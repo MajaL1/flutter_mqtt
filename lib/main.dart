@@ -3,7 +3,14 @@ import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:provider/provider.dart';
 
+import 'LoginForm.dart';
+
 void main() => runApp(MyApp());
+
+test() => {
+  const a=0
+  print("a b c", a, b, c);
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -29,10 +36,17 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: ChangeNotifierProvider<MQTTAppState>(
+        /** tukaj bomo zamenjali s home: LoginForm
+         * v HomePage bomo poklicali MQTTVIEW **/
+        /** home: ChangeNotifierProvider<MQTTAppState>(
           create: (_) => MQTTAppState(),
           child: MQTTView(),
-        ));
+          //
+        ) */
+        home: LoginForm(),
+          //
+
+    );
   }
 }
 
