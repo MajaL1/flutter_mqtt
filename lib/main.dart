@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 
 import 'LoginForm.dart';
 
 void main() => runApp(MyApp());
 
-test() => {
-  const a=0
-  print("a b c", a, b, c);
+
+void test(){
+  int a=0;
+  print(a);
 }
 
 class MyApp extends StatelessWidget {

@@ -37,15 +37,15 @@ class _LoginFormValidationState extends State<LoginForm> {
           key: formkey,
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 60.0),
-                child: Center(
-                  child: Container(
-                      width: 200,
-                      height: 150,
-                      child: Image.asset('asset/images/flutter-logo.png')),
-                ),
-              ),
+             // Padding(
+               // padding: const EdgeInsets.only(top: 60.0),
+               // child: Center(
+                 // child: Container(
+                  //    width: 200,
+                  //    height: 150,
+                   //   child: //Image.asset('asset/images/flutter-logo.png')),
+                //),
+             // ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
@@ -96,7 +96,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                 child: TextButton(
                   onPressed: () {
                     if (formkey.currentState!.validate()) {
-                      Navigator.push(context,
+                       Navigator.push(context,
                           /**MaterialPageRoute(builder: (_) => HomePage())); */
                           MaterialPageRoute(builder: (_) => MQTTView()));
                       print("Validated");

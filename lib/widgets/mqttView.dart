@@ -47,13 +47,30 @@ class _MQTTViewState extends State<MQTTView> {
 
    */
 
-  @override
+  /*@override
   Widget build(BuildContext context) {
     final MQTTAppState appState = Provider.of<MQTTAppState>(context);
     // Keep a reference to the app state.
     currentAppState = appState;
     final Scaffold scaffold = Scaffold(body: _buildColumn());
     return scaffold;
+  }*/
+
+  Widget build(BuildContext context) {
+    return Provider<MQTTView>(
+        create: (_) => MQTTView(),
+        // we use `builder` to obtain a new `BuildContext` that has access to the provider
+        builder: (context, child) {
+          // No longer throws
+          //return Text(context.watch<MQTTView>().toString());
+          //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+
+          //currentAppState = appState;
+          final Scaffold scaffold = Scaffold(body: _buildColumn());
+          //return Text(context.watch<MQTTView>().toString());
+          return scaffold;
+        }
+    );
   }
 
   Widget _buildAppBar(BuildContext context) {
