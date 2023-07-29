@@ -26,6 +26,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -95,6 +96,15 @@ class _LoginFormValidationState extends State<LoginForm> {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () {
+/**************************/
+                 /*   onTap: () {
+                      var user = Provider.of<UserRepository>(context);
+                      user.savePreference(user.user.id, "Something");
+                      user.navigateToNewPage(Dashboard(), context);
+                      print(user.user.id);
+                    },   */
+/**************************/
+
                     if (formkey.currentState!.validate()) {
                        Navigator.push(context,
                           /**MaterialPageRoute(builder: (_) => HomePage())); */

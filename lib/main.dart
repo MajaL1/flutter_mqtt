@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
+import 'package:provider/provider.dart';
 //import 'package:provider/provider.dart';
 
 import 'LoginForm.dart';
+import 'mqtt/MQTTManager.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,13 +19,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    /*
-    final MQTTManager manager = MQTTManager(host:'test.mosquitto.org',topic:'flutter/amp/cool',identifier:'ios');
-    manager.initializeMQTTClient();
+    
+    /*final MQTTManager manager = MQTTManager(host:'test.mosquitto.org',topic:'flutter/amp/cool',identifier:'ios');
+    manager.initializeMQTTClient(); */
 
-     */
-
-    return MaterialApp(
+     
+    return MultiProvider(
+    providers: [
+      ChangeNotifierProvider<MQTTAppState>(
+        create: (context) => Provider.of<MQTTAppState>(context)
+      ),
+    ],
+    child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           // This is the theme of your application.
@@ -39,16 +46,13 @@ class MyApp extends StatelessWidget {
         ),
         /** tukaj bomo zamenjali s home: LoginForm
          * v HomePage bomo poklicali MQTTVIEW **/
-        /** home: ChangeNotifierProvider<MQTTAppState>(
+        /* home: ChangeNotifierProvider<MQTTAppState>(
           create: (_) => MQTTAppState(),
           child: MQTTView(),
-          //
-        ) */
-        home: LoginForm(),
-          //
-
-    );
-  }
+        */
+        home:  LoginForm(), //
+    )
+    );}
 }
 
 
