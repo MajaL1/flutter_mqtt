@@ -27,7 +27,10 @@ class _LoginFormValidationState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return DefaultTabController(
+        length: 3,
+
+        child: Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Login Page"),
@@ -128,6 +131,6 @@ class _LoginFormValidationState extends State<LoginForm> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
