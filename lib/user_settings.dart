@@ -6,16 +6,21 @@ class UserSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("User Settings"),
-        centerTitle: true,
-      ),
-      body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-          )
-      ),
+    return new Builder(
+        builder: (ctx)
+    {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("User Settings"),
+          centerTitle: true,
+        ),
+        body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+            )
+        ),
+      );
+      }
     );
   }
 }
