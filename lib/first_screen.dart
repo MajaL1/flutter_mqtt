@@ -19,26 +19,21 @@ class FirstScreen extends StatelessWidget {
           TextButton(
             style: style,
             onPressed: () {
-              MaterialPageRoute(builder: (context) => AlarmHistory());
-              // Navigator.pushNamed(context, "/user_history");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AlarmHistory())
+                //Navigator.pushNamed(context, "/");
+              );
             },
             child: const Text('History'),
           ),
           TextButton(
             style: style,
             onPressed: () {
-              //ScaffoldMessenger.of(context).showSnackBar(
-              //  const SnackBar(content: Text('This is a snackbar')));
-              /*Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return UserSettings();
-                    }
-                  ));*/
               print("Clicked");
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => UserSettings())
-                //Navigator.pushNamed(context, "/");
               );
             },
             child: const Text('Settings'),
