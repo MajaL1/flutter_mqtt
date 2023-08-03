@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginForm(),
           '/user_settings': (context) => UserSettings(),
           '/history': (context) => AlarmHistory(),
+          '/current_alarms': (context) => MQTTView(),
 
         },
         navigatorKey: navigatorKey,

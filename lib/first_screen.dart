@@ -1,9 +1,11 @@
-import 'package:flutter/cupertino.dart';
+
+
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/alarm_history.dart';
 import 'package:mqtt_test/user_settings.dart';
+import 'package:mqtt_test/widgets/mqttView.dart';
 
 import 'LoginForm.dart';
+import 'alarm_history.dart';
 
 class FirstScreen extends StatelessWidget {
   @override
@@ -14,7 +16,8 @@ class FirstScreen extends StatelessWidget {
 
    return Scaffold(
       body: LoginForm(),
-      appBar: AppBar(
+      /*appBar: AppBar(
+        automaticallyImplyLeading: true,
         actions: <Widget>[
           TextButton(
             style: style,
@@ -38,8 +41,20 @@ class FirstScreen extends StatelessWidget {
             },
             child: const Text('Settings'),
           ),
+          TextButton(
+            style: style,
+            onPressed: () {
+              print("Clicked");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MQTTView())
+              );
+            },
+            child: const Text('Alarms'),
+          ),
         ],
-      ),
+      ),*/
+     //appBar: ,
     );
   }
 }
