@@ -21,7 +21,7 @@ class _MQTTViewState extends State<MQTTView> {
   @override
   void initState() {
     super.initState();
-   // final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+    // final MQTTAppState appState = Provider.of<MQTTAppState>(context);
     //currentAppState = appState;
 
     /*
@@ -49,12 +49,16 @@ class _MQTTViewState extends State<MQTTView> {
 
    */
 
- /* @override
-  Widget build(BuildContext context) {
+  @override
+  /*Widget build(BuildContext context) {
     final MQTTAppState appState = Provider.of<MQTTAppState>(context);
     // Keep a reference to the app state.
     currentAppState = appState;
-    final Scaffold scaffold = Scaffold(body: _buildColumn());
+    final Scaffold scaffold = Scaffold(
+        body: _buildColumn(),
+        appBar: AppBar(
+          title: const Text("Settings"),
+        ));
     return scaffold;
   }*/
 
@@ -69,7 +73,12 @@ class _MQTTViewState extends State<MQTTView> {
           final MQTTAppState appState = Provider.of<MQTTAppState>(context);
 
           currentAppState = appState;
-          final Scaffold scaffold = Scaffold(body: _buildColumn());
+          final Scaffold scaffold = Scaffold(
+              body: _buildColumn(),
+            appBar: AppBar(
+              title: const Text("Current alarms"),
+            ),
+          );
           //return Text(context.watch<MQTTView>().toString());
           return scaffold;
         }

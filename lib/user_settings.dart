@@ -37,7 +37,104 @@ class _UserSettingsState extends State<UserSettings> {
     if (kIsWeb) {
       // Some web specific code there
     }
-    return (kIsWeb)//(Platform.isAndroid || kIsWeb)
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Settings"),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          alignment: Alignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Account", style: headingStyle),
+                ],
+              ),
+              const ListTile(
+                leading: Icon(Icons.phone),
+                title: Text("Phone Number"),
+              ),
+              const Divider(),
+              const ListTile(
+                leading: Icon(Icons.mail),
+                title: Text("Email"),
+              ),
+              const Divider(),
+              const ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text("Sign Out"),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Security", style: headingStyle),
+                ],
+              ),
+              ListTile(
+                leading: const Icon(Icons.phonelink_lock_outlined),
+                title: const Text("Lock app in background"),
+                trailing: Switch(
+                    value: lockAppSwitchVal,
+                    activeColor: Colors.redAccent,
+                    onChanged: (val) {
+                      setState(() {
+                        lockAppSwitchVal = val;
+                      });
+                    }),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.fingerprint),
+                title: const Text("Use fingerprint"),
+                trailing: Switch(
+                    value: fingerprintSwitchVal,
+                    activeColor: Colors.redAccent,
+                    onChanged: (val) {
+                      setState(() {
+                        fingerprintSwitchVal = val;
+                      });
+                    }),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.lock),
+                title: const Text("Change Password"),
+                trailing: Switch(
+                    value: changePassSwitchVal,
+                    activeColor: Colors.redAccent,
+                    onChanged: (val) {
+                      setState(() {
+                        changePassSwitchVal = val;
+                      });
+                    }),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Misc", style: headingStyle),
+                ],
+              ),
+              const ListTile(
+                leading: Icon(Icons.file_open_outlined),
+                title: Text("Terms of Service"),
+              ),
+              const Divider(),
+              const ListTile(
+                leading: Icon(Icons.file_copy_outlined),
+                title: Text("Open Source and Licences"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+
+        /*  return (kIsWeb)//(Platform.isAndroid || kIsWeb)
         ? MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -530,6 +627,6 @@ class _UserSettingsState extends State<UserSettings> {
           ),
         ),
       ),
-    );
+    );*/
   }
 }

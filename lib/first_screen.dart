@@ -16,8 +16,12 @@ class FirstScreen extends StatelessWidget {
 
    return Scaffold(
       body: LoginForm(),
-      /*appBar: AppBar(
-        automaticallyImplyLeading: true,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: <Widget>[
           TextButton(
             style: style,
@@ -38,6 +42,7 @@ class FirstScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(builder: (context) => UserSettings())
               );
+             // Navigator.pushNamed(context, '/settings');
             },
             child: const Text('Settings'),
           ),
@@ -53,7 +58,7 @@ class FirstScreen extends StatelessWidget {
             child: const Text('Alarms'),
           ),
         ],
-      ),*/
+      ),
      //appBar: ,
     );
   }

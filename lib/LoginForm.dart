@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 /**  ToDo: implementiraj onLoginSuccess **/
@@ -9,8 +10,23 @@ class LoginForm extends StatefulWidget {
   _LoginFormValidationState createState() => _LoginFormValidationState();
 }
 
+
 class _LoginFormValidationState extends State<LoginForm> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
+  Future<void> login() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("email", "useremail@gmail.com");
+
+    if (formkey.currentState!.validate()) {
+      Navigator.push(context,
+          /**MaterialPageRoute(builder: (_) => HomePage())); */
+          MaterialPageRoute(builder: (_) => MQTTView()));
+      print("Validated");
+    } else {
+      print("Not Validated");
+    }
+  }
 
   String? validatePassword(String value) {
     if (value.isEmpty) {
@@ -99,23 +115,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () {
-/**************************/
-                 /*   onTap: () {
-                      var user = Provider.of<UserRepository>(context);
-                      user.savePreference(user.user.id, "Something");
-                      user.navigateToNewPage(Dashboard(), context);
-                      print(user.user.id);
-                    },   */
-/**************************/
+                  // login
 
-                    if (formkey.currentState!.validate()) {
-                       Navigator.push(context,
-                          /**MaterialPageRoute(builder: (_) => HomePage())); */
-                          MaterialPageRoute(builder: (_) => MQTTView()));
-                      print("Validated");
-                    } else {
-                      print("Not Validated");
-                    }
                   },
                   child: Text(
                     'Login',
