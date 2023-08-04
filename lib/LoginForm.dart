@@ -13,11 +13,19 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormValidationState extends State<LoginForm> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
 
   Future<void> login() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString("email", "useremail@gmail.com");
+var username = emailController.text;
+var password = passwordController.text;
 
+print("u, p "+username+", "+password);
+
+    // check email and passworm
     if (formkey.currentState!.validate()) {
       Navigator.push(context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
@@ -73,6 +81,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                         border: OutlineInputBorder(),
                         labelText: 'Email',
                         hintText: 'Enter valid email id as abc@gmail.com'),
+                        controller: emailController,
                     /*validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       EmailValidator(errorText: "Enter valid email id"),
@@ -87,6 +96,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         hintText: 'Enter secure password'),
+                        controller: passwordController,
                    /* validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       MinLengthValidator(6,
