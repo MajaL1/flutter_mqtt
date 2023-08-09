@@ -6,15 +6,24 @@ import 'package:mqtt_test/alarm_history.dart';
 import 'package:mqtt_test/first_screen.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
-import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
-import 'package:provider/provider.dart';
-//import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'LoginForm.dart';
+
+import 'login_form.dart';
 import 'base_appbar.dart';
 import 'mqtt/MQTTManager.dart';
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
+
+Future<void> main() async {
+
+  SharedPreferences sharedPref = await SharedPreferences.getInstance();
+  runApp(MyApp(sharedPref));
+  //runApp(MyApp(home: token == null ? LoginForm() : MQTTView()));
+ // MaterialPageRoute(builder: (context) => AlarmHistory());
+
+  //runApp(MyApp());
+}
 
 final List<Widget> screens = [
   LoginForm(),
@@ -29,6 +38,9 @@ void test() {
 
 class MyApp extends StatelessWidget {
   final navigatorKey = GlobalKey<NavigatorState>();
+  final SharedPreferences sharedPref;
+
+  MyApp(this.sharedPref);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +69,7 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         // home: LoginForm(), //
 
-        home: FirstScreen()
+        home: FirstScreen(sharedPref)
     );
   }
 }
