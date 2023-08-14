@@ -16,26 +16,36 @@ class FirstScreen extends StatelessWidget {
 
   FirstScreen(this.sharedPref);
 
+  Future<void> logout() async {
+    // ToDo: Call service
+  }
+
   @override
   Widget build(BuildContext context) {
-    this.sharedPref.setString('token', Null as String);
+    this.sharedPref.setString('token', "test");
     final ButtonStyle style = TextButton.styleFrom(
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
     );
 
  // SharedPrefUtils sharedPrefUtils = new SharedPrefUtils();
 
-  print("token: "+sharedPref.toString());
+
+  print("token: "+sharedPref.get("token").toString());
    return Scaffold(
 
       body: this.sharedPref.getString("token") == null ? LoginForm() : MQTTView(),
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        title: Text('Login'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: (this.sharedPref.getString("token")
+          != null) ? Icon(Icons.arrow_back) : Icon(
+            Icons.notifications_none,
+            color: Colors.transparent,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: <Widget>[
+        actions:this.sharedPref.getString("token") != null ? <Widget>[
           TextButton(
             style: style,
             onPressed: () {
@@ -70,7 +80,15 @@ class FirstScreen extends StatelessWidget {
             },
             child: const Text('Alarms'),
           ),
-        ],
+          TextButton(
+            style: style,
+            onPressed: () {
+              print("Clicked");
+            },
+            child: const Text('Logout'),
+          ),
+        ]: null
+        ,
       ),
      //appBar: ,
     );

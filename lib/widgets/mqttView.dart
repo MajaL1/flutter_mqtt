@@ -76,6 +76,7 @@ class _MQTTViewState extends State<MQTTView> {
           final Scaffold scaffold = Scaffold(
               body: _buildColumn(),
             appBar: AppBar(
+              automaticallyImplyLeading: true,
               title: const Text("Current alarms"),
             ),
           );

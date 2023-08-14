@@ -31,6 +31,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     var password = passwordController.text;
 
     print("u, p " + username + ", " + password);
+    print("u, p " + username + ", " + password);
 
     // check email and password
     if (formkey.currentState!.validate()) {
