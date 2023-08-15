@@ -52,18 +52,6 @@ class _MQTTViewState extends State<MQTTView> {
    */
 
   @override
-  /*Widget build(BuildContext context) {
-    final MQTTAppState appState = Provider.of<MQTTAppState>(context);
-    // Keep a reference to the app state.
-    currentAppState = appState;
-    final Scaffold scaffold = Scaffold(
-        body: _buildColumn(),
-        appBar: AppBar(
-          title: const Text("Settings"),
-        ));
-    return scaffold;
-  }*/
-
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
@@ -79,19 +67,12 @@ class _MQTTViewState extends State<MQTTView> {
             body: _buildColumn(),
             drawer: NavDrawer(),
             appBar: AppBar(
-              title: Text("About"),
+              title: Text("Alarms"),
             ),
           );
           //return Text(context.watch<MQTTView>().toString());
           return scaffold;
         });
-  }
-
-  Widget _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text('MQTT'),
-      backgroundColor: Colors.greenAccent,
-    );
   }
 
   Widget _buildColumn() {

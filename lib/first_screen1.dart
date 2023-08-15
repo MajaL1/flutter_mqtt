@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
@@ -10,9 +8,7 @@ import 'drawer.dart';
 import 'login_form.dart';
 import 'alarm_history.dart';
 
-
 class FirstScreen extends StatelessWidget {
-
   final SharedPreferences sharedPref;
 
   FirstScreen(this.sharedPref);
@@ -28,18 +24,17 @@ class FirstScreen extends StatelessWidget {
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
     );
 
- // SharedPrefUtils sharedPrefUtils = new SharedPrefUtils();
+    // SharedPrefUtils sharedPrefUtils = new SharedPrefUtils();
 
-
-  print("token: "+sharedPref.get("token").toString());
-   return Scaffold(
-
-      body: this.sharedPref.getString("token") == null ? LoginForm() : MQTTView(),
+    print("token: " + sharedPref.get("token").toString());
+    return Scaffold(
+      body:
+          this.sharedPref.getString("token") == null ? LoginForm() : MQTTView(),
       drawer: NavDrawer(),
-      appBar: AppBar(
-       title: Text("title"),
-     ),
-     //appBar: ,
+      appBar: this.sharedPref.getString("token") == null ? AppBar(
+        title: Text("Login"))
+           : null
+      //appBar: ,
     );
   }
 }
