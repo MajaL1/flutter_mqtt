@@ -30,17 +30,19 @@ class AlarmHistory extends StatelessWidget {
       future: ApiService.getAlarms(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: 75,
-                  color: Colors.white,
-                  child: Center(
-                    child: Text(snapshot.data![index].name),
-                  ),
-                );
-              });
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text("Alarms log"),
+              ),
+              body: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(snapshot.data![index].name),
+                      leading: FlutterLogo(),
+                    );
+                  })
+          );
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
