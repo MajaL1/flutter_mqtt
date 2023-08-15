@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'drawer.dart';
+
 void main() {
   runApp(
     const UserSettings(),
@@ -41,6 +43,7 @@ class _UserSettingsState extends State<UserSettings> {
       appBar: AppBar(
         title: const Text("Settings"),
       ),
+      drawer: NavDrawer(),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(12),

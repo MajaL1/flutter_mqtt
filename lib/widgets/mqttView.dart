@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
 
+import '../drawer.dart';
+
 class MQTTView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -74,16 +76,15 @@ class _MQTTViewState extends State<MQTTView> {
 
           currentAppState = appState;
           final Scaffold scaffold = Scaffold(
-              body: _buildColumn(),
+            body: _buildColumn(),
+            drawer: NavDrawer(),
             appBar: AppBar(
-              automaticallyImplyLeading: true,
-              title: const Text("Current alarms"),
+              title: Text("About"),
             ),
           );
           //return Text(context.watch<MQTTView>().toString());
           return scaffold;
-        }
-    );
+        });
   }
 
   Widget _buildAppBar(BuildContext context) {

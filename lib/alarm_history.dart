@@ -2,29 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/api/api_service.dart';
 
+import 'drawer.dart';
 import 'model/alarm.dart';
 
 class AlarmHistory extends StatelessWidget {
   const AlarmHistory({Key? key}) : super(key: key);
 
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            title: const Text("Alarm history"),
-            centerTitle: true
-        ),
-        body:
-        ListView(
-          padding: const EdgeInsets.all(8),
-          children: <Widget>[
-            ListTile(title: Text('List 1')),
-            ListTile(title: Text('List 2')),
-            ListTile(title: Text('List 3')),
-          ],
-        )
-    );
-  }*/
+
+  void showAlarmDetail(index) {
+    // Todo: open detail
+  }
+
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarms(),
@@ -34,15 +22,30 @@ class AlarmHistory extends StatelessWidget {
               appBar: AppBar(
                 title: const Text("Alarms log"),
               ),
+              drawer: NavDrawer(),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Text(snapshot.data![index].name),
-                      leading: FlutterLogo(),
-                    );
-                  })
-          );
+                        title: Text(snapshot.data![index].name),
+                        leading: FlutterLogo(),
+                        subtitle: Row(
+                          children: <Widget>[
+                            Text(snapshot.data![index].date!),
+                            Text("  -  "),
+                            Text(
+                              snapshot.data![index].description,
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                          ],
+                        ),
+
+                        //Text(snapshot.data![index].date!),
+
+                        onTap: () {
+                          showAlarmDetail(index);
+                        });
+                  }));
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
