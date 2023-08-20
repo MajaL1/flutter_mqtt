@@ -13,55 +13,26 @@ class NavDrawer extends StatelessWidget {
           color: Colors.blue,
           child: ListView(
             children: <Widget>[
-              ListTile(
-                title: Text('Settings'),
-                textColor: Colors.white,
-                trailing: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => UserSettings())),
-              ),
-              ListTile(
-                title: Text('User 1'),
-                textColor: Colors.white,
-                trailing: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => UserSettings())),
-              ),
-              ListTile(
-                title: Text('Alarms'),
-                textColor: Colors.white,
-                trailing: Icon(
-                  Icons.alarm,
-                  color: Colors.white,
-                ),
-                onTap: () => Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => MQTTView())),
-              ),
-              ListTile(
-                title: Text('History'),
-                textColor: Colors.white,
-                trailing: Icon(
-                  Icons.history,
-                  color: Colors.white,
-                ),
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AlarmHistory())),
-              ),
-              Divider(
-                color: Colors.white,
-              ),
-              ListTile(
-                title: Text('Log out'),
-                textColor: Colors.white,
-                trailing: Icon(
-                  Icons.logout,
-                  color: Colors.white,
+              Expanded(
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: ListTile(
+                    hoverColor: Colors.blue,
+                    dense: true,
+                    visualDensity: VisualDensity(vertical: -4),
+                    leading: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'Settings',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => UserSettings())),
+                  ),
                 ),
               ),
               Expanded(
@@ -72,10 +43,82 @@ class NavDrawer extends StatelessWidget {
                     dense: true,
                     visualDensity: VisualDensity(vertical: -4),
                     leading: Icon(
-                      Icons.logout,
-                      color: Colors.black,
+                      Icons.verified_user,
+                      color: Colors.white,
                     ),
-                    title: Text('Logout'),
+                    title: Text(
+                      'User',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: ListTile(
+                    hoverColor: Colors.blue,
+                    dense: true,
+                    visualDensity: VisualDensity(vertical: -4),
+                    leading: Icon(
+                      Icons.alarm,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'Alarms',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => MQTTView())),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: ListTile(
+                    hoverColor: Colors.blue,
+                    dense: true,
+                    visualDensity: VisualDensity(vertical: -4),
+                    leading: Icon(
+                      Icons.history,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'History',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AlarmHistory())),
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.white,
+              ),
+              Expanded(
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: ListTile(
+                    hoverColor: Colors.blue,
+                    dense: true,
+                    visualDensity: VisualDensity(vertical: -4),
+                    leading: Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     onTap: () {},
                   ),
                 ),
