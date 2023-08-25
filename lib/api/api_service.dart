@@ -37,9 +37,6 @@ class ApiService {
     var data = await rootBundle.loadString("lib/assets/alarms.json");
     final jsonResult = jsonDecode(data);
     print("jsonResult: $jsonResult");
-   /* FutureOr<List<Alarm>> jsonContent = (await rootBundle.loadString("lib/assets/alarms.json")) as FutureOr<List<Alarm>>;
-    final jsonData = json.decode(jsonContent as String);
-    return jsonData;*/
 
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 

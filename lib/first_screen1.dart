@@ -19,19 +19,19 @@ class FirstScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    this.sharedPref.setString('token', "test");
+    //this.sharedPref.setString('token', "test");
     final ButtonStyle style = TextButton.styleFrom(
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
     );
 
     // SharedPrefUtils sharedPrefUtils = new SharedPrefUtils();
 
-    print("token: " + sharedPref.get("token").toString());
+    print("token1: " + sharedPref.get("token").toString());
     return Scaffold(
       body:
           this.sharedPref.getString("token") == null ? LoginForm() : MQTTView(),
       drawer: NavDrawer(),
-      appBar: this.sharedPref.getString("token") == null ? AppBar(
+      appBar: this.sharedPref.getString("token") != null ? AppBar(
         title: Text("Login"))
            : null
       //appBar: ,

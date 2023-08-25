@@ -77,6 +77,7 @@ class _MQTTViewState extends State<MQTTView> {
 
   Widget _buildColumn() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         _buildConnectionStateText(
             _prepareStateMessageFrom(currentAppState.getAppConnectionState)),
@@ -89,7 +90,9 @@ class _MQTTViewState extends State<MQTTView> {
   Widget _buildEditableColumn() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
+      //mainAxisSize: MainAxisSize.min,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _buildTextFieldWith(_hostTextController, 'Enter broker address',
               currentAppState.getAppConnectionState),

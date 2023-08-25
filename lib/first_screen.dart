@@ -22,7 +22,7 @@ class FirstScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    this.sharedPref.setString('token', "test");
+    //this.sharedPref.setString('token', "test");
     final ButtonStyle style = TextButton.styleFrom(
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
     );
