@@ -4,6 +4,7 @@ import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/alarm_history.dart';
 import 'package:mqtt_test/first_screen1.dart';
+import 'package:mqtt_test/test_notifications.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
           '/user_settings': (context) => UserSettings(),
           '/history': (context) => AlarmHistory(),
           '/current_alarms': (context) => MQTTView(),
+          '/test_notifications': (context) => TestNotifications(),
 
         },
         navigatorKey: navigatorKey,

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
-import 'package:mqtt_test/widgets/shared_prefs_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mqtt_test/noti.dart';
 import 'drawer.dart';
 import 'login_form.dart';
-import 'alarm_history.dart';
+
 
 class FirstScreen extends StatelessWidget {
   final SharedPreferences sharedPref;
-
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
   FirstScreen(this.sharedPref);
 
   Future<void> logout() async {

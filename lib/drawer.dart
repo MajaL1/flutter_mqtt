@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/test_notifications.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/alarm_history.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
@@ -47,11 +48,13 @@ class NavDrawer extends StatelessWidget {
                       color: Colors.white,
                     ),
                     title: Text(
-                      'User',
+                      'Test notifications',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => TestNotifications())),
                   ),
                 ),
               ),
