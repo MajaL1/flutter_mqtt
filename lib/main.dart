@@ -1,27 +1,25 @@
-import 'dart:js';
-import 'dart:js_util';
-
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/alarm_history.dart';
 import 'package:mqtt_test/first_screen1.dart';
 import 'package:mqtt_test/test_notifications.dart';
+import 'package:mqtt_test/test_notifications1.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'login_form.dart';
-import 'base_appbar.dart';
 import 'mqtt/MQTTManager.dart';
+import 'notification_controller.dart';
+import 'notification_page.dart';
 
 //void main() => runApp(MyApp());
 
 Future<void> main() async {
-
   SharedPreferences sharedPref = await SharedPreferences.getInstance();
+  await NotificationController.initializeLocalNotifications();
   runApp(MyApp(sharedPref));
-  //runApp(MyApp(home: token == null ? LoginForm() : MQTTView()));
- // MaterialPageRoute(builder: (context) => AlarmHistory());
 
   //runApp(MyApp());
 }
@@ -37,41 +35,61 @@ void test() {
   print(a);
 }
 
-class MyApp extends StatelessWidget {
-  final navigatorKey = GlobalKey<NavigatorState>();
+class MyApp extends StatefulWidget {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final SharedPreferences sharedPref;
+
 
   MyApp(this.sharedPref);
 
   @override
-  Widget build(BuildContext context) {
-
-    /*final MQTTManager manager = MQTTManager(host:'test.mosquitto.org',topic:'flutter/amp/cool',identifier:'ios');
-    manager.initializeMQTTClient(); */
-
-    /* return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<MQTTAppState>(
-              create: (context) => Provider.of<MQTTAppState>(context)),
-        ], */
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: '/',
-        routes: <String, WidgetBuilder>{
-          '/login': (context) => LoginForm(),
-          '/user_settings': (context) => UserSettings(),
-          '/history': (context) => AlarmHistory(),
-          '/current_alarms': (context) => MQTTView(),
-          '/test_notifications': (context) => TestNotifications(),
-
-        },
-        navigatorKey: navigatorKey,
-        // home: LoginForm(), //
-
-        home: FirstScreen(sharedPref)
-    );
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
   }
+}
+
+class _AppState extends State<MyApp> {
+  // This widget is the root of your application.
+
+   String routeHome = '/',
+      routeNotification = '/notification-page';
+
+  @override
+  void initState() {
+    NotificationController.startListeningNotificationEvents();
+    super.initState();
+  }
+
+
+
+@override
+Widget build(BuildContext context) {
+
+ return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/',
+      routes: <String, WidgetBuilder>{
+        '/login': (context) => LoginForm(),
+        '/user_settings': (context) => UserSettings(),
+        '/history': (context) => AlarmHistory(),
+        '/current_alarms': (context) => MQTTView(),
+        '/test_notifications': (context) => TestNotifications(),
+        '/test_notifications1': (context) =>
+            TestNotifications1(title: 'test notifications 1',),
+        '/notifications_page': (context) =>
+            NotificationPage(
+              receivedAction: NotificationController.initialAction!,),
+      },
+      navigatorKey: navigatorKey,
+      // home: LoginForm(), //
+
+      home: FirstScreen(sharedPref)
+  );
+}
+
+
 }

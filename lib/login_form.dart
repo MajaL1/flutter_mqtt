@@ -119,7 +119,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                       //validatePassword,        //Function to check validation
                     ),
                   ),
-                  Container(
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+            ),
+              Container(
                     height: 50,
                     width: 250,
                     decoration: BoxDecoration(
