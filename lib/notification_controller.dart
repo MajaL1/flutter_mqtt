@@ -87,7 +87,7 @@ class NotificationController {
                   children: [
                     Expanded(
                       child: Image.asset(
-                        'assets/animated-bell.gif',
+                        'lib/assets/animated-bell.gif',
                         height: MediaQuery.of(context).size.height * 0.3,
                         fit: BoxFit.fitWidth,
                       ),

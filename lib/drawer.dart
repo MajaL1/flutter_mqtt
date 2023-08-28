@@ -94,9 +94,8 @@ class NavDrawer extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => NotificationPage(receivedAction: NotificationController.initialAction!,))),
-                  )
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => NotificationPage())),   )
                   ,
                   Divider(height: 10),
                   ListTile(

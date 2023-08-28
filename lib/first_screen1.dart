@@ -8,12 +8,11 @@ import 'drawer.dart';
 import 'login_form.dart';
 
 
-class FirstScreen extends StatelessWidget {
-  final SharedPreferences sharedPref;
+class FirstScreen1 extends StatelessWidget {
+  late final SharedPreferences sharedPref;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
-  FirstScreen(this.sharedPref);
-
+//
   Future<void> logout() async {
     // ToDo: Call service
   }
@@ -25,7 +24,7 @@ class FirstScreen extends StatelessWidget {
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
     );
 
-    // SharedPrefUtils sharedPrefUtils = new SharedPrefUtils();
+    final SharedPreferences sharedPref = SharedPreferences.getInstance() as SharedPreferences;
 
     print("token1: " + sharedPref.get("token").toString());
     return Scaffold(

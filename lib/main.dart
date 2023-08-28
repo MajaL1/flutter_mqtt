@@ -9,6 +9,7 @@ import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
+import 'first_screen.dart';
 import 'login_form.dart';
 import 'mqtt/MQTTManager.dart';
 import 'notification_controller.dart';
@@ -17,8 +18,25 @@ import 'notification_page.dart';
 //void main() => runApp(MyApp());
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized ();
   SharedPreferences sharedPref = await SharedPreferences.getInstance();
-  await NotificationController.initializeLocalNotifications();
+  //await NotificationController.initializeLocalNotifications();
+  WidgetsFlutterBinding.ensureInitialized();
+  AwesomeNotifications().initialize(
+      null,
+      [
+        NotificationChannel(
+            channelKey: 'key1',
+            channelName: 'Proto Coders Point',
+            channelDescription: "Notification example",
+            defaultColor: Color(0XFF9050DD),
+            ledColor: Colors.white,
+            playSound: true,
+            enableLights:true,
+            enableVibration: true
+        )
+      ]
+  );
   runApp(MyApp(sharedPref));
 
   //runApp(MyApp());
@@ -35,61 +53,49 @@ void test() {
   print(a);
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final SharedPreferences sharedPref;
 
-
   MyApp(this.sharedPref);
 
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
-}
 
-class _AppState extends State<MyApp> {
-  // This widget is the root of your application.
-
-   String routeHome = '/',
-      routeNotification = '/notification-page';
-
-  @override
-  void initState() {
-    NotificationController.startListeningNotificationEvents();
-    super.initState();
-  }
 
 
 
 @override
 Widget build(BuildContext context) {
 
- return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-        '/login': (context) => LoginForm(),
-        '/user_settings': (context) => UserSettings(),
-        '/history': (context) => AlarmHistory(),
-        '/current_alarms': (context) => MQTTView(),
-        '/test_notifications': (context) => TestNotifications(),
-        '/test_notifications1': (context) =>
-            TestNotifications1(title: 'test notifications 1',),
-        '/notifications_page': (context) =>
-            NotificationPage(
-              receivedAction: NotificationController.initialAction!,),
-      },
-      navigatorKey: navigatorKey,
-      // home: LoginForm(), //
+    /*final MQTTManager manager = MQTTManager(host:'test.mosquitto.org',topic:'flutter/amp/cool',identifier:'ios');
+    manager.initializeMQTTClient(); */
 
-      home: FirstScreen(sharedPref)
-  );
-}
+    /* return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<MQTTAppState>(
+              create: (context) => Provider.of<MQTTAppState>(context)),
+        ], */
 
+  NotificationController.initializeLocalNotifications();
 
+  return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: '/',
+        routes: <String, WidgetBuilder>{
+          '/login': (context) => LoginForm(),
+          '/user_settings': (context) => UserSettings(),
+          '/history': (context) => AlarmHistory(),
+          '/current_alarms': (context) => MQTTView(),
+          '/test_notifications1': (context) => TestNotifications1(title: "test"),
+          '/test_notifications': (context) => TestNotifications(),
+
+        },
+        navigatorKey: navigatorKey,
+        // home: LoginForm(), //
+
+        home: FirstScreen(sharedPref)
+    );
+  }
 }

@@ -70,6 +70,7 @@ flutter:
   assets:
     - lib/assets/alarms.json
     - lib/assets/user.json
+    - lib/assets/animated-bell.gif
 
   # To add assets to your application, add an assets section, like this:
   # assets:

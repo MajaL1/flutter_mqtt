@@ -1,122 +1,83 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'notification_controller.dart';
 
 ///  *********************************************
 ///     NOTIFICATION PAGE
 ///  *********************************************
 ///
 class NotificationPage extends StatelessWidget {
-  const NotificationPage({Key? key, required this.receivedAction})
-      : super(key: key);
+  const NotificationPage({Key? key}) : super(key: key);
 
-  final ReceivedAction receivedAction;
+  //final ReceivedAction receivedAction;
 
   @override
   Widget build(BuildContext context) {
-    bool hasLargeIcon = receivedAction.largeIconImage != null;
-    bool hasBigPicture = receivedAction.bigPictureImage != null;
-    double bigPictureSize = MediaQuery.of(context).size.height * .4;
-    double largeIconSize =
-        MediaQuery.of(context).size.height * (hasBigPicture ? .12 : .2);
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(receivedAction.title ?? receivedAction.body ?? ''),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.zero,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-                height:
-                hasBigPicture ? bigPictureSize + 40 : largeIconSize + 60,
-                child: hasBigPicture
-                    ? Stack(
-                  children: [
-                    if (hasBigPicture)
-                      FadeInImage(
-                        placeholder: const NetworkImage(
-                            'https://cdn.syncfusion.com/content/images/common/placeholder.gif'),
-                        //AssetImage('assets/images/placeholder.gif'),
-                        height: bigPictureSize,
-                        width: MediaQuery.of(context).size.width,
-                        image: receivedAction.bigPictureImage!,
-                        fit: BoxFit.cover,
-                      ),
-                    if (hasLargeIcon)
-                      Positioned(
-                        bottom: 15,
-                        left: 20,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(largeIconSize)),
-                          child: FadeInImage(
-                            placeholder: const NetworkImage(
-                                'https://cdn.syncfusion.com/content/images/common/placeholder.gif'),
-                            //AssetImage('assets/images/placeholder.gif'),
-                            height: largeIconSize,
-                            width: largeIconSize,
-                            image: receivedAction.largeIconImage!,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
-                  ],
-                )
-                    : Center(
-                  child: ClipRRect(
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(largeIconSize)),
-                    child: FadeInImage(
-                      placeholder: const NetworkImage(
-                          'https://cdn.syncfusion.com/content/images/common/placeholder.gif'),
-                      //AssetImage('assets/images/placeholder.gif'),
-                      height: largeIconSize,
-                      width: largeIconSize,
-                      image: receivedAction.largeIconImage!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                      text: TextSpan(children: [
-                        if (receivedAction.title?.isNotEmpty ?? false)
-                          TextSpan(
-                            text: receivedAction.title!,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        if ((receivedAction.title?.isNotEmpty ?? false) &&
-                            (receivedAction.body?.isNotEmpty ?? false))
-                          TextSpan(
-                            text: '\n\n',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        if (receivedAction.body?.isNotEmpty ?? false)
-                          TextSpan(
-                            text: receivedAction.body!,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                      ]))
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.black12,
-              padding: const EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width,
-              child: Text(receivedAction.toString()),
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text("notifications page"),
         ),
-      ),
+        body: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Notify(1); //localnotification method call below
+                          // when user top on notification this listener will work and user will be navigated to notification page
+
+                          /*Navigator.of(context).pushNamed(
+                            '/test_notifications',
+                          );*/
+                        },
+                        child: Text("Local Notification 1")),
+                  Padding(padding: EdgeInsets.all(20)),
+                  ElevatedButton(
+                      onPressed: () {
+                        Notify(2); //localnotification method call below
+                        // when user top on notification this listener will work and user will be navigated to notification page
+
+                        /*Navigator.of(context).pushNamed(
+                            '/test_notifications',
+                          );*/
+                      },
+                      child: Text("Local Notification 2"))
+                  ]
+                  )
+        )
     );
+  }
+
+  void Notify(id) async {
+    String timezom = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+    /*await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: 1,
+          channelKey: 'key1',
+          displayOnForeground: true,
+          title: 'This is Notification title',
+          body: 'This is Body of Noti',
+          bigPicture:
+              'https://protocoderspoint.com/wp-content/uploads/2021/05/Monitize-flutter-app-with-google-admob-min-741x486.png',
+          notificationLayout: NotificationLayout.BigPicture),
+
+      schedule:
+          NotificationInterval(interval: 100, timeZone: timezom, repeats: true),
+    );*/
+    switch (id) {
+      case 1:
+        NotificationController.createNewNotification();
+        NotificationController.scheduleNewNotification();
+        NotificationController.displayNotificationRationale();
+        //NotificationController.executeLongTaskInBackground();
+      break;
+      case 2: NotificationController.createNewNotification();
+      break;
+    }
+    //NotificationController.createNewNotification();
+    //NotificationController.displayNotificationRationale();
+    // NotificationController.scheduleNewNotification();
+    NotificationController.initializeLocalNotifications();
   }
 }
