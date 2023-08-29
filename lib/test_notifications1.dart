@@ -1,72 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/model/notif_message.dart';
+import 'package:mqtt_test/user_settings.dart';
+import 'package:mqtt_test/api/api_service.dart';
 
-import 'notification_controller.dart';
+import 'drawer.dart';
+import 'model/alarm.dart';
 
-///  *********************************************
-///     HOME PAGE
-///  *********************************************
-///
-class TestNotifications1 extends StatefulWidget {
-  const TestNotifications1({key, required this.title});
-  final String title;
+class TestNotifications1 extends StatelessWidget {
+  const TestNotifications1({Key? key}) : super(key: key);
 
-  @override
-  State<TestNotifications1> createState() => _TestNotifications1State();
-}
 
-class _TestNotifications1State extends State<TestNotifications1> {
-  @override
+  void showNotificationDetail(index) {
+    // Todo: open detail
+  }
+
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'Push the buttons below to create new notifications',
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(width: 20),
-            FloatingActionButton(
-              heroTag: '1',
-              onPressed: () => NotificationController.createNewNotification(),
-              tooltip: 'Create New notification',
-              child: const Icon(Icons.outgoing_mail),
-            ),
-            const SizedBox(width: 10),
-            FloatingActionButton(
-              heroTag: '2',
-              onPressed: () => NotificationController.scheduleNewNotification(),
-              tooltip: 'Schedule New notification',
-              child: const Icon(Icons.access_time_outlined),
-            ),
-            const SizedBox(width: 10),
-            FloatingActionButton(
-              heroTag: '3',
-              onPressed: () => NotificationController.resetBadgeCounter(),
-              tooltip: 'Reset badge counter',
-              child: const Icon(Icons.exposure_zero),
-            ),
-            const SizedBox(width: 10),
-            FloatingActionButton(
-              heroTag: '4',
-              onPressed: () => NotificationController.cancelNotifications(),
-              tooltip: 'Cancel all notifications',
-              child: const Icon(Icons.delete_forever),
-            ),
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    return FutureBuilder<List<NotifMessage>>(
+      future: ApiService.getNotifMess(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text("Scheduled Notifications"),
+              ),
+              drawer: NavDrawer(),
+              body: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                        title: Text(snapshot.data![index].title),
+                        leading: FlutterLogo(),
+                        subtitle: Row(
+                          children: <Widget>[
+                            Text(snapshot.data![index].description!),
+                            Text("  -  "),
+                            Text(
+                              snapshot.data![index].on as String,
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                          ],
+                        ),
+
+                        //Text(snapshot.data![index].date!),
+
+                        onTap: () {
+                          showAlarmDetail(index);
+                        });
+                  }));
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        // By default show a loading spinner.
+        return const CircularProgressIndicator();
+      },
     );
   }
+
+  void showAlarmDetail(int index) {}
 }

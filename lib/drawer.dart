@@ -75,7 +75,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TestNotifications1(title: '',))),
+                        builder: (context) => TestNotifications1())),
                   )
                   ,
                   ListTile(

@@ -69,10 +69,15 @@ class NotificationPage extends StatelessWidget {
       case 1:
         NotificationController.createNewNotification();
         NotificationController.scheduleNewNotification();
-        NotificationController.displayNotificationRationale();
+
         //NotificationController.executeLongTaskInBackground();
       break;
       case 2: NotificationController.createNewNotification();
+       //NotificationController.displayNotificationRationale();
+       NotificationController.createNewNotification();
+      NotificationController.createNewNotification();
+      NotificationController.createNewNotification();
+      NotificationController.createNewNotification();
       break;
     }
     //NotificationController.createNewNotification();

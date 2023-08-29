@@ -88,7 +88,7 @@ Widget build(BuildContext context) {
           '/user_settings': (context) => UserSettings(),
           '/history': (context) => AlarmHistory(),
           '/current_alarms': (context) => MQTTView(),
-          '/test_notifications1': (context) => TestNotifications1(title: "test"),
+          '/test_notifications1': (context) => TestNotifications1(),
           '/test_notifications': (context) => TestNotifications(),
 
         },
