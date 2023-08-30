@@ -1,5 +1,3 @@
-
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/alarm_history.dart';
@@ -10,7 +8,6 @@ import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 import 'first_screen.dart';
 import 'login_form.dart';
 import 'mqtt/MQTTManager.dart';
@@ -20,9 +17,6 @@ import 'notification_page.dart';
 //void main() => runApp(MyApp());
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized ();
-  //SharedPreferences sharedPref = await SharedPreferences.getInstance();
-  //await NotificationController.initializeLocalNotifications();
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
       null,
@@ -62,7 +56,7 @@ class MyApp extends StatelessWidget {
   MyApp();
 
 
-  late SharedPreferences prefs = initiateSharedPreferences() as SharedPreferences;
+  late SharedPreferences prefs;
   Future<void> initiateSharedPreferences()
   async {
     prefs = await SharedPreferences.getInstance();
@@ -94,4 +88,5 @@ Widget build(BuildContext context) {
         home: FirstScreen(this.prefs)
     );
   }
-}
+
+  }

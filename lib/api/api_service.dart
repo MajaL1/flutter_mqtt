@@ -4,7 +4,7 @@ import 'package:mqtt_test/model/notif_message.dart';
 import 'dart:async';
 import 'dart:convert';
 import '../model/alarm.dart';
-import '../model/notif_message.dart';
+
 //import 'package:mqtt_test/assets/alarms.json' show rootBundle;
 
 class ApiService {

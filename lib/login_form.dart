@@ -32,6 +32,8 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   Future<void> login() async {
    // this.sharedPreferences.setString("email", "useremail@gmail.com");
+
+    //sharedPreferences.setString("email", "useremail@gmail.com");
     var username = emailController.text;
     var password = passwordController.text;
 
@@ -40,7 +42,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
     // check email and password
     if (formkey.currentState!.validate()) {
-      print("preferences $sharedPreferences");
+      print("preferences ${sharedPreferences.toString()}");
 
       Navigator.push(
           context,
