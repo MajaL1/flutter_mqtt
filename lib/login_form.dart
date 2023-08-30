@@ -5,6 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
+  var sharedPreferences;
+
+  LoginForm(sharedPreferences);
+
   @override
   _LoginFormValidationState createState() => _LoginFormValidationState();
 }
@@ -16,6 +20,8 @@ class _LoginFormValidationState extends State<LoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  var sharedPreferences;
+
   getLoggedInState() async {
     /*await Helper.getUserLoggedInSharedPreference().then((value) {
       setState(() {
@@ -25,8 +31,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
   Future<void> login() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString("email", "useremail@gmail.com");
+   // this.sharedPreferences.setString("email", "useremail@gmail.com");
     var username = emailController.text;
     var password = passwordController.text;
 
@@ -35,13 +40,15 @@ class _LoginFormValidationState extends State<LoginForm> {
 
     // check email and password
     if (formkey.currentState!.validate()) {
+      print("preferences $sharedPreferences");
+
       Navigator.push(
           context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
-          MaterialPageRoute(builder: (_) => MQTTView()));
+          MaterialPageRoute(builder: (_) => MQTTView(sharedPreferences,)));
       print("Validated");
     } else {
-      LoginForm();
+      LoginForm(sharedPreferences,);
       print("Not Validated");
     }
   }

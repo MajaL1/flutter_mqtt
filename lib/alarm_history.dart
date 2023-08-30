@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/api/api_service.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'drawer.dart';
 import 'model/alarm.dart';
 
 class AlarmHistory extends StatelessWidget {
-  const AlarmHistory({Key? key}) : super(key: key);
+  var sharedPreferences;
+
+  AlarmHistory(sharedPreferences);
+ // late SharedPreferences sharedPreferences = sharedPreferences;
+
 
 
   void showAlarmDetail(index) {
@@ -22,7 +26,7 @@ class AlarmHistory extends StatelessWidget {
               appBar: AppBar(
                 title: const Text("Alarms log"),
               ),
-              drawer: NavDrawer(),
+              drawer: NavDrawer(sharedPreferences),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {

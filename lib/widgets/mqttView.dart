@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../drawer.dart';
 
 class MQTTView extends StatefulWidget {
+
+  var sharedPreferences;
+
+  MQTTView(sharedPrefs);
+
   @override
   State<StatefulWidget> createState() {
-    return _MQTTViewState();
+    return _MQTTViewState(sharedPreferences);
   }
 }
 
@@ -19,6 +25,10 @@ class _MQTTViewState extends State<MQTTView> {
   final TextEditingController _topicTextController = TextEditingController();
   late MQTTAppState currentAppState;
   late MQTTManager manager;
+
+  var sharedPreferences;
+
+  _MQTTViewState(sharedPreferences);
 
   @override
   void initState() {
@@ -55,7 +65,7 @@ class _MQTTViewState extends State<MQTTView> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
-        child: MQTTView(),
+        child: MQTTView(sharedPreferences),
         // we use `builder` to obtain a new `BuildContext` that has access to the provider
         builder: (context, child) {
           // No longer throws
@@ -65,7 +75,7 @@ class _MQTTViewState extends State<MQTTView> {
           currentAppState = appState;
           final Scaffold scaffold = Scaffold(
             body: _buildColumn(),
-            drawer: NavDrawer(),
+            drawer: NavDrawer(sharedPreferences,),
             appBar: AppBar(
               title: Text("Alarms"),
             ),

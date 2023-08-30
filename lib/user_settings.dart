@@ -43,7 +43,7 @@ class _UserSettingsState extends State<UserSettings> {
       appBar: AppBar(
         title: const Text("Settings"),
       ),
-      drawer: NavDrawer(),
+      //drawer: NavDrawer(null),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(12),

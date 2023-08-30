@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/notification_page.dart';
 import 'package:mqtt_test/test_notifications.dart';
@@ -6,10 +7,15 @@ import 'package:mqtt_test/test_notifications1.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/alarm_history.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'notification_controller.dart';
 
 class NavDrawer extends StatelessWidget {
+  var sharedPreferences;
+
+  NavDrawer(sharedPrefs);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,7 +81,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TestNotifications1())),
+                        builder: (context) => TestNotifications1(sharedPreferences))),
                   )
                   ,
                   ListTile(
@@ -114,7 +120,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MQTTView())),
+                        MaterialPageRoute(builder: (context) => MQTTView(sharedPreferences))),
                   ),
                   Divider(height: 10),
                   ListTile(
@@ -133,7 +139,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => AlarmHistory())),
+                        MaterialPageRoute(builder: (context) => AlarmHistory( sharedPreferences ))),
                   ),
                   Divider(height: 10),
                   ListTile(

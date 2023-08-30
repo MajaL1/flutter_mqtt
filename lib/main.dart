@@ -1,3 +1,5 @@
+
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/alarm_history.dart';
@@ -19,7 +21,7 @@ import 'notification_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized ();
-  SharedPreferences sharedPref = await SharedPreferences.getInstance();
+  //SharedPreferences sharedPref = await SharedPreferences.getInstance();
   //await NotificationController.initializeLocalNotifications();
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
@@ -37,16 +39,16 @@ Future<void> main() async {
         )
       ]
   );
-  runApp(MyApp(sharedPref));
+  runApp(MyApp());
 
   //runApp(MyApp());
 }
 
-final List<Widget> screens = [
+/*final List<Widget> screens = [
   LoginForm(),
-  const AlarmHistory(),
+  const AlarmHistory(sharedPreferences: JsFunction.),
   const UserSettings()
-];
+]; */
 
 void test() {
   int a = 0;
@@ -55,28 +57,22 @@ void test() {
 
 class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  final SharedPreferences sharedPref;
-
-  MyApp(this.sharedPref);
 
 
+  MyApp();
 
+
+  late SharedPreferences prefs = initiateSharedPreferences() as SharedPreferences;
+  Future<void> initiateSharedPreferences()
+  async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
 
 @override
 Widget build(BuildContext context) {
-
-    /*final MQTTManager manager = MQTTManager(host:'test.mosquitto.org',topic:'flutter/amp/cool',identifier:'ios');
-    manager.initializeMQTTClient(); */
-
-    /* return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<MQTTAppState>(
-              create: (context) => Provider.of<MQTTAppState>(context)),
-        ], */
-
   NotificationController.initializeLocalNotifications();
-
+ // SharedPreferences sharedPref =  SharedPreferences.getInstance();
   return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -84,18 +80,18 @@ Widget build(BuildContext context) {
         ),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
-          '/login': (context) => LoginForm(),
+          '/login': (context) => LoginForm(this.prefs),
           '/user_settings': (context) => UserSettings(),
-          '/history': (context) => AlarmHistory(),
-          '/current_alarms': (context) => MQTTView(),
-          '/test_notifications1': (context) => TestNotifications1(),
+          '/history': (context) => AlarmHistory(this.prefs),
+          '/current_alarms': (context) => MQTTView(this.prefs),
+          '/test_notifications1': (context) => TestNotifications1(this.prefs,),
           '/test_notifications': (context) => TestNotifications(),
 
         },
         navigatorKey: navigatorKey,
         // home: LoginForm(), //
 
-        home: FirstScreen(sharedPref)
+        home: FirstScreen(this.prefs)
     );
   }
 }

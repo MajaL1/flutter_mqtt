@@ -2,31 +2,36 @@ import 'dart:convert';
 
 class NotifMessage {
   int? id;
+  String ?channel;
   String title;
   String ?description;
   bool ? on;
 
   NotifMessage(
-      {this.id = 0,
-      required this.title,
-      required this.description,
-      required this.on}) {}
+      {
+        this.id = 0,
+        required this.channel,
+        required this.title,
+        required this.description,
+        required this.on}) {}
 
   // Class Function
   showNotifInfo() {
-    print("Nofification message : ${id}, ${title}, ${description}, ${on}");
+    print("Nofification message : ${id}, ${channel}, ${title}, ${description}, ${on}");
   }
 
   factory NotifMessage.fromJson(Map<String, dynamic> map) {
     return NotifMessage(
         id: map["id"],
+        channel: map["channel"],
         title: map["title"],
         description: map["description"],
         on: map["on"]);
   }
 
   Map<String, dynamic> toJson() {
-    return {"id": id, "title": title, "description": description, "on": on};
+    return {"id": id, "channel": channel
+      ,"title": title, "description": description, "on": on};
   }
 
   List<NotifMessage> notifMessageFromJson(String jsonData) {

@@ -33,7 +33,7 @@ class FirstScreen extends StatelessWidget {
   print("token: "+sharedPref.get("token").toString());
    return Scaffold(
 
-      body: this.sharedPref.getString("token") == null ? LoginForm() : MQTTView(),
+      body: this.sharedPref.getString("token") == null ? LoginForm(sharedPref,) : MQTTView(sharedPref),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Login'),
@@ -51,7 +51,7 @@ class FirstScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AlarmHistory())
+                  MaterialPageRoute(builder: (context) => AlarmHistory(sharedPref,))
                 //Navigator.pushNamed(context, "/");
               );
             },
@@ -75,7 +75,7 @@ class FirstScreen extends StatelessWidget {
               print("Clicked");
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MQTTView())
+                  MaterialPageRoute(builder: (context) => MQTTView(sharedPref))
               );
             },
             child: const Text('Alarms'),

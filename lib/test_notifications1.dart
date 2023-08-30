@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_test/model/notif_message.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/api/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'drawer.dart';
 import 'model/alarm.dart';
 
 class TestNotifications1 extends StatelessWidget {
-  const TestNotifications1({Key? key}) : super(key: key);
+  const TestNotifications1(sharedPreferences);
+ // SharedPreferences sharedPref =  SharedPreferences.getInstance() as SharedPreferences;
+
 
 
   void showNotificationDetail(index) {
+    // Todo: open detail
+  }
+
+  void scheduleNotifications() {
     // Todo: open detail
   }
 
@@ -23,7 +30,7 @@ class TestNotifications1 extends StatelessWidget {
               appBar: AppBar(
                 title: const Text("Scheduled Notifications"),
               ),
-              drawer: NavDrawer(),
+              //drawer: NavDrawer(sharedPrefs: ),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -35,7 +42,7 @@ class TestNotifications1 extends StatelessWidget {
                             Text(snapshot.data![index].description!),
                             Text("  -  "),
                             Text(
-                              snapshot.data![index].on as String,
+                              snapshot.data![index].on.toString(),
                               style: TextStyle(fontWeight: FontWeight.w800),
                             ),
                           ],
