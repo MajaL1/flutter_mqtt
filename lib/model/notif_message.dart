@@ -5,7 +5,7 @@ class NotifMessage {
   String ?channel;
   String title;
   String ?description;
-  bool ? on;
+  bool on;
 
   NotifMessage(
       {

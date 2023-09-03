@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
-  var sharedPreferences;
+  //var sharedPreferences;
 
-  LoginForm(sharedPreferences);
+  LoginForm();
 
   @override
   _LoginFormValidationState createState() => _LoginFormValidationState();
@@ -47,10 +47,10 @@ class _LoginFormValidationState extends State<LoginForm> {
       Navigator.push(
           context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
-          MaterialPageRoute(builder: (_) => MQTTView(sharedPreferences,)));
+          MaterialPageRoute(builder: (_) => MQTTView()));
       print("Validated");
     } else {
-      LoginForm(sharedPreferences,);
+      LoginForm();
       print("Not Validated");
     }
   }

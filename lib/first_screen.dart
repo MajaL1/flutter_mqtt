@@ -1,24 +1,27 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/app_preference_util.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
-import 'package:mqtt_test/widgets/shared_prefs_util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:mqtt_test/widgets/constants.dart';
 import 'login_form.dart';
 import 'alarm_history.dart';
 
 
 class FirstScreen extends StatelessWidget {
 
-  final SharedPreferences sharedPref;
+  //final  sharedPref;
 
-  FirstScreen(this.sharedPref);
+  //FirstScreen(this.sharedPref);
+  FirstScreen();
 
   Future<void> logout() async {
     // ToDo: Call service
   }
+  var username = SharedPrefs().username;
+  var token = SharedPrefs().token;
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,31 +30,30 @@ class FirstScreen extends StatelessWidget {
       foregroundColor: Theme.of(context).colorScheme.onPrimary,
     );
 
- // SharedPrefUtils sharedPrefUtils = new SharedPrefUtils();
 
+  print("token: "+SharedPrefs().token+", "+SharedPrefs().token == null);
 
-  print("token: "+sharedPref.get("token").toString());
    return Scaffold(
 
-      body: this.sharedPref.getString("token") == null ? LoginForm(sharedPref,) : MQTTView(sharedPref),
+      body: SharedPrefs().token.isEmpty ? LoginForm() : MQTTView(),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Login'),
         leading: IconButton(
-          icon: (this.sharedPref.getString("token")
+          icon: (SharedPrefs().token
           != null) ? Icon(Icons.arrow_back) : Icon(
             Icons.notifications_none,
             color: Colors.transparent,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions:this.sharedPref.getString("token") != null ? <Widget>[
+        actions:SharedPrefs().token.isNotEmpty ? <Widget>[
           TextButton(
             style: style,
             onPressed: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AlarmHistory(sharedPref,))
+                  MaterialPageRoute(builder: (context) => AlarmHistory())
                 //Navigator.pushNamed(context, "/");
               );
             },
@@ -75,7 +77,7 @@ class FirstScreen extends StatelessWidget {
               print("Clicked");
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MQTTView(sharedPref))
+                  MaterialPageRoute(builder: (context) => MQTTView())
               );
             },
             child: const Text('Alarms'),

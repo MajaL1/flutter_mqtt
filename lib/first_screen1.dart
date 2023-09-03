@@ -29,8 +29,8 @@ class FirstScreen1 extends StatelessWidget {
     print("token1: " + sharedPref.get("token").toString());
     return Scaffold(
       body:
-          this.sharedPref.getString("token") == null ? LoginForm(sharedPref,) : MQTTView(sharedPref),
-      drawer: NavDrawer(sharedPref),
+          this.sharedPref.getString("token") == null ? LoginForm() : MQTTView(),
+      drawer: NavDrawer(),
       appBar: this.sharedPref.getString("token") != null ? AppBar(
         title: Text("Login"))
            : null

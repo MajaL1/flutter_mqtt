@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_test/notification_page.dart';
 import 'package:mqtt_test/test_notifications.dart';
 import 'package:mqtt_test/test_notifications1.dart';
+import 'package:mqtt_test/test_notifications_editable.dart';
 //import 'package:mqtt_test/test_notifications1.dart';
 import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/alarm_history.dart';
@@ -12,15 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'notification_controller.dart';
 
 class NavDrawer extends StatelessWidget {
-  var sharedPreferences;
+  //var sharedPreferences;
 
-  NavDrawer(sharedPrefs);
+ // NavDrawer(sharedPrefs);
+  NavDrawer();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.blue,
-      width: MediaQuery.of(context).size.width * 0.30,
+      width: MediaQuery.of(context).size.width * 0.50,
       child: Drawer(
           child: ConstrainedBox(
               //color: Colors.blue,
@@ -54,36 +56,19 @@ class NavDrawer extends StatelessWidget {
                       color: Colors.white,
                     ),
                     title: Text(
-                      'Test notifications',
+                      'Test notification1',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TestNotifications())),
+                        //builder: (context) => TestNotifications1())),
+                        builder: (context) => TestNotificationsEditable())),
+
                   )
                   ,
                   Divider(height: 10),
-                  ListTile(
-                    hoverColor: Colors.blue,
 
-                    tileColor: Colors.blue,
-                    dense: false,
-                    visualDensity: VisualDensity(vertical: -4),
-                    leading: const Icon(
-                      Icons.verified_user,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      'Test notifications 1',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TestNotifications1(sharedPreferences))),
-                  )
-                  ,
                   ListTile(
                     hoverColor: Colors.blue,
 
@@ -120,7 +105,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MQTTView(sharedPreferences))),
+                        MaterialPageRoute(builder: (context) => MQTTView())),
                   ),
                   Divider(height: 10),
                   ListTile(
@@ -139,7 +124,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => AlarmHistory( sharedPreferences ))),
+                        MaterialPageRoute(builder: (context) => AlarmHistory())),
                   ),
                   Divider(height: 10),
                   ListTile(

@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'main.dart';
+import 'main2.dart';
 
 class NotificationController {
   static ReceivedAction? initialAction;
@@ -152,16 +152,18 @@ class NotificationController {
     if (!isAllowed) return;
 
     await AwesomeNotifications().createNotification(
+       // schedule: NotificationAndroidCrontab.daily(referenceDateTime: referenceDateTime),
         content: NotificationContent(
             id: -1, // -1 is replaced by a random number
             channelKey: 'alerts',
-            title: 'Huston! The eagle has landed!',
+            title: 'TestNotification',
+            actionType: ActionType.KeepOnTop,
             body:
-            "A small step for a man, but a giant leap to Flutter's community!",
+            "This is body text",
             bigPicture: 'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
             largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
             //'asset://assets/images/balloons-in-sky.jpg',
-            notificationLayout: NotificationLayout.BigPicture,
+            notificationLayout: NotificationLayout.BigText,
             payload: {'notificationId': '1234567890'}),
         actionButtons: [
           NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
@@ -169,7 +171,7 @@ class NotificationController {
               key: 'REPLY',
               label: 'Reply Message',
               requireInputText: true,
-              actionType: ActionType.SilentAction
+              actionType: ActionType.DismissAction
           ),
           NotificationActionButton(
               key: 'DISMISS',

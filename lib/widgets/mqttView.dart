@@ -9,13 +9,16 @@ import '../drawer.dart';
 
 class MQTTView extends StatefulWidget {
 
-  var sharedPreferences;
+  //var sharedPreferences;
+  //MQTTView();
 
-  MQTTView(sharedPrefs);
+  //MQTTView(sharedPrefs);
 
   @override
   State<StatefulWidget> createState() {
-    return _MQTTViewState(sharedPreferences);
+//    return _MQTTViewState(sharedPreferences);
+    return _MQTTViewState();
+
   }
 }
 
@@ -26,9 +29,9 @@ class _MQTTViewState extends State<MQTTView> {
   late MQTTAppState currentAppState;
   late MQTTManager manager;
 
-  var sharedPreferences;
+  //var sharedPreferences;
 
-  _MQTTViewState(sharedPreferences);
+  _MQTTViewState();
 
   @override
   void initState() {
@@ -65,8 +68,10 @@ class _MQTTViewState extends State<MQTTView> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
-        child: MQTTView(sharedPreferences),
-        // we use `builder` to obtain a new `BuildContext` that has access to the provider
+        child: //MQTTView(sharedPreferences),
+        MQTTView(),
+
+    // we use `builder` to obtain a new `BuildContext` that has access to the provider
         builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
@@ -75,7 +80,7 @@ class _MQTTViewState extends State<MQTTView> {
           currentAppState = appState;
           final Scaffold scaffold = Scaffold(
             body: _buildColumn(),
-            drawer: NavDrawer(sharedPreferences,),
+            drawer: NavDrawer(),
             appBar: AppBar(
               title: Text("Alarms"),
             ),

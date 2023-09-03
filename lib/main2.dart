@@ -8,7 +8,6 @@ import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'app_preference_util.dart';
 import 'first_screen.dart';
 import 'login_form.dart';
 import 'mqtt/MQTTManager.dart';
@@ -19,11 +18,8 @@ import 'notification_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPrefs().init();
-  runApp(
-    MyApp(),
-  );
-  
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
   AwesomeNotifications().initialize(
       null,
       [
@@ -39,7 +35,7 @@ Future<void> main() async {
         )
       ]
   );
-  runApp(MyApp());
+  runApp(MyApp(prefs));
 
   //runApp(MyApp());
 }
@@ -55,43 +51,36 @@ void test() {
   print(a);
 }
 
-
-
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 
-  MyApp();
-
-  //get prefs => SharedPreferences.getInstance();
-
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-  class _MyAppState extends State<MyApp> {
-   var prefs =1;
-    @override
-    void initState() {
-      super.initState();
-    }
-   void sharedData() async {
-      SharedPreferences.getInstance().then((prefValue) =>
-          setState(() {
-             prefValue.setString("test", "test1");
-          })
-      );
-   }
 
 
 
-  @override
-  Widget build(BuildContext context) {
-    SharedPreferences.getInstance().then((prefValue) =>
-        print(this)
-    );
-    NotificationController.initializeLocalNotifications();
-    // SharedPreferences prefs =  getPrefs() ;
-    return MaterialApp(
+
+ /* Future<void> initiateSharedPreferences()
+  async {
+    prefs = await SharedPreferences.getInstance();
+  } */
+  MyApp(prefs);
+
+  get prefs =>  SharedPreferences.getInstance();
+
+
+  /* getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('--getPrefs ');
+    return prefs;
+  }*/
+
+@override
+Widget build(BuildContext context) {
+  //SharedPreferences prefs;
+
+  NotificationController.initializeLocalNotifications();
+ // SharedPreferences prefs =  getPrefs() ;
+  return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -103,18 +92,14 @@ class MyApp extends StatefulWidget {
           '/history': (context) => AlarmHistory(),
           '/current_alarms': (context) => MQTTView(),
           '/test_notifications1': (context) => TestNotifications1(),
-         // '/test_notifications': (context) => TestNotifications(),
+          '/test_notifications': (context) => TestNotifications(),
 
         },
-       // navigatorKey: super.navigatorKey,
+        navigatorKey: navigatorKey,
         // home: LoginForm(), //
 
         home: FirstScreen()
-
     );
   }
 
   }
-
-
-

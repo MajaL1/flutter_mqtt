@@ -7,20 +7,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'drawer.dart';
 import 'model/alarm.dart';
 
-class TestNotifications1 extends StatelessWidget {
-  const TestNotifications1();
- // SharedPreferences sharedPref =  SharedPreferences.getInstance() as SharedPreferences;
+class TestNotificationsEditable extends StatefulWidget {
+  const TestNotificationsEditable();
 
+  // SharedPreferences sharedPref =  SharedPreferences.getInstance() as SharedPreferences;
 
+  @override
+  _TestNotificationsEditableState createState() =>
+      _TestNotificationsEditableState();
+}
 
-  void showNotificationDetail(index) {
-    // Todo: open detail
-  }
-
-  void scheduleNotifications() {
-    // Todo: open detail
-  }
-
+class _TestNotificationsEditableState extends State<TestNotificationsEditable> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<NotifMessage>>(
       future: ApiService.getNotifMess(),
@@ -33,10 +30,16 @@ class TestNotifications1 extends StatelessWidget {
               //drawer: NavDrawer(sharedPrefs: ),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
+                  padding: EdgeInsets.only(top: 20),
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
+                        contentPadding: EdgeInsets.only(
+                            left: 10, right: 10, top: 20, bottom: 20),
                         title: Text(snapshot.data![index].title),
-                        leading: FlutterLogo(),
+                        leading: ImageIcon(
+                          AssetImage("lib/assets/bell.png"),
+                          color: Color(0xFF3A5A98),
+                        ),
                         subtitle: Row(
                           children: <Widget>[
                             Text(snapshot.data![index].description!),
@@ -44,6 +47,20 @@ class TestNotifications1 extends StatelessWidget {
                             Text(
                               snapshot.data![index].on.toString(),
                               style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                            Switch(
+                              activeColor: Colors.greenAccent,
+                              inactiveThumbColor: Colors.redAccent,
+                              value: snapshot.data![index].on ? true : false,
+                              onChanged: (bool value) {
+                                print(
+                                    "old value:: ${snapshot.data![index].on}");
+                                print("new value:: ${value}");
+                                setState(() {
+                                  snapshot.data![index].on = value;
+                                });
+                                changeAlarmEnabled(index, value);
+                              },
                             ),
                           ],
                         ),
@@ -63,5 +80,9 @@ class TestNotifications1 extends StatelessWidget {
     );
   }
 
-  void showAlarmDetail(int index) {}
+  void changeAlarmEnabled(int id, bool value) {
+    print("calling changeAlarmEnabled: ${id}, ${value}");
+  }
+
+  void showAlarmDetail(int id) {}
 }

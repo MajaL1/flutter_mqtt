@@ -1,7 +1,9 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mqtt_test/api/api_service.dart' as api;
+import 'package:mqtt_test/model/notif_message.dart';
 
+import 'model/notif_message.dart';
 import 'notification_controller.dart';
 
 ///  *********************************************
@@ -13,8 +15,16 @@ class NotificationPage extends StatelessWidget {
 
   //final ReceivedAction receivedAction;
 
+  Future<void> recieveNotifications() async {
+    List notifMessageList = await api.ApiService.getNotifMess() as List;
+
+    print('notifMessageList ${notifMessageList}');
+
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("notifications page"),
@@ -65,7 +75,11 @@ class NotificationPage extends StatelessWidget {
       schedule:
           NotificationInterval(interval: 100, timeZone: timezom, repeats: true),
     );*/
+
+
+
     switch (id) {
+      /**  schedule notifications in loop**/
       case 1:
         NotificationController.createNewNotification();
         NotificationController.scheduleNewNotification();
