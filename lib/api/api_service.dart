@@ -12,7 +12,7 @@ class ApiService {
   static Client client = Client();
 
   static Future<List<Alarm>> getAlarms() async {
-    var data = await rootBundle.loadString("lib/assets/alarms.json");
+    var data = await rootBundle.loadString("assets/alarms.json");
     final jsonResult = jsonDecode(data);
     print("jsonResult: $jsonResult");
 
@@ -35,7 +35,7 @@ class ApiService {
   }
 
   static Future<List<NotifMessage>> getNotifMess() async {
-    var data = await rootBundle.loadString("lib/assets/test_notifications_list.json");
+    var data = await rootBundle.loadString("assets/test_notifications_list.json");
     final jsonResult = jsonDecode(data);
     print("jsonResult: $jsonResult");
 

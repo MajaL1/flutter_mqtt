@@ -2,7 +2,8 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'main2.dart';
+import 'main.dart';
+
 
 class NotificationController {
   static ReceivedAction? initialAction;
@@ -59,7 +60,7 @@ class NotificationController {
       await executeLongTaskInBackground();
     }
     else {
-      MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      NotificationsApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
           '/notification-page',
               (route) =>
           (route.settings.name != '/notification-page') || route.isFirst,
@@ -73,7 +74,7 @@ class NotificationController {
   ///
   static Future<bool> displayNotificationRationale() async {
     bool userAuthorized = false;
-    BuildContext context = MyApp.navigatorKey.currentContext!;
+    BuildContext context = NotificationsApp.navigatorKey.currentContext!;
     await showDialog(
         context: context,
         builder: (BuildContext ctx) {
@@ -87,7 +88,7 @@ class NotificationController {
                   children: [
                     Expanded(
                       child: Image.asset(
-                        'lib/assets/animated-bell.gif',
+                        'assets/animated-bell.gif',
                         height: MediaQuery.of(context).size.height * 0.3,
                         fit: BoxFit.fitWidth,
                       ),

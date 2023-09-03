@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:mqtt_test/noti.dart';
-import 'drawer.dart';
+import 'package:mqtt_test/components/noti.dart';
+import '../components/drawer.dart';
 import 'login_form.dart';
 
 /** unused **/

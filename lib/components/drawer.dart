@@ -1,28 +1,21 @@
-
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/notification_page.dart';
-import 'package:mqtt_test/test_notifications.dart';
-import 'package:mqtt_test/test_notifications1.dart';
-import 'package:mqtt_test/test_notifications_editable.dart';
-//import 'package:mqtt_test/test_notifications1.dart';
-import 'package:mqtt_test/user_settings.dart';
-import 'package:mqtt_test/alarm_history.dart';
+import 'package:mqtt_test/pages/notification_page.dart';
+import 'package:mqtt_test/pages/test_notifications_editable.dart';
+import 'package:mqtt_test/pages/user_settings.dart';
+import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'notification_controller.dart';
 
 class NavDrawer extends StatelessWidget {
   //var sharedPreferences;
 
- // NavDrawer(sharedPrefs);
+  // NavDrawer(sharedPrefs);
   NavDrawer();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.blue,
-      width: MediaQuery.of(context).size.width * 0.50,
+      width: MediaQuery.of(context).size.width * 0.55,
       child: Drawer(
           child: ConstrainedBox(
               //color: Colors.blue,
@@ -34,6 +27,12 @@ class NavDrawer extends StatelessWidget {
                     hoverColor: Colors.blue,
                     tileColor: Colors.indigo,
                     dense: false,
+                    leading: const Icon(
+                      Icons.person_rounded,
+                      color: Colors.white,
+                    ),
+                    contentPadding: EdgeInsets.only(
+                        top: 25, bottom: 25, left: 20, right: 10),
                     visualDensity: VisualDensity(vertical: -4),
                     enabled: false,
                     title: Text(
@@ -42,21 +41,19 @@ class NavDrawer extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-
                   ),
                   Divider(height: 40),
                   ListTile(
                     hoverColor: Colors.blue,
-
                     tileColor: Colors.blue,
                     dense: false,
                     visualDensity: VisualDensity(vertical: -4),
                     leading: const Icon(
-                      Icons.verified_user,
+                      Icons.notifications_active_outlined,
                       color: Colors.white,
                     ),
                     title: Text(
-                      'Test notification1',
+                      'Scheduled alarms',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -64,30 +61,26 @@ class NavDrawer extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         //builder: (context) => TestNotifications1())),
                         builder: (context) => TestNotificationsEditable())),
-
-                  )
-                  ,
+                  ),
                   Divider(height: 10),
-
                   ListTile(
                     hoverColor: Colors.blue,
-
                     tileColor: Colors.blue,
                     dense: false,
                     visualDensity: VisualDensity(vertical: -4),
                     leading: const Icon(
-                      Icons.verified_user,
+                      Icons.notifications,
                       color: Colors.white,
                     ),
                     title: Text(
-                      'Notification page',
+                      'Notifications-test',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => NotificationPage())),   )
-                  ,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => NotificationPage())),
+                  ),
                   Divider(height: 10),
                   ListTile(
                     hoverColor: Colors.blue,
@@ -123,8 +116,8 @@ class NavDrawer extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => AlarmHistory())),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => AlarmHistory())),
                   ),
                   Divider(height: 10),
                   ListTile(
@@ -142,13 +135,13 @@ class NavDrawer extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => UserSettings())),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => UserSettings())),
                   ),
-                  Divider(height: 30),
+                  Divider(height: 40),
                   ListTile(
                     hoverColor: Colors.blue,
-                    tileColor: Colors.cyan,
+                    tileColor: Colors.grey,
                     dense: false,
                     visualDensity: VisualDensity(vertical: -4),
                     leading: Icon(
@@ -163,46 +156,6 @@ class NavDrawer extends StatelessWidget {
                     ),
                     onTap: () {},
                   ),
-                 /*
-                  Flexible(
-                    flex: 4,
-                    child: ListTile(
-                      hoverColor: Colors.blue,
-                      dense: true,
-                      visualDensity: VisualDensity(vertical: -4),
-                      leading: Icon(
-                        Icons.history,
-                        color: Colors.white,
-                      ),
-                      title: Text(
-                        'History',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AlarmHistory())),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 5,
-                    child: ListTile(
-                      hoverColor: Colors.blue,
-                      dense: true,
-                      visualDensity: VisualDensity(vertical: -4),
-                      leading: Icon(
-                        Icons.logout,
-                        color: Colors.white,
-                      ),
-                      title: Text(
-                        'Logout',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () {},
-                    ),
-                  )*/
                 ],
               ))),
     );

@@ -1,19 +1,17 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/alarm_history.dart';
-import 'package:mqtt_test/first_screen1.dart';
-import 'package:mqtt_test/test_notifications.dart';
-import 'package:mqtt_test/test_notifications1.dart';
-import 'package:mqtt_test/user_settings.dart';
+import 'package:mqtt_test/pages/alarm_history.dart';
+import 'package:mqtt_test/pages/test_notifications1.dart';
+import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'app_preference_util.dart';
-import 'first_screen.dart';
-import 'login_form.dart';
+import 'util/app_preference_util.dart';
+import 'pages/first_screen.dart';
+import 'pages/login_form.dart';
 import 'mqtt/MQTTManager.dart';
 import 'notification_controller.dart';
-import 'notification_page.dart';
+import 'pages/notification_page.dart';
 
 //void main() => runApp(MyApp());
 
@@ -21,7 +19,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
   runApp(
-    MyApp(),
+    NotificationsApp(),
   );
   
   AwesomeNotifications().initialize(
@@ -39,7 +37,7 @@ Future<void> main() async {
         )
       ]
   );
-  runApp(MyApp());
+  runApp(NotificationsApp());
 
   //runApp(MyApp());
 }
@@ -57,18 +55,18 @@ void test() {
 
 
 
-class MyApp extends StatefulWidget {
+class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 
-  MyApp();
+  NotificationsApp();
 
   //get prefs => SharedPreferences.getInstance();
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _NotificationsAppState createState() => _NotificationsAppState();
 }
-  class _MyAppState extends State<MyApp> {
+  class _NotificationsAppState extends State<NotificationsApp> {
    var prefs =1;
     @override
     void initState() {

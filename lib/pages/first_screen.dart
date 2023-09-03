@@ -1,8 +1,8 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/app_preference_util.dart';
-import 'package:mqtt_test/user_settings.dart';
+import 'package:mqtt_test/util/app_preference_util.dart';
+import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:mqtt_test/widgets/constants.dart';
 import 'login_form.dart';
@@ -34,7 +34,6 @@ class FirstScreen extends StatelessWidget {
   print("token: "+SharedPrefs().token+", "+SharedPrefs().token == null);
 
    return Scaffold(
-
       body: SharedPrefs().token.isEmpty ? LoginForm() : MQTTView(),
       appBar: AppBar(
         automaticallyImplyLeading: false,

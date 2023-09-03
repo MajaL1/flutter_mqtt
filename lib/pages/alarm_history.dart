@@ -1,48 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/model/notif_message.dart';
-import 'package:mqtt_test/user_settings.dart';
+import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../components/drawer.dart';
+import '../model/alarm.dart';
 
-import 'drawer.dart';
-import 'model/alarm.dart';
+class AlarmHistory extends StatelessWidget {
+  //var sharedPreferences;
 
-class TestNotifications1 extends StatelessWidget {
-  const TestNotifications1();
- // SharedPreferences sharedPref =  SharedPreferences.getInstance() as SharedPreferences;
-
+  AlarmHistory();
+ // late SharedPreferences sharedPreferences = sharedPreferences;
 
 
-  void showNotificationDetail(index) {
-    // Todo: open detail
-  }
 
-  void scheduleNotifications() {
+  void showAlarmDetail(index) {
     // Todo: open detail
   }
 
   Widget build(BuildContext context) {
-    return FutureBuilder<List<NotifMessage>>(
-      future: ApiService.getNotifMess(),
+    return FutureBuilder<List<Alarm>>(
+      future: ApiService.getAlarms(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text("Scheduled Notifications"),
+                title: const Text("Alarms log"),
               ),
-              //drawer: NavDrawer(sharedPrefs: ),
+              drawer: NavDrawer(),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                        title: Text(snapshot.data![index].title),
+                        title: Text(snapshot.data![index].name),
                         leading: FlutterLogo(),
                         subtitle: Row(
                           children: <Widget>[
-                            Text(snapshot.data![index].description!),
+                            Text(snapshot.data![index].date!),
                             Text("  -  "),
                             Text(
-                              snapshot.data![index].on.toString(),
+                              snapshot.data![index].description,
                               style: TextStyle(fontWeight: FontWeight.w800),
                             ),
                           ],
@@ -62,6 +58,4 @@ class TestNotifications1 extends StatelessWidget {
       },
     );
   }
-
-  void showAlarmDetail(int index) {}
 }

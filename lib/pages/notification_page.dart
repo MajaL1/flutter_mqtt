@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_test/api/api_service.dart' as api;
 import 'package:mqtt_test/model/notif_message.dart';
 
-import 'model/notif_message.dart';
-import 'notification_controller.dart';
+import '../model/notif_message.dart';
+import '../notification_controller.dart';
 
 ///  *********************************************
 ///     NOTIFICATION PAGE

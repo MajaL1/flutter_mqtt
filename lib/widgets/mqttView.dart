@@ -5,7 +5,7 @@ import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../drawer.dart';
+import '../components/drawer.dart';
 
 class MQTTView extends StatefulWidget {
 
