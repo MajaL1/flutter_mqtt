@@ -198,6 +198,7 @@ class NotificationController {
             largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
             //'asset://assets/images/balloons-in-sky.jpg',
             notificationLayout: NotificationLayout.BigPicture,
+            category: NotificationCategory.Reminder,
             payload: {
               'notificationId': '1234567890'
             }),

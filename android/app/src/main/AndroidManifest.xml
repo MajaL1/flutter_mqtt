@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
     <application
-        android:label="mqtt_test"
+        android:label="Test notifications"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

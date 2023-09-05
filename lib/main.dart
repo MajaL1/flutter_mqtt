@@ -9,6 +9,7 @@ import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/pages/test_notifications.dart';
 import 'package:mqtt_test/pages/test_notifications1.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
+import 'package:mqtt_test/util/notification_helper.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
@@ -28,7 +29,7 @@ Future<void> main() async {
     NotificationsApp(),
   );
 }
-
+// ToDo: zamenjaj klic za awsome service
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
 
@@ -69,7 +70,7 @@ Future<void> initializeService() async {
       isForegroundMode: true,
 
       notificationChannelId: 'my_foreground',
-      initialNotificationTitle: 'AWESOME SERVICE',
+      initialNotificationTitle: 'TEST NOTIFICATIONS',
       initialNotificationContent: 'Initializing',
       foregroundServiceNotificationId: 888,
     ),
@@ -139,29 +140,59 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  List<NotifMessage> notificationList = await ApiService.getNotifMess();
-  for (var i = 1; i <= notificationList.length - 1; i++) {
-    //Info: Index not 0 because Index 0 value should not be used
+  NotificationController.scheduleNewNotification();
 
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: 1,
-          channelKey: 'alerts1',
-          title: 'wait 5 seconds to show ${notificationList[i].title}',
-          body: 'now is 5 seconds later ${i}',
-          wakeUpScreen: true,
-          category: NotificationCategory.Alarm,
-        ),
-        schedule: NotificationInterval(
-            interval: 10,
-            preciseAlarm: true,
-            timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
-        )
-    );
+  /******** tole sem probala in prikaze vse razen prvega*******/
+
+  List<NotifMessage> notificationList = await ApiService.getNotifMess();
+  for (var i = 0; i < notificationList.length; i++) {
+    print("showing notification: ${notificationList[i].title}. ${i}");
+
+   await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+                id: notificationList[i].id!, // -1 is replaced by a random number
+                channelKey: 'alerts',
+                title: "channel: ${notificationList[i].channel}, ${notificationList[i].title}",
+                body:
+                    "${notificationList[i].description}, ${notificationList[i].on} ",
+                bigPicture: 'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
+                //'asset://assets/images/balloons-in-sky.jpg',
+                notificationLayout: NotificationLayout.BigPicture,
+                payload: {
+                  'notificationId': '1234567890'
+                }
+                ,category: NotificationCategory.Reminder
+                ),
+            actionButtons: [
+              NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
+              NotificationActionButton(
+                  key: 'DISMISS',
+                  label: 'Dismiss',
+                  actionType: ActionType.DismissAction,
+                  isDangerousOption: true)
+            ],
+            schedule: NotificationCalendar.fromDate(date: scheduleTime),
+            /*schedule: NotificationCalendar.fromDate(
+                date: DateTime.now().add(const Duration(seconds: 10)
+                )
+            ), */
+            //schedule: NotificationCalendar.fromDate(date: scheduleTime));
+          );
+      }
   }
 
+/******************************************/
 
-/*****************************************/
+ /* List<NotifMessage> notificationList = await ApiService.getNotifMess(); {
+    NotificationHelper.scheduledNotification(
+      hour: int.parse(_provider.getScheduleRecords[i].time.split(":")[0]),
+      minutes: int.parse(_provider.getScheduleRecords[i].time.split(":")[1]),
+      id: _provider.getScheduleRecords[i].id,
+      sound: 'sound0',
+    );
+  }*/
+
+/********* nekaj kode od prej ********************************/
   // bring to foreground
 /*  Timer.periodic(const Duration(seconds: 30), (timer) async {
     if (service is AndroidServiceInstance) {
@@ -230,15 +261,12 @@ void onStart(ServiceInstance service) async {
         schedule: NotificationCalendar.fromDate(
             date: DateTime.now().add(const Duration(seconds: 10))));
   }
-}
+
 
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-
   NotificationsApp();
-
-  //get prefs => SharedPreferences.getInstance();
 
   @override
   _NotificationsAppState createState() => _NotificationsAppState();

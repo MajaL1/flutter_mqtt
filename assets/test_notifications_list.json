@@ -1,10 +1,5 @@
 [
-  {
-    "id": 1,
-    "title": "Notifications 1",
-    "description": "description 1",
-    "on" : true
-  },
+
   {
     "id": 2,
     "title": "Notifications 2",
@@ -21,6 +16,20 @@
     "id": 4,
     "title": "Notifications 4",
     "description": "description 4",
+    "on" : true
+  }
+,
+  {
+    "id": 5,
+    "title": "Notifications 5",
+    "description": "description 5",
+    "on" : true
+  }
+  ,
+  {
+    "id": 6,
+    "title": "Notifications 6",
+    "description": "description 6",
     "on" : true
   }
 ]
