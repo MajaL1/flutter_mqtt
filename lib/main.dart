@@ -29,6 +29,7 @@ Future<void> main() async {
     NotificationsApp(),
   );
 }
+
 // ToDo: zamenjaj klic za awsome service
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
@@ -38,12 +39,12 @@ Future<void> initializeService() async {
     'my_foreground', // id
     'MY FOREGROUND SERVICE', // title
     description:
-    'This channel is used for important notifications.', // description
+        'This channel is used for important notifications.', // description
     importance: Importance.low, // importance must be at low or higher level
   );
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   if (Platform.isIOS || Platform.isAndroid) {
     await flutterLocalNotificationsPlugin.initialize(
@@ -54,10 +55,9 @@ Future<void> initializeService() async {
     );
   }
 
-
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   await service.configure(
@@ -67,7 +67,7 @@ Future<void> initializeService() async {
 
       // auto start service
       autoStart: true,
-      isForegroundMode: true,
+      isForegroundMode: false,
 
       notificationChannelId: 'my_foreground',
       initialNotificationTitle: 'TEST NOTIFICATIONS',
@@ -148,42 +148,43 @@ void onStart(ServiceInstance service) async {
   for (var i = 0; i < notificationList.length; i++) {
     print("showing notification: ${notificationList[i].title}. ${i}");
 
-   await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationList[i].id!, // -1 is replaced by a random number
-                channelKey: 'alerts',
-                title: "channel: ${notificationList[i].channel}, ${notificationList[i].title}",
-                body:
-                    "${notificationList[i].description}, ${notificationList[i].on} ",
-                bigPicture: 'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
-                //'asset://assets/images/balloons-in-sky.jpg',
-                notificationLayout: NotificationLayout.BigPicture,
-                payload: {
-                  'notificationId': '1234567890'
-                }
-                ,category: NotificationCategory.Reminder
-                ),
-            actionButtons: [
-              NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
-              NotificationActionButton(
-                  key: 'DISMISS',
-                  label: 'Dismiss',
-                  actionType: ActionType.DismissAction,
-                  isDangerousOption: true)
-            ],
-            schedule: NotificationCalendar.fromDate(date: scheduleTime),
-            /*schedule: NotificationCalendar.fromDate(
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: notificationList[i].id!,
+            // -1 is replaced by a random number
+            channelKey: 'alerts',
+            title:
+                "channel: ${notificationList[i].channel}, ${notificationList[i].title}",
+            body:
+                "${notificationList[i].description}, ${notificationList[i].on} ",
+            bigPicture:
+                'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
+            //'asset://assets/images/balloons-in-sky.jpg',
+            notificationLayout: NotificationLayout.BigPicture,
+            payload: {'notificationId': '1234567890'},
+            category: NotificationCategory.LocalSharing),
+        actionButtons: [
+          NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
+          NotificationActionButton(
+              key: 'DISMISS',
+              label: 'Dismiss',
+              actionType: ActionType.DismissAction,
+              isDangerousOption: true)
+        ],
+        //schedule: NotificationCalendar.fromDate(date: scheduleTime),
+        schedule: NotificationCalendar.fromDate(
                 date: DateTime.now().add(const Duration(seconds: 10)
                 )
-            ), */
-            //schedule: NotificationCalendar.fromDate(date: scheduleTime));
-          );
-      }
+            ));
+        //schedule: NotificationCalendar.fromDate(date: scheduleTime));
+        //schedule: NotificationCalendar(
+          //  hour: 12, minute: 50, second: 10, repeats: true, allowWhileIdle: true));
   }
+}
 
 /******************************************/
 
- /* List<NotifMessage> notificationList = await ApiService.getNotifMess(); {
+/* List<NotifMessage> notificationList = await ApiService.getNotifMess(); {
     NotificationHelper.scheduledNotification(
       hour: int.parse(_provider.getScheduleRecords[i].time.split(":")[0]),
       minutes: int.parse(_provider.getScheduleRecords[i].time.split(":")[1]),
@@ -193,7 +194,7 @@ void onStart(ServiceInstance service) async {
   }*/
 
 /********* nekaj kode od prej ********************************/
-  // bring to foreground
+// bring to foreground
 /*  Timer.periodic(const Duration(seconds: 30), (timer) async {
     if (service is AndroidServiceInstance) {
       // NotificationController.createNewNotification(),
@@ -230,38 +231,36 @@ void onStart(ServiceInstance service) async {
       },
     );
   }); */
-  //******************************************//
-
+//******************************************//
 
 // test schedulerja za notificatione
-  Future<void> scheduleNewNotification() async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: -1,
-            // -1 is replaced by a random number
-            channelKey: 'alerts',
-            title: "Test notificationa",
-            body:
-            "Test iz classa main.dart",
-            bigPicture: 'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
-            largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
-            //'asset://assets/images/balloons-in-sky.jpg',
-            notificationLayout: NotificationLayout.BigPicture,
-            payload: {
-              'notificationId': '1234567890'
-            }),
-        actionButtons: [
-          NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
-          NotificationActionButton(
-              key: 'DISMISS',
-              label: 'Dismiss',
-              actionType: ActionType.DismissAction,
-              isDangerousOption: true)
-        ],
-        schedule: NotificationCalendar.fromDate(
-            date: DateTime.now().add(const Duration(seconds: 10))));
-  }
-
+Future<void> scheduleNewNotification() async {
+  await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: -1,
+          // -1 is replaced by a random number
+          channelKey: 'alerts',
+          title: "Test notificationa",
+          body: "Test iz classa main.dart",
+          bigPicture:
+              'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
+          largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
+          //'asset://assets/images/balloons-in-sky.jpg',
+          notificationLayout: NotificationLayout.BigPicture,
+          payload: {
+            'notificationId': '1234567890'
+          }),
+      actionButtons: [
+        NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
+        NotificationActionButton(
+            key: 'DISMISS',
+            label: 'Dismiss',
+            actionType: ActionType.DismissAction,
+            isDangerousOption: true)
+      ],
+      schedule: NotificationCalendar.fromDate(
+          date: DateTime.now().add(const Duration(seconds: 10))));
+}
 
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -281,8 +280,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
   }
 
   void sharedData() async {
-    SharedPreferences.getInstance().then((prefValue) =>
-        setState(() {
+    SharedPreferences.getInstance().then((prefValue) => setState(() {
           prefValue.setString("test", "test1");
         }));
   }

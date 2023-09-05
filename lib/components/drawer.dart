@@ -89,25 +89,6 @@ class NavDrawer extends StatelessWidget {
                     dense: false,
                     visualDensity: VisualDensity(vertical: -4),
                     leading: Icon(
-                      Icons.alarm,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      'Alarms',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MQTTView())),
-                  ),
-                  Divider(height: 10),
-                  ListTile(
-                    hoverColor: Colors.blue,
-                    tileColor: Colors.blue,
-                    dense: false,
-                    visualDensity: VisualDensity(vertical: -4),
-                    leading: Icon(
                       Icons.history,
                       color: Colors.white,
                     ),
@@ -138,6 +119,26 @@ class NavDrawer extends StatelessWidget {
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => UserSettings())),
+                  ),
+                  Divider(height: 10),
+                  Divider(height: 10),
+                  ListTile(
+                    hoverColor: Colors.blue,
+                    tileColor: Colors.blue,
+                    dense: false,
+                    visualDensity: VisualDensity(vertical: -4),
+                    leading: Icon(
+                      Icons.alarm,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'Test MQTT',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => MQTTView())),
                   ),
                   Divider(height: 10),
                   ListTile(
