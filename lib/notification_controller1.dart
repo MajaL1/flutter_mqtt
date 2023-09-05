@@ -12,14 +12,14 @@ class NotificationController {
   ///     INITIALIZATIONS
   ///  *********************************************
   ///
-  static Future<void> initializeLocalNotifications(channelKey, channelName, channelDescription,) async {
+  static Future<void> initializeLocalNotifications() async {
     await AwesomeNotifications().initialize(
         null, //'resource://drawable/res_app_icon',//
         [
           NotificationChannel(
-              channelKey: channelKey,
-              channelName: channelName,
-              channelDescription: channelDescription,
+              channelKey: 'alerts',
+              channelName: 'Alerts',
+              channelDescription: 'Notification tests as alerts',
               playSound: true,
               onlyAlertOnce: true,
               groupAlertBehavior: GroupAlertBehavior.Children,
@@ -157,7 +157,7 @@ class NotificationController {
         content: NotificationContent(
             id: -1, // -1 is replaced by a random number
             channelKey: 'alerts',
-            title: 'TestNotification from controller',
+            title: 'TestNotification',
             actionType: ActionType.KeepOnTop,
             body:
             "This is body text",

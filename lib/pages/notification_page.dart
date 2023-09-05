@@ -78,7 +78,7 @@ class NotificationPage extends StatelessWidget {
 
 
 
-    switch (id) {
+   /* switch (id) {
       /**  schedule notifications in loop**/
       case 1:
         NotificationController.createNewNotification();
@@ -93,10 +93,14 @@ class NotificationPage extends StatelessWidget {
       NotificationController.createNewNotification();
       NotificationController.createNewNotification();
       break;
-    }
+    } */
     //NotificationController.createNewNotification();
     //NotificationController.displayNotificationRationale();
     // NotificationController.scheduleNewNotification();
-    NotificationController.initializeLocalNotifications();
+    String channelKey = "alerts1";
+    String channelName = "Alerts1";
+    String channelDescription = "Notification tests as alerts1";
+
+    NotificationController.initializeLocalNotifications(channelKey, channelName, channelDescription);
   }
 }

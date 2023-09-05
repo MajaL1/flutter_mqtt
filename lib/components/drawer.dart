@@ -3,6 +3,7 @@ import 'package:mqtt_test/pages/notification_page.dart';
 import 'package:mqtt_test/pages/test_notifications_editable.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
+import 'package:mqtt_test/test_backround_process.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -137,6 +138,25 @@ class NavDrawer extends StatelessWidget {
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => UserSettings())),
+                  ),
+                  Divider(height: 10),
+                  ListTile(
+                    hoverColor: Colors.blue,
+                    tileColor: Colors.blue,
+                    dense: false,
+                    visualDensity: VisualDensity(vertical: -4),
+                    leading: Icon(
+                      Icons.history,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'Test background process',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => TestBackgroundProcess())),
                   ),
                   Divider(height: 40),
                   ListTile(
