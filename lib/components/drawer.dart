@@ -37,7 +37,7 @@ class NavDrawer extends StatelessWidget {
                     visualDensity: VisualDensity(vertical: -4),
                     enabled: false,
                     title: Text(
-                      'Welcome User1',
+                      'Welcome, User1',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -62,25 +62,6 @@ class NavDrawer extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         //builder: (context) => TestNotifications1())),
                         builder: (context) => TestNotificationsEditable())),
-                  ),
-                  Divider(height: 10),
-                  ListTile(
-                    hoverColor: Colors.blue,
-                    tileColor: Colors.blue,
-                    dense: false,
-                    visualDensity: VisualDensity(vertical: -4),
-                    leading: const Icon(
-                      Icons.notifications,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      'Notifications-test',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => NotificationPage())),
                   ),
                   Divider(height: 10),
                   ListTile(
@@ -121,6 +102,25 @@ class NavDrawer extends StatelessWidget {
                         builder: (context) => UserSettings())),
                   ),
                   Divider(height: 10),
+                  Divider(height: 10),
+                  ListTile(
+                    hoverColor: Colors.blue,
+                    tileColor: Colors.blue,
+                    dense: false,
+                    visualDensity: VisualDensity(vertical: -4),
+                    leading: const Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      'Test - Notifications',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => NotificationPage())),
+                  ),
                   Divider(height: 10),
                   ListTile(
                     hoverColor: Colors.blue,

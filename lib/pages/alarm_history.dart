@@ -9,9 +9,7 @@ class AlarmHistory extends StatelessWidget {
   //var sharedPreferences;
 
   AlarmHistory();
- // late SharedPreferences sharedPreferences = sharedPreferences;
-
-
+  // late SharedPreferences sharedPreferences = sharedPreferences;
 
   void showAlarmDetail(index) {
     // Todo: open detail
@@ -30,25 +28,26 @@ class AlarmHistory extends StatelessWidget {
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                        title: Text(snapshot.data![index].name),
-                        leading: FlutterLogo(),
-                        subtitle: Row(
-                          children: <Widget>[
-                            Text(snapshot.data![index].date!),
-                            Text("  -  "),
-                            Text(
-                              snapshot.data![index].description,
-                              style: TextStyle(fontWeight: FontWeight.w800),
+                    return Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.blueGrey))),
+                        child: ListTile(
+                            title: Text(snapshot.data![index].name),
+                            leading: FlutterLogo(),
+                            subtitle: Row(
+                              children: <Widget>[
+                                Text(snapshot.data![index].date!),
+                                Text("  -  "),
+                                Text(
+                                  snapshot.data![index].description,
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-
-                        //Text(snapshot.data![index].date!),
-
-                        onTap: () {
-                          showAlarmDetail(index);
-                        });
+                            onTap: () {
+                              showAlarmDetail(index);
+                            }));
                   }));
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
