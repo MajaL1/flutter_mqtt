@@ -61,7 +61,6 @@ class FirstScreen extends StatelessWidget {
           TextButton(
             style: style,
             onPressed: () {
-              print("Clicked");
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => UserSettings())
@@ -73,7 +72,6 @@ class FirstScreen extends StatelessWidget {
           TextButton(
             style: style,
             onPressed: () {
-              print("Clicked");
               Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MQTTView())
@@ -89,7 +87,6 @@ class FirstScreen extends StatelessWidget {
             child: const Text('Logout'),
           ),
         ]: null
-        ,
       ),
      //appBar: ,
     );
