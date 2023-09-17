@@ -50,9 +50,11 @@ class MQTTManager {
   void connect() async {
     assert(_client != null);
     try {
-      print('EXAMPLE::Mosquitto start client connecting....');
+      String username= "test";
+      String password = "MWQxYjRkZWJlZjQ2MWViNQ=";
+      print('::Navis app client connecting....');
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
-      await _client!.connect();
+      await _client!.connect(username, password);
     } on Exception catch (e) {
       print('EXAMPLE::client exception - $e');
       disconnect();
@@ -98,6 +100,7 @@ class MQTTManager {
       final String pt =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message!);
       _currentState.setReceivedText(pt);
+      print("======= pt: ${pt}");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       print('');

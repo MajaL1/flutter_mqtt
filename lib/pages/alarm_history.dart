@@ -22,9 +22,8 @@ class AlarmHistory extends StatelessWidget {
         if (snapshot.hasData) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text("Alarms log"),
+                title: const Text("History"),
               ),
-              drawer: NavDrawer(),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {

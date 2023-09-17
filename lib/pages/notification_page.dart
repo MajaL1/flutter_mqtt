@@ -41,7 +41,7 @@ class NotificationPage extends StatelessWidget {
                             '/test_notifications',
                           );*/
                         },
-                        child: Text("Local Notification 1")),
+                        child: Text("Local Notification 1 test")),
                   Padding(padding: EdgeInsets.all(20)),
                   ElevatedButton(
                       onPressed: () {
@@ -61,6 +61,7 @@ class NotificationPage extends StatelessWidget {
 
   void Notify(id) async {
     String timezom = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+    NotificationController.createNewNotification();
     /*await AwesomeNotifications().createNotification(
       content: NotificationContent(
           id: 1,
@@ -74,7 +75,7 @@ class NotificationPage extends StatelessWidget {
 
       schedule:
           NotificationInterval(interval: 100, timeZone: timezom, repeats: true),
-    );*/
+    ); */
 
 
 

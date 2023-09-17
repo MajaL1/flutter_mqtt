@@ -14,7 +14,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormValidationState extends State<LoginForm> {
-
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -31,7 +30,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
   Future<void> login() async {
-   // this.sharedPreferences.setString("email", "useremail@gmail.com");
+    // this.sharedPreferences.setString("email", "useremail@gmail.com");
 
     //sharedPreferences.setString("email", "useremail@gmail.com");
     var username = emailController.text;
@@ -128,11 +127,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                       //validatePassword,        //Function to check validation
                     ),
                   ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-            ),
-              Container(
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 15.0, right: 15.0, top: 15, bottom: 0),
+                  ),
+                  Container(
                     height: 50,
                     width: 250,
                     decoration: BoxDecoration(
@@ -145,6 +144,21 @@ class _LoginFormValidationState extends State<LoginForm> {
                       child: Text(
                         'Login',
                         style: TextStyle(color: Colors.white, fontSize: 25),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 15.0, right: 15.0, top: 15, bottom: 0),
+                    child: Container(
+                      child: TextButton(
+                        onPressed: () {
+                          // login();
+                        },
+                        child: Text(
+                          'Forgot password?',
+                          style: TextStyle(color: Colors.indigoAccent, decoration: TextDecoration.underline, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),

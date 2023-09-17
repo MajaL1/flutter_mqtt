@@ -1,25 +1,24 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:ui';
-import 'package:awesome_notifications/awesome_notifications.dart';
+//import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
-import 'package:mqtt_test/pages/test_notifications.dart';
 import 'package:mqtt_test/pages/test_notifications1.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
-import 'package:mqtt_test/util/notification_helper.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'model/notif_message.dart';
 import 'util/app_preference_util.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'pages/first_screen.dart';
 import 'pages/login_form.dart';
 import 'notification_controller.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,11 +45,14 @@ Future<void> initializeService() async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+
   if (Platform.isIOS || Platform.isAndroid) {
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         iOS: DarwinInitializationSettings(),
-        android: AndroidInitializationSettings('ic_bg_service_small'),
+        android: AndroidInitializationSettings('launcher_notification'),
       ),
     );
   }
@@ -87,6 +89,19 @@ Future<void> initializeService() async {
   );
 
   service.startService();
+
+ /* await flutterLocalNotificationsPlugin.zonedSchedule(
+      12345,
+      "A Notification From My App",
+      "This notification is brought to you by Local Notifcations Package",
+      tz.TZDateTime.now(tz.local).add(const Duration(days: 3)),
+      const NotificationDetails(
+          android: AndroidNotificationDetails("1", "11",
+              )),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime);
+*/
 }
 
 // to ensure this is executed
@@ -140,7 +155,7 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  NotificationController.scheduleNewNotification();
+  //NotificationController.scheduleNewNotification();
 
   /******** tole sem probala in prikaze vse razen prvega*******/
 
@@ -148,7 +163,7 @@ void onStart(ServiceInstance service) async {
   for (var i = 0; i < notificationList.length; i++) {
     print("showing notification: ${notificationList[i].title}. ${i}");
 
-    await AwesomeNotifications().createNotification(
+    /* await AwesomeNotifications().createNotification(
         content: NotificationContent(
             id: notificationList[i].id!,
             // -1 is replaced by a random number
@@ -179,6 +194,9 @@ void onStart(ServiceInstance service) async {
         //schedule: NotificationCalendar.fromDate(date: scheduleTime));
         //schedule: NotificationCalendar(
           //  hour: 12, minute: 50, second: 10, repeats: true, allowWhileIdle: true));
+  } */
+
+    await NotificationController.createNewNotification();
   }
 }
 
@@ -234,7 +252,7 @@ void onStart(ServiceInstance service) async {
 //******************************************//
 
 // test schedulerja za notificatione
-Future<void> scheduleNewNotification() async {
+/*Future<void> scheduleNewNotification() async {
   await AwesomeNotifications().createNotification(
       content: NotificationContent(
           id: -1,
@@ -242,9 +260,9 @@ Future<void> scheduleNewNotification() async {
           channelKey: 'alerts',
           title: "Test notificationa",
           body: "Test iz classa main.dart",
-          bigPicture:
-              'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
-          largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
+          bigPicture: null,
+            //  'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
+          //largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
           //'asset://assets/images/balloons-in-sky.jpg',
           notificationLayout: NotificationLayout.BigPicture,
           payload: {
@@ -260,7 +278,7 @@ Future<void> scheduleNewNotification() async {
       ],
       schedule: NotificationCalendar.fromDate(
           date: DateTime.now().add(const Duration(seconds: 10))));
-}
+} */
 
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

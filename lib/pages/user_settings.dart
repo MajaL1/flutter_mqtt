@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../components/drawer.dart';
 
 void main() {
   runApp(
@@ -35,15 +36,11 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
-      // Some web specific code there
-    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
       ),
-      //drawer: NavDrawer(null),
-      body: SingleChildScrollView(
+        body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(12),
           alignment: Alignment.center,
@@ -135,8 +132,7 @@ class _UserSettingsState extends State<UserSettings> {
       ),
     );
 
-
-        /*  return (kIsWeb)//(Platform.isAndroid || kIsWeb)
+    /*  return (kIsWeb)//(Platform.isAndroid || kIsWeb)
         ? MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

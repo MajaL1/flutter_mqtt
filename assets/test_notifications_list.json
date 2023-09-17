@@ -15,13 +15,13 @@
     "id": 3,
     "title": "Channel 3",
     "description": "description 3",
-    "on" : true
+    "on" : false
   },
   {
     "id": 4,
     "title": "Channel 4",
     "description": "description 4",
-    "on" : true
+    "on" : false
   }
 ,
   {
