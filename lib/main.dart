@@ -17,8 +17,15 @@ import 'pages/first_screen.dart';
 import 'pages/login_form.dart';
 import 'notification_controller.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tzl;
+import 'package:timezone/standalone.dart' as tz;
+
+
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,8 +49,7 @@ Future<void> initializeService() async {
     importance: Importance.low, // importance must be at low or higher level
   );
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
       AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
@@ -52,7 +58,7 @@ Future<void> initializeService() async {
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         iOS: DarwinInitializationSettings(),
-        android: AndroidInitializationSettings('launcher_notification'),
+        android: AndroidInitializationSettings('ic_bg_service_small'),
       ),
     );
   }
@@ -87,21 +93,9 @@ Future<void> initializeService() async {
       onBackground: onIosBackground,
     ),
   );
-
+  tzl.initializeTimeZones();
   service.startService();
 
- /* await flutterLocalNotificationsPlugin.zonedSchedule(
-      12345,
-      "A Notification From My App",
-      "This notification is brought to you by Local Notifcations Package",
-      tz.TZDateTime.now(tz.local).add(const Duration(days: 3)),
-      const NotificationDetails(
-          android: AndroidNotificationDetails("1", "11",
-              )),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime);
-*/
 }
 
 // to ensure this is executed
@@ -155,48 +149,27 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  //NotificationController.scheduleNewNotification();
-
   /******** tole sem probala in prikaze vse razen prvega*******/
+  tzl.initializeTimeZones();
+  final slovenia = tz.getLocation('Europe/London');
+  final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
   List<NotifMessage> notificationList = await ApiService.getNotifMess();
   for (var i = 0; i < notificationList.length; i++) {
     print("showing notification: ${notificationList[i].title}. ${i}");
 
-    /* await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-            id: notificationList[i].id!,
-            // -1 is replaced by a random number
-            channelKey: 'alerts',
-            title:
-                "channel: ${notificationList[i].channel}, ${notificationList[i].title}",
-            body:
-                "${notificationList[i].description}, ${notificationList[i].on} ",
-            bigPicture:
-                'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
-            //'asset://assets/images/balloons-in-sky.jpg',
-            notificationLayout: NotificationLayout.BigPicture,
-            payload: {'notificationId': '1234567890'},
-            category: NotificationCategory.LocalSharing),
-        actionButtons: [
-          NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
-          NotificationActionButton(
-              key: 'DISMISS',
-              label: 'Dismiss',
-              actionType: ActionType.DismissAction,
-              isDangerousOption: true)
-        ],
-        //schedule: NotificationCalendar.fromDate(date: scheduleTime),
-        schedule: NotificationCalendar.fromDate(
-                date: DateTime.now().add(const Duration(seconds: 10)
-                )
-            ));
-        //schedule: NotificationCalendar.fromDate(date: scheduleTime));
-        //schedule: NotificationCalendar(
-          //  hour: 12, minute: 50, second: 10, repeats: true, allowWhileIdle: true));
-  } */
-
-    await NotificationController.createNewNotification();
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        i,
+        "A Notification From My App ",
+        "${notificationList[i].title}",
+        tz.TZDateTime.now(slovenia).add(Duration(seconds: 1)),
+        //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails("1", "11",
+            )),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime);
   }
 }
 

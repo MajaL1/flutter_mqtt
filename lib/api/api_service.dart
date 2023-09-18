@@ -1,9 +1,10 @@
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' show Client;
-import 'package:mqtt_test/model/notif_message.dart';
 import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' show Client, Response;
+import 'package:mqtt_test/model/notif_message.dart';
 import 'dart:convert';
 import '../model/alarm.dart';
+import '../model/user.dart';
 
 //import 'package:mqtt_test/assets/alarms.json' show rootBundle;
 
@@ -11,7 +12,7 @@ class ApiService {
   static final String BASE_URL = "https://reqbin.com/sample/post/json";
   static Client client = Client();
 
-  static Future<List<Alarm>> getAlarms() async {
+ static Future<List<Alarm>> getAlarms() async {
     var data = await rootBundle.loadString("assets/alarms.json");
     final jsonResult = jsonDecode(data);
     print("jsonResult: $jsonResult");
@@ -34,7 +35,7 @@ class ApiService {
     }
   }
 
-  Future void login(String email , password) async {
+/*Future void login(String email , password) async {
     
     try{
       Response response = await post(
@@ -57,9 +58,9 @@ class ApiService {
     }catch(e){
       print(e.toString());
     }
-  }
+  } */
 
-  Future<Map<String, dynamic>> register(String email, String password, String passwordConfirmation) async {
+/* Future<Map<String, dynamic>> register(String email, String password, String passwordConfirmation) async {
 
     final Map<String, dynamic> registrationData = {
       'user': {
@@ -70,10 +71,10 @@ class ApiService {
     };
 
 
-    _registeredInStatus = Status.Registering;
-    notifyListeners();
+   // _registeredInStatus = Status.Registering;
+   // notifyListeners();
 
-    return await post(AppUrl.register,
+    /*return await post(AppUrl.register,
         body: json.encode(registrationData),
         headers: {'Content-Type': 'application/json'})
         .then(onValue)
@@ -90,12 +91,12 @@ class ApiService {
 
       User authUser = User.fromJson(userData);
 
-      UserPreferences().saveUser(authUser);
+      /*UserPreferences().saveUser(authUser);
       result = {
         'status': true,
         'message': 'Successfully registered',
         'data': authUser
-      };
+      }; */
     } else {
 
       result = {
@@ -112,7 +113,9 @@ class ApiService {
     print("the error is $error.detail");
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
+*/
 
+ */
   static Future<List<NotifMessage>> getNotifMess() async {
     var data = await rootBundle.loadString("assets/test_notifications_list.json");
     final jsonResult = jsonDecode(data);
