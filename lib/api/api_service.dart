@@ -34,6 +34,31 @@ class ApiService {
     }
   }
 
+  Future void login(String email , password) async {
+    
+    try{
+      Response response = await post(
+        Uri.parse('https://reqres.in/api/login'),
+        body: {
+          'email' : 'eve.holt@reqres.in',
+          'password' : 'cityslicka'
+        }
+      );
+
+      if(response.statusCode == 200){
+        
+        var data = jsonDecode(response.body.toString());
+        print(data['token']);
+        print('Login successfully');
+
+      }else {
+        print('failed');
+      }
+    }catch(e){
+      print(e.toString());
+    }
+  }
+
   static Future<List<NotifMessage>> getNotifMess() async {
     var data = await rootBundle.loadString("assets/test_notifications_list.json");
     final jsonResult = jsonDecode(data);
