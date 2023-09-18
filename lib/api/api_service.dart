@@ -59,6 +59,60 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> register(String email, String password, String passwordConfirmation) async {
+
+    final Map<String, dynamic> registrationData = {
+      'user': {
+        'email': email,
+        'password': password,
+        'password_confirmation': passwordConfirmation
+      }
+    };
+
+
+    _registeredInStatus = Status.Registering;
+    notifyListeners();
+
+    return await post(AppUrl.register,
+        body: json.encode(registrationData),
+        headers: {'Content-Type': 'application/json'})
+        .then(onValue)
+        .catchError(onError);
+  }
+
+  static Future<FutureOr> onValue(Response response) async {
+    var result;
+    final Map<String, dynamic> responseData = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+
+      var userData = responseData['data'];
+
+      User authUser = User.fromJson(userData);
+
+      UserPreferences().saveUser(authUser);
+      result = {
+        'status': true,
+        'message': 'Successfully registered',
+        'data': authUser
+      };
+    } else {
+
+      result = {
+        'status': false,
+        'message': 'Registration failed',
+        'data': responseData
+      };
+    }
+
+    return result;
+  }
+
+  static onError(error) {
+    print("the error is $error.detail");
+    return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
+  }
+
   static Future<List<NotifMessage>> getNotifMess() async {
     var data = await rootBundle.loadString("assets/test_notifications_list.json");
     final jsonResult = jsonDecode(data);
