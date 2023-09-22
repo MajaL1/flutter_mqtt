@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:mqtt_test/api/api_service.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/user.dart';
 
 /**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
@@ -42,7 +45,8 @@ class _LoginFormValidationState extends State<LoginForm> {
     // check email and password
     if (formkey.currentState!.validate()) {
       print("preferences ${sharedPreferences.toString()}");
-
+      // todo: odkomentiraj login
+     // User? user = await ApiService.login(username, password);
       Navigator.push(
           context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
@@ -157,7 +161,10 @@ class _LoginFormValidationState extends State<LoginForm> {
                         },
                         child: Text(
                           'Forgot password?',
-                          style: TextStyle(color: Colors.indigoAccent, decoration: TextDecoration.underline, fontSize: 15),
+                          style: TextStyle(
+                              color: Colors.indigoAccent,
+                              decoration: TextDecoration.underline,
+                              fontSize: 15),
                         ),
                       ),
                     ),

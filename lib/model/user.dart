@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_test/model/user_topic.dart';
 
 class User {
   String username;
@@ -9,7 +10,7 @@ class User {
   String mqtt_pass;
   DateTime date_register;
   DateTime date_login;
-  List<Topic> topicList;
+  List<UserTopic> topicList = <UserTopic>[];
 
   User({required this.id, required this.username, required this.email, required this.mqtt_pass, required this.date_register,
       required this.date_login, required this.topicList});

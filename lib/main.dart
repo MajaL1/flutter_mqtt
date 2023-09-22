@@ -162,7 +162,7 @@ void onStart(ServiceInstance service) async {
         i,
         "A Notification From My App ",
         "${notificationList[i].title}",
-        tz.TZDateTime.now(slovenia).add(Duration(seconds: 1)),
+        tz.TZDateTime.now(slovenia).add(Duration(minutes: 5)),
         //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
         const NotificationDetails(
             android: AndroidNotificationDetails("1", "11",
@@ -173,16 +173,6 @@ void onStart(ServiceInstance service) async {
   }
 }
 
-/******************************************/
-
-/* List<NotifMessage> notificationList = await ApiService.getNotifMess(); {
-    NotificationHelper.scheduledNotification(
-      hour: int.parse(_provider.getScheduleRecords[i].time.split(":")[0]),
-      minutes: int.parse(_provider.getScheduleRecords[i].time.split(":")[1]),
-      id: _provider.getScheduleRecords[i].id,
-      sound: 'sound0',
-    );
-  }*/
 
 /********* nekaj kode od prej ********************************/
 // bring to foreground
@@ -224,34 +214,7 @@ void onStart(ServiceInstance service) async {
   }); */
 //******************************************//
 
-// test schedulerja za notificatione
-/*Future<void> scheduleNewNotification() async {
-  await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-          id: -1,
-          // -1 is replaced by a random number
-          channelKey: 'alerts',
-          title: "Test notificationa",
-          body: "Test iz classa main.dart",
-          bigPicture: null,
-            //  'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
-          //largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
-          //'asset://assets/images/balloons-in-sky.jpg',
-          notificationLayout: NotificationLayout.BigPicture,
-          payload: {
-            'notificationId': '1234567890'
-          }),
-      actionButtons: [
-        NotificationActionButton(key: 'REDIRECT', label: 'Redirect'),
-        NotificationActionButton(
-            key: 'DISMISS',
-            label: 'Dismiss',
-            actionType: ActionType.DismissAction,
-            isDangerousOption: true)
-      ],
-      schedule: NotificationCalendar.fromDate(
-          date: DateTime.now().add(const Duration(seconds: 10))));
-} */
+
 
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
