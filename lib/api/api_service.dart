@@ -22,6 +22,20 @@ class ApiService {
     return parsed.map<Alarm>((json) => Alarm.fromJson(json)).toList();
   }
 
+  static Future<User> getUserData() async {
+    var data = await rootBundle.loadString("assets/user.json");
+    final jsonResult = jsonDecode(data);
+    User.fromJson(jsonResult);
+    print("jsonResult: $jsonResult");
+    return jsonResult;
+  }
+
+
+
+/** static Future<UserTopic> getTopicData(user) async {
+    UserTopic topicList =
+    }*/
+
   Future<bool> createAlarms(Alarm data) async {
     final response = await client.post(
       "$BASE_URL/api/alarm" as Uri,

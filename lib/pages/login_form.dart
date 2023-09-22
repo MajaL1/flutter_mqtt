@@ -42,11 +42,16 @@ class _LoginFormValidationState extends State<LoginForm> {
     print("u, p " + username + ", " + password);
     print("u, p " + username + ", " + password);
 
+    User user = await ApiService.getUserData();
+
+
     // check email and password
     if (formkey.currentState!.validate()) {
       print("preferences ${sharedPreferences.toString()}");
       // todo: odkomentiraj login
      // User? user = await ApiService.login(username, password);
+
+     // todo: inicializiraj Mqtt service za settingse
       Navigator.push(
           context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
