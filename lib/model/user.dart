@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:js_util';
 
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 
 class User {
@@ -10,24 +12,34 @@ class User {
   String mqtt_pass;
   DateTime date_register;
   DateTime ? date_login;
-  List<UserTopic> topicList = <UserTopic>[];
+  UserTopic topic;
 
   User(
       {required this.id, required this.username, required this.email, required this.mqtt_pass, required this.date_register,
-        this.date_login, required this.topicList});
+        this.date_login, required this.topic});
 
   factory User.fromJson(Map<String, dynamic> map) {
-    Map<String, dynamic> topicsJson;
-    topicsJson = map['topics']; // as List<UserTopic>;
+    Map topicsJson;
+    topicsJson = map['topics'];// as List;
 
-     List<UserTopic> topic = topicsJson.map((tagJson) => UserTopic.fromJson(tagJson));
-
-  /*  for (final entry in topicsJson.entries) {
-      print("==== ${entry}, ${entry}");
-      UserTopic topic = UserTopic.fromJson(entry as Map<String, dynamic>);
-    } */
-
-
+     //List<UserTopic>? topic = topicsJson.map((i) => UserTopic.fromJson(i)).cast<UserTopic>().toList();
+     // topicList: UserTopic.fromJson(topicsJson["topics"]);
+    UserTopic userTopic = new UserTopic(id: "", topicList: []);
+     for (final key in topicsJson.keys) {
+      print("==== ${key}, ${topicsJson[key]}");
+      //topic = UserTopic.fromJson(key);
+     // Map <dynamic, dynamic>topicsMap =topicsJson[key];
+     // topicData = topicsJson[key].map((i) => TopicData.fromJson(i));
+      List topicData1 = topicsJson[key];//.map((i) => TopicData.fromJson(i));
+      print("==== topicData1 ${topicData1}");
+      List<TopicData> topicDataList = [];
+      for(var topic in topicData1){
+        print("==== topic['topic']:  ${topic['topic']}, topic['rw']: ${topic['rw']}");
+        TopicData topicData = TopicData(name: topic['topic'], rw: topic['rw']);
+        topicDataList.add(topicData);
+      }
+      userTopic = UserTopic(id: key, topicList: topicDataList);
+   }
 
     return User(
     id: map["id"],
@@ -36,12 +48,17 @@ class User {
     mqtt_pass: map["mqtt_pass"],
     date_register: DateTime.parse(map["date_register"]),
     date_login: map["date_login"] == null ? null : DateTime.tryParse(map["date_login"]),
-    topicList: map["topics"] != null ? map["topics"].map((i) => i.toJson()).toList
-    (
-    )
-    :
-    null
+    topic: userTopic//map["topics"] != null ? map["topics"].map((i) => i.toJson()).toList() : null);
     );
+  }
+
+  List<TopicData> getTopicDataList(topicData) {
+    List<TopicData> topicDataList = [];
+    for(var topic in topicData){
+      TopicData topicData = TopicData(name: topic.name, rw: topic.rw);
+      topicDataList.add(topicData);
+    }
+    return topicDataList;
   }
 
   Map<String, dynamic> toJson() {
@@ -51,7 +68,7 @@ class User {
       "mqtt_pass": mqtt_pass,
       "date_register": date_register,
       "date_login": date_login,
-      "topicList": topicList
+      "topic": topic
     };
   }
 

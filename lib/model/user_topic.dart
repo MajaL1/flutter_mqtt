@@ -1,31 +1,21 @@
 import 'dart:ffi';
 
-class UserTopic {
-  String name;
-  String rw;
+import 'package:mqtt_test/model/topic_data.dart';
 
-  UserTopic({required this.name, required this.rw});
+class UserTopic {
+  String id;
+  List<TopicData> topicList = <TopicData>[];
+
+  UserTopic({required this.id, required this.topicList});
 
   Map<String, dynamic> toJson() {
-    return {"name": name, "name": name, "rw": rw};
+    return {"id": id, "topicList": topicList};
   }
 
   factory UserTopic.fromJson(Map<String, dynamic> json) {
-         return UserTopic(
-        name: json['name'] as String,
-        rw : json['rw'] as String,
-      );
-    //}
+    return UserTopic(
+        id: json["id"],
+        topicList: json["topics"]
+    );
   }
-  /*List<UserTopic> fromJson(Map<String, dynamic> parsedJson) {
-    List<UserTopic> userTopicList = [];
-    for (String key in parsedJson.keys) {
-      print(key);
-      print(parsedJson[key]);
-
-      UserTopic userTopic = UserTopic(name: name, rw: rw);
-      userTopicList.add(userTopic);
-    }
-    return userTopicList;
-  } */
 }
