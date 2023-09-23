@@ -6,13 +6,12 @@ import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
-import '../model/user_topic.dart';
 
-/**  ToDo: implementiraj onLoginSuccess **/
+//**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
   //var sharedPreferences;
 
-  LoginForm();
+  const LoginForm({Key? key}) : super(key: key);
 
   @override
   _LoginFormValidationState createState() => _LoginFormValidationState();
@@ -38,60 +37,55 @@ class _LoginFormValidationState extends State<LoginForm> {
     var username = emailController.text;
     var password = passwordController.text;
 
-    print("u, p " + username + ", " + password);
+    debugPrint("u, p $username, $password");
 
     //check email and password
     if (formkey.currentState!.validate()) {
-      print("preferences ${sharedPreferences.toString()}");
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
       User user = await ApiService.getUserData();
 
-      if (user != null) {
         SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
         sharedPreferences.setString("username", user.username);
         sharedPreferences.setString("email", user.email ?? "");
+        debugPrint("preferences ${sharedPreferences.toString()}");
 
-        // todo: inicializiraj Mqtt service za settingse
 
-        if (user.topic != null) {
+      // todo: inicializiraj Mqtt service za settingse
 
           List <String> brokerAddressList = [];
           var topicForUser = user.topic.topicList;
-          print("user.topic.id : ${user.topic.id}");
+          debugPrint("user.topic.id : ${user.topic.id}");
           String deviceName = user.topic.id;
-          print("deviceName : ${deviceName}");
+          debugPrint("deviceName : $deviceName");
 
-          print("topicForUser : ${topicForUser}, list of ");
+          debugPrint("topicForUser : $topicForUser, list of ");
           for (var topic in topicForUser) {
             String topicName = topic.name;
-            print("==== name:  ${topic.name}");
-            print("==== rw:  ${topic.rw}");
-            if(topic != null){
-              brokerAddressList.add(deviceName+"/"+topicName);
-            }
+            debugPrint("==== name:  ${topic.name}");
+            debugPrint("==== rw:  ${topic.rw}");
+
+            brokerAddressList.add(deviceName+"/"+topicName);
           }
          connectToBroker(brokerAddressList);
-      }
-    }
 
     Navigator.push(
         context,
         /**MaterialPageRoute(builder: (_) => HomePage())); */
         MaterialPageRoute(builder: (_) => MQTTView()));
-    print("Validated");
+      debugPrint("Validated");
   }
 
   else {
-  LoginForm();
-  print("Not Validated");
+  const LoginForm();
+  debugPrint("Not Validated");
   }
 }
 
 void connectToBroker(List<String> brokerAddressList) {
     for(var brokerAddress in brokerAddressList) {
-      print("brokerAddress: ${brokerAddress}");
+      debugPrint("brokerAddress: $brokerAddress");
      /* MQTTManager manager = MQTTManager(
           host: brokerAddress,
           topic: brokerAddress,
@@ -122,7 +116,7 @@ Widget build(BuildContext context) {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text("Login Page"),
+          title: const Text("Login Page"),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -140,9 +134,9 @@ Widget build(BuildContext context) {
                       ),
                     )),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: TextFormField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Email',
                         hintText: 'Enter valid email id as abc@gmail.com'),
@@ -160,7 +154,7 @@ Widget build(BuildContext context) {
                     obscureText: true,
                     enableSuggestions: false,
                     autocorrect: false,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         hintText: 'Enter secure password'),
@@ -176,8 +170,8 @@ Widget build(BuildContext context) {
                     //validatePassword,        //Function to check validation
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
+                const Padding(
+                  padding: EdgeInsets.only(
                       left: 15.0, right: 15.0, top: 15, bottom: 0),
                 ),
                 Container(
@@ -190,7 +184,7 @@ Widget build(BuildContext context) {
                     onPressed: () {
                       login();
                     },
-                    child: Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
@@ -204,7 +198,7 @@ Widget build(BuildContext context) {
                       onPressed: () {
                         // login();
                       },
-                      child: Text(
+                      child: const Text(
                         'Forgot password?',
                         style: TextStyle(
                             color: Colors.indigoAccent,
