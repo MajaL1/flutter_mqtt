@@ -15,8 +15,7 @@ class ApiService {
   static Future<List<Alarm>> getAlarms() async {
     var data = await rootBundle.loadString("assets/alarms.json");
     final jsonResult = jsonDecode(data);
-    print("jsonResult: $jsonResult");
-
+    //print("jsonResult: $jsonResult");
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 
     return parsed.map<Alarm>((json) => Alarm.fromJson(json)).toList();
@@ -25,9 +24,9 @@ class ApiService {
   static Future<User> getUserData() async {
     var data = await rootBundle.loadString("assets/user.json");
     final jsonResult = jsonDecode(data);
-    User.fromJson(jsonResult);
-    print("jsonResult: $jsonResult");
-    return jsonResult;
+    User user = User.fromJson(jsonResult);
+    //print("jsonResult: $jsonResult");
+    return user;
   }
 
 

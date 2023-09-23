@@ -41,7 +41,7 @@ class MQTTManager {
         .withWillMessage('My Will message')
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
-    print('EXAMPLE::Mosquitto client connecting....');
+    print('EXAMPLE:: client connecting....');
     _client!.connectionMessage = connMess;
   }
 
