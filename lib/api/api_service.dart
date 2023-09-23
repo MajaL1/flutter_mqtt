@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' show Client, Response, post;
 import 'package:mqtt_test/model/notif_message.dart';
+import 'package:mqtt_test/model/constants.dart' as Const;
 import 'package:mqtt_test/model/user_topic.dart';
 import 'dart:convert';
 import '../model/alarm.dart';
@@ -9,7 +10,7 @@ import '../model/user.dart';
 //import 'package:mqtt_test/assets/alarms.json' show rootBundle;
 
 class ApiService {
-  static final String BASE_URL = "https://reqbin.com/sample/post/json";
+
   static Client client = Client();
 
   static Future<List<Alarm>> getAlarms() async {
@@ -36,8 +37,9 @@ class ApiService {
     }*/
 
   Future<bool> createAlarms(Alarm data) async {
+    String url = Const.BASE_URL;
     final response = await client.post(
-      "$BASE_URL/api/alarm" as Uri,
+      "${Const.url}/api/alarm" as Uri,
       headers: {"content-type": "application/json"},
       body: alarmToJson(data),
     );
@@ -159,7 +161,8 @@ class ApiService {
   }
 
   Future<bool> createNotifMessageFromJson(NotifMessage data) async {
-    final response = await client.post("$BASE_URL/api/alarm" as Uri,
+    String url = Const.BASE_URL;
+    final response = await client.post("${url}/api/alarm" as Uri,
         headers: {"content-type": "application/json"}, body: data.toJson()
         //NotifMessage().notifMessageToJson(data),
         );
