@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/api/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../components/drawer.dart';
 import '../model/alarm.dart';
 
 class AlarmHistory extends StatelessWidget {
   //var sharedPreferences;
 
-  AlarmHistory();
+  const AlarmHistory({Key? key}) : super(key: key);
   // late SharedPreferences sharedPreferences = sharedPreferences;
 
   void showAlarmDetail(index) {
     // Todo: open detail
   }
 
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarms(),
@@ -28,19 +26,19 @@ class AlarmHistory extends StatelessWidget {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
                         child: ListTile(
                             title: Text(snapshot.data![index].name),
-                            leading: FlutterLogo(),
+                            leading: const FlutterLogo(),
                             subtitle: Row(
                               children: <Widget>[
                                 Text(snapshot.data![index].date!),
-                                Text("  -  "),
+                                const Text("  -  "),
                                 Text(
                                   snapshot.data![index].description,
-                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                  style: const TextStyle(fontWeight: FontWeight.w800),
                                 ),
                               ],
                             ),

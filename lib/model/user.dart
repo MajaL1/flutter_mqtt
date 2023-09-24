@@ -23,7 +23,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> map) {
     Map topicsJson;
     topicsJson = map['topics']; // as List;
-    UserTopic userTopic = new UserTopic(id: "", topicList: []);
+    UserTopic userTopic = UserTopic(id: "", topicList: []);
     for (final key in topicsJson.keys) {
       //print("==== ${key}, ${topicsJson[key]}");
       List topicData1 = topicsJson[key];
@@ -31,7 +31,7 @@ class User {
       List<TopicData> topicDataList = [];
       for (var topic in topicData1) {
         //print(
-         //   "==== topic['topic']:  ${topic['topic']}, topic['rw']: ${topic['rw']}");
+        //   "==== topic['topic']:  ${topic['topic']}, topic['rw']: ${topic['rw']}");
         TopicData topicData = TopicData(name: topic['topic'], rw: topic['rw']);
         topicDataList.add(topicData);
       }
@@ -47,9 +47,7 @@ class User {
         date_login: map["date_login"] == null
             ? null
             : DateTime.tryParse(map["date_login"]),
-        topic:
-            userTopic
-        );
+        topic: userTopic);
   }
 
   List<TopicData> getTopicDataList(topicData) {

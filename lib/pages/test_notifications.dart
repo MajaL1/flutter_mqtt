@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,9 +15,10 @@ class TestNotifications extends StatefulWidget {
 }
 
 class _TestNotificationsState extends State<TestNotifications> {
+  @override
   void initState() {
     super.initState();
-    Noti.initialize(flutterLocalNotificationsPlugin);
+    NotificationTest.initialize(flutterLocalNotificationsPlugin);
   }
 
   TextStyle headingStyle = const TextStyle(
@@ -47,32 +46,23 @@ class _TestNotificationsState extends State<TestNotifications> {
         //backgroundColor: Colors.blue.withOpacity(0.5),
         title: Text("Test notifications"),
       ),
-      body: Container(
-        child:
-        Row(
-          children: [
-            Flexible(
-                flex: 1,
-                child: Container(
-
-                ) // your widget here
+      body: Row(
+        children: [
+          Flexible(flex: 1, child: Container() // your widget here
+              ),
+          Flexible(
+            flex: 2,
+            child: ElevatedButton(
+              onPressed: () {
+                NotificationTest.showBigTextNotification(
+                    title: "New message title",
+                    body: "Your long body",
+                    fln: flutterLocalNotificationsPlugin);
+              },
+              child: const Text("click"),
             ),
-            Flexible(
-                flex: 2,
-                child: Container(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Noti.showBigTextNotification(
-                          title: "New message title",
-                          body: "Your long body",
-                          fln: flutterLocalNotificationsPlugin);
-                    },
-                    child: Text("click"),
-                  ),
-                ) // another widget or an empty container to allocate the space
-            ),
-          ],
-        )
+          ),
+        ],
       ),
     );
   }

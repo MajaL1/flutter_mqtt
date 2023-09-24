@@ -1,10 +1,10 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class Noti{
+class NotificationTest{
   static Future initialize(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    var androidInitialize = new AndroidInitializationSettings('mipmap/ic_launcher');
-    var iOSInitialize = new DarwinInitializationSettings();
-    var initializationsSettings = new InitializationSettings(android: androidInitialize,
+    var androidInitialize = const AndroidInitializationSettings('mipmap/ic_launcher');
+    var iOSInitialize = const DarwinInitializationSettings();
+    var initializationsSettings = InitializationSettings(android: androidInitialize,
         iOS: iOSInitialize);
     await flutterLocalNotificationsPlugin.initialize(initializationsSettings );
   }
@@ -13,7 +13,7 @@ class Noti{
     var payload, required FlutterLocalNotificationsPlugin fln
   } ) async {
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-    new AndroidNotificationDetails(
+    const AndroidNotificationDetails(
       'you_can_name_it_whatever1',
       'channel_name',
 
@@ -24,7 +24,7 @@ class Noti{
     );
 
     var not= NotificationDetails(android: androidPlatformChannelSpecifics,
-        iOS: DarwinNotificationDetails()
+        iOS: const DarwinNotificationDetails()
     );
     await fln.show(0, title, body,not );
   }

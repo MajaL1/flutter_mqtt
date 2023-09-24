@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' show Client, Response, post;
-import 'package:mqtt_test/model/notif_message.dart';
-import 'package:mqtt_test/model/constants.dart' as Const;
+import 'package:mqtt_test/model/notification_message.dart';
+import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'dart:convert';
 import '../model/alarm.dart';
@@ -32,14 +33,14 @@ class ApiService {
 
 
 
-/** static Future<UserTopic> getTopicData(user) async {
+/* static Future<UserTopic> getTopicData(user) async {
     UserTopic topicList =
-    }*/
+    }*///
 
   Future<bool> createAlarms(Alarm data) async {
-    String url = Const.BASE_URL;
+    String url = Constants.BASE_URL;
     final response = await client.post(
-      "${Const.url}/api/alarm" as Uri,
+      "${url}/api/alarm" as Uri,
       headers: {"content-type": "application/json"},
       body: alarmToJson(data),
     );
@@ -147,21 +148,21 @@ class ApiService {
 */
 
  */
-  static Future<List<NotifMessage>> getNotifMess() async {
+  static Future<List<NotificationMessage>> getNotifMess() async {
     var data =
         await rootBundle.loadString("assets/test_notifications_list.json");
     final jsonResult = jsonDecode(data);
-    print("jsonResult: $jsonResult");
+    debugPrint("jsonResult: $jsonResult");
 
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 
     return parsed
-        .map<NotifMessage>((json) => NotifMessage.fromJson(json))
+        .map<NotificationMessage>((json) => NotificationMessage.fromJson(json))
         .toList();
   }
 
-  Future<bool> createNotifMessageFromJson(NotifMessage data) async {
-    String url = Const.BASE_URL;
+  Future<bool> createNotifMessageFromJson(NotificationMessage data) async {
+    String url = Constants.BASE_URL;
     final response = await client.post("${url}/api/alarm" as Uri,
         headers: {"content-type": "application/json"}, body: data.toJson()
         //NotifMessage().notifMessageToJson(data),

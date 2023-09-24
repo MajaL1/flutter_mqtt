@@ -23,24 +23,6 @@
         "topic": "alarm",
         "rw": 1
       }
-    ],
-    "123test": [
-      {
-        "topic": "settings",
-        "rw": 2
-      },
-      {
-        "topic": "data",
-        "rw": 1
-      },
-      {
-        "topic": "sensors",
-        "rw": 1
-      },
-      {
-        "topic": "alarm",
-        "rw": 1
-      }
     ]
   }
 }

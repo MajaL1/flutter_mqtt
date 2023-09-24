@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'dart:ui';
-//import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/api/api_service.dart';
@@ -11,11 +10,10 @@ import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-import 'model/notif_message.dart';
+import 'model/notification_message.dart';
 import 'util/app_preference_util.dart';
 import 'pages/first_screen.dart';
 import 'pages/login_form.dart';
-import 'notification_controller.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
@@ -32,7 +30,7 @@ Future<void> main() async {
   await SharedPrefs().init();
   await initializeService();
   runApp(
-    NotificationsApp(),
+    const NotificationsApp(),
   );
 }
 
@@ -132,8 +130,8 @@ void onStart(ServiceInstance service) async {
   String channelKey = "alerts1";
   String channelName = "Alerts1";
   String channelDescription = "Notification tests as alerts1";
-  NotificationController.initializeLocalNotifications(
-      channelKey, channelName, channelDescription);
+  //NotificationController.initializeLocalNotifications(
+    //  channelKey, channelName, channelDescription);
 
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
@@ -154,27 +152,27 @@ void onStart(ServiceInstance service) async {
   final slovenia = tz.getLocation('Europe/London');
   final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
-  List<NotifMessage> notificationList = await ApiService.getNotifMess();
+  List<NotificationMessage> notificationList = await ApiService.getNotifMess();
   for (var i = 0; i < notificationList.length; i++) {
-    print("showing notification: ${notificationList[i].title}. ${i}");
+    debugPrint("showing notification: ${notificationList[i].title}. $i");
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
         i,
         "A Notification From My App ",
-        "${notificationList[i].title}",
-        tz.TZDateTime.now(slovenia).add(Duration(minutes: 5)),
+        "$notificationList[i].title",
+        tz.TZDateTime.now(slovenia).add(const Duration(minutes: 5)),
         //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
         const NotificationDetails(
             android: AndroidNotificationDetails("1", "11",
             )),
-        androidAllowWhileIdle: true,
+        //androidScheduleMode: AndroidScheduleMode,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime);
   }
 }
 
 
-/********* nekaj kode od prej ********************************/
+///********* nekaj kode od prej *******************************
 // bring to foreground
 /*  Timer.periodic(const Duration(seconds: 30), (timer) async {
     if (service is AndroidServiceInstance) {
@@ -219,10 +217,10 @@ void onStart(ServiceInstance service) async {
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  NotificationsApp();
+  const NotificationsApp({Key? key}) : super(key: key);
 
   @override
-  _NotificationsAppState createState() => _NotificationsAppState();
+  State<NotificationsApp> createState() => _NotificationsAppState();
 }
 
 class _NotificationsAppState extends State<NotificationsApp> {
@@ -241,13 +239,13 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
   @override
   Widget build(BuildContext context) {
-    SharedPreferences.getInstance().then((prefValue) => print(this));
+    //SharedPreferences.getInstance().then((prefValue) => debugPrint(this));
     String channelKey = "alerts1Main";
     String channelName = "Alerts1Main";
     String channelDescription = "Notification tests as alerts1Main";
 
-    NotificationController.initializeLocalNotifications(
-        channelKey, channelDescription, channelName);
+   // NotificationController.initializeLocalNotifications(
+    //    channelKey, channelDescription, channelName);
     // SharedPreferences prefs =  getPrefs() ;
     return MaterialApp(
         title: 'Flutter Demo',
@@ -256,9 +254,9 @@ class _NotificationsAppState extends State<NotificationsApp> {
         ),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
-          '/login': (context) => LoginForm(),
-          '/user_settings': (context) => UserSettings(),
-          '/history': (context) => AlarmHistory(),
+          '/login': (context) => const LoginForm(),
+          '/user_settings': (context) => const UserSettings(),
+          '/history': (context) => const AlarmHistory(),
           '/current_alarms': (context) => MQTTView(),
           '/test_notifications1': (context) => TestNotifications1(),
           // '/test_notifications': (context) => TestNotifications(),

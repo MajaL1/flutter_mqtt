@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/components/noti.dart';
-import 'package:mqtt_test/model/notif_message.dart';
+import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +21,7 @@ class TestNotifications1 extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    return FutureBuilder<List<NotifMessage>>(
+    return FutureBuilder<List<NotificationMessage>>(
       future: ApiService.getNotifMess(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {

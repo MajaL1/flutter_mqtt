@@ -1,27 +1,29 @@
 import 'dart:convert';
 
-class NotifMessage {
+import 'package:flutter/material.dart';
+
+class NotificationMessage {
   int? id;
   String ?channel;
   String title;
   String ?description;
   bool on;
 
-  NotifMessage(
+  NotificationMessage(
       {
         this.id = 0,
         required this.channel,
         required this.title,
         required this.description,
-        required this.on}) {}
+        required this.on});
 
   // Class Function
-  showNotifInfo() {
-    print("Nofification message : ${id}, ${channel}, ${title}, ${description}, ${on}");
+  showNotificationInfo() {
+    debugPrint("Notification message : $id, $channel, $title, $description, $on");
   }
 
-  factory NotifMessage.fromJson(Map<String, dynamic> map) {
-    return NotifMessage(
+  factory NotificationMessage.fromJson(Map<String, dynamic> map) {
+    return NotificationMessage(
         id: map["id"],
         channel: map["channel"],
         title: map["title"],
@@ -34,13 +36,13 @@ class NotifMessage {
       ,"title": title, "description": description, "on": on};
   }
 
-  List<NotifMessage> notifMessageFromJson(String jsonData) {
+  List<NotificationMessage> notificationMessageFromJson(String jsonData) {
     final data = json.decode(jsonData);
-    return List<NotifMessage>.from(
-        data.map((item) => NotifMessage.fromJson(item)));
+    return List<NotificationMessage>.from(
+        data.map((item) => NotificationMessage.fromJson(item)));
   }
 
-  String notifMessageToJson(NotifMessage data) {
+  String notificationMessageToJson(NotificationMessage data) {
     final jsonData = data.toJson();
     return json.encode(jsonData);
   }
@@ -51,6 +53,6 @@ class NotifMessage {
   }
 
   void main() {
-    //var notifMessage = new NotifMessage(title: '');
+    //var notificationMessage = new NotificationMessage(title: '');
   }
 }

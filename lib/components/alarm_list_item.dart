@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AlarmListItem extends StatefulWidget {
-  const AlarmListItem({Key? key, this.snapshot, required this.index})
+  const AlarmListItem({Key? key, required this.snapshot, required this.index})
       : super(key: key);
 
   final snapshot;
   final int index;
 
   @override
-  _AlarmListItemState createState() => _AlarmListItemState();
+  State<AlarmListItem> createState() => _AlarmListItemState();
 }
 
 class _AlarmListItemState extends State<AlarmListItem> {
@@ -19,30 +19,30 @@ class _AlarmListItemState extends State<AlarmListItem> {
     int index = widget.index;
     var snapshot = widget.snapshot;
     return Container(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.blueGrey))),
+        decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.blueGrey))),
         child: ListTile(
             contentPadding:
-                EdgeInsets.only(left: 20, right: 10, top: 20, bottom: 20),
+                const EdgeInsets.only(left: 20, right: 10, top: 20, bottom: 20),
             title: Text(snapshot.data![index].title),
-            leading: ImageIcon(
+            leading: const ImageIcon(
               AssetImage("assets/bell.png"),
               color: Color(0xFF3A5A98),
             ),
             subtitle: Row(
               children: <Widget>[
                 Text(snapshot.data![index].description!),
-                Text("  -  "),
+                const Text("  -  "),
                 Text(
                   snapshot.data![index].on.toString(),
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 Switch(
                   activeColor: Colors.greenAccent,
                   inactiveThumbColor: Colors.redAccent,
                   value: snapshot.data![index].on ? true : false,
                   onChanged: (bool value) {
-                    print("old value:: ${snapshot.data![index].on}");
-                    print("new value:: ${value}");
+                    debugPrint("old value:: $snapshot.data![index].on");
+                    debugPrint("new value:: $value");
                     setState(() {
                       snapshot.data![index].on = value;
                     });
@@ -58,7 +58,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
   }
 
   void changeAlarmEnabled(int id, bool value) {
-    print("calling changeAlarmEnabled: ${id}, ${value}");
+    debugPrint("calling changeAlarmEnabled: $id, $value");
   }
 
   void showAlarmDetail(int id) {}

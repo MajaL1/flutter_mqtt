@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_test/util/app_preference_util.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
-import 'package:mqtt_test/widgets/constants.dart';
 import 'login_form.dart';
 import 'alarm_history.dart';
 
@@ -14,7 +13,7 @@ class FirstScreen extends StatelessWidget {
   //final  sharedPref;
 
   //FirstScreen(this.sharedPref);
-  FirstScreen();
+  FirstScreen({Key? key}) : super(key: key);
 
   Future<void> logout() async {
     // ToDo: Call service
@@ -31,16 +30,16 @@ class FirstScreen extends StatelessWidget {
     );
 
 
-  print("token: "+SharedPrefs().token+", "+SharedPrefs().token == null);
+  debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
 
    return Scaffold(
-      body: SharedPrefs().token.isEmpty ? LoginForm() : MQTTView(),
+      body: SharedPrefs().token.isEmpty ? const LoginForm() : MQTTView(),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Login'),
+        title: const Text('Login'),
         leading: IconButton(
           icon: (SharedPrefs().token
-          != null) ? Icon(Icons.arrow_back) : Icon(
+          != null) ? const Icon(Icons.arrow_back) : const Icon(
             Icons.notifications_none,
             color: Colors.transparent,
           ),
@@ -52,7 +51,7 @@ class FirstScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AlarmHistory())
+                  MaterialPageRoute(builder: (context) => const AlarmHistory())
                 //Navigator.pushNamed(context, "/");
               );
             },
@@ -63,7 +62,7 @@ class FirstScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserSettings())
+                  MaterialPageRoute(builder: (context) => const UserSettings())
               );
              // Navigator.pushNamed(context, '/settings');
             },
@@ -82,7 +81,7 @@ class FirstScreen extends StatelessWidget {
           TextButton(
             style: style,
             onPressed: () {
-              print("Clicked");
+               debugPrint("Clicked");
             },
             child: const Text('Logout'),
           ),

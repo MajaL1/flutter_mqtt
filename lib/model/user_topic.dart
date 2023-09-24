@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:mqtt_test/model/topic_data.dart';
 
 class UserTopic {

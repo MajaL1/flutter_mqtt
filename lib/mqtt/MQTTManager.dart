@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -41,7 +42,7 @@ class MQTTManager {
         .withWillMessage('My Will message')
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
-    print('EXAMPLE:: client connecting....');
+    debugPrint('EXAMPLE:: client connecting....');
     _client!.connectionMessage = connMess;
   }
 
@@ -52,7 +53,7 @@ class MQTTManager {
     try {
       String username= "test";
       String password = "MWQxYjRkZWJlZjQ2MWViNQ=";
-      print('::Navis app client connecting....');
+      debugPrint('::Navis app client connecting....');
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
       await _client!.connect(username, password);
     } on Exception catch (e) {
@@ -62,7 +63,7 @@ class MQTTManager {
   }
 
   void disconnect() {
-    print('Disconnected');
+    debugPrint('Disconnected');
     _client!.disconnect();
   }
 
@@ -98,9 +99,9 @@ class MQTTManager {
 
       // final MqttPublishMessage recMess = c![0].payload;
       final String pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message!);
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       _currentState.setReceivedText(pt);
-      print("======= pt: ${pt}");
+      print("======= pt: $pt");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       print('');

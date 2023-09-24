@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../components/drawer.dart';
 
 class MQTTView extends StatefulWidget {
-
   //var sharedPreferences;
   //MQTTView();
 
@@ -18,7 +17,6 @@ class MQTTView extends StatefulWidget {
   State<StatefulWidget> createState() {
 //    return _MQTTViewState(sharedPreferences);
     return _MQTTViewState();
-
   }
 }
 
@@ -69,9 +67,9 @@ class _MQTTViewState extends State<MQTTView> {
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
         child: //MQTTView(sharedPreferences),
-        MQTTView(),
+            MQTTView(),
 
-    // we use `builder` to obtain a new `BuildContext` that has access to the provider
+        // we use `builder` to obtain a new `BuildContext` that has access to the provider
         builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
@@ -79,7 +77,9 @@ class _MQTTViewState extends State<MQTTView> {
 
           currentAppState = appState;
           final Scaffold scaffold = Scaffold(
-            body: _buildColumn(),
+            body: SingleChildScrollView(
+              child: _buildColumn(),
+            ),
             drawer: NavDrawer(),
             appBar: AppBar(
               title: Text("Alarms"),

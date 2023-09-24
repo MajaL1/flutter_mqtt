@@ -4,6 +4,7 @@ import 'package:mqtt_test/api/api_service.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../model/user.dart';
 
@@ -14,7 +15,7 @@ class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
 
   @override
-  _LoginFormValidationState createState() => _LoginFormValidationState();
+  State<LoginForm> createState() => _LoginFormValidationState();
 }
 
 class _LoginFormValidationState extends State<LoginForm> {
@@ -34,6 +35,8 @@ class _LoginFormValidationState extends State<LoginForm> {
   Future<void> login() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
+    final storage = FlutterSecureStorage();
+
     var username = emailController.text;
     var password = passwordController.text;
 
@@ -50,7 +53,7 @@ class _LoginFormValidationState extends State<LoginForm> {
       sharedPreferences.setString("username", user.username);
       sharedPreferences.setString("email", user.email ?? "");
       debugPrint("preferences ${sharedPreferences.toString()}");
-
+      await storage.write(key: 'jwt', value: 'jwtTokenTest');
       // todo: inicializiraj Mqtt service za settingse
 
       List<String> brokerAddressList = [];
