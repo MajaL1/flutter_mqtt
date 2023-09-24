@@ -125,14 +125,9 @@ void onStart(ServiceInstance service) async {
   await preferences.setString("hello", "world");
 
   /// OPTIONAL when use custom notification
-  // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  // FlutterLocalNotificationsPlugin();
-  String channelKey = "alerts1";
-  String channelName = "Alerts1";
-  String channelDescription = "Notification tests as alerts1";
-  //NotificationController.initializeLocalNotifications(
-    //  channelKey, channelName, channelDescription);
-
+   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+  
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
