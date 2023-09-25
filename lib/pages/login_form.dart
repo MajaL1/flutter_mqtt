@@ -205,6 +205,22 @@ class _LoginFormValidationState extends State<LoginForm> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 15.0, right: 15.0, top: 15, bottom: 0),
+                    child: TextButton(
+                      onPressed: () {
+                        // login();
+                      },
+                      child: const Text(
+                        'Create account',
+                        style: TextStyle(
+                            color: Colors.indigoAccent,
+                            decoration: TextDecoration.underline,
+                            fontSize: 15),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
