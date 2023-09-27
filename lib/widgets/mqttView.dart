@@ -243,7 +243,7 @@ class _MQTTViewState extends State<MQTTView> {
     // TODO: Use UUID
     String osPrefix = 'Flutter_iOS';
     if (Platform.isAndroid) {
-      osPrefix = 'Flutter_Android';
+      osPrefix = 'Flutter_Android1';
     }
     manager = MQTTManager(
         host: _hostTextController.text,

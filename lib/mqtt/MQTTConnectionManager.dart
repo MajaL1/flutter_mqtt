@@ -2,7 +2,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
-class MQTTConnector {
+class MQTTConnectionManager {
   // Private instance of client
   final MQTTAppState _currentState;
   MqttServerClient? _client;
@@ -12,7 +12,7 @@ class MQTTConnector {
 
   // Constructor
   // ignore: sort_constructors_first
-  MQTTConnector(
+  MQTTConnectionManager(
       {required String host,
         required String topic,
         required String identifier,
@@ -50,8 +50,8 @@ class MQTTConnector {
   void connect() async {
     assert(_client != null);
     try {
-      String username= "test";
-      String password = "MWQxYjRkZWJlZjQ2MWViNQ=";
+      String username= "test1";
+      String password = "MDQ0MThmZmM1NTI4OGQ4OQ==";
       print('::Navis app client connecting....');
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
       await _client!.connect(username, password);

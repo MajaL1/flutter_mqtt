@@ -18,7 +18,7 @@ class MQTTManager {
       required String topic,
       required String identifier,
       required MQTTAppState state})
-      : _identifier = identifier,
+      : _identifier = "Test1",
         _host = host,
         _topic = topic,
         _currentState = state;
@@ -26,6 +26,7 @@ class MQTTManager {
   void initializeMQTTClient() {
     _client = MqttServerClient(_host, _identifier);
     _client!.port = 1883;
+   // _client!.keepAlive = KeepAlive(child: Widgetas MqttConnectionKeepAlive?;
     _client!.keepAlivePeriod = 20;
     _client!.onDisconnected = onDisconnected;
     _client!.secure = false;
@@ -36,12 +37,13 @@ class MQTTManager {
     _client!.onSubscribed = onSubscribed;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
-        .withClientIdentifier(_identifier)
-        .withWillTopic(
-            'willtopic') // If you set this you must set a will message
-        .withWillMessage('My Will message')
+       // .withClientIdentifier("Test1")
+        //.withWillTopic(
+         //   'willtopic') // If you set this you must set a will message
+        //.withWillMessage('My Will message')
         .startClean() // Non persistent session for testing
-        .withWillQos(MqttQos.atLeastOnce);
+        .withWillQos(MqttQos.atMostOnce);
+        //.withWillQos(MqttQos.atLeastOnce);
     debugPrint('EXAMPLE:: client connecting....');
     _client!.connectionMessage = connMess;
   }
@@ -52,9 +54,10 @@ class MQTTManager {
     assert(_client != null);
     try {
       String username= "test";
-      String password = "MWQxYjRkZWJlZjQ2MWViNQ=";
+      String password = "MWQxYjRkZWJlZjQ2MWViNQ==";
       debugPrint('::Navis app client connecting....');
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
+      _client?.keepAlivePeriod = 20;
       await _client!.connect(username, password);
     } on Exception catch (e) {
       print('EXAMPLE::client exception - $e');
