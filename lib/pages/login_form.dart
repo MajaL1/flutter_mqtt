@@ -172,7 +172,18 @@ class _LoginFormValidationState extends State<LoginForm> {
 
     @override
     Widget build(BuildContext context) {
-      return DefaultTabController(
+      
+      return ChangeNotifierProvider<MQTTAppState>(
+        create: (_) => MQTTAppState(),
+        child: LoginForm(),
+      builder: (context, child) {
+          // No longer throws
+          //return Text(context.watch<MQTTView>().toString());
+          final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+
+          currentAppState = appState;
+        
+      body: DefaultTabController(
           length: 3,
           child: Scaffold(
             backgroundColor: Colors.white,
@@ -285,6 +296,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                     ),
                   ],
                 ),
+                ),
+              ),
               ),
             ),
           ));
