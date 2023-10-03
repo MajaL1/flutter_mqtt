@@ -26,6 +26,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormValidationState extends State<LoginForm> {
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  late MQTTAppState currentAppState;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -57,6 +58,8 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance();
       sharedPreferences.setString("username", user.username);
       sharedPreferences.setString("email", user.email ?? "");
+      sharedPreferences.setString("mqtt_pass", user.mqtt_pass ?? "");
+
       debugPrint("preferences ${sharedPreferences.toString()}");
       await storage.write(key: 'jwt', value: 'jwtTokenTest');
       // todo: inicializiraj Mqtt service za settingse
@@ -114,13 +117,34 @@ class _LoginFormValidationState extends State<LoginForm> {
       manager.initializeMQTTClient();
       manager.connect();*/
 
+
+      String osPrefix = 'Flutter_iOS';
+      if (Platform.isAndroid) {
+        osPrefix = 'Flutter_Android1';
+      }
+      MQTTConnectionManager manager = MQTTConnectionManager(
+          host: 'test.navis-livedata.com',//_hostTextController.text,
+          topic: 'c45bbe821261/data',//_topicTextController.text,
+          identifier: osPrefix,
+          state: currentAppState);
+      manager.initializeMQTTClient();
+      manager.connect();
+
       // ali vsebuje alarme
-      if (brokerAddress.contains('/alarm')) {}
+      if (brokerAddress.contains('/alarm')) {
+
+      }
       /** ali vsebuje nastavitve - samo za admina **/
-      else if (brokerAddress.contains('/settings')) {} else
+      /** settingse preberemo v objekt in prikazemo */
+      /** {"101":{"alarm":2000},"135":{"alarm":2000},"111":{"alarm":0}}*/
+      /** Settings: naprava 101
+       *            vrednost alarma: 2000
+       * */
+      else if (brokerAddress.contains('/settings')) {
+
+      } else
       if (brokerAddress.contains('/data')) {}
     }
-
 
     /** ToDo: Connect to broker ***/
 
@@ -158,80 +182,81 @@ class _LoginFormValidationState extends State<LoginForm> {
     manager.connect(); */
   }
 
-    String? validatePassword(String value) {
-      if (value.isEmpty) {
-        return "* Required";
-      } else if (value.length < 6) {
-        return "Password should be atleast 6 characters";
-      } else if (value.length > 15) {
-        return "Password should not be greater than 15 characters";
-      } else {
-        return null;
-      }
+  String? validatePassword(String value) {
+    if (value.isEmpty) {
+      return "* Required";
+    } else if (value.length < 6) {
+      return "Password should be atleast 6 characters";
+    } else if (value.length > 15) {
+      return "Password should not be greater than 15 characters";
+    } else {
+      return null;
     }
+  }
 
-    @override
-    Widget build(BuildContext context) {
-      
-      return ChangeNotifierProvider<MQTTAppState>(
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
         child: LoginForm(),
-      builder: (context, child) {
+        builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
           final MQTTAppState appState = Provider.of<MQTTAppState>(context);
 
           currentAppState = appState;
-        
-      body: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              title: const Text("Login Page"),
-            ),
-            body: SingleChildScrollView(
-              child: Form(
-                //autovalidate: true, //check for validation while typing
-                key: formkey,
-                child: Column(
-                  children: <Widget>[
-                    const Padding(
-                        padding: EdgeInsets.only(top: 60.0),
-                        child: Center(
-                          child: SizedBox(
-                            width: 200,
-                            height: 30,
-                            // child: //Image.asset('asset/images/flutter-logo.png')),
-                          ),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Email',
-                            hintText: 'Enter valid email id as abc@gmail.com'),
-                        controller: emailController,
-                        /*validator: MultiValidator([
+
+          body:
+          return DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                title: const Text("Login Page"),
+              ),
+              body: SingleChildScrollView(
+                child: Form(
+                  //autovalidate: true, //check for validation while typing
+                  key: formkey,
+                  child: Column(
+                    children: <Widget>[
+                      const Padding(
+                          padding: EdgeInsets.only(top: 60.0),
+                          child: Center(
+                            child: SizedBox(
+                              width: 200,
+                              height: 30,
+                              // child: //Image.asset('asset/images/flutter-logo.png')),
+                            ),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Email',
+                              hintText:
+                                  'Enter valid email id as abc@gmail.com'),
+                          controller: emailController,
+                          /*validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       EmailValidator(errorText: "Enter valid email id"),
                     ])*/
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15, bottom: 0),
-                      child: TextFormField(
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Password',
-                            hintText: 'Enter secure password'),
-                        controller: passwordController,
-                        /* validator: MultiValidator([
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                        child: TextFormField(
+                          obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Password',
+                              hintText: 'Enter secure password'),
+                          controller: passwordController,
+                          /* validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       MinLengthValidator(6,
                           errorText: "Password should be atleast 6 characters"),
@@ -239,67 +264,67 @@ class _LoginFormValidationState extends State<LoginForm> {
                           errorText:
                           "Password should not be greater than 15 characters")
                     ])*/
-                        //validatePassword,        //Function to check validation
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15, bottom: 0),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 250,
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: TextButton(
-                        onPressed: () {
-                          login();
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 25),
+                          //validatePassword,        //Function to check validation
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15, bottom: 0),
-                      child: TextButton(
-                        onPressed: () {
-                          // login();
-                        },
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                              color: Colors.indigoAccent,
-                              decoration: TextDecoration.underline,
-                              fontSize: 15),
+                      const Padding(
+                        padding: EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 250,
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: TextButton(
+                          onPressed: () {
+                            login();
+                          },
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0, right: 15.0, top: 15, bottom: 0),
-                      child: TextButton(
-                        onPressed: () {
-                          // login();
-                        },
-                        child: const Text(
-                          'Create account',
-                          style: TextStyle(
-                              color: Colors.indigoAccent,
-                              decoration: TextDecoration.underline,
-                              fontSize: 15),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                        child: TextButton(
+                          onPressed: () {
+                            // login();
+                          },
+                          child: const Text(
+                            'Forgot password?',
+                            style: TextStyle(
+                                color: Colors.indigoAccent,
+                                decoration: TextDecoration.underline,
+                                fontSize: 15),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                        child: TextButton(
+                          onPressed: () {
+                            // login();
+                          },
+                          child: const Text(
+                            'Create account',
+                            style: TextStyle(
+                                color: Colors.indigoAccent,
+                                decoration: TextDecoration.underline,
+                                fontSize: 15),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                ),
-              ),
               ),
             ),
-          ));
-    }
+          );
+        });
+  }
 }
