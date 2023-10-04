@@ -1,6 +1,7 @@
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MQTTConnectionManager {
   // Private instance of client
@@ -90,9 +91,9 @@ class MQTTConnectionManager {
   /// The successful connect callback
   void onConnected() {
     _currentState.setAppConnectionState(MQTTAppConnectionState.connected);
-    print('EXAMPLE::Mosquitto client connected....');
+    print('on Connected: EXAMPLE::Mosquitto client connected....');
     _client!.subscribe(_topic, MqttQos.atLeastOnce);
-    _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
+    _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
 
@@ -100,6 +101,8 @@ class MQTTConnectionManager {
       final String pt =
       MqttPublishPayload.bytesToStringAsString(recMess.payload.message!);
       _currentState.setReceivedText(pt);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString("mqtt_payload", pt);
       print("======= pt: ${pt}");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');

@@ -12,6 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../model/user.dart';
 import '../mqtt/MQTTConnectionManager.dart';
+import '../mqtt/state/MQTTAppState.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
@@ -63,7 +64,9 @@ class _LoginFormValidationState extends State<LoginForm> {
       debugPrint("preferences ${sharedPreferences.toString()}");
       await storage.write(key: 'jwt', value: 'jwtTokenTest');
       // todo: inicializiraj Mqtt service za settingse
-
+//storage.containsKey(key: "jwt")
+      String? readToken = await storage.read(key: "token");
+      print("token from flutter secure storage: $readToken");
       List<String> brokerAddressList = [];
       var topicForUser = user.topic.topicList;
       debugPrint("user.topic.id : ${user.topic.id}");
@@ -106,55 +109,36 @@ class _LoginFormValidationState extends State<LoginForm> {
 
    ***/
 
-   void connectToBroker(List<String> brokerAddressList) {
+  Future<void> connectToBroker(List<String> brokerAddressList) async {
     for (var brokerAddress in brokerAddressList) {
-      debugPrint("brokerAddress: $brokerAddress");
-      /* MQTTManager manager = MQTTManager(
-          host: brokerAddress,
-          topic: brokerAddress,
-          identifier: osPrefix,
-          state: currentAppState);
-      manager.initializeMQTTClient();
-      manager.connect();*/
-
-
-      String osPrefix = 'Flutter_iOS';
-      if (Platform.isAndroid) {
-        osPrefix = 'Flutter_Android1';
-      }
-      MQTTConnectionManager manager = MQTTConnectionManager(
-          host: 'test.navis-livedata.com',//_hostTextController.text,
-          topic: 'c45bbe821261/data',//_topicTextController.text,
-          identifier: osPrefix,
-          state: currentAppState);
-      manager.initializeMQTTClient();
-      manager.connect();
-
       // ali vsebuje alarme
       if (brokerAddress.contains('/alarm')) {
-
-      }
-      /** ali vsebuje nastavitve - samo za admina **/
-      /** settingse preberemo v objekt in prikazemo */
-      /** {"101":{"alarm":2000},"135":{"alarm":2000},"111":{"alarm":0}}*/
-      /** Settings: naprava 101
-       *            vrednost alarma: 2000
-       * */
-      else if (brokerAddress.contains('/settings')) {
-
-      } else
-      if (brokerAddress.contains('/data')) {}
+      } else if (brokerAddress.contains('/settings')) {
+      } else if (brokerAddress.contains('/data')) {}
+      debugPrint("brokerAddress: $brokerAddress");
     }
 
-    /** ToDo: Connect to broker ***/
+    if(MQTTAppConnectionState.disconnected == currentAppState.getAppConnectionState) {
+      _configureAndConnect();
+    }
 
-    _configureAndConnect();
+    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
+      String t = await currentAppState.getHistoryText;
+
+      print("****************** $t");
+    }
+
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
-    if(MQTTAppConnectionState.connected == true){
-    //MQTTConnectionManager._publishMessage(topic, text);
+    if (MQTTAppConnectionState.connected == true) {
+      //MQTTConnectionManager._publishMessage(topic, text);
+      String t = await currentAppState.getHistoryText;
+
+      print("****************** $t");
     }
 
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.get("mqtt_payload");
     // pridobivanje sporocil
     //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
     //if(MQTTAppConnectionState.connected == true){
@@ -171,15 +155,14 @@ class _LoginFormValidationState extends State<LoginForm> {
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android';
     }
-    // Ali rabimo oba mqttConnManager in manager
-    /*MQTTConnectionManager mqttConnManager = MQTTConnectionManager(host: '', topic: '', identifier: '', state: appState);
-    MQTTManager manager = MQTTManager(
-        host: '',
-        topic: '',
+    MQTTConnectionManager manager = MQTTConnectionManager(
+        host: 'test.navis-livedata.com', //_hostTextController.text,
+        topic: 'c45bbe821261/data'
+            '', //_topicTextController.text,
         identifier: osPrefix,
-        state: this.getLoggedInState());
+        state: currentAppState);
     manager.initializeMQTTClient();
-    manager.connect(); */
+    manager.connect();
   }
 
   String? validatePassword(String value) {

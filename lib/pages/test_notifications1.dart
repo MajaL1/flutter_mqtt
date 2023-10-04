@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:mqtt_test/components/noti.dart';
 import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/api/api_service.dart';

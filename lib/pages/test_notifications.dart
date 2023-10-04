@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../components/noti.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -18,7 +17,7 @@ class _TestNotificationsState extends State<TestNotifications> {
   @override
   void initState() {
     super.initState();
-    NotificationTest.initialize(flutterLocalNotificationsPlugin);
+    //NotificationTest.initialize(flutterLocalNotificationsPlugin);
   }
 
   TextStyle headingStyle = const TextStyle(
@@ -54,10 +53,10 @@ class _TestNotificationsState extends State<TestNotifications> {
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
-                NotificationTest.showBigTextNotification(
-                    title: "New message title",
-                    body: "Your long body",
-                    fln: flutterLocalNotificationsPlugin);
+                //NotificationTest.showBigTextNotification(
+                  //  title: "New message title",
+                   // body: "Your long body",
+                   // fln: flutterLocalNotificationsPlugin);
               },
               child: const Text("click"),
             ),
