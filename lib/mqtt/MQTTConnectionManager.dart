@@ -48,7 +48,7 @@ class MQTTConnectionManager {
 
   // Connect to the host
   // ignore: avoid_void_async
-  void connect() async {
+  Future<void> connect() async {
     assert(_client != null);
     try {
       String username= "test1";

@@ -1,15 +1,17 @@
 class UserSettings {
-  String id;
+  String sensorAddress;
+  BigInt alarmValue;
  
-  UserSettings({required this.id});
+  UserSettings({required this.sensorAddress, required this.alarmValue});
 
   Map<String, dynamic> toJson() {
-    return {"id": id};
+    return {"sensor_address": sensorAddress};
   }
 
   factory UserSettings.fromJson(Map<String, dynamic> json) {
     return UserSettings(
-        id: json["id"]
+        sensorAddress: json["sensor_address"],
+        alarmValue: json["alarm_value"]
     );
   }
 }

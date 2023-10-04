@@ -119,7 +119,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     }
 
     if(MQTTAppConnectionState.disconnected == currentAppState.getAppConnectionState) {
-      _configureAndConnect();
+      await _configureAndConnect();
     }
 
     if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
@@ -130,7 +130,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
-    if (MQTTAppConnectionState.connected == true) {
+    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
       //MQTTConnectionManager._publishMessage(topic, text);
       String t = await currentAppState.getHistoryText;
 
@@ -147,7 +147,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
   // Connectr to brokers
-  void _configureAndConnect() {
+  Future<void> _configureAndConnect() async {
     //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
 
     // TODO: Use UUID
@@ -157,12 +157,12 @@ class _LoginFormValidationState extends State<LoginForm> {
     }
     MQTTConnectionManager manager = MQTTConnectionManager(
         host: 'test.navis-livedata.com', //_hostTextController.text,
-        topic: 'c45bbe821261/data'
+        topic: 'c45bbe821261/settings'
             '', //_topicTextController.text,
         identifier: osPrefix,
         state: currentAppState);
     manager.initializeMQTTClient();
-    manager.connect();
+    await manager.connect();
   }
 
   String? validatePassword(String value) {
