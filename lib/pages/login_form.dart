@@ -126,34 +126,10 @@ class _LoginFormValidationState extends State<LoginForm> {
       } else if (brokerAddress.contains('/data')) {}
       debugPrint("brokerAddress: $brokerAddress");
     }
-
     if(MQTTAppConnectionState.disconnected == currentAppState.getAppConnectionState) {
       await _configureAndConnect();
     }
 
-    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
-      String t = await currentAppState.getHistoryText;
-
-      print("****************** $t");
-    }
-
-
-    // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
-    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
-      //MQTTConnectionManager._publishMessage(topic, text);
-      String t = await currentAppState.getHistoryText;
-
-      print("****************** $t");
-    }
-
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? data = preferences.get("settings_mqtt").toString();
-     // napolnimo nov objekt UserSettings
-    // pridobivanje sporocil
-    //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
-    //if(MQTTAppConnectionState.connected == true){
-    //this.publish('topic');
-    //}
   }
 
   // Connectr to brokers
@@ -173,6 +149,43 @@ class _LoginFormValidationState extends State<LoginForm> {
         state: currentAppState);
     manager.initializeMQTTClient();
     await manager.connect();
+
+
+
+    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
+      String t = await currentAppState.getHistoryText;
+
+      print("****************** $t");
+    }
+
+    // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
+    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
+      //MQTTConnectionManager._publishMessage(topic, text);
+      String t = await currentAppState.getHistoryText;
+
+      print("****************** $t");
+    }
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? data = preferences.get("settings_mqtt").toString();
+    String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+    print("****************** data $data");
+    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+
+    // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
+    List<UserSettings> userSettings = UserSettings().getUserSettings(jsonMap);
+
+    debugPrint("UserSettings from JSON: $userSettings");
+
+    // napolnimo nov objekt UserSettings
+    // pridobivanje sporocil
+    //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
+    //if(MQTTAppConnectionState.connected == true){
+    //this.publish('topic');
+    //}
+
+
+
   }
 
   String? validatePassword(String value) {

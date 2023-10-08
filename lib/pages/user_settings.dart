@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mqtt_test/model/user_settings.dart';
 
 void main() {
   runApp(
@@ -12,6 +16,21 @@ class UserSettings extends StatefulWidget {
 
   @override
   State<UserSettings> createState() => _UserSettingsState();
+
+}
+
+void getUserSettings(){
+  SharedPreferences preferences =  SharedPreferences.getInstance() as SharedPreferences;
+  String? data = preferences.get("settings_mqtt").toString();
+  String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+  print("****************** data $data");
+  Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+
+  // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
+  List<UserSettings> userSettings = UserSettings().getUserSettings(jsonMap);
+
+  debugPrint("UserSettings from JSON: $userSettings");
+
 }
 
 class _UserSettingsState extends State<UserSettings> {
@@ -28,6 +47,9 @@ class _UserSettingsState extends State<UserSettings> {
     color: CupertinoColors.inactiveGray,
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
+
+
+
 
   @override
   Widget build(BuildContext context) {

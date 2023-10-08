@@ -112,16 +112,10 @@ class MQTTConnectionManager {
       String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
 
       debugPrint("__________ $decodeMessage");
-      Map<String, dynamic> jsonMap = json.decode(decodeMessage);
-
-      // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-      List<UserSettings> userSettings = UserSettings().getUserSettings(jsonMap);
-
-      debugPrint("UserSettings from JSON: $userSettings");
 
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString("settings_mqtt", userSettings);
+      preferences.setString("settings_mqtt", decodeMessage);
       print("======= pt: ${pt}");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
