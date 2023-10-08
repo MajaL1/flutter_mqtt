@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -101,8 +104,19 @@ class MQTTConnectionManager {
       final String pt =
       MqttPublishPayload.bytesToStringAsString(recMess.payload.message!);
       _currentState.setReceivedText(pt);
+
+      String message =
+      MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+
+      String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
+
+      debugPrint("__________ $decodeMessage");
+      print("MQTTClientWrapper::GOT A NEW MESSAGE $decodeMessage");
+
+
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString("mqtt_payload", pt);
+      preferences.setString("settings_mqtt", decodeMessage);
       print("======= pt: ${pt}");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');

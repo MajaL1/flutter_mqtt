@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../model/user.dart';
+import '../model/user_settings.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
 
@@ -138,7 +140,13 @@ class _LoginFormValidationState extends State<LoginForm> {
     }
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.get("mqtt_payload");
+    String? data = preferences.get("settings_mqtt").toString();
+     // napolnimo nov objekt UserSettings
+    Map<String, dynamic> jsonMap = json.decode(data);
+
+    UserSettings userSettings = UserSettings.fromJson(jsonMap);
+
+    debugPrint("UserSettings from JSON: $userSettings");
     // pridobivanje sporocil
     //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
     //if(MQTTAppConnectionState.connected == true){
