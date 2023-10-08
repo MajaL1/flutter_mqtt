@@ -6,6 +6,8 @@ import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/user_settings.dart';
+
 class MQTTConnectionManager {
   // Private instance of client
   final MQTTAppState _currentState;
@@ -107,16 +109,19 @@ class MQTTConnectionManager {
 
       String message =
       MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
-
       String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
 
       debugPrint("__________ $decodeMessage");
-      print("MQTTClientWrapper::GOT A NEW MESSAGE $decodeMessage");
+      Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+
+      // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
+      List<UserSettings> userSettings = UserSettings().getUserSettings(jsonMap);
+
+      debugPrint("UserSettings from JSON: $userSettings");
 
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString("settings_mqtt", decodeMessage);
+      preferences.setString("settings_mqtt", userSettings);
       print("======= pt: ${pt}");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');

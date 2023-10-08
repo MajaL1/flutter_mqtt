@@ -69,9 +69,6 @@ class User {
       "topic": topic
     };
   }
-
-  //List<Topic> topicList =
-
   @override
   String toString() {
     return 'User{id: $id, name: $username}';

@@ -1,19 +1,27 @@
 class UserSettings {
   String? sensorAddress;
-  BigInt? alarmValue;
+  int? t;
+  int? hiAlarm;
+  int? loAlarm;
 
-  UserSettings({sensorAddress, t, hiAlarm, loAlarm});
+  UserSettings({this.sensorAddress, this.t, this.hiAlarm, this.loAlarm});
 
   Map<String, dynamic> toJson() {
-    return {"sensor_address": sensorAddress};
+    return {
+      "sensor_address": sensorAddress,
+      "t": t,
+      "hi_alarm": hiAlarm,
+      "lo_alarm": loAlarm
+    };
   }
 
-  factory UserSettings.fromJson(Map<String, dynamic> json) {
+  List<UserSettings> getUserSettings(Map<String, dynamic> json) {
+    List<UserSettings> userSettingsList = [];
     for (String key in json.keys) {
-      print("key:  $key");
+      //print("key:  $key");
       if (key.isNotEmpty) {
         Map value = json[key];
-        print("value:  $value");
+        //print("value:  $value");
         if (key.isNotEmpty) {
           int t = 0;
           int hiAlarm = 0;
@@ -21,7 +29,7 @@ class UserSettings {
           for (String key1 in value.keys) {
             value[key1];
             int value1 = value[key1];
-            print("key1: $key1, value1: $value1");
+            //print("key1: $key1, value1: $value1");
             if (key1 == "t") {
               t = value1;
             }
@@ -32,17 +40,13 @@ class UserSettings {
               loAlarm = value1;
             }
           }
-          UserSettings userSettings = UserSettings(sensorAddress: key, t: t, hiAlarm: hiAlarm, loAlarm: loAlarm);
+          //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
+          UserSettings userSettings = UserSettings(
+              sensorAddress: key, t: t, hiAlarm: hiAlarm, loAlarm: loAlarm);
+          userSettingsList.add(userSettings);
         }
-        UserSettings userSettings =
-        UserSettings(sensorAddress: 2);
       }
     }
-    return UserSettings(
-      sensorAddress: json["sensor_address"], //,json.keys.first.
-      t: json["t"],
-      hiAlarm: json["hi_alarm"],
-      loAlarm: json["lo_alarm"],
-    );
+    return userSettingsList;
   }
 }

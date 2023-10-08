@@ -6,6 +6,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
+import 'package:mqtt_test/util/mqtt_connect_util.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,6 +56,12 @@ class _LoginFormValidationState extends State<LoginForm> {
     if (formkey.currentState!.validate()) {
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
+
+     /** User user = await MqttConnectUtil.readUserData();
+      *  MqttConnectUtil.getBrokerAddressList(user);
+         MqttConnectUtil.initalizeUserPrefs(user);
+         **/
+
       User user = await ApiService.getUserData();
 
       SharedPreferences sharedPreferences =
@@ -142,11 +149,6 @@ class _LoginFormValidationState extends State<LoginForm> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("settings_mqtt").toString();
      // napolnimo nov objekt UserSettings
-    Map<String, dynamic> jsonMap = json.decode(data);
-
-    UserSettings userSettings = UserSettings.fromJson(jsonMap);
-
-    debugPrint("UserSettings from JSON: $userSettings");
     // pridobivanje sporocil
     //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
     //if(MQTTAppConnectionState.connected == true){
