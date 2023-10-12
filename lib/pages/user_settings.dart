@@ -2,14 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mqtt_test/model/user_settings.dart';
 
-void main() {
-  runApp(
-    const UserSettings(),
-  );
-}
+
+
 
 class UserSettings extends StatefulWidget {
   const UserSettings({Key? key}) : super(key: key);
@@ -19,17 +16,17 @@ class UserSettings extends StatefulWidget {
 
 }
 
-void getUserSettings(){
-  SharedPreferences preferences =  SharedPreferences.getInstance() as SharedPreferences;
+Future<List<UserDataSettings>> getUserDataSettings() async{
+  SharedPreferences preferences = await SharedPreferences.getInstance();
   String? data = preferences.get("settings_mqtt").toString();
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   print("****************** data $data");
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
   // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-  List<UserSettings> userSettings = UserSettings().getUserSettings(jsonMap);
-
-  debugPrint("UserSettings from JSON: $userSettings");
+  List<UserDataSettings> userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+  return userDataSettings;
+ // debugPrint("UserSettings from JSON: $userSettings");
 
 }
 
@@ -49,11 +46,48 @@ class _UserSettingsState extends State<UserSettings> {
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    return FutureBuilder<List<UserDataSettings>>(
+      future: getUserDataSettings(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text("Scheduled Notifications"),
+              ),
+              //drawer: NavDrawer(sharedPrefs: ),
+              body: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                        title: Text(snapshot.data![index].sensorAddress ?? ""),
+                        subtitle: Row(
+                          children: <Widget>[
+                            Text(snapshot.data![index].loAlarm.toString()),
+                            Text("  -  "),
+                            Text(
+                              snapshot.data![index].hiAlarm.toString(),
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                          ],
+                        ),
+
+                        //Text(snapshot.data![index].date!),
+
+                        onTap: () {
+                         // showAlarmDetail(index);
+                        });
+                  }));
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        // By default show a loading spinner.
+        return const CircularProgressIndicator();
+      },
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
       ),
@@ -148,7 +182,7 @@ class _UserSettingsState extends State<UserSettings> {
         ),
       ),
     );
-
+*/
     /*  return (kIsWeb)//(Platform.isAndroid || kIsWeb)
         ? MaterialApp(
       debugShowCheckedModeBanner: false,

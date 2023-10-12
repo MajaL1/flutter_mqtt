@@ -6,7 +6,7 @@ import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/user_settings.dart';
+import '../model/user_data_settings.dart';
 
 class MQTTConnectionManager {
   // Private instance of client

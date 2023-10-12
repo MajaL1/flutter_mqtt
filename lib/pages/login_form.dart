@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../model/user.dart';
-import '../model/user_settings.dart';
+import '../model/user_data_settings.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
 
@@ -173,9 +173,9 @@ class _LoginFormValidationState extends State<LoginForm> {
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
     // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-    List<UserSettings> userSettings = UserSettings().getUserSettings(jsonMap);
+   // List<UserDataSettings> userSettings = UserDataSettings().getUserDataSettings(jsonMap);
 
-    debugPrint("UserSettings from JSON: $userSettings");
+   // debugPrint("UserSettings from JSON: $userSettings");
 
     // napolnimo nov objekt UserSettings
     // pridobivanje sporocil

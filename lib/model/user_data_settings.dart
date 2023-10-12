@@ -1,10 +1,10 @@
-class UserSettings {
+class UserDataSettings {
   String? sensorAddress;
   int? t;
   int? hiAlarm;
   int? loAlarm;
 
-  UserSettings({this.sensorAddress, this.t, this.hiAlarm, this.loAlarm});
+  UserDataSettings({this.sensorAddress, this.t, this.hiAlarm, this.loAlarm});
 
   Map<String, dynamic> toJson() {
     return {
@@ -15,8 +15,8 @@ class UserSettings {
     };
   }
 
-  List<UserSettings> getUserSettings(Map<String, dynamic> json) {
-    List<UserSettings> userSettingsList = [];
+  static List<UserDataSettings> getUserDataSettings(Map<String, dynamic> json) {
+    List<UserDataSettings> userSettingsList = [];
     for (String key in json.keys) {
       //print("key:  $key");
       if (key.isNotEmpty) {
@@ -41,7 +41,7 @@ class UserSettings {
             }
           }
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
-          UserSettings userSettings = UserSettings(
+          UserDataSettings userSettings = UserDataSettings(
               sensorAddress: key, t: t, hiAlarm: hiAlarm, loAlarm: loAlarm);
           userSettingsList.add(userSettings);
         }
