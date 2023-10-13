@@ -61,31 +61,31 @@ class _UserSettingsState extends State<UserSettings> {
                     return Container(
                         decoration: const BoxDecoration(
                             border: Border(
-                                bottom: BorderSide(color: Colors.blueGrey)
-                            )
-                        ),
+                                bottom: BorderSide(color: Colors.blueGrey))),
                         child: ListTile(
-                            contentPadding:
-                            const EdgeInsets.only(left: 20, right: 10, top: 20, bottom: 20),
-                            title:
-                                Text("Id: ${snapshot.data![index].sensorAddress!}"),
+                            contentPadding: const EdgeInsets.only(
+                                left: 20, right: 10, top: 20, bottom: 20),
+                            title: Text(
+                                "Id: ${snapshot.data![index].sensorAddress!}"),
                             leading: const FlutterLogo(),
                             subtitle: Row(
                               children: <Widget>[
-                                Text(snapshot.data![index].t.toString()),
-                                Text("  -  "),
+                                const Text("t"),
                                 Expanded(
                                   child: TextField(
                                     controller: dataController,
                                     onChanged: (text) {
-                                      dataController.text = snapshot
-                                          .data![index].t
-                                          .toString();
+                                      dataController.text =
+                                          snapshot.data![index].t.toString();
                                     },
+                                    decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText:
+                                        (snapshot.data![index].t)
+                                            .toString()),
                                   ),
                                 ),
-                                Text(snapshot.data![index].hiAlarm.toString()),
-                                Text("  -  "),
+                                const Text("Hi alarm"),
                                 Expanded(
                                   child: TextField(
                                     controller: dataController,
@@ -94,13 +94,17 @@ class _UserSettingsState extends State<UserSettings> {
                                           .data![index].hiAlarm
                                           .toString();
                                     },
+                                    decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText:
+                                            (snapshot.data![index].hiAlarm)
+                                                .toString()),
                                   ),
                                 ),
-                                Text(
-                                  snapshot.data![index].loAlarm.toString(),
+                                const Text(
+                                  "lo alarm",
                                   style: TextStyle(fontWeight: FontWeight.w800),
                                 ),
-                                Text("  -  "),
                                 Expanded(
                                   child: TextField(
                                     controller: dataController,
@@ -109,6 +113,11 @@ class _UserSettingsState extends State<UserSettings> {
                                           .data![index].loAlarm
                                           .toString();
                                     },
+                                    decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText:
+                                        (snapshot.data![index].loAlarm)
+                                            .toString()),
                                   ),
                                 ),
                               ],
