@@ -34,7 +34,7 @@ class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red);
 
-  bool lockAppSwitchVal = true;
+ /* bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
   bool changePassSwitchVal = true;
 
@@ -43,7 +43,7 @@ class _UserSettingsState extends State<UserSettings> {
     fontSize: 16,
     color: CupertinoColors.inactiveGray,
   );
-  TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
+  TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray); */
 
 
   @override
@@ -61,6 +61,11 @@ class _UserSettingsState extends State<UserSettings> {
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(color: Colors.blueGrey))),
+                        child:
                     return ListTile(
                         title: Text(snapshot.data![index].sensorAddress ?? ""),
                         subtitle: Row(
@@ -79,7 +84,10 @@ class _UserSettingsState extends State<UserSettings> {
                         onTap: () {
                          // showAlarmDetail(index);
                         });
-                  }));
+                  }
+                  )
+              )
+          );
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
