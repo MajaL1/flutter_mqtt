@@ -5,18 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
 class UserSettings extends StatefulWidget {
   const UserSettings({Key? key}) : super(key: key);
 
   @override
   State<UserSettings> createState() => _UserSettingsState();
-
 }
 
-Future<List<UserDataSettings>> getUserDataSettings() async{
+Future<List<UserDataSettings>> getUserDataSettings() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String? data = preferences.get("settings_mqtt").toString();
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
@@ -24,17 +20,17 @@ Future<List<UserDataSettings>> getUserDataSettings() async{
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
   // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-  List<UserDataSettings> userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+  List<UserDataSettings> userDataSettings =
+      UserDataSettings.getUserDataSettings(jsonMap);
   return userDataSettings;
- // debugPrint("UserSettings from JSON: $userSettings");
-
+  // debugPrint("UserSettings from JSON: $userSettings");
 }
 
 class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red);
 
- /* bool lockAppSwitchVal = true;
+  bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
   bool changePassSwitchVal = true;
 
@@ -43,51 +39,87 @@ class _UserSettingsState extends State<UserSettings> {
     fontSize: 16,
     color: CupertinoColors.inactiveGray,
   );
-  TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray); */
+  TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
+  final TextEditingController dataController = TextEditingController();
+  String value = "";
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder<List<UserDataSettings>>(
       future: getUserDataSettings(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text("Scheduled Notifications"),
+                title: const Text("Settings"),
               ),
               //drawer: NavDrawer(sharedPrefs: ),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
-                  return Container(
+                    return Container(
                         decoration: const BoxDecoration(
                             border: Border(
-                                bottom: BorderSide(color: Colors.blueGrey))),
-                        child:
-                    return ListTile(
-                        title: Text(snapshot.data![index].sensorAddress ?? ""),
-                        subtitle: Row(
-                          children: <Widget>[
-                            Text(snapshot.data![index].loAlarm.toString()),
-                            Text("  -  "),
-                            Text(
-                              snapshot.data![index].hiAlarm.toString(),
-                              style: TextStyle(fontWeight: FontWeight.w800),
-                            ),
-                          ],
+                                bottom: BorderSide(color: Colors.blueGrey)
+                            )
                         ),
+                        child: ListTile(
+                            contentPadding:
+                            const EdgeInsets.only(left: 20, right: 10, top: 20, bottom: 20),
+                            title:
+                                Text("Id: ${snapshot.data![index].sensorAddress!}"),
+                            leading: const FlutterLogo(),
+                            subtitle: Row(
+                              children: <Widget>[
+                                Text(snapshot.data![index].t.toString()),
+                                Text("  -  "),
+                                Expanded(
+                                  child: TextField(
+                                    controller: dataController,
+                                    onChanged: (text) {
+                                      dataController.text = snapshot
+                                          .data![index].t
+                                          .toString();
+                                    },
+                                  ),
+                                ),
+                                Text(snapshot.data![index].hiAlarm.toString()),
+                                Text("  -  "),
+                                Expanded(
+                                  child: TextField(
+                                    controller: dataController,
+                                    onChanged: (text) {
+                                      dataController.text = snapshot
+                                          .data![index].hiAlarm
+                                          .toString();
+                                    },
+                                  ),
+                                ),
+                                Text(
+                                  snapshot.data![index].loAlarm.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                                Text("  -  "),
+                                Expanded(
+                                  child: TextField(
+                                    controller: dataController,
+                                    onChanged: (text) {
+                                      dataController.text = snapshot
+                                          .data![index].loAlarm
+                                          .toString();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
 
-                        //Text(snapshot.data![index].date!),
+                            //Text(snapshot.data![index].date!),
 
-                        onTap: () {
-                         // showAlarmDetail(index);
-                        });
-                  }
-                  )
-              )
-          );
+                            onTap: () {
+                              // showAlarmDetail(index);
+                            }));
+                  }));
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }

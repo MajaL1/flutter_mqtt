@@ -6,6 +6,7 @@ class AlarmHistory extends StatelessWidget {
   //var sharedPreferences;
 
   const AlarmHistory({Key? key}) : super(key: key);
+
   // late SharedPreferences sharedPreferences = sharedPreferences;
 
   void showAlarmDetail(index) {
@@ -38,7 +39,8 @@ class AlarmHistory extends StatelessWidget {
                                 const Text("  -  "),
                                 Text(
                                   snapshot.data![index].description,
-                                  style: const TextStyle(fontWeight: FontWeight.w800),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w800),
                                 ),
                               ],
                             ),
