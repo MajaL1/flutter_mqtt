@@ -727,4 +727,9 @@ class _UserSettingsState extends State<UserSettings> {
       ),
     );*/
   }
+
+  Future<void> saveUserSettings() async { SharedPreferences sharedPreferences = await SharedPreferences.getInstance(); final storage = FlutterSecureStorage(); var username = emailController.text; var password = passwordController.text; debugPrint("u, p $username, $password"); //check email and password if (formkey.currentState!.validate()) { // todo: odkomentiraj login // User? user = await ApiService.login(username, password); /** User user = await MqttConnectUtil.readUserData(); * MqttConnectUtil.getBrokerAddressList(user); MqttConnectUtil.initalizeUserPrefs(user); **/ User user = await ApiService.getUserData(); 
+
+}
+
 }
