@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../mqtt/MQTTConnectionManager.dart';
+import '../mqtt/state/MQTTAppState.dart';
+
 class UserSettings extends StatefulWidget {
   const UserSettings({Key? key}) : super(key: key);
 
@@ -692,6 +695,7 @@ class _UserSettingsState extends State<UserSettings> {
                                 title: Text(
                                     "Id: ${snapshot.data![index].sensorAddress!}"),
                                 leading: const FlutterLogo(),
+
                                 subtitle: Row(
                                   children: <Widget>[
                                     const Text("t"),
@@ -784,5 +788,20 @@ class _UserSettingsState extends State<UserSettings> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     //var password = passwordController.text;
     debugPrint("Save user settings");
+
+    /** pridobivanje iz settingsov **/
+
+    // ali je mqtt state connected?
+    // kako dobimo connected state?
+    // verjetno je potrebno to dodati nekam na shared memory
+    //if (MQTTAppConnectionState.connected ==  // currentAppState.getAppConnectionState) {
+        MQTTConnectionManager.publish("100");
+        //String t = await currentAppState.getHistoryText;
+
+    print("****************** $t");
+
+
+      //this.publish('topic');
+
   }
 }
