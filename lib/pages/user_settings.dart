@@ -46,192 +46,25 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<UserDataSettings>>(
-      future: getUserDataSettings(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-              appBar: AppBar(
-                title: const Text("Settings"),
-              ),
-              //drawer: NavDrawer(sharedPrefs: ),
-              body: ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(color: Colors.blueGrey))),
-                        child: ListTile(
-                            contentPadding: const EdgeInsets.only(
-                                left: 20, right: 10, top: 20, bottom: 20),
-                            title: Text(
-                                "Id: ${snapshot.data![index].sensorAddress!}"),
-                            leading: const FlutterLogo(),
-                            subtitle: Row(
-                              children: <Widget>[
-                                const Text("t"),
-                                Expanded(
-                                  child: TextField(
-                                    controller: dataController,
-                                    onChanged: (text) {
-                                      dataController.text =
-                                          snapshot.data![index].t.toString();
-                                    },
-                                    decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText:
-                                        (snapshot.data![index].t)
-                                            .toString()),
-                                  ),
-                                ),
-                                const Text("Hi alarm"),
-                                Expanded(
-                                  child: TextField(
-                                    controller: dataController,
-                                    onChanged: (text) {
-                                      dataController.text = snapshot
-                                          .data![index].hiAlarm
-                                          .toString();
-                                    },
-                                    decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText:
-                                            (snapshot.data![index].hiAlarm)
-                                                .toString()),
-                                  ),
-                                ),
-                                const Text(
-                                  "lo alarm",
-                                  style: TextStyle(fontWeight: FontWeight.w800),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    controller: dataController,
-                                    onChanged: (text) {
-                                      dataController.text = snapshot
-                                          .data![index].loAlarm
-                                          .toString();
-                                    },
-                                    decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText:
-                                        (snapshot.data![index].loAlarm)
-                                            .toString()),
-                                  ),
-                                ),
-                              ],
-                            ),
 
-                            //Text(snapshot.data![index].date!),
-
-                            onTap: () {
-                              // showAlarmDetail(index);
-                            }));
-                  }));
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        // By default show a loading spinner.
-        return const CircularProgressIndicator();
-      },
-    );
-    /*return Scaffold(
+    return Scaffold(
+      //padding: const EdgeInsets.all(12),
+      //alignment: Alignment.center,
       appBar: AppBar(
         title: const Text("Settings"),
       ),
         body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("Account", style: headingStyle),
-                ],
-              ),
-              const ListTile(
-                leading: Icon(Icons.phone),
-                title: Text("Phone Number"),
-              ),
-              const Divider(),
-              const ListTile(
-                leading: Icon(Icons.mail),
-                title: Text("Email"),
-              ),
-              const Divider(),
-              const ListTile(
-                leading: Icon(Icons.exit_to_app),
-                title: Text("Sign Out"),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("Security", style: headingStyle),
-                ],
-              ),
-              ListTile(
-                leading: const Icon(Icons.phonelink_lock_outlined),
-                title: const Text("Lock app in background"),
-                trailing: Switch(
-                    value: lockAppSwitchVal,
-                    activeColor: Colors.redAccent,
-                    onChanged: (val) {
-                      setState(() {
-                        lockAppSwitchVal = val;
-                      });
-                    }),
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.fingerprint),
-                title: const Text("Use fingerprint"),
-                trailing: Switch(
-                    value: fingerprintSwitchVal,
-                    activeColor: Colors.redAccent,
-                    onChanged: (val) {
-                      setState(() {
-                        fingerprintSwitchVal = val;
-                      });
-                    }),
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.lock),
-                title: const Text("Change Password"),
-                trailing: Switch(
-                    value: changePassSwitchVal,
-                    activeColor: Colors.redAccent,
-                    onChanged: (val) {
-                      setState(() {
-                        changePassSwitchVal = val;
-                      });
-                    }),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("Misc", style: headingStyle),
-                ],
-              ),
-              const ListTile(
-                leading: Icon(Icons.file_open_outlined),
-                title: Text("Terms of Service"),
-              ),
-              const Divider(),
-              const ListTile(
-                leading: Icon(Icons.file_copy_outlined),
-                title: Text("Open Source and Licences"),
-              ),
-            ],
-          ),
+        child: Column(
+
+          children: <Widget>[
+            _buildMqttSettingsView(),
+            _buildUserPersonalSettings(),
+          ]
+
         ),
+
       ),
     );
-*/
     /*  return (kIsWeb)//(Platform.isAndroid || kIsWeb)
         ? MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -728,8 +561,228 @@ class _UserSettingsState extends State<UserSettings> {
     );*/
   }
 
-  Future<void> saveUserSettings() async { SharedPreferences sharedPreferences = await SharedPreferences.getInstance(); final storage = FlutterSecureStorage(); var username = emailController.text; var password = passwordController.text; debugPrint("u, p $username, $password"); //check email and password if (formkey.currentState!.validate()) { // todo: odkomentiraj login // User? user = await ApiService.login(username, password); /** User user = await MqttConnectUtil.readUserData(); * MqttConnectUtil.getBrokerAddressList(user); MqttConnectUtil.initalizeUserPrefs(user); **/ User user = await ApiService.getUserData(); 
+  Widget _buildUserPersonalSettings(){
+    return Container(
+      padding: const EdgeInsets.all(12),
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Common",
+                style: headingStyle,
+              ),
+            ],
+          ),
+          const ListTile(
+            leading: Icon(Icons.language),
+            title: Text("Language"),
+            subtitle: Text("English"),
+          ),
+          const Divider(),
+          const ListTile(
+            leading: Icon(Icons.cloud),
+            title: Text("Environment"),
+            subtitle: Text("Production"),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Account", style: headingStyle),
+            ],
+          ),
+          const ListTile(
+            leading: Icon(Icons.phone),
+            title: Text("Phone Number"),
+          ),
+          const Divider(),
+          const ListTile(
+            leading: Icon(Icons.mail),
+            title: Text("Email"),
+          ),
+          const Divider(),
+          const ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text("Sign Out"),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Security", style: headingStyle),
+            ],
+          ),
+          ListTile(
+            leading: const Icon(Icons.phonelink_lock_outlined),
+            title: const Text("Lock app in background"),
+            trailing: Switch(
+                value: lockAppSwitchVal,
+                activeColor: Colors.redAccent,
+                onChanged: (val) {
+                  setState(() {
+                    lockAppSwitchVal = val;
+                  });
+                }),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.fingerprint),
+            title: const Text("Use fingerprint"),
+            trailing: Switch(
+                value: fingerprintSwitchVal,
+                activeColor: Colors.redAccent,
+                onChanged: (val) {
+                  setState(() {
+                    fingerprintSwitchVal = val;
+                  });
+                }),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.lock),
+            title: const Text("Change Password"),
+            trailing: Switch(
+                value: changePassSwitchVal,
+                activeColor: Colors.redAccent,
+                onChanged: (val) {
+                  setState(() {
+                    changePassSwitchVal = val;
+                  });
+                }),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Misc", style: headingStyle),
+            ],
+          ),
+          const ListTile(
+            leading: Icon(Icons.file_open_outlined),
+            title: Text("Terms of Service"),
+          ),
+          const Divider(),
+          const ListTile(
+            leading: Icon(Icons.file_copy_outlined),
+            title: Text("Open Source and Licences"),
+          ),
+        ],
+      ),
+    );
+  }
 
-}
+  Widget _buildMqttSettingsView() {
+    return FutureBuilder<List<UserDataSettings>>(
+      future: getUserDataSettings(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return  ListView.builder(
+                    shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom:
+                                        BorderSide(color: Colors.blueGrey))),
+                            child: ListTile(
+                                contentPadding: const EdgeInsets.only(
+                                    left: 20, right: 10, top: 20, bottom: 20),
+                                title: Text(
+                                    "Id: ${snapshot.data![index].sensorAddress!}"),
+                                leading: const FlutterLogo(),
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    const Text("t"),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: dataController,
+                                        onChanged: (text) {
+                                          dataController.text = snapshot
+                                              .data![index].t
+                                              .toString();
+                                        },
+                                        decoration: InputDecoration(
+                                            border: const OutlineInputBorder(),
+                                            labelText: (snapshot.data![index].t)
+                                                .toString()),
+                                      ),
+                                    ),
+                                    const Text("Hi alarm"),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: dataController,
+                                        onChanged: (text) {
+                                          dataController.text = snapshot
+                                              .data![index].hiAlarm
+                                              .toString();
+                                        },
+                                        decoration: InputDecoration(
+                                            border: const OutlineInputBorder(),
+                                            labelText:
+                                                (snapshot.data![index].hiAlarm)
+                                                    .toString()),
+                                      ),
+                                    ),
+                                    const Text(
+                                      "lo alarm",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: dataController,
+                                        onChanged: (text) {
+                                          dataController.text = snapshot
+                                              .data![index].loAlarm
+                                              .toString();
+                                        },
+                                        decoration: InputDecoration(
+                                            border: const OutlineInputBorder(),
+                                            labelText:
+                                                (snapshot.data![index].loAlarm)
+                                                    .toString()),
+                                      ),
+                                    ),
+                                    Expanded(
+                                        child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 15.0,
+                                                right: 15.0,
+                                                top: 15,
+                                                bottom: 0),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                saveUserSettings();
+                                              },
+                                              child: const Text(
+                                                'Save',
+                                                style: TextStyle(
+                                                    color: Colors.indigoAccent,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    fontSize: 15),
+                                              ),
+                                            )))
+                                  ],
+                                ),
+                                onTap: () {
+                                  // showAlarmDetail(index);
+                                }));
+                      });
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        // By default show a loading spinner.
+        return const CircularProgressIndicator();
+      },
+    );
+  }
 
+  Future<void> saveUserSettings() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    //var password = passwordController.text;
+    debugPrint("Save user settings");
+  }
 }
