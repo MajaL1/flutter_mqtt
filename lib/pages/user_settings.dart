@@ -795,10 +795,10 @@ class _UserSettingsState extends State<UserSettings> {
     // kako dobimo connected state?
     // verjetno je potrebno to dodati nekam na shared memory
     //if (MQTTAppConnectionState.connected ==  // currentAppState.getAppConnectionState) {
-        MQTTConnectionManager.publish("100");
+        //MQTTConnectionManager.publish("100");
         //String t = await currentAppState.getHistoryText;
 
-    print("****************** $t");
+    //print("****************** $t");
 
 
       //this.publish('topic');

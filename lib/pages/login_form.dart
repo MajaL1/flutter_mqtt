@@ -21,7 +21,11 @@ import '../mqtt/state/MQTTAppState.dart';
 class LoginForm extends StatefulWidget {
   //var sharedPreferences;
 
-  const LoginForm({Key? key}) : super(key: key);
+  MQTTConnectionManager? manager;
+
+ /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
+    this.manager;
+  } */
 
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
@@ -34,6 +38,8 @@ class _LoginFormValidationState extends State<LoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  late MQTTConnectionManager manager;
+
   getLoggedInState() async {
     /*await Helper.getUserLoggedInSharedPreference().then((value) {
       setState(() {
@@ -45,7 +51,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   Future<void> login() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    final storage = FlutterSecureStorage();
+    final storage = const FlutterSecureStorage();
 
     var username = emailController.text;
     var password = passwordController.text;
@@ -57,18 +63,16 @@ class _LoginFormValidationState extends State<LoginForm> {
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
 
-     /** User user = await MqttConnectUtil.readUserData();
-      *  MqttConnectUtil.getBrokerAddressList(user);
-         MqttConnectUtil.initalizeUserPrefs(user);
-         **/
+      // ***************** connect to broker ****************
+      User user = await MqttConnectUtil.readUserData();
+      MqttConnectUtil.getBrokerAddressList(user);
+      MqttConnectUtil.initalizeUserPrefs(user);
+      List<String> brokerAddressList =
+          MqttConnectUtil.getBrokerAddressList(user);
+      connectToBroker(brokerAddressList);
+      // *****************************************************
 
-      User user = await ApiService.getUserData();
 
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      sharedPreferences.setString("username", user.username);
-      sharedPreferences.setString("email", user.email ?? "");
-      sharedPreferences.setString("mqtt_pass", user.mqtt_pass ?? "");
 
       debugPrint("preferences ${sharedPreferences.toString()}");
       await storage.write(key: 'jwt', value: 'jwtTokenTest');
@@ -76,21 +80,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 //storage.containsKey(key: "jwt")
       String? readToken = await storage.read(key: "token");
       print("token from flutter secure storage: $readToken");
-      List<String> brokerAddressList = [];
-      var topicForUser = user.topic.topicList;
-      debugPrint("user.topic.id : ${user.topic.id}");
-      String deviceName = user.topic.id;
-      debugPrint("deviceName : $deviceName");
 
-      debugPrint("topicForUser : $topicForUser, list of ");
-      for (var topic in topicForUser) {
-        String topicName = topic.name;
-        debugPrint("==== name:  ${topic.name}");
-        debugPrint("==== rw:  ${topic.rw}");
-
-        brokerAddressList.add(deviceName + "/" + topicName);
-      }
-      connectToBroker(brokerAddressList);
 
       Navigator.push(
           context,
@@ -98,25 +88,11 @@ class _LoginFormValidationState extends State<LoginForm> {
           MaterialPageRoute(builder: (_) => MQTTView()));
       debugPrint("Validated");
     } else {
-      const LoginForm();
+       LoginForm();
       debugPrint("Not Validated");
     }
   }
 
-  /**** iz mqttView
-
-      bool shouldEnable = false;
-      if (controller == _messageTextController &&
-      state == MQTTAppConnectionState.connected) {
-      shouldEnable = true;
-      } else if ((controller == _hostTextController &&
-      state == MQTTAppConnectionState.disconnected) ||
-      (controller == _topicTextController &&
-      state == MQTTAppConnectionState.disconnected)) {
-      shouldEnable = true;
-      }
-
-   ***/
 
   Future<void> connectToBroker(List<String> brokerAddressList) async {
     for (var brokerAddress in brokerAddressList) {
@@ -126,10 +102,10 @@ class _LoginFormValidationState extends State<LoginForm> {
       } else if (brokerAddress.contains('/data')) {}
       debugPrint("brokerAddress: $brokerAddress");
     }
-    if(MQTTAppConnectionState.disconnected == currentAppState.getAppConnectionState) {
+    if (MQTTAppConnectionState.disconnected ==
+        currentAppState.getAppConnectionState) {
       await _configureAndConnect();
     }
-
   }
 
   // Connectr to brokers
@@ -150,16 +126,16 @@ class _LoginFormValidationState extends State<LoginForm> {
     manager.initializeMQTTClient();
     await manager.connect();
 
-
-
-    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
+    if (MQTTAppConnectionState.connected ==
+        currentAppState.getAppConnectionState) {
       String t = await currentAppState.getHistoryText;
 
       print("****************** $t");
     }
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
-    if (MQTTAppConnectionState.connected == currentAppState.getAppConnectionState) {
+    if (MQTTAppConnectionState.connected ==
+        currentAppState.getAppConnectionState) {
       //MQTTConnectionManager._publishMessage(topic, text);
       String t = await currentAppState.getHistoryText;
 
@@ -173,9 +149,9 @@ class _LoginFormValidationState extends State<LoginForm> {
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
     // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-   // List<UserDataSettings> userSettings = UserDataSettings().getUserDataSettings(jsonMap);
+    // List<UserDataSettings> userSettings = UserDataSettings().getUserDataSettings(jsonMap);
 
-   // debugPrint("UserSettings from JSON: $userSettings");
+    // debugPrint("UserSettings from JSON: $userSettings");
 
     // napolnimo nov objekt UserSettings
     // pridobivanje sporocil
@@ -183,9 +159,6 @@ class _LoginFormValidationState extends State<LoginForm> {
     //if(MQTTAppConnectionState.connected == true){
     //this.publish('topic');
     //}
-
-
-
   }
 
   String? validatePassword(String value) {

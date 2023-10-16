@@ -249,7 +249,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         ),
         initialRoute: '/',
         routes: <String, WidgetBuilder>{
-          '/login': (context) => const LoginForm(),
+          '/login': (context) =>  LoginForm(),
           '/user_settings': (context) => const UserSettings(),
           '/history': (context) => const AlarmHistory(),
           '/current_alarms': (context) => MQTTView(),

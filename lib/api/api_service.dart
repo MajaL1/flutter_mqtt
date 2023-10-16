@@ -31,12 +31,6 @@ class ApiService {
     return user;
   }
 
-
-
-/* static Future<UserTopic> getTopicData(user) async {
-    UserTopic topicList =
-    }*///
-
   Future<bool> createAlarms(Alarm data) async {
     String url = Constants.BASE_URL;
     final response = await client.post(
