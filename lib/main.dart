@@ -167,48 +167,6 @@ void onStart(ServiceInstance service) async {
 }
 
 
-///********* nekaj kode od prej *******************************
-// bring to foreground
-/*  Timer.periodic(const Duration(seconds: 30), (timer) async {
-    if (service is AndroidServiceInstance) {
-      // NotificationController.createNewNotification(),
-
-      if (await service.isForegroundService()) {
-        // if you don't using custom notification, uncomment this
-       // service.setForegroundNotificationInfo(
-         // title: "==Foreground My App Service",
-         // content: "==Updated at ${DateTime.now()}, updates every 10 seconds",
-        //);
-      }
-    }
-
-    /// you can see this log in logcat
-    print('== background service == Test NOtification FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
-
-    // test using external plugin
-    final deviceInfo = DeviceInfoPlugin();
-    String? device;
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      device = androidInfo.model;
-    }
-
-    if (Platform.isIOS) {
-      final iosInfo = await deviceInfo.iosInfo;
-      device = iosInfo.model;
-    }
-    service.invoke(
-      'update',
-      {
-        "current_date": DateTime.now().toIso8601String(),
-        "device": device,
-      },
-    );
-  }); */
-//******************************************//
-
-
-
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -261,4 +219,76 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
         home: FirstScreen());
   }
+
+
+  /*** dodano za pridobivanje servisa mqtt **/
+
+  
+  Future<void> connectToBroker(List<String> brokerAddressList) async {
+    for (var brokerAddress in brokerAddressList) {
+      // ali vsebuje alarme
+      if (brokerAddress.contains('/alarm')) {
+      } else if (brokerAddress.contains('/settings')) {
+      } else if (brokerAddress.contains('/data')) {}
+      debugPrint("brokerAddress: $brokerAddress");
+    }
+    if (MQTTAppConnectionState.disconnected ==
+        currentAppState.getAppConnectionState) {
+      await _configureAndConnect();
+    }
+  }
+
+  // Connectr to brokers
+  Future<void> _configureAndConnect() async {
+    //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+
+    // TODO: Use UUID
+    String osPrefix = 'Flutter_iOS';
+    if (Platform.isAndroid) {
+      osPrefix = 'Flutter_Android';
+    }
+    MQTTConnectionManager manager = MQTTConnectionManager(
+        host: 'test.navis-livedata.com', //_hostTextController.text,
+        topic: 'c45bbe821261/settings'
+            '', //_topicTextController.text,
+        identifier: osPrefix,
+        state: currentAppState);
+    manager.initializeMQTTClient();
+    await manager.connect();
+
+    if (MQTTAppConnectionState.connected ==
+        currentAppState.getAppConnectionState) {
+      String t = await currentAppState.getHistoryText;
+
+      print("****************** $t");
+    }
+
+    // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
+    if (MQTTAppConnectionState.connected ==
+        currentAppState.getAppConnectionState) {
+      //MQTTConnectionManager._publishMessage(topic, text);
+      String t = await currentAppState.getHistoryText;
+
+      print("****************** $t");
+    }
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? data = preferences.get("settings_mqtt").toString();
+    String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+    print("****************** data $data");
+    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+
+    // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
+    // List<UserDataSettings> userSettings = UserDataSettings().getUserDataSettings(jsonMap);
+
+    // debugPrint("UserSettings from JSON: $userSettings");
+
+    // napolnimo nov objekt UserSettings
+    // pridobivanje sporocil
+    //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
+    //if(MQTTAppConnectionState.connected == true){
+    //this.publish('topic');
+    //}
+  }
+
 }
