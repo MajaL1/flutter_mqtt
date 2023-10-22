@@ -22,8 +22,8 @@ class FirstScreen extends StatefulWidget {
   late MQTTAppState currentAppState;
 
   FirstScreen(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key) {
-    //manager = manager;
-
+    manager = manager;
+    currentAppState = currentAppState;
   }
   FirstScreen.base();
 
@@ -53,16 +53,17 @@ class _FirstScreenState extends State<FirstScreen> {
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
     initalizeConnection();
     // return Scaffold(
+    final MQTTAppState appState =  Provider.of<MQTTAppState>(context);
+
+    setCurrentAppState(appState);
+
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
         child: FirstScreen.base(),
         builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
-          final MQTTAppState appState =  Provider.of<MQTTAppState>(context);
-
-          setCurrentAppState(appState);
-          manager =  MQTTConnectionManager(
+           manager =  MQTTConnectionManager(
               host: 'test.navis-livedata.com', //_hostTextController.text,
               topic: 'c45bbe821261/settings'
                   '', //_topicTextController.text,
