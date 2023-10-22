@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_test/mqtt/MQTTConnectionManager.dart';
 import 'package:mqtt_test/util/app_preference_util.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
@@ -18,7 +19,7 @@ class FirstScreen extends StatefulWidget {
   //final  sharedPref;
   MQTTConnectionManager? manager;
 
- /* FirstScreen(MQTTConnectionManager manager, {Key? key}) : super(key: key) {
+  /* FirstScreen(MQTTConnectionManager manager, {Key? key}) : super(key: key) {
     this.manager;
   } */
 
@@ -30,20 +31,24 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-
   late MQTTAppState currentAppState;
 
+  @override
+  initState() {
+    super.initState();
+    // ignore: avoid_print
+    print("-- firstScreen initstate");
+    initalizeConnection();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
 
-   // return Scaffold(
+    // return Scaffold(
     return ChangeNotifierProvider<MQTTAppState>(
-    create: (_) => MQTTAppState(),
-      child: FirstScreen(),
-
+        create: (_) => MQTTAppState(),
+        child: FirstScreen(),
         builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
@@ -51,71 +56,8 @@ class _FirstScreenState extends State<FirstScreen> {
 
           currentAppState = appState;
           return SharedPrefs().token.isEmpty ? LoginForm() : MQTTView();
-          appBar:
-          _createAppBar();
         });
   }
-
-  _createAppBar(){
-      final ButtonStyle style = TextButton.styleFrom(
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-      );
-
-      return AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Login'),
-          leading: IconButton(
-            icon: (SharedPrefs().token != null)
-                ? const Icon(Icons.arrow_back)
-                : const Icon(
-              Icons.notifications_none,
-              color: Colors.transparent,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          actions: SharedPrefs().token.isNotEmpty
-              ? <Widget>[
-            TextButton(
-              style: style,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AlarmHistory())
-                  //Navigator.pushNamed(context, "/");
-                );
-              },
-              child: const Text('History'),
-            ),
-            TextButton(
-              style: style,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const UserSettings()));
-                // Navigator.pushNamed(context, '/settings');
-              },
-              child: const Text('Settings'),
-            ),
-            TextButton(
-              style: style,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MQTTView()));
-              },
-              child: const Text('Alarms'),
-            ),
-            TextButton(
-              style: style,
-              onPressed: () {
-                debugPrint("Clicked");
-              },
-              child: const Text('Logout'),
-            ),
-          ]
-              : null);
-    }
 
   Future<void> connectToBroker(List<String> brokerAddressList) async {
     for (var brokerAddress in brokerAddressList) {
@@ -131,7 +73,28 @@ class _FirstScreenState extends State<FirstScreen> {
     }
   }
 
-  // Connectr to brokers
+  // Initalize user data and connect
+  Future<void> initalizeConnection() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final storage = const FlutterSecureStorage();
+
+    // ***************** connect to broker ****************
+    User user = await MqttConnectUtil.readUserData();
+    MqttConnectUtil.getBrokerAddressList(user);
+    MqttConnectUtil.initalizeUserPrefs(user);
+    List<String> brokerAddressList = MqttConnectUtil.getBrokerAddressList(user);
+    connectToBroker(brokerAddressList);
+    // *****************************************************
+
+    debugPrint("preferences ${sharedPreferences.toString()}");
+    await storage.write(key: 'jwt', value: 'jwtTokenTest');
+    // todo: inicializiraj Mqtt service za settingse
+//storage.containsKey(key: "jwt")
+    String? readToken = await storage.read(key: "token");
+    print("token from flutter secure storage: $readToken");
+  }
+
+  // Connect to brokers
   Future<void> _configureAndConnect() async {
     //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
 

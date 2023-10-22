@@ -78,7 +78,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AlarmHistory())),
+                        builder: (context) => const AlarmHistory())),
                   ),
                   const Divider(height: 10),
                   ListTile(

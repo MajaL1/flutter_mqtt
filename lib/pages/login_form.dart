@@ -23,7 +23,7 @@ class LoginForm extends StatefulWidget {
 
   MQTTConnectionManager? manager;
 
- /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
+  /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
     this.manager;
   } */
 
@@ -49,10 +49,6 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
   Future<void> login() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    final storage = const FlutterSecureStorage();
-
     var username = emailController.text;
     var password = passwordController.text;
 
@@ -63,36 +59,16 @@ class _LoginFormValidationState extends State<LoginForm> {
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
 
-      // ***************** connect to broker ****************
-      User user = await MqttConnectUtil.readUserData();
-      MqttConnectUtil.getBrokerAddressList(user);
-      MqttConnectUtil.initalizeUserPrefs(user);
-      List<String> brokerAddressList =
-          MqttConnectUtil.getBrokerAddressList(user);
-      connectToBroker(brokerAddressList);
-      // *****************************************************
-
-
-
-      debugPrint("preferences ${sharedPreferences.toString()}");
-      await storage.write(key: 'jwt', value: 'jwtTokenTest');
-      // todo: inicializiraj Mqtt service za settingse
-//storage.containsKey(key: "jwt")
-      String? readToken = await storage.read(key: "token");
-      print("token from flutter secure storage: $readToken");
-
-
       Navigator.push(
           context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
           MaterialPageRoute(builder: (_) => MQTTView()));
       debugPrint("Validated");
     } else {
-       LoginForm();
+      LoginForm();
       debugPrint("Not Validated");
     }
   }
-
 
   Future<void> connectToBroker(List<String> brokerAddressList) async {
     for (var brokerAddress in brokerAddressList) {
