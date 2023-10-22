@@ -209,10 +209,14 @@ class _UserSettingsState extends State<UserSettings> {
                       columnWidths: const {
                         0: FractionColumnWidth(0.99),
                       },
+
                       children: [
-                        TableRow(children: [
+                        TableRow(
+                            //decoration: ,
+                            children: [
                           Table(children: [
-                            TableRow(children: <Widget>[
+                            TableRow(
+                                children: <Widget>[
                               Text("Id: ${snapshot.data![index].sensorAddress.toString()}",
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 16),

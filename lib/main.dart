@@ -1,22 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io' show Platform;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/api/api_service.dart';
-import 'package:mqtt_test/pages/alarm_history.dart';
-import 'package:mqtt_test/pages/test_notifications1.dart';
-import 'package:mqtt_test/pages/user_settings.dart';
-import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'model/notification_message.dart';
-import 'mqtt/MQTTConnectionManager.dart';
-import 'mqtt/state/MQTTAppState.dart';
 import 'util/app_preference_util.dart';
 import 'pages/first_screen.dart';
-import 'pages/login_form.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
@@ -209,14 +201,13 @@ class _NotificationsAppState extends State<NotificationsApp> {
           primarySwatch: Colors.blue,
         ),
         initialRoute: '/',
-        routes: <String, WidgetBuilder>{
+     /*   routes: <String, WidgetBuilder>{
           '/login': (context) =>  LoginForm(),
           '/user_settings': (context) => const UserSettings(),
           '/history': (context) => const AlarmHistory(),
           '/current_alarms': (context) => MQTTView(),
           '/test_notifications1': (context) => TestNotifications1(),
-          // '/test_notifications': (context) => TestNotifications(),
-        },
+        }, */
         // navigatorKey: super.navigatorKey,
         // home: LoginForm(), //
 
@@ -225,73 +216,5 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
 
   /*** dodano za pridobivanje servisa mqtt **/
-
- /*
-  Future<void> connectToBroker(List<String> brokerAddressList) async {
-    for (var brokerAddress in brokerAddressList) {
-      // ali vsebuje alarme
-      if (brokerAddress.contains('/alarm')) {
-      } else if (brokerAddress.contains('/settings')) {
-      } else if (brokerAddress.contains('/data')) {}
-      debugPrint("brokerAddress: $brokerAddress");
-    }
-    if (MQTTAppConnectionState.disconnected ==
-        currentAppState.getAppConnectionState) {
-      await _configureAndConnect();
-    }
-  }
-
-  // Connectr to brokers
-  Future<void> _configureAndConnect() async {
-    //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
-
-    // TODO: Use UUID
-    String osPrefix = 'Flutter_iOS';
-    if (Platform.isAndroid) {
-      osPrefix = 'Flutter_Android';
-    }
-    MQTTConnectionManager manager = MQTTConnectionManager(
-        host: 'test.navis-livedata.com', //_hostTextController.text,
-        topic: 'c45bbe821261/settings'
-            '', //_topicTextController.text,
-        identifier: osPrefix,
-        state: currentAppState);
-    manager.initializeMQTTClient();
-    await manager.connect();
-
-    if (MQTTAppConnectionState.connected ==
-        currentAppState.getAppConnectionState) {
-      String t = await currentAppState.getHistoryText;
-
-      print("****************** $t");
-    }
-
-    // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
-    if (MQTTAppConnectionState.connected ==
-        currentAppState.getAppConnectionState) {
-      //MQTTConnectionManager._publishMessage(topic, text);
-      String t = await currentAppState.getHistoryText;
-
-      print("****************** $t");
-    }
-
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? data = preferences.get("settings_mqtt").toString();
-    String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-    print("****************** data $data");
-    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
-
-    // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-    // List<UserDataSettings> userSettings = UserDataSettings().getUserDataSettings(jsonMap);
-
-    // debugPrint("UserSettings from JSON: $userSettings");
-
-    // napolnimo nov objekt UserSettings
-    // pridobivanje sporocil
-    //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
-    //if(MQTTAppConnectionState.connected == true){
-    //this.publish('topic');
-    //}
-  }*/
 
 }

@@ -185,7 +185,6 @@ class _LoginFormValidationState extends State<LoginForm> {
 
           currentAppState = appState;
 
-          body:
           return DefaultTabController(
             length: 3,
             child: Scaffold(
