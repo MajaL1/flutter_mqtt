@@ -32,6 +32,7 @@ class FirstScreen extends StatefulWidget {
 
 class _FirstScreenState extends State<FirstScreen> {
   late MQTTAppState currentAppState;
+  late MQTTConnectionManager manager;
 
   @override
   initState() {
@@ -55,7 +56,7 @@ class _FirstScreenState extends State<FirstScreen> {
           final MQTTAppState appState = Provider.of<MQTTAppState>(context);
 
           currentAppState = appState;
-          return SharedPrefs().token.isEmpty ? LoginForm() : MQTTView();
+          return SharedPrefs().token.isEmpty ? LoginForm(currentAppState, manager) : MQTTView(currentAppState, manager);
         });
   }
 

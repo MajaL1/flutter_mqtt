@@ -3,25 +3,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:mqtt_test/api/api_service.dart';
-import 'package:mqtt_test/mqtt/MQTTManager.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
-import 'package:mqtt_test/util/mqtt_connect_util.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../model/user.dart';
-import '../model/user_data_settings.dart';
+import '../components/drawer.dart';
 import '../mqtt/MQTTConnectionManager.dart';
-import '../mqtt/state/MQTTAppState.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
   //var sharedPreferences;
 
   MQTTConnectionManager? manager;
+
+  LoginForm(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key);
 
   /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
     this.manager;
@@ -62,10 +57,10 @@ class _LoginFormValidationState extends State<LoginForm> {
       Navigator.push(
           context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
-          MaterialPageRoute(builder: (_) => MQTTView()));
+          MaterialPageRoute(builder: (_) => MQTTView(currentAppState, manager)));
       debugPrint("Validated");
     } else {
-      LoginForm();
+      LoginForm(currentAppState, manager);
       debugPrint("Not Validated");
     }
   }
@@ -106,7 +101,7 @@ class _LoginFormValidationState extends State<LoginForm> {
         currentAppState.getAppConnectionState) {
       String t = await currentAppState.getHistoryText;
 
-      print("****************** $t");
+      debugPrint("****************** $t");
     }
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
@@ -153,7 +148,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
-        child: LoginForm(),
+        child: LoginForm(currentAppState, manager),
         builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
@@ -164,6 +159,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           return DefaultTabController(
             length: 3,
             child: Scaffold(
+              drawer: NavDrawer(),
               backgroundColor: Colors.white,
               appBar: AppBar(
                 title: const Text("Login Page"),

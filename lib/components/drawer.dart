@@ -4,14 +4,18 @@ import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 
+import '../mqtt/MQTTConnectionManager.dart';
+import '../mqtt/state/MQTTAppState.dart';
+
 class NavDrawer extends StatelessWidget {
   //var sharedPreferences;
 
   // NavDrawer(sharedPrefs);
-  const NavDrawer({Key? key}) : super(key: key);
+  const NavDrawer(MQTTAppState appState, MQTTConnectionManager manager, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       color: Colors.blue,
       width: MediaQuery.of(context).size.width * 0.55,
@@ -52,7 +56,7 @@ class NavDrawer extends StatelessWidget {
                       color: Colors.white,
                     ),
                     title: const Text(
-                      'Scheduled alarms',
+                      '//Scheduled alarms',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -97,7 +101,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const UserSettings())),
+                        builder: (context) => const UserSettings.base())),
                   ),
                   const Divider(height: 10),
                   const Divider(height: 10),
@@ -136,7 +140,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MQTTView())),
+                        MaterialPageRoute(builder: (context) => MQTTView.empty())),
                   ),
                   const Divider(height: 10),
                   const Divider(height: 40),

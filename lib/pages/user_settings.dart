@@ -10,6 +10,7 @@ import '../mqtt/state/MQTTAppState.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({Key? key}) : super(key: key);
+  const UserSettings.base();
 
   @override
   State<UserSettings> createState() => _UserSettingsState();

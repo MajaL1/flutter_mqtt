@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/mqtt/MQTTConnectionManager.dart';
 import 'package:provider/provider.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
@@ -8,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../components/drawer.dart';
 
 class MQTTView extends StatefulWidget {
+  const MQTTView(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key);
+
+  const MQTTView.empty();
   //var sharedPreferences;
   //MQTTView();
 
@@ -25,7 +29,8 @@ class _MQTTViewState extends State<MQTTView> {
   final TextEditingController _messageTextController = TextEditingController();
   final TextEditingController _topicTextController = TextEditingController();
   late MQTTAppState currentAppState;
-  late MQTTManager manager;
+//  late MQTTManager manager;
+  late MQTTConnectionManager manager;
 
   //var sharedPreferences;
 
@@ -67,7 +72,7 @@ class _MQTTViewState extends State<MQTTView> {
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
         child: //MQTTView(sharedPreferences),
-            MQTTView(),
+            MQTTView(currentAppState, manager),
 
         // we use `builder` to obtain a new `BuildContext` that has access to the provider
         builder: (context, child) {
@@ -245,7 +250,7 @@ class _MQTTViewState extends State<MQTTView> {
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android1';
     }
-    manager = MQTTManager(
+    manager = MQTTConnectionManager(
         host: _hostTextController.text,
         topic: _topicTextController.text,
         identifier: osPrefix,
