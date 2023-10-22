@@ -19,9 +19,13 @@ class FirstScreen extends StatefulWidget {
   //final  sharedPref;
   MQTTConnectionManager? manager;
 
-  /* FirstScreen(MQTTConnectionManager manager, {Key? key}) : super(key: key) {
-    this.manager;
-  } */
+  late MQTTAppState currentAppState;
+
+  FirstScreen(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key) {
+    //manager = manager;
+
+  }
+  FirstScreen.base();
 
   var username = SharedPrefs().username;
   var token = SharedPrefs().token;
@@ -39,25 +43,37 @@ class _FirstScreenState extends State<FirstScreen> {
     super.initState();
     // ignore: avoid_print
     print("-- firstScreen initstate");
-    initalizeConnection();
+    //currentAppState = currentAppState;
+
+   //  initalizeConnection();
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
-
+    initalizeConnection();
     // return Scaffold(
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
-        child: FirstScreen(),
+        child: FirstScreen.base(),
         builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
-          final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+          final MQTTAppState appState =  Provider.of<MQTTAppState>(context);
 
-          currentAppState = appState;
+          setCurrentAppState(appState);
+          manager =  MQTTConnectionManager(
+              host: 'test.navis-livedata.com', //_hostTextController.text,
+              topic: 'c45bbe821261/settings'
+                  '', //_topicTextController.text,
+              identifier: "Android",
+              state: currentAppState);
           return SharedPrefs().token.isEmpty ? LoginForm(currentAppState, manager) : MQTTView(currentAppState, manager);
         });
+  }
+
+  Future<void> setCurrentAppState(appState)async {
+    currentAppState = appState;
   }
 
   Future<void> connectToBroker(List<String> brokerAddressList) async {
@@ -104,7 +120,7 @@ class _FirstScreenState extends State<FirstScreen> {
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android';
     }
-    MQTTConnectionManager manager = MQTTConnectionManager(
+     manager = MQTTConnectionManager(
         host: 'test.navis-livedata.com', //_hostTextController.text,
         topic: 'c45bbe821261/settings'
             '', //_topicTextController.text,

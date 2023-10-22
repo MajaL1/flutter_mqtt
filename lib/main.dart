@@ -211,7 +211,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         // navigatorKey: super.navigatorKey,
         // home: LoginForm(), //
 
-        home: FirstScreen());
+        home: FirstScreen.base());
   }
 
 

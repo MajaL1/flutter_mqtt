@@ -85,7 +85,7 @@ class _MQTTViewState extends State<MQTTView> {
             body: SingleChildScrollView(
               child: _buildColumn(),
             ),
-            drawer: NavDrawer(),
+            drawer: NavDrawer(currentAppState, manager),
             appBar: AppBar(
               title: Text("Alarms"),
             ),

@@ -15,8 +15,13 @@ class LoginForm extends StatefulWidget {
   //var sharedPreferences;
 
   MQTTConnectionManager? manager;
+  late MQTTAppState currentAppState;
 
-  LoginForm(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key);
+  LoginForm(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key){
+    manager = manager;
+    currentAppState = currentAppState;
+    }
+
 
   /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
     this.manager;
@@ -53,7 +58,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     if (formkey.currentState!.validate()) {
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
-
+      currentAppState = currentAppState;
       Navigator.push(
           context,
           /**MaterialPageRoute(builder: (_) => HomePage())); */
@@ -146,20 +151,21 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+    currentAppState = appState;
+
     return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
         child: LoginForm(currentAppState, manager),
         builder: (context, child) {
           // No longer throws
           //return Text(context.watch<MQTTView>().toString());
-          final MQTTAppState appState = Provider.of<MQTTAppState>(context);
 
-          currentAppState = appState;
 
           return DefaultTabController(
             length: 3,
             child: Scaffold(
-              drawer: NavDrawer(),
+              drawer: NavDrawer(appState, manager),
               backgroundColor: Colors.white,
               appBar: AppBar(
                 title: const Text("Login Page"),
