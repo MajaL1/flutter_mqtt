@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' show Platform;
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'model/notification_message.dart';
+import 'mqtt/MQTTConnectionManager.dart';
+import 'mqtt/state/MQTTAppState.dart';
 import 'util/app_preference_util.dart';
 import 'pages/first_screen.dart';
 import 'pages/login_form.dart';
@@ -223,7 +226,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
   /*** dodano za pridobivanje servisa mqtt **/
 
-  
+ /*
   Future<void> connectToBroker(List<String> brokerAddressList) async {
     for (var brokerAddress in brokerAddressList) {
       // ali vsebuje alarme
@@ -289,6 +292,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
     //if(MQTTAppConnectionState.connected == true){
     //this.publish('topic');
     //}
-  }
+  }*/
 
 }

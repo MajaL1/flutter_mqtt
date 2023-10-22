@@ -56,512 +56,26 @@ class _UserSettingsState extends State<UserSettings> {
       appBar: AppBar(
         title: const Text("Settings"),
       ),
-        body: SingleChildScrollView(
-        child: Column(
-
-          children: <Widget>[
-            _buildMqttSettingsView(),
-            _buildUserPersonalSettings(),
-          ]
-
-        ),
-
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.only(top: 30, bottom: 20),
+        child: Column(children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 35),
+          ),
+          const Text("Device settings: ",
+              style: TextStyle(color: Colors.black, fontSize: 20)),
+          _buildMqttSettingsView(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 35),
+          ),
+          const Text("Personal settings: ",
+              style: TextStyle(color: Colors.black, fontSize: 20)),
+          _buildUserPersonalSettings(),
+        ]),
       ),
     );
-    /*  return (kIsWeb)//(Platform.isAndroid || kIsWeb)
-        ? MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Colors.redAccent,
-          secondary: Colors.redAccent,
-        ),
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Settings UI"),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Common",
-                      style: headingStyle,
-                    ),
-                  ],
-                ),
-                const ListTile(
-                  leading: Icon(Icons.language),
-                  title: Text("Language"),
-                  subtitle: Text("English"),
-                ),
-                const Divider(),
-                const ListTile(
-                  leading: Icon(Icons.cloud),
-                  title: Text("Environment"),
-                  subtitle: Text("Production"),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Account", style: headingStyle),
-                  ],
-                ),
-                const ListTile(
-                  leading: Icon(Icons.phone),
-                  title: Text("Phone Number"),
-                ),
-                const Divider(),
-                const ListTile(
-                  leading: Icon(Icons.mail),
-                  title: Text("Email"),
-                ),
-                const Divider(),
-                const ListTile(
-                  leading: Icon(Icons.exit_to_app),
-                  title: Text("Sign Out"),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Security", style: headingStyle),
-                  ],
-                ),
-                ListTile(
-                  leading: const Icon(Icons.phonelink_lock_outlined),
-                  title: const Text("Lock app in background"),
-                  trailing: Switch(
-                      value: lockAppSwitchVal,
-                      activeColor: Colors.redAccent,
-                      onChanged: (val) {
-                        setState(() {
-                          lockAppSwitchVal = val;
-                        });
-                      }),
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.fingerprint),
-                  title: const Text("Use fingerprint"),
-                  trailing: Switch(
-                      value: fingerprintSwitchVal,
-                      activeColor: Colors.redAccent,
-                      onChanged: (val) {
-                        setState(() {
-                          fingerprintSwitchVal = val;
-                        });
-                      }),
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.lock),
-                  title: const Text("Change Password"),
-                  trailing: Switch(
-                      value: changePassSwitchVal,
-                      activeColor: Colors.redAccent,
-                      onChanged: (val) {
-                        setState(() {
-                          changePassSwitchVal = val;
-                        });
-                      }),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Misc", style: headingStyle),
-                  ],
-                ),
-                const ListTile(
-                  leading: Icon(Icons.file_open_outlined),
-                  title: Text("Terms of Service"),
-                ),
-                const Divider(),
-                const ListTile(
-                  leading: Icon(Icons.file_copy_outlined),
-                  title: Text("Open Source and Licences"),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    )
-        : CupertinoApp(
-      debugShowCheckedModeBanner: false,
-      home: CupertinoPageScaffold(
-        navigationBar: const CupertinoNavigationBar(
-          backgroundColor: CupertinoColors.destructiveRed,
-          middle: Text("Settings UI"),
-        ),
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: CupertinoColors.extraLightBackgroundGray,
-          child: Column(
-            children: [
-              //Common
-              const SizedBox(height: 14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 12),
-                  Text(
-                    "Common",
-                    style: headingStyleIOS,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                color: CupertinoColors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 12),
-                          const Icon(
-                            Icons.language,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 12),
-                          const Text("Language"),
-                          const Spacer(),
-                          Text(
-                            "English",
-                            style: descStyleIOS,
-                          ),
-                          const SizedBox(width: 5),
-                          const Icon(
-                            CupertinoIcons.right_chevron,
-                            color: CupertinoColors.inactiveGray,
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Container(
-                      width: double.infinity,
-                      height: 38,
-                      alignment: Alignment.center,
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 12),
-                          const Icon(
-                            Icons.cloud,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 12),
-                          const Text("Environment"),
-                          const Spacer(),
-                          Text(
-                            "Production",
-                            style: descStyleIOS,
-                          ),
-                          const SizedBox(width: 5),
-                          const Icon(
-                            CupertinoIcons.right_chevron,
-                            color: CupertinoColors.inactiveGray,
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              //Account
-              const SizedBox(height: 14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 12),
-                  Text(
-                    "Account",
-                    style: headingStyleIOS,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                color: CupertinoColors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(width: 12),
-                          Icon(
-                            Icons.phone,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(width: 12),
-                          Text("Phone Number"),
-                          Spacer(),
-                          Icon(
-                            CupertinoIcons.right_chevron,
-                            color: CupertinoColors.inactiveGray,
-                          ),
-                          SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(width: 12),
-                          Icon(
-                            Icons.mail,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(width: 12),
-                          Text("Email"),
-                          Spacer(),
-                          Icon(
-                            CupertinoIcons.right_chevron,
-                            color: CupertinoColors.inactiveGray,
-                          ),
-                          SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(width: 12),
-                          Icon(
-                            Icons.exit_to_app,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(width: 12),
-                          Text("Sign Out"),
-                          Spacer(),
-                          Icon(
-                            CupertinoIcons.right_chevron,
-                            color: CupertinoColors.inactiveGray,
-                          ),
-                          SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              //Security
-              const SizedBox(height: 14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 12),
-                  Text(
-                    "Security",
-                    style: headingStyleIOS,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                color: CupertinoColors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 12),
-                          const Icon(
-                            Icons.phonelink_lock_outlined,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 12),
-                          const Text("Lock app in Background"),
-                          const Spacer(),
-                          CupertinoSwitch(
-                              value: lockAppSwitchVal,
-                              activeColor: CupertinoColors.destructiveRed,
-                              onChanged: (val) {
-                                setState(() {
-                                  lockAppSwitchVal = val;
-                                });
-                              }),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 12),
-                          const Icon(
-                            Icons.fingerprint,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 12),
-                          const Text("Use Fingerprint"),
-                          const Spacer(),
-                          CupertinoSwitch(
-                            value: fingerprintSwitchVal,
-                            onChanged: (val) {
-                              setState(() {
-                                fingerprintSwitchVal = val;
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 12),
-                          const Icon(
-                            Icons.lock,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 12),
-                          const Text("Change Password"),
-                          const Spacer(),
-                          CupertinoSwitch(
-                            value: changePassSwitchVal,
-                            activeColor: CupertinoColors.destructiveRed,
-                            onChanged: (val) {
-                              setState(() {
-                                changePassSwitchVal = val;
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              //Misc
-              const SizedBox(height: 14),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 12),
-                  Text(
-                    "Misc",
-                    style: headingStyleIOS,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                color: CupertinoColors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(width: 12),
-                          Icon(
-                            Icons.file_open_sharp,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(width: 12),
-                          Text("Terms of Service"),
-                          Spacer(),
-                          Icon(
-                            CupertinoIcons.right_chevron,
-                            color: CupertinoColors.inactiveGray,
-                          ),
-                          SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: double.infinity,
-                      height: 38,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(width: 12),
-                          Icon(
-                            Icons.file_copy_sharp,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(width: 12),
-                          Text("Open Source Licenses"),
-                          Spacer(),
-                          Icon(
-                            CupertinoIcons.right_chevron,
-                            color: CupertinoColors.inactiveGray,
-                          ),
-                          SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );*/
+
   }
 
   Widget _buildUserPersonalSettings(){
@@ -680,101 +194,70 @@ class _UserSettingsState extends State<UserSettings> {
       future: getUserDataSettings(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return  ListView.builder(
-                    shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom:
-                                        BorderSide(color: Colors.blueGrey))),
-                            child: ListTile(
-                                contentPadding: const EdgeInsets.only(
-                                    left: 20, right: 10, top: 20, bottom: 20),
-                                title: Text(
-                                    "Id: ${snapshot.data![index].sensorAddress!}"),
-                                leading: const FlutterLogo(),
-
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Text("t"),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: dataController,
-                                        onChanged: (text) {
-                                          dataController.text = snapshot
-                                              .data![index].t
-                                              .toString();
-                                        },
-                                        decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            labelText: (snapshot.data![index].t)
-                                                .toString()),
-                                      ),
-                                    ),
-                                    const Text("Hi alarm"),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: dataController,
-                                        onChanged: (text) {
-                                          dataController.text = snapshot
-                                              .data![index].hiAlarm
-                                              .toString();
-                                        },
-                                        decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            labelText:
-                                                (snapshot.data![index].hiAlarm)
-                                                    .toString()),
-                                      ),
-                                    ),
-                                    const Text(
-                                      "lo alarm",
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                    decoration: const BoxDecoration(
+                        //  border:
+                        //    Border(bottom: BorderSide(color: Colors.blueGrey))
+                        ),
+                    padding: const EdgeInsets.only(
+                        top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
+                    child: Table(
+                      columnWidths: const {
+                        0: FractionColumnWidth(0.99),
+                      },
+                      children: [
+                        TableRow(children: [
+                          Table(children: [
+                            TableRow(children: <Widget>[
+                              Text("Id: ${snapshot.data![index].sensorAddress.toString()}",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                  textAlign: TextAlign.justify),
+                              Container(
+                                  alignment: Alignment.bottomCenter,
+                                  child: const Text("T: ",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w800),
-                                    ),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: dataController,
-                                        onChanged: (text) {
-                                          dataController.text = snapshot
-                                              .data![index].loAlarm
-                                              .toString();
-                                        },
-                                        decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            labelText:
-                                                (snapshot.data![index].loAlarm)
-                                                    .toString()),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 15.0,
-                                                right: 15.0,
-                                                top: 15,
-                                                bottom: 0),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                saveUserSettings();
-                                              },
-                                              child: const Text(
-                                                'Save',
-                                                style: TextStyle(
-                                                    color: Colors.indigoAccent,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    fontSize: 15),
-                                              ),
-                                            )))
-                                  ],
-                                ),
-                                onTap: () {
-                                  // showAlarmDetail(index);
-                                }));
-                      });
+                                          color: Colors.black, fontSize: 16),
+                                      textAlign: TextAlign.justify)),
+                               TextField(
+                                controller: dataController,
+                                decoration: _setBorderDecoration(),
+                                onChanged: (text) {
+                                  dataController.text =
+                                      snapshot.data![index].t.toString();
+                                },
+                              ),
+                              const Text("Hi alarm:"),
+                              TextField(
+                                controller: dataController,
+                                decoration: _setBorderDecoration(),
+                                onChanged: (text) {
+                                  dataController.text =
+                                      snapshot.data![index].hiAlarm.toString();
+                                },
+                              ),
+                              const Text(
+                                "Lo alarm:",
+                                style: TextStyle(),
+                              ),
+                              TextField(
+                                controller: dataController,
+                                decoration: _setBorderDecoration(),
+                                onChanged: (text) {
+                                  dataController.text =
+                                      snapshot.data![index].loAlarm.toString();
+                                },
+                              ),
+                            ]),
+                          ]),
+                        ])
+                      ],
+                    ));
+              });
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -782,6 +265,16 @@ class _UserSettingsState extends State<UserSettings> {
         return const CircularProgressIndicator();
       },
     );
+  }
+
+  _setBorderDecoration(){
+    return const InputDecoration(
+        focusedBorder:  OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.greenAccent, width: 5.0),
+        ),
+        enabledBorder:  OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+        ));
   }
 
   Future<void> saveUserSettings() async {
