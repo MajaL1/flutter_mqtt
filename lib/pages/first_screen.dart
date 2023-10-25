@@ -18,15 +18,14 @@ import 'alarm_history.dart';
 
 class FirstScreen extends StatefulWidget {
   //final  sharedPref;
-   MQTTConnectionManager? manager;
+  late MQTTConnectionManager manager;
 
-   MQTTAppState? currentAppState;
+  late MQTTAppState currentAppState;
 
-  FirstScreen(MQTTAppState appState, MQTTConnectionManager manager,
-      {Key? key})
+  FirstScreen(MQTTAppState appState, MQTTConnectionManager manager, {Key? key})
       : super(key: key) {
-    manager = manager;
     currentAppState = appState;
+    manager = manager;
   }
 
   FirstScreen.base();
@@ -39,8 +38,8 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  MQTTAppState ? currentAppState;
-  MQTTConnectionManager ? manager;
+  //late MQTTAppState currentAppState;
+  //late MQTTConnectionManager manager;
 
   @override
   initState() {
@@ -56,10 +55,11 @@ class _FirstScreenState extends State<FirstScreen> {
     Timer(
         Duration(seconds: 2),
         () => {
-              setCurrentAppState(currentAppState),
-              debugPrint("[[[ currentAppState: $currentAppState ]]]")
+              setCurrentAppState(widget.currentAppState),
+              setManager(widget.manager),
+              debugPrint("[[[ currentAppState: $widget.currentAppState ]]]")
             });
-    return currentAppState;
+    return widget.currentAppState;
   }
 
   @override
@@ -77,14 +77,15 @@ class _FirstScreenState extends State<FirstScreen> {
               } else {
                 if (snapshot.hasError) {
                   return ErrorWidget(Exception(
-                      'Error occured when fetching data from database'));
+                      'Error occured when fetching data from database $snapshot.error'));
                 } else if (!snapshot.hasData) {
                   debugPrint("snapshot:: $snapshot");
-                  return const Center(child: Text('Data is empty!'));
+                  return LoginForm(widget.currentAppState, widget.manager);
+                  //return const Center(child: Text('Data is empty!'));
                 } else {
                   return SharedPrefs().token.isEmpty
-                      ? LoginForm(currentAppState!, manager!)
-                      : MQTTView(currentAppState!, manager!);
+                      ? LoginForm(widget.currentAppState, widget.manager)
+                      : MQTTView(widget.currentAppState, widget.manager);
                 }
               }
             }));
@@ -105,6 +106,10 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 
   Future<void> setCurrentAppState(appState) async {
-    currentAppState = appState;
+    widget.currentAppState = appState;
+  }
+
+  Future<void> setManager(manager) async {
+    widget.manager = manager;
   }
 }
