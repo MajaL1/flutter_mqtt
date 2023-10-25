@@ -10,6 +10,7 @@ import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../components/drawer.dart';
 import '../model/user.dart';
 import '../mqtt/state/MQTTAppState.dart';
 import '../util/mqtt_connect_util.dart';
@@ -22,7 +23,8 @@ class FirstScreen extends StatefulWidget {
 
   late MQTTAppState currentAppState;
 
-  FirstScreen(MQTTAppState appState, MQTTConnectionManager connectionManager, {Key? key})
+  FirstScreen(MQTTAppState appState, MQTTConnectionManager connectionManager,
+      {Key? key})
       : super(key: key) {
     currentAppState = appState;
     manager = connectionManager;
@@ -80,29 +82,19 @@ class _FirstScreenState extends State<FirstScreen> {
                       'Error occured when fetching data from database $snapshot.error'));
                 } else if (!snapshot.hasData) {
                   debugPrint("snapshot:: $snapshot");
-                  return LoginForm(widget.currentAppState, widget.manager);
-                  //return const Center(child: Text('Data is empty!'));
+                  // return LoginForm(widget.currentAppState, widget.manager);
+                  return LoginForm.base();
                 } else {
-                  return SharedPrefs().token.isEmpty
+                  return /* SharedPrefs().token.isEmpty
                       ? LoginForm(widget.currentAppState, widget.manager)
-                      : MQTTView(widget.currentAppState, widget.manager);
+                      : MQTTView(widget.currentAppState, widget.manager); */
+                      Scaffold(
+                          drawer:
+                              NavDrawer(widget.currentAppState, widget.manager),
+                          body: LoginForm.base());
                 }
               }
             }));
-/*return ChangeNotifierProvider<MQTTAppState>(
-        create: (_) => MQTTAppState(),
-        //child: FirstScreen.base(),
-        builder: (context, child)  {
-         // final MQTTAppState appState =  Provider.of<MQTTAppState>(context);
-          //setCurrentAppState(appState);
-          manager = MQTTConnectionManager(
-              host: 'test.navis-livedata.com', //_hostTextController.text,
-              topic: 'c45bbe821261/settings'
-                  '', //_topicTextController.text,
-              identifier: "Android",
-              state: currentAppState);
-          return SharedPrefs().token.isEmpty ? LoginForm(currentAppState, manager) : MQTTView(currentAppState, manager);
-        }); */
   }
 
   Future<void> setCurrentAppState(appState) async {

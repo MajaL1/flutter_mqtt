@@ -21,9 +21,11 @@ class LoginForm extends StatefulWidget {
     manager = manager;
     currentAppState = currentAppState;
     }
+    LoginForm.base();
 
 
-  /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
+
+ /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
     this.manager;
   } */
 
@@ -154,7 +156,6 @@ class _LoginFormValidationState extends State<LoginForm> {
           return DefaultTabController(
             length: 3,
             child: Scaffold(
-              drawer: NavDrawer(currentAppState, manager),
               backgroundColor: Colors.white,
               appBar: AppBar(
                 title: const Text("Login Page"),
