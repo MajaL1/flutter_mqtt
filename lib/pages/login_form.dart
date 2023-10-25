@@ -50,7 +50,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     }); */
   }
 
-  Future<void> login() async {
+  Future<FutureBuilder> login() async {
     var username = emailController.text;
     var password = passwordController.text;
 
@@ -61,14 +61,26 @@ class _LoginFormValidationState extends State<LoginForm> {
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
       currentAppState = currentAppState;
-      Navigator.push(
-          context,
-          /**MaterialPageRoute(builder: (_) => HomePage())); */
-          MaterialPageRoute(builder: (_) => MQTTView(currentAppState, manager)));
-      debugPrint("Validated");
-    } else {
-      LoginForm(currentAppState, manager);
-      debugPrint("Not Validated");
+      MaterialPageRoute(
+          builder: (BuildContext context) =>
+              FutureBuilder<String>(
+                //future: propositionManager.getData(object.id),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  MQTTView(currentAppState, manager)));
+                      debugPrint("Validated");
+                    }
+                    else {
+                      LoginForm(currentAppState, manager);
+                      debugPrint("Not Validated");
+                    }
+                  }
+              )
+      );
     }
   }
 
