@@ -18,15 +18,15 @@ import 'alarm_history.dart';
 
 class FirstScreen extends StatefulWidget {
   //final  sharedPref;
-  late MQTTConnectionManager? manager;
+   MQTTConnectionManager? manager;
 
-  late MQTTAppState? currentAppState;
+   MQTTAppState? currentAppState;
 
-  FirstScreen(MQTTAppState currentAppState, MQTTConnectionManager manager,
+  FirstScreen(MQTTAppState appState, MQTTConnectionManager manager,
       {Key? key})
       : super(key: key) {
     manager = manager;
-    currentAppState = currentAppState;
+    currentAppState = appState;
   }
 
   FirstScreen.base();
@@ -39,8 +39,8 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  late MQTTAppState currentAppState;
-  late MQTTConnectionManager manager;
+  MQTTAppState ? currentAppState;
+  MQTTConnectionManager ? manager;
 
   @override
   initState() {
@@ -55,28 +55,39 @@ class _FirstScreenState extends State<FirstScreen> {
   _initUser() async {
     Timer(
         Duration(seconds: 2),
-        () =>
-        { setCurrentAppState(currentAppState),
-          debugPrint("[[[ currentAppState: $currentAppState ]]]")
-
-        }
-    );
+        () => {
+              setCurrentAppState(currentAppState),
+              debugPrint("[[[ currentAppState: $currentAppState ]]]")
+            });
+    return currentAppState;
   }
-
 
   @override
   Widget build(BuildContext context) {
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
 
-    return Scaffold(body: FutureBuilder(
-        future: _initUser(),
-        builder: (context, snapshot) {
-      //if (currentAppState != null) {
-      return SharedPrefs().token.isEmpty
-          ? LoginForm(currentAppState, manager)
-          : MQTTView(currentAppState, manager);
-      // }
-    }));
+    return Scaffold(
+        body: FutureBuilder(
+            future: _initUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                if (snapshot.hasError) {
+                  return ErrorWidget(Exception(
+                      'Error occured when fetching data from database'));
+                } else if (!snapshot.hasData) {
+                  debugPrint("snapshot:: $snapshot");
+                  return const Center(child: Text('Data is empty!'));
+                } else {
+                  return SharedPrefs().token.isEmpty
+                      ? LoginForm(currentAppState!, manager!)
+                      : MQTTView(currentAppState!, manager!);
+                }
+              }
+            }));
 /*return ChangeNotifierProvider<MQTTAppState>(
         create: (_) => MQTTAppState(),
         //child: FirstScreen.base(),
