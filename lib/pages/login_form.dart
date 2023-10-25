@@ -14,8 +14,8 @@ import '../mqtt/MQTTConnectionManager.dart';
 class LoginForm extends StatefulWidget {
   //var sharedPreferences;
 
-  MQTTConnectionManager? manager;
-  late MQTTAppState currentAppState;
+ late MQTTConnectionManager? manager;
+   late MQTTAppState? currentAppState;
 
   LoginForm(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key){
     manager = manager;
@@ -151,21 +151,10 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final MQTTAppState appState = Provider.of<MQTTAppState>(context);
-    currentAppState = appState;
-
-    return ChangeNotifierProvider<MQTTAppState>(
-        create: (_) => MQTTAppState(),
-        child: LoginForm(currentAppState, manager),
-        builder: (context, child) {
-          // No longer throws
-          //return Text(context.watch<MQTTView>().toString());
-
-
           return DefaultTabController(
             length: 3,
             child: Scaffold(
-              drawer: NavDrawer(appState, manager),
+              drawer: NavDrawer(currentAppState, manager),
               backgroundColor: Colors.white,
               appBar: AppBar(
                 title: const Text("Login Page"),
@@ -281,6 +270,5 @@ class _LoginFormValidationState extends State<LoginForm> {
               ),
             ),
           );
-        });
   }
 }
