@@ -22,10 +22,10 @@ class FirstScreen extends StatefulWidget {
 
   late MQTTAppState currentAppState;
 
-  FirstScreen(MQTTAppState appState, MQTTConnectionManager manager, {Key? key})
+  FirstScreen(MQTTAppState appState, MQTTConnectionManager connectionManager, {Key? key})
       : super(key: key) {
     currentAppState = appState;
-    manager = manager;
+    manager = connectionManager;
   }
 
   FirstScreen.base();
