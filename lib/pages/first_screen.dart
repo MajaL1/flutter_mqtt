@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -51,12 +52,24 @@ class _FirstScreenState extends State<FirstScreen> {
     //  initalizeConnection();
   }
 
+  _initUser() async {
+    Timer(
+        Duration(seconds: 2),
+        () =>
+        { setCurrentAppState(currentAppState),
+          debugPrint("[[[ currentAppState: $currentAppState ]]]")
+
+        }
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
 
     return Scaffold(body: FutureBuilder(
-        //future: _initUser(),
+        future: _initUser(),
         builder: (context, snapshot) {
       //if (currentAppState != null) {
       return SharedPrefs().token.isEmpty

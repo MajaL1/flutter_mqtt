@@ -232,9 +232,22 @@ class _NotificationsAppState extends State<NotificationsApp> {
               future: initalizeConnection(appState),
               builder: (context, snapshot) {
                 //if (currentAppState != null) {
-                return FirstScreen(appState, manager);
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (snapshot.hasError) {
+                    return ErrorWidget(Exception(
+                        'Error occured when fetching data from database'));
+                  } else if (!snapshot.hasData) {
+                    debugPrint("snapshot:: $snapshot");
+                    return const Center(child: Text('Data is empty!'));
+                  } else {
+                    return FirstScreen(appState, manager);
+                  }
                 // }
-              }));
+              }}));
          /* return MaterialApp(
                 title: 'Flutter Demo',
                 theme: ThemeData(
@@ -261,7 +274,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
   }
 
   // Initalize user data and connect
-  Future<void> initalizeConnection(currentAppState) async {
+  Future<User> initalizeConnection(currentAppState) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final storage = const FlutterSecureStorage();
 
@@ -279,6 +292,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
 //storage.containsKey(key: "jwt")
     String? readToken = await storage.read(key: "token");
     print("token from flutter secure storage: $readToken");
+    return user;
   }
 
   // Connect to brokers
