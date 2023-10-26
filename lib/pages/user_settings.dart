@@ -200,9 +200,11 @@ class _UserSettingsState extends State<UserSettings> {
           return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
+              scrollDirection: Axis.vertical,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 return SingleChildScrollView(
-
+                    scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: Table(
@@ -235,6 +237,7 @@ class _UserSettingsState extends State<UserSettings> {
                                         controllerT.text =
                                             snapshot.data![index].t.toString();
                                       },
+
                                     ),
                                     const Text("Hi alarm:"),
                                     TextField(
@@ -250,7 +253,7 @@ class _UserSettingsState extends State<UserSettings> {
                                       "Lo alarm:",
                                       style: TextStyle(),
                                     ),
-                                    TextField(
+                                    TextFormField(
                                       controller: controllerLoAlarm,
                                       decoration: _setBorderDecoration(),
                                       onChanged: (text) {
@@ -264,7 +267,8 @@ class _UserSettingsState extends State<UserSettings> {
                               ),
                             ]),
                         TableRow(children: [
-                          Container(
+                          TableCell(
+                              child: Container(
                             height: 30,
                             width: 50,
                             margin: EdgeInsets.only(top: 20),
@@ -281,7 +285,7 @@ class _UserSettingsState extends State<UserSettings> {
                                     color: Colors.white, fontSize: 15),
                               ),
                             ),
-                          )
+                          ))
                         ])
                       ],
                     ));
@@ -305,6 +309,7 @@ class _UserSettingsState extends State<UserSettings> {
 
   _setBorderDecoration() {
     return const InputDecoration(
+        labelText: "1",
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.greenAccent, width: 5.0),
         ),
