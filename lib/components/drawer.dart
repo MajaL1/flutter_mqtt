@@ -140,7 +140,7 @@ class NavDrawer extends StatelessWidget {
                       ),
                     ),
                     onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => MQTTView.empty())),
+                        MaterialPageRoute(builder: (context) => MQTTView.base())),
                   ),
                   const Divider(height: 10),
                   const Divider(height: 40),

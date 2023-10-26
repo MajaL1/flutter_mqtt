@@ -11,7 +11,7 @@ import '../components/drawer.dart';
 class MQTTView extends StatefulWidget {
   const MQTTView(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key);
 
-  const MQTTView.empty();
+  const MQTTView.base();
   //var sharedPreferences;
   //MQTTView();
 

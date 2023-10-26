@@ -10,6 +10,7 @@ import '../mqtt/state/MQTTAppState.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({Key? key}) : super(key: key);
+
   const UserSettings.base();
 
   @override
@@ -45,12 +46,14 @@ class _UserSettingsState extends State<UserSettings> {
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
-  final TextEditingController dataController = TextEditingController();
+  final TextEditingController controllerT = TextEditingController();
+  final TextEditingController controllerHiAlarm = TextEditingController();
+  final TextEditingController controllerLoAlarm = TextEditingController();
+
   String value = "";
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
@@ -76,10 +79,9 @@ class _UserSettingsState extends State<UserSettings> {
         ]),
       ),
     );
-
   }
 
-  Widget _buildUserPersonalSettings(){
+  Widget _buildUserPersonalSettings() {
     return Container(
       padding: const EdgeInsets.all(12),
       alignment: Alignment.center,
@@ -199,66 +201,87 @@ class _UserSettingsState extends State<UserSettings> {
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                    decoration: const BoxDecoration(
-                        //  border:
-                        //    Border(bottom: BorderSide(color: Colors.blueGrey))
-                        ),
+                return SingleChildScrollView(
+
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: Table(
                       columnWidths: const {
                         0: FractionColumnWidth(0.99),
                       },
-
                       children: [
                         TableRow(
                             //decoration: ,
                             children: [
-                          Table(children: [
-                            TableRow(
-                                children: <Widget>[
-                              Text("Id: ${snapshot.data![index].sensorAddress.toString()}",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 16),
-                                  textAlign: TextAlign.justify),
-                              Container(
-                                  alignment: Alignment.bottomCenter,
-                                  child: const Text("T: ",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 16),
-                                      textAlign: TextAlign.justify)),
-                               TextField(
-                                controller: dataController,
-                                decoration: _setBorderDecoration(),
-                                onChanged: (text) {
-                                  dataController.text =
-                                      snapshot.data![index].t.toString();
-                                },
-                              ),
-                              const Text("Hi alarm:"),
-                              TextField(
-                                controller: dataController,
-                                decoration: _setBorderDecoration(),
-                                onChanged: (text) {
-                                  dataController.text =
-                                      snapshot.data![index].hiAlarm.toString();
-                                },
-                              ),
-                              const Text(
-                                "Lo alarm:",
-                                style: TextStyle(),
-                              ),
-                              TextField(
-                                controller: dataController,
-                                decoration: _setBorderDecoration(),
-                                onChanged: (text) {
-                                  dataController.text =
-                                      snapshot.data![index].loAlarm.toString();
-                                },
+                              Table(
+                                children: [
+                                  TableRow(children: <Widget>[
+                                    Text(
+                                        "Id: ${snapshot.data![index].sensorAddress.toString()}",
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 16),
+                                        textAlign: TextAlign.justify),
+                                    Container(
+                                        alignment: Alignment.bottomCenter,
+                                        child: const Text("T: ",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16),
+                                            textAlign: TextAlign.justify)),
+                                    TextField(
+                                      controller: controllerT,
+                                      decoration: _setBorderDecoration(),
+                                      onChanged: (text) {
+                                        controllerT.text =
+                                            snapshot.data![index].t.toString();
+                                      },
+                                    ),
+                                    const Text("Hi alarm:"),
+                                    TextField(
+                                      controller: controllerHiAlarm,
+                                      decoration: _setBorderDecoration(),
+                                      onChanged: (text) {
+                                        controllerHiAlarm.text = snapshot
+                                            .data![index].hiAlarm
+                                            .toString();
+                                      },
+                                    ),
+                                    const Text(
+                                      "Lo alarm:",
+                                      style: TextStyle(),
+                                    ),
+                                    TextField(
+                                      controller: controllerLoAlarm,
+                                      decoration: _setBorderDecoration(),
+                                      onChanged: (text) {
+                                        controllerLoAlarm.text = snapshot
+                                            .data![index].loAlarm
+                                            .toString();
+                                      },
+                                    ),
+                                  ]),
+                                ],
                               ),
                             ]),
-                          ]),
+                        TableRow(children: [
+                          Container(
+                            height: 30,
+                            width: 50,
+                            margin: EdgeInsets.only(top: 20),
+                            decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: TextButton(
+                              onPressed: () {
+                                saveMqttSettings();
+                              },
+                              child: const Text(
+                                'Save device settings',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                            ),
+                          )
                         ])
                       ],
                     ));
@@ -272,12 +295,20 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  _setBorderDecoration(){
+  void saveMqttSettings() {
+    var t = controllerT.text;
+    var hiAlarm = controllerHiAlarm.text;
+    var loAlarm = controllerLoAlarm.text;
+
+    debugPrint("t, hiAlarm, loAlarm $t, $hiAlarm, $loAlarm");
+  }
+
+  _setBorderDecoration() {
     return const InputDecoration(
-        focusedBorder:  OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.greenAccent, width: 5.0),
         ),
-        enabledBorder:  OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),
         ));
   }
@@ -293,13 +324,11 @@ class _UserSettingsState extends State<UserSettings> {
     // kako dobimo connected state?
     // verjetno je potrebno to dodati nekam na shared memory
     //if (MQTTAppConnectionState.connected ==  // currentAppState.getAppConnectionState) {
-        //MQTTConnectionManager.publish("100");
-        //String t = await currentAppState.getHistoryText;
+    //MQTTConnectionManager.publish("100");
+    //String t = await currentAppState.getHistoryText;
 
     //print("****************** $t");
 
-
-      //this.publish('topic');
-
+    //this.publish('topic');
   }
 }
