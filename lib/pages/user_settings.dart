@@ -232,17 +232,19 @@ class _UserSettingsState extends State<UserSettings> {
                                             textAlign: TextAlign.justify)),
                                     TextField(
                                       controller: controllerT,
-                                      decoration: _setBorderDecoration(),
+                                      decoration: _setInputDecoration(
+                                          snapshot.data![index].t.toString()),
                                       onChanged: (text) {
                                         controllerT.text =
                                             snapshot.data![index].t.toString();
                                       },
-
                                     ),
                                     const Text("Hi alarm:"),
                                     TextField(
                                       controller: controllerHiAlarm,
-                                      decoration: _setBorderDecoration(),
+                                      decoration: _setInputDecoration(snapshot
+                                          .data![index].hiAlarm
+                                          .toString()),
                                       onChanged: (text) {
                                         controllerHiAlarm.text = snapshot
                                             .data![index].hiAlarm
@@ -253,9 +255,13 @@ class _UserSettingsState extends State<UserSettings> {
                                       "Lo alarm:",
                                       style: TextStyle(),
                                     ),
-                                    TextFormField(
+                                    TextField(
                                       controller: controllerLoAlarm,
-                                      decoration: _setBorderDecoration(),
+
+                                      decoration: _setInputDecoration(snapshot
+                                          .data![index].loAlarm
+                                          .toString()),
+                                      // labelText: data![index].loAlarm,,
                                       onChanged: (text) {
                                         controllerLoAlarm.text = snapshot
                                             .data![index].loAlarm
@@ -307,9 +313,9 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("t, hiAlarm, loAlarm $t, $hiAlarm, $loAlarm");
   }
 
-  _setBorderDecoration() {
-    return const InputDecoration(
-        labelText: "1",
+  _setInputDecoration(val) {
+    return InputDecoration(
+        labelText: val,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.greenAccent, width: 5.0),
         ),
