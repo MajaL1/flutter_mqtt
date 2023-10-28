@@ -200,7 +200,7 @@ class _UserSettingsState extends State<UserSettings> {
           List<UserDataSettings>? userDataSettings = snapshot.data;
           List<TextEditingController> textEditingControllers =
               _returnTextEditController(userDataSettings!);
-
+              debugPrint(textEditingControllers.toString());
                     return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -237,8 +237,8 @@ class _UserSettingsState extends State<UserSettings> {
                                     TextField(
                                       //controller: controllerT,
                                       controller: textEditingControllers[index],
-                                      decoration: _setInputDecoration(
-                                          snapshot.data![index].t.toString()),
+                                      //decoration: _setInputDecoration(
+                                          //snapshot.data![index].t.toString()),
                                       onChanged: (text) {
                                         controllerT.text =
                                             snapshot.data![index].t.toString();
@@ -248,9 +248,9 @@ class _UserSettingsState extends State<UserSettings> {
                                     TextField(
                                       //controller: controllerHiAlarm,
                                       controller: textEditingControllers[index],
-                                      decoration: _setInputDecoration(snapshot
-                                          .data![index].hiAlarm
-                                          .toString()),
+                                    //  decoration: _setInputDecoration(snapshot
+                                      //    .data![index].hiAlarm
+                                        //  .toString()),
                                       onChanged: (text) {
                                         controllerHiAlarm.text = snapshot
                                             .data![index].hiAlarm
@@ -325,14 +325,14 @@ class _UserSettingsState extends State<UserSettings> {
       var hiAlarm = deviceProp.hiAlarm;
       var loAlarm = deviceProp.loAlarm;
       TextEditingController controller = TextEditingController();
-      String controllerT = "${sensorAddress}_$t";
+      String controllerT = "${sensorAddress}_t";
       textEditControllerList.add(TextEditingController(text: controllerT));
 
-      String controllerHiAlarm = "${sensorAddress}_$hiAlarm";
+      String controllerHiAlarm = "${sensorAddress}_hiAlarm";
       textEditControllerList
           .add(TextEditingController(text: controllerHiAlarm));
 
-      String controllerLoAlarm = "${sensorAddress}_$loAlarm";
+      String controllerLoAlarm = "${sensorAddress}_loAlarm";
       textEditControllerList
           .add(TextEditingController(text: controllerLoAlarm));
     }
