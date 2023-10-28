@@ -233,7 +233,7 @@ class _UserSettingsState extends State<UserSettings> {
                               child: const Text("T: ",
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 16),
-                                  textAlign: TextAlign.justify)),
+                                  textAlign: TextAlign.left)),
                           TextField(
                             //controller: controllerT,
                             controller: textEditingControllers[index],
@@ -335,8 +335,11 @@ class _UserSettingsState extends State<UserSettings> {
       textEditControllerList
           .add(TextEditingController(text: controllerLoAlarm));
     }
+    for (var t in textEditControllerList) {
+      debugPrint(t.value as String?);
+    }
 
-    return textEditControllerList;
+      return textEditControllerList;
   }
 
   void saveMqttSettings() {
