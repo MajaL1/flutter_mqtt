@@ -197,6 +197,15 @@ class _UserSettingsState extends State<UserSettings> {
       future: getUserDataSettings(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          var listFromApiCall = ["a", "b", "c", "d", "e", "f","a", "b", "c", "d", "e"];
+          List<UserDataSettings>? userDataSettings = snapshot.data;
+          _returnTextEditController(userDataSettings!);
+          List<TextEditingController> textEditingControllers = [];
+          listFromApiCall.forEach((String str) {
+            var textEditingController = TextEditingController(text: str);
+            textEditingControllers.add(textEditingController);
+          });
+
           return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -231,7 +240,8 @@ class _UserSettingsState extends State<UserSettings> {
                                                 fontSize: 16),
                                             textAlign: TextAlign.justify)),
                                     TextField(
-                                      controller: controllerT,
+                                      //controller: controllerT,
+                                      controller: textEditingControllers[index],
                                       decoration: _setInputDecoration(
                                           snapshot.data![index].t.toString()),
                                       onChanged: (text) {
@@ -303,6 +313,32 @@ class _UserSettingsState extends State<UserSettings> {
         return const CircularProgressIndicator();
       },
     );
+  }
+/***
+ * dynamically cretes controller text name based on device name and property
+ *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
+ * ***/
+  List<TextEditingController> _returnTextEditController(List<UserDataSettings> shapshotData){
+    List<TextEditingController> textEditControllerList = [];
+
+    for(var deviceProp in shapshotData) {
+      var sensorAddress = deviceProp.sensorAddress;
+      var t = deviceProp.t;
+      var hiAlarm = deviceProp.hiAlarm;
+      var loAlarm = deviceProp.loAlarm;
+      TextEditingController controller = TextEditingController();
+      String controllerT = "${sensorAddress}_$t";
+      textEditControllerList.add(TextEditingController(text: controllerT));
+
+      String controllerHiAlarm = "${sensorAddress}_$hiAlarm";
+      textEditControllerList.add(TextEditingController(text: controllerHiAlarm));
+
+      String controllerLoAlarm = "${sensorAddress}_$loAlarm";
+      textEditControllerList.add(TextEditingController(text: controllerLoAlarm));
+
+    }
+
+    return textEditControllerList;
   }
 
   void saveMqttSettings() {
