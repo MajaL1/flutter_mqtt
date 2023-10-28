@@ -200,8 +200,8 @@ class _UserSettingsState extends State<UserSettings> {
           List<UserDataSettings>? userDataSettings = snapshot.data;
           List<TextEditingController> textEditingControllers =
               _returnTextEditController(userDataSettings!);
-              debugPrint(textEditingControllers.toString());
-                    return ListView.builder(
+          debugPrint(textEditingControllers.toString());
+          return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
               scrollDirection: Axis.vertical,
@@ -211,96 +211,95 @@ class _UserSettingsState extends State<UserSettings> {
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
-                    child: Table(
-                      columnWidths: const {
-                        0: FractionColumnWidth(0.99),
-                      },
-                      children: [
-                        TableRow(
-                            //decoration: ,
-                            children: [
-                              Table(
-                                children: [
-                                  TableRow(children: <Widget>[
-                                    Text(
-                                        "Id: ${snapshot.data![index].sensorAddress.toString()}",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 16),
-                                        textAlign: TextAlign.justify),
-                                    Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: const Text("T: ",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16),
-                                            textAlign: TextAlign.justify)),
-                                    TextField(
-                                      //controller: controllerT,
-                                      controller: textEditingControllers[index],
-                                      //decoration: _setInputDecoration(
-                                          //snapshot.data![index].t.toString()),
-                                      onChanged: (text) {
-                                        controllerT.text =
-                                            snapshot.data![index].t.toString();
-                                      },
-                                    ),
-                                    const Text("Hi alarm:"),
-                                    TextField(
-                                      //controller: controllerHiAlarm,
-                                      controller: textEditingControllers[index],
-                                    //  decoration: _setInputDecoration(snapshot
-                                      //    .data![index].hiAlarm
-                                        //  .toString()),
-                                      onChanged: (text) {
-                                        controllerHiAlarm.text = snapshot
-                                            .data![index].hiAlarm
-                                            .toString();
-                                      },
-                                    ),
-                                    const Text(
-                                      "Lo alarm:",
-                                      style: TextStyle(),
-                                    ),
-                                    TextField(
-                                      //controller: controllerLoAlarm,
-                                      controller: textEditingControllers[index],
-                                      decoration: _setInputDecoration(snapshot
-                                          .data![index].loAlarm
-                                          .toString()),
-                                      // labelText: data![index].loAlarm,,
-                                      onChanged: (text) {
-                                        controllerLoAlarm.text = snapshot
-                                            .data![index].loAlarm
-                                            .toString();
-                                      },
-                                    ),
-                                  ]),
-                                ],
-                              ),
-                            ]),
-                        TableRow(children: [
-                          TableCell(
-                              child: Container(
-                            height: 30,
-                            width: 50,
-                            margin: EdgeInsets.only(top: 20),
-                            decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: TextButton(
-                              onPressed: () {
-                                saveMqttSettings();
-                              },
-                              child: const Text(
-                                'Save device settings',
+                    child: Table(columnWidths: const {
+                      0: FractionColumnWidth(0.99),
+                    }, children: [
+                      TableRow(children: [
+                        TableCell(
+                          child: Column(children: [
+                            Text(
+                                "Id: ${snapshot.data![index].sensorAddress.toString()}",
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                              ),
+                                    color: Colors.black, fontSize: 16),
+                                textAlign: TextAlign.justify),
+                          ]),
+                        )
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Column(children: [
+                          Container(
+                              alignment: Alignment.bottomCenter,
+                              child: const Text("T: ",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                  textAlign: TextAlign.justify)),
+                          TextField(
+                            //controller: controllerT,
+                            controller: textEditingControllers[index],
+                            //decoration: _setInputDecoration(
+                            //snapshot.data![index].t.toString()),
+                            onChanged: (text) {
+                              controllerT.text =
+                                  snapshot.data![index].t.toString();
+                            },
+                          )
+                        ]))
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Column(children: [
+                          const Text("Hi alarm:"),
+                          TextField(
+                            //controller: controllerHiAlarm,
+                            controller: textEditingControllers[index],
+                            //  decoration: _setInputDecoration(snapshot
+                            //    .data![index].hiAlarm
+                            //  .toString()),
+                            onChanged: (text) {
+                              controllerHiAlarm.text =
+                                  snapshot.data![index].hiAlarm.toString();
+                            },
+                          ),
+                          const Text(
+                            "Lo alarm:",
+                            style: TextStyle(),
+                          ),
+                          TextField(
+                            //controller: controllerLoAlarm,
+                            controller: textEditingControllers[index],
+                            decoration: _setInputDecoration(
+                                snapshot.data![index].loAlarm.toString()),
+                            // labelText: data![index].loAlarm,,
+                            onChanged: (text) {
+                              controllerLoAlarm.text =
+                                  snapshot.data![index].loAlarm.toString();
+                            },
+                          )
+                        ]))
+                      ]),
+                      TableRow(children: [
+                        TableCell(
+                            child: Container(
+                          height: 30,
+                          width: 50,
+                          margin: EdgeInsets.only(top: 20),
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: TextButton(
+                            onPressed: () {
+                              saveMqttSettings();
+                            },
+                            child: const Text(
+                              'Save device settings',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
                             ),
-                          ))
-                        ])
-                      ],
-                    ));
+                          ),
+                        ))
+                      ])
+                    ]));
               });
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
