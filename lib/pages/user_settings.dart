@@ -197,16 +197,11 @@ class _UserSettingsState extends State<UserSettings> {
       future: getUserDataSettings(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var listFromApiCall = ["a", "b", "c", "d", "e", "f","a", "b", "c", "d", "e"];
           List<UserDataSettings>? userDataSettings = snapshot.data;
-          _returnTextEditController(userDataSettings!);
-          List<TextEditingController> textEditingControllers = [];
-          listFromApiCall.forEach((String str) {
-            var textEditingController = TextEditingController(text: str);
-            textEditingControllers.add(textEditingController);
-          });
+          List<TextEditingController> textEditingControllers =
+              _returnTextEditController(userDataSettings!);
 
-          return ListView.builder(
+                    return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
               scrollDirection: Axis.vertical,
@@ -251,7 +246,8 @@ class _UserSettingsState extends State<UserSettings> {
                                     ),
                                     const Text("Hi alarm:"),
                                     TextField(
-                                      controller: controllerHiAlarm,
+                                      //controller: controllerHiAlarm,
+                                      controller: textEditingControllers[index],
                                       decoration: _setInputDecoration(snapshot
                                           .data![index].hiAlarm
                                           .toString()),
@@ -266,8 +262,8 @@ class _UserSettingsState extends State<UserSettings> {
                                       style: TextStyle(),
                                     ),
                                     TextField(
-                                      controller: controllerLoAlarm,
-
+                                      //controller: controllerLoAlarm,
+                                      controller: textEditingControllers[index],
                                       decoration: _setInputDecoration(snapshot
                                           .data![index].loAlarm
                                           .toString()),
@@ -314,14 +310,16 @@ class _UserSettingsState extends State<UserSettings> {
       },
     );
   }
-/***
- * dynamically cretes controller text name based on device name and property
- *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
- * ***/
-  List<TextEditingController> _returnTextEditController(List<UserDataSettings> shapshotData){
+
+  /***
+   * dynamically cretes controller text name based on device name and property
+   *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
+   * ***/
+  List<TextEditingController> _returnTextEditController(
+      List<UserDataSettings> shapshotData) {
     List<TextEditingController> textEditControllerList = [];
 
-    for(var deviceProp in shapshotData) {
+    for (var deviceProp in shapshotData) {
       var sensorAddress = deviceProp.sensorAddress;
       var t = deviceProp.t;
       var hiAlarm = deviceProp.hiAlarm;
@@ -331,11 +329,12 @@ class _UserSettingsState extends State<UserSettings> {
       textEditControllerList.add(TextEditingController(text: controllerT));
 
       String controllerHiAlarm = "${sensorAddress}_$hiAlarm";
-      textEditControllerList.add(TextEditingController(text: controllerHiAlarm));
+      textEditControllerList
+          .add(TextEditingController(text: controllerHiAlarm));
 
       String controllerLoAlarm = "${sensorAddress}_$loAlarm";
-      textEditControllerList.add(TextEditingController(text: controllerLoAlarm));
-
+      textEditControllerList
+          .add(TextEditingController(text: controllerLoAlarm));
     }
 
     return textEditControllerList;
