@@ -336,7 +336,7 @@ class _UserSettingsState extends State<UserSettings> {
           .add(TextEditingController(text: controllerLoAlarm));
     }
     for (var t in textEditControllerList) {
-      debugPrint(t.value as String?);
+      debugPrint("0000000000000000000:  $t.toString()");
     }
 
       return textEditControllerList;
