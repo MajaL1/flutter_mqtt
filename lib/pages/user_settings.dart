@@ -61,12 +61,6 @@ class _UserSettingsState extends State<UserSettings> {
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
-  final TextEditingController controllerT = TextEditingController();
-  final TextEditingController controllerHiAlarm = TextEditingController();
-  final TextEditingController controllerLoAlarm = TextEditingController();
-
-  String value = "";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,7 +223,7 @@ class _UserSettingsState extends State<UserSettings> {
                     child: ListView(shrinkWrap: true, children: [
                       Container(
                         child: Text(
-                            "Id: ${snapshot.data![index].sensorAddress.toString()}",
+                            "Device id: ${snapshot.data![index].sensorAddress.toString()}",
                             style: TextStyle(color: Colors.black, fontSize: 16),
                             textAlign: TextAlign.justify),
                       ),
@@ -237,38 +231,46 @@ class _UserSettingsState extends State<UserSettings> {
                         Container(
                             alignment: Alignment.bottomCenter,
                             child: const Text("T: ",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
+                                style: TextStyle(),
                                 textAlign: TextAlign.left)),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                        ),
                         TextField(
                           controller: _returnTextEditingController(
                               snapshot.data![index].sensorAddress,
                               snapshot.data?[index].t),
-                          //decoration: _setInputDecoration(
+                          decoration: _setInputDecoration(
+                              snapshot.data![index].loAlarm.toString()),
                           onChanged: (text) {
-                            controllerT.text =
-                                snapshot.data![index].t.toString();
+                            //controllerT.text =
+                             //   snapshot.data![index].t.toString();
                           },
                         ),
-                      ]),
+                ]),
+
                       Column(children: [
                         const Text("Hi alarm:"),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                        ),
                         TextField(
                           controller: _returnTextEditingController(
                               snapshot.data![index].sensorAddress,
                               snapshot.data?[index].hiAlarm),
-
-                          //  decoration: _setInputDecoration(snapshot
-                          //    .data![index].hiAlarm
-                          //  .toString()),
+                          decoration: _setInputDecoration(
+                              snapshot.data![index].loAlarm.toString()),
                           onChanged: (text) {
-                            controllerHiAlarm.text =
-                                snapshot.data![index].hiAlarm.toString();
+                           // controllerHiAlarm.text =
+                             //   snapshot.data![index].hiAlarm.toString();
                           },
                         ),
                         const Text(
                           "Lo alarm:",
                           style: TextStyle(),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10.0),
                         ),
                         TextField(
                           controller: _returnTextEditingController(
@@ -278,8 +280,8 @@ class _UserSettingsState extends State<UserSettings> {
                               snapshot.data![index].loAlarm.toString()),
                           // labelText: data![index].loAlarm,,
                           onChanged: (text) {
-                            controllerLoAlarm.text =
-                                snapshot.data![index].loAlarm.toString();
+                           // controllerLoAlarm.text =
+                             //   snapshot.data![index].loAlarm.toString();
                           },
                         )
                       ]),
@@ -355,15 +357,12 @@ class _UserSettingsState extends State<UserSettings> {
 // test method with dummy parameters
   void saveMqttSettingsTest() {
     debugPrint("save test: ");
+    widget.manager.publish("200");
   }
 
   void saveMqttSettings(
       Key? key, String deviceName, String paramName, String paramValue) {
-    var t = controllerT.text;
-    var hiAlarm = controllerHiAlarm.text;
-    var loAlarm = controllerLoAlarm.text;
-
-    debugPrint(
+       debugPrint(
         "t, hiAlarm, loAlarm $key, $deviceName, $paramName, $paramValue");
   }
 
