@@ -82,14 +82,14 @@ class _LoginFormValidationState extends State<LoginForm> {
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
 
-      /*
+
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => MQTTView(widget.currentAppState, widget.manager)));
-      debugPrint("Validated");
+//              builder: (_) => MQTTView(widget.currentAppState, widget.manager)));
+              builder: (_) => UserSettings(widget.currentAppState, widget.manager)));
 
-       */
+      debugPrint("Validated");
     }
   }
 
