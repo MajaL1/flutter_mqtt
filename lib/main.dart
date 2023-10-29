@@ -280,7 +280,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
     // ***************** connect to broker ****************
     User user = await MqttConnectUtil.readUserData();
-    MqttConnectUtil.getBrokerAddressList(user);
     MqttConnectUtil.initalizeUserPrefs(user);
     List<String> brokerAddressList = MqttConnectUtil.getBrokerAddressList(user);
     connectToBroker(brokerAddressList);
@@ -297,7 +296,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
   // Connect to brokers
   Future<void> _configureAndConnect(currentAppState) async {
-    //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
 
     // TODO: Use UUID
     String osPrefix = 'Flutter_iOS';

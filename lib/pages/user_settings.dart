@@ -357,7 +357,10 @@ class _UserSettingsState extends State<UserSettings> {
 // test method with dummy parameters
   void saveMqttSettingsTest() {
     debugPrint("save test: ");
-    widget.manager.publish("200");
+    if (MQTTAppConnectionState.connected ==
+        widget.currentAppState.getAppConnectionState) {
+      widget.manager.publish("200");
+    }
   }
 
   void saveMqttSettings(

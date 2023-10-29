@@ -11,7 +11,7 @@ import '../model/user_data_settings.dart';
 class MQTTConnectionManager {
   // Private instance of client
   final MQTTAppState _currentState;
-  MqttServerClient? _client;
+ static MqttServerClient ?client;
   final String _identifier;
   final String _host;
   final String _topic;
@@ -28,17 +28,18 @@ class MQTTConnectionManager {
         _topic = topic,
         _currentState = state;
 
+
   void initializeMQTTClient() {
-    _client = MqttServerClient(_host, _identifier);
-    _client!.port = 1883;
-    _client!.keepAlivePeriod = 20;
-    _client!.onDisconnected = onDisconnected;
-    _client!.secure = false;
-    _client!.logging(on: true);
+    client = MqttServerClient(_host, _identifier);
+    client!.port = 1883;
+    client!.keepAlivePeriod = 20;
+    client!.onDisconnected = onDisconnected;
+    client!.secure = false;
+    client!.logging(on: true);
 
     /// Add the successful connection callback
-    _client!.onConnected = onConnected;
-    _client!.onSubscribed = onSubscribed;
+    client!.onConnected = onConnected;
+    client!.onSubscribed = onSubscribed;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
         .withClientIdentifier(_identifier)
@@ -48,19 +49,19 @@ class MQTTConnectionManager {
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
     print('EXAMPLE:: client connecting....');
-    _client!.connectionMessage = connMess;
+    client!.connectionMessage = connMess;
   }
 
   // Connect to the host
   // ignore: avoid_void_async
   Future<void> connect() async {
-    assert(_client != null);
+    assert(client != null);
     try {
       String username= "test1";
       String password = "MDQ0MThmZmM1NTI4OGQ4OQ==";
       print('::Navis app client connecting....');
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
-      await _client!.connect(username, password);
+      await client!.connect(username, password);
     } on Exception catch (e) {
       print('EXAMPLE::client exception - $e');
       disconnect();
@@ -69,13 +70,13 @@ class MQTTConnectionManager {
 
   void disconnect() {
     print('Disconnected');
-    _client!.disconnect();
+    client!.disconnect();
   }
 
   void publish(String message) {
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
-    _client!.publishMessage(_topic, MqttQos.exactlyOnce, builder.payload!);
+    client!.publishMessage(_topic, MqttQos.exactlyOnce, builder.payload!);
   }
 
   /// The subscribed callback
@@ -86,7 +87,7 @@ class MQTTConnectionManager {
   /// The unsolicited disconnect callback
   void onDisconnected() {
     print('EXAMPLE::OnDisconnected client callback - Client disconnection');
-    if (_client!.connectionStatus!.returnCode ==
+    if (client!.connectionStatus!.returnCode ==
         MqttConnectReturnCode.noneSpecified) {
       print('EXAMPLE::OnDisconnected callback is solicited, this is correct');
     }
@@ -97,8 +98,8 @@ class MQTTConnectionManager {
   void onConnected() {
     _currentState.setAppConnectionState(MQTTAppConnectionState.connected);
     print('on Connected: EXAMPLE::Mosquitto client connected....');
-    _client!.subscribe(_topic, MqttQos.atLeastOnce);
-    _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
+    client!.subscribe(_topic, MqttQos.atLeastOnce);
+    client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
 
