@@ -359,7 +359,7 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("save test: ");
     if (MQTTAppConnectionState.connected ==
         widget.currentAppState.getAppConnectionState) {
-      widget.manager.publish("200");
+      widget.manager.publish("{t:200}");
     }
   }
 
