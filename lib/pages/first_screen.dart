@@ -19,18 +19,24 @@ import 'alarm_history.dart';
 
 class FirstScreen extends StatefulWidget {
   //final  sharedPref;
-  late MQTTConnectionManager manager;
+  MQTTConnectionManager manager;
 
-  late MQTTAppState currentAppState;
+  MQTTAppState currentAppState;
 
   FirstScreen(MQTTAppState appState, MQTTConnectionManager connectionManager,
       {Key? key})
-      : super(key: key) {
-    currentAppState = appState;
-    manager = connectionManager;
+      : currentAppState = appState,
+        manager = connectionManager,
+        super(key: key);
+
+  get appState {
+    return currentAppState;
+  }
+  get connectionManager {
+    return manager;
   }
 
-  FirstScreen.base();
+  //FirstScreen.base();
 
   var username = SharedPrefs().username;
   var token = SharedPrefs().token;
@@ -40,20 +46,15 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  //late MQTTAppState currentAppState;
-  //late MQTTConnectionManager manager;
-
   @override
   initState() {
     super.initState();
     // ignore: avoid_print
     print("-- firstScreen initstate");
-    //
-
     //  initalizeConnection();
   }
 
-  _initUser() async {
+  _initCurrentAppState() async {
     Timer(
         Duration(seconds: 2),
         () => {
@@ -70,7 +71,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
     return Scaffold(
         body: FutureBuilder(
-            future: _initUser(),
+            future: _initCurrentAppState(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -81,17 +82,21 @@ class _FirstScreenState extends State<FirstScreen> {
                   return ErrorWidget(Exception(
                       'Error occured when fetching data from database $snapshot.error'));
                 } else if (!snapshot.hasData) {
-                  debugPrint("snapshot:: $snapshot");
+                  debugPrint(
+                      "first screen: snapshot:: $snapshot, $widget.currentAppState. ${widget.manager}");
                   // return LoginForm(widget.currentAppState, widget.manager);
-                  return LoginForm.base();
+                  return LoginForm(widget.currentAppState, widget.manager);
                 } else {
+                  debugPrint(
+                      "first screen: currentAppState:: $widget.currentAppState, ${widget.currentAppState != null}, ${widget.manager}");
+
                   return /* SharedPrefs().token.isEmpty
                       ? LoginForm(widget.currentAppState, widget.manager)
                       : MQTTView(widget.currentAppState, widget.manager); */
                       Scaffold(
                           drawer:
                               NavDrawer(widget.currentAppState, widget.manager),
-                          body: LoginForm.base());
+                          body: LoginForm(widget.currentAppState, widget.manager));
                 }
               }
             }));

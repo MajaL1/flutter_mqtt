@@ -100,8 +100,8 @@ class NavDrawer extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const UserSettings.base())),
+                   // onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    //    builder: (context) =>  UserSettings.base())),
                   ),
                   const Divider(height: 10),
                   const Divider(height: 10),

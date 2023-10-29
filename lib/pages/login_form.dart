@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -13,23 +14,24 @@ import '../mqtt/MQTTConnectionManager.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
-  //var sharedPreferences;
+  MQTTConnectionManager manager;
+  MQTTAppState currentAppState;
 
-  late MQTTConnectionManager manager;
-  late MQTTAppState currentAppState;
-
-  LoginForm(MQTTAppState currentAppState, MQTTConnectionManager manager,
+  LoginForm(MQTTAppState appState, MQTTConnectionManager connectionManager,
       {Key? key})
-      : super(key: key) {
-    manager = manager;
-    currentAppState = currentAppState;
+      : currentAppState = appState,
+        manager = connectionManager,
+        super(key: key);
+
+  get appState {
+    return currentAppState;
   }
 
-  LoginForm.base();
+  get connectionManager {
+    return manager;
+  }
 
-  /* LoginForm(MQTTConnectionManager manager, {Key? key}) : super(key: key){
-    this.manager;
-  } */
+  //LoginForm.base();
 
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
@@ -38,11 +40,8 @@ class LoginForm extends StatefulWidget {
 class _LoginFormValidationState extends State<LoginForm> {
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  late MQTTAppState currentAppState;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  late MQTTConnectionManager manager;
 
   getLoggedInState() async {
     /*await Helper.getUserLoggedInSharedPreference().then((value) {
@@ -50,6 +49,26 @@ class _LoginFormValidationState extends State<LoginForm> {
         userIsLoggedIn = value!;
       });
     }); */
+  }
+
+  @override
+  initState() {
+    super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+    // _initCurrentAppState();
+    // ignore: avoid_print
+    print("-- loginform initstate");
+  }
+
+  _initCurrentAppState() async {
+    await Timer(
+        Duration(seconds: 2),
+        () => {
+              setCurrentAppState(widget.currentAppState),
+              setManager(widget.manager),
+              debugPrint("[[[ currentAppState: $widget.currentAppState ]]]")
+            });
+    return widget.currentAppState;
   }
 
   Future<void> login() async {
@@ -63,54 +82,14 @@ class _LoginFormValidationState extends State<LoginForm> {
       // todo: odkomentiraj login
       // User? user = await ApiService.login(username, password);
 
+      /*
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) =>
-                  MQTTView(currentAppState, manager)));
+              builder: (_) => MQTTView(widget.currentAppState, widget.manager)));
       debugPrint("Validated");
 
-      /*return Scaffold(body: FutureBuilder(
-          //future: _initUser(),
-          builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          if (snapshot.hasError) {
-            return ErrorWidget(Exception(
-                'Error occured when fetching data from database $snapshot.error'));
-          } else if (!snapshot.hasData) {
-            debugPrint("snapshot:: $snapshot");
-            LoginForm(widget.currentAppState, widget.manager);
-            // LoginForm.base();
-          } else {
-            LoginForm.base();
-          }
-        }
-      }));
-*/
-      /* MaterialPageRoute(
-          builder: (BuildContext context) =>
-              FutureBuilder<String>(
-                //future: propositionManager.getData(object.id),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) =>
-                                  MQTTView(currentAppState, manager)));
-                      debugPrint("Validated");
-                    }
-                    else {
-                      return LoginForm(currentAppState, manager);
-                      debugPrint("Not Validated");
-                    }
-                  }
-              )
-      ); */
+       */
     }
   }
 
@@ -130,71 +109,73 @@ class _LoginFormValidationState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-     // child: SingleChildScrollView(
-
-          child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                title: const Text("Login Page"),
-              ),
-              body: FutureBuilder(
-              //future: _initUser(),
+      // child: SingleChildScrollView(
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: const Text("Login Page"),
+          ),
+          body: FutureBuilder(
+              future: _initCurrentAppState(),
               builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              if (snapshot.hasError) {
-                return ErrorWidget(Exception(
-                    'Error occured when fetching data from database $snapshot.error'));
-              } else if (!snapshot.hasData) {
-                debugPrint("snapshot:: $snapshot");
-                return const UserSettings();
-              } else {
-                return SingleChildScrollView(
-                    child: Form(
-                  //autovalidate: true, //check for validation while typing
-                  key: formkey,
-                  child: Column(
-                    children: <Widget>[
-                      const Padding(
-                          padding: EdgeInsets.only(top: 60.0),
-                          child: Center(
-                            child: SizedBox(
-                              width: 200,
-                              height: 30,
-                              // child: //Image.asset('asset/images/flutter-logo.png')),
-                            ),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Email',
-                              hintText:
-                                  'Enter valid email id as abc@gmail.com'),
-                          controller: emailController,
-                          /*validator: MultiValidator([
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (snapshot.hasError) {
+                    return ErrorWidget(Exception(
+                        'Error occured when fetching data from database $snapshot.error'));
+                  } else if (!snapshot.hasData) {
+                    debugPrint("snapshot:: $snapshot");
+                    //return ErrorWidget(Exception('e $snapshot.error'));
+
+                    return UserSettings(widget.currentAppState, widget.manager);
+                  } else {
+                    return SingleChildScrollView(
+                      child: Form(
+                        //autovalidate: true, //check for validation while typing
+                        key: formkey,
+                        child: Column(
+                          children: <Widget>[
+                            const Padding(
+                                padding: EdgeInsets.only(top: 60.0),
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 200,
+                                    height: 30,
+                                    // child: //Image.asset('asset/images/flutter-logo.png')),
+                                  ),
+                                )),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Email',
+                                    hintText:
+                                        'Enter valid email id as abc@gmail.com'),
+                                controller: emailController,
+                                /*validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       EmailValidator(errorText: "Enter valid email id"),
                     ])*/
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15.0, right: 15.0, top: 15, bottom: 0),
-                        child: TextFormField(
-                          obscureText: true,
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Password',
-                              hintText: 'Enter secure password'),
-                          controller: passwordController,
-                          /* validator: MultiValidator([
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                              child: TextFormField(
+                                obscureText: true,
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Password',
+                                    hintText: 'Enter secure password'),
+                                controller: passwordController,
+                                /* validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       MinLengthValidator(6,
                           errorText: "Password should be atleast 6 characters"),
@@ -202,67 +183,69 @@ class _LoginFormValidationState extends State<LoginForm> {
                           errorText:
                           "Password should not be greater than 15 characters")
                     ])*/
-                          //validatePassword,        //Function to check validation
+                                //validatePassword,        //Function to check validation
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                            ),
+                            Container(
+                              height: 50,
+                              width: 250,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: TextButton(
+                                onPressed: () {
+                                  login();
+                                },
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 25),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                              child: TextButton(
+                                onPressed: () {
+                                  // login();
+                                },
+                                child: const Text(
+                                  'Forgot password?',
+                                  style: TextStyle(
+                                      color: Colors.indigoAccent,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 15),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                              child: TextButton(
+                                onPressed: () {
+                                  // login();
+                                },
+                                child: const Text(
+                                  'Create account',
+                                  style: TextStyle(
+                                      color: Colors.indigoAccent,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 15),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                            left: 15.0, right: 15.0, top: 15, bottom: 0),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 250,
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: TextButton(
-                          onPressed: () {
-                            login();
-                          },
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(color: Colors.white, fontSize: 25),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15.0, right: 15.0, top: 15, bottom: 0),
-                        child: TextButton(
-                          onPressed: () {
-                            // login();
-                          },
-                          child: const Text(
-                            'Forgot password?',
-                            style: TextStyle(
-                                color: Colors.indigoAccent,
-                                decoration: TextDecoration.underline,
-                                fontSize: 15),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15.0, right: 15.0, top: 15, bottom: 0),
-                        child: TextButton(
-                          onPressed: () {
-                            // login();
-                          },
-                          child: const Text(
-                            'Create account',
-                            style: TextStyle(
-                                color: Colors.indigoAccent,
-                                decoration: TextDecoration.underline,
-                                fontSize: 15),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                    ),);
-              }
-            }
-          })),
+                    );
+                  }
+                }
+              })),
     );
   }
 
