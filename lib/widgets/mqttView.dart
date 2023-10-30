@@ -4,14 +4,13 @@ import 'package:mqtt_test/mqtt/MQTTConnectionManager.dart';
 import 'package:provider/provider.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
 
 class MQTTView extends StatefulWidget {
   const MQTTView(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key);
 
-  const MQTTView.base();
+  const MQTTView.base({Key? key}) : super(key: key);
   //var sharedPreferences;
   //MQTTView();
 
@@ -87,7 +86,7 @@ class _MQTTViewState extends State<MQTTView> {
             ),
             drawer: NavDrawer(currentAppState, manager),
             appBar: AppBar(
-              title: Text("Alarms"),
+              title: const Text("Alarms"),
             ),
           );
           //return Text(context.watch<MQTTView>().toString());
@@ -180,7 +179,7 @@ class _MQTTViewState extends State<MQTTView> {
   Widget _buildScrollableTextWith(String text) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Container(
+      child: SizedBox(
         width: 400,
         height: 200,
         child: SingleChildScrollView(
@@ -197,10 +196,10 @@ class _MQTTViewState extends State<MQTTView> {
           // ignore: deprecated_member_use
           child: MaterialButton(
             color: Colors.lightBlueAccent,
-            child: const Text('Connect'),
             onPressed: state == MQTTAppConnectionState.disconnected
                 ? _configureAndConnect
                 : null, //
+            child: const Text('Connect'),
           ),
         ),
         const SizedBox(width: 10),
@@ -208,10 +207,10 @@ class _MQTTViewState extends State<MQTTView> {
           // ignore: deprecated_member_use
           child: MaterialButton(
             color: Colors.redAccent,
-            child: const Text('Disconnect'),
             onPressed: state == MQTTAppConnectionState.connected
                 ? _disconnect
-                : null, //
+                : null,
+            child: const Text('Disconnect'),
           ),
         ),
       ],
@@ -222,12 +221,12 @@ class _MQTTViewState extends State<MQTTView> {
     // ignore: deprecated_member_use
     return MaterialButton(
       color: Colors.green,
-      child: const Text('Send'),
       onPressed: state == MQTTAppConnectionState.connected
           ? () {
               _publishMessage(_messageTextController.text);
             }
-          : null, //
+          : null,
+      child: const Text('Send'),
     );
   }
 
@@ -268,7 +267,7 @@ class _MQTTViewState extends State<MQTTView> {
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android';
     }
-    final String message = osPrefix + ' says: ' + text;
+    final String message = "$osPrefix says: $text";
     manager.publish(message);
     _messageTextController.clear();
   }

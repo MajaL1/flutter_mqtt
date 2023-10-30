@@ -55,7 +55,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   _initCurrentAppState() async {
     Timer(
-        Duration(seconds: 2),
+        const Duration(seconds: 2),
         () => {
               setCurrentAppState(widget.currentAppState),
               setManager(widget.manager),
@@ -86,7 +86,7 @@ class _FirstScreenState extends State<FirstScreen> {
                   return LoginForm(widget.currentAppState, widget.manager);
                 } else {
                   debugPrint(
-                      "first screen: currentAppState:: $widget.currentAppState, ${widget.currentAppState != null}, ${widget.manager}");
+                      "first screen: currentAppState:: $widget.currentAppState, ${widget.currentAppState}, ${widget.manager}");
 
                   return Scaffold(
                       drawer: NavDrawer(widget.currentAppState, widget.manager),

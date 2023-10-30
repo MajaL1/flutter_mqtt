@@ -40,7 +40,7 @@ class _NavDrawerState extends State<NavDrawer> {
 
   _initCurrentAppState() async {
     Timer(
-        Duration(seconds: 2),
+        const Duration(seconds: 2),
         () => {
               setCurrentAppState(widget.currentAppState),
               setManager(widget.manager),
@@ -205,7 +205,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 ),
                                 onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (context) => MQTTView.base())),
+                                        builder: (context) => const MQTTView.base())),
                               ),
                               const Divider(height: 10),
                               const Divider(height: 40),

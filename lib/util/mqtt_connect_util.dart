@@ -14,7 +14,7 @@ class MqttConnectUtil {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString("username", user.username);
     sharedPreferences.setString("email", user.email ?? "");
-    sharedPreferences.setString("mqtt_pass", user.mqtt_pass ?? "");
+    sharedPreferences.setString("mqtt_pass", user.mqtt_pass);
   }
 
   static List<String> getBrokerAddressList(User user){

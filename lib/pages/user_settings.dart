@@ -37,7 +37,7 @@ Future<List<UserDataSettings>> getUserDataSettings() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String? data = preferences.get("settings_mqtt").toString();
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-  print("****************** data $data");
+  debugPrint("****************** data $data");
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
   // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
@@ -224,12 +224,10 @@ class _UserSettingsState extends State<UserSettings> {
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: ListView(shrinkWrap: true, children: [
-                      Container(
-                        child: Text(
-                            "Device id: ${snapshot.data![index].sensorAddress.toString()}",
-                            style: TextStyle(color: Colors.black, fontSize: 16),
-                            textAlign: TextAlign.justify),
-                      ),
+                      Text(
+                          "Device id: ${snapshot.data![index].sensorAddress.toString()}",
+                          style: const TextStyle(color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
                       Column(children: [
                         Container(
                             alignment: Alignment.bottomCenter,
@@ -289,7 +287,7 @@ class _UserSettingsState extends State<UserSettings> {
                       Container(
                         height: 30,
                         width: 50,
-                        margin: EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
                             color: Colors.blue,
                             borderRadius: BorderRadius.circular(10)),
@@ -327,14 +325,13 @@ class _UserSettingsState extends State<UserSettings> {
   /***
    * dynamically cretes controller text name based on device name and property
    *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
-   * ***/
+   * ***///
 
   // Todo: Generiraj specificen kontroler, build liste kontrolerjev
 
   List<TextEditingController> _generateTextEditControllerList(
       List<UserDataSettings> shapshotData) {
     List<TextEditingController> textEditControllerList = [];
-    int i = 0;
     for (var deviceProp in shapshotData) {
       var sensorAddress = deviceProp.sensorAddress;
 
@@ -379,7 +376,7 @@ class _UserSettingsState extends State<UserSettings> {
 // finds specific TextEditingController
   TextEditingController _returnTextEditingController(
       String? index, int? parameter) {
-    String controllerName = "${index}_${parameter}";
+    String controllerName = "$index-$parameter";
     debugPrint("controller: $controllerName");
     TextEditingController controller =
         TextEditingController(text: controllerName);
@@ -405,17 +402,15 @@ class _UserSettingsState extends State<UserSettings> {
   _setInputDecoration(val) {
     return InputDecoration(
         labelText: val,
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.greenAccent, width: 5.0),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),
         ));
   }
 
   Future<void> saveUserSettings() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    //var password = passwordController.text;
     debugPrint("Save user settings");
 
     /** pridobivanje iz settingsov **/

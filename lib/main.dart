@@ -276,7 +276,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
   // Initalize user data and connect
   Future<User> initalizeConnection(currentAppState) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final storage = const FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
 
     // ***************** connect to broker ****************
     User user = await MqttConnectUtil.readUserData();
@@ -290,7 +290,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     // todo: inicializiraj Mqtt service za settingse
 //storage.containsKey(key: "jwt")
     String? readToken = await storage.read(key: "token");
-    print("token from flutter secure storage: $readToken");
+    debugPrint("token from flutter secure storage: $readToken");
     return user;
   }
 
@@ -315,7 +315,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         currentAppState?.getAppConnectionState) {
       String ? t = await currentAppState?.getHistoryText;
 
-      print("****************** $t");
+      debugPrint("****************** $t");
     }
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
@@ -324,14 +324,14 @@ class _NotificationsAppState extends State<NotificationsApp> {
       //MQTTConnectionManager._publishMessage(topic, text);
       String ? t = await currentAppState?.getHistoryText;
 
-      print("****************** $t");
+      debugPrint("****************** $t");
     }
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("settings_mqtt").toString();
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-    print("****************** data $data");
-    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+    debugPrint("****************** data $data");
+    //Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
     // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
     // List<UserDataSettings> userSettings = UserDataSettings().getUserDataSettings(jsonMap);
