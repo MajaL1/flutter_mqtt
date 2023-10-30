@@ -24,7 +24,7 @@ class AlarmHistory extends StatelessWidget {
               appBar: AppBar(
                 title: const Text("History"),
               ),
-              drawer: NavDrawer.base(),
+              //drawer: NavDrawer(),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {

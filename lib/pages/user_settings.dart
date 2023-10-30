@@ -298,7 +298,7 @@ class _UserSettingsState extends State<UserSettings> {
                           },
                           child: const Text(
                             'Save device settings',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         ),
                       )

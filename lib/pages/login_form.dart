@@ -133,6 +133,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                     return UserSettings(widget.currentAppState, widget.manager);
                   } else {
                     return SingleChildScrollView(
+
                       child: Form(
                         //autovalidate: true, //check for validation while typing
                         key: formkey,
@@ -147,9 +148,10 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     // child: //Image.asset('asset/images/flutter-logo.png')),
                                   ),
                                 )),
+                            const Text("Enter username and password"),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),

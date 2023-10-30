@@ -69,6 +69,7 @@ class _FirstScreenState extends State<FirstScreen> {
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
 
     return Scaffold(
+        drawer: NavDrawer(widget.currentAppState, widget.manager),
         body: FutureBuilder(
             future: _initCurrentAppState(),
             builder: (context, snapshot) {
