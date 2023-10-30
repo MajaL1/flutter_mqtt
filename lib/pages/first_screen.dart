@@ -18,9 +18,7 @@ import 'login_form.dart';
 import 'alarm_history.dart';
 
 class FirstScreen extends StatefulWidget {
-  //final  sharedPref;
   MQTTConnectionManager manager;
-
   MQTTAppState currentAppState;
 
   FirstScreen(MQTTAppState appState, MQTTConnectionManager connectionManager,
@@ -32,6 +30,7 @@ class FirstScreen extends StatefulWidget {
   get appState {
     return currentAppState;
   }
+
   get connectionManager {
     return manager;
   }
@@ -84,19 +83,14 @@ class _FirstScreenState extends State<FirstScreen> {
                 } else if (!snapshot.hasData) {
                   debugPrint(
                       "first screen: snapshot:: $snapshot, $widget.currentAppState. ${widget.manager}");
-                  // return LoginForm(widget.currentAppState, widget.manager);
                   return LoginForm(widget.currentAppState, widget.manager);
                 } else {
                   debugPrint(
                       "first screen: currentAppState:: $widget.currentAppState, ${widget.currentAppState != null}, ${widget.manager}");
 
-                  return /* SharedPrefs().token.isEmpty
-                      ? LoginForm(widget.currentAppState, widget.manager)
-                      : MQTTView(widget.currentAppState, widget.manager); */
-                      Scaffold(
-                          drawer:
-                              NavDrawer(widget.currentAppState, widget.manager),
-                          body: LoginForm(widget.currentAppState, widget.manager));
+                  return Scaffold(
+                      drawer: NavDrawer(widget.currentAppState, widget.manager),
+                      body: LoginForm(widget.currentAppState, widget.manager));
                 }
               }
             }));

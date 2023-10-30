@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/api/api_service.dart';
+import '../components/drawer.dart';
 import '../model/alarm.dart';
 
 class AlarmHistory extends StatelessWidget {
@@ -23,6 +24,7 @@ class AlarmHistory extends StatelessWidget {
               appBar: AppBar(
                 title: const Text("History"),
               ),
+              drawer: NavDrawer.base(),
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {

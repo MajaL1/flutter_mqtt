@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/drawer.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
 
@@ -69,6 +70,8 @@ class _UserSettingsState extends State<UserSettings> {
       appBar: AppBar(
         title: const Text("Settings"),
       ),
+      drawer: NavDrawer(widget.currentAppState, widget.manager),
+
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         padding: const EdgeInsets.only(top: 30, bottom: 20),
@@ -207,7 +210,8 @@ class _UserSettingsState extends State<UserSettings> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<UserDataSettings>? userDataSettings = snapshot.data;
-          List<TextEditingController> textEditingControllers = _generateTextEditControllerList(userDataSettings!);
+          List<TextEditingController> textEditingControllers =
+              _generateTextEditControllerList(userDataSettings!);
           debugPrint(textEditingControllers.toString());
           return ListView.builder(
               shrinkWrap: true,
@@ -230,8 +234,7 @@ class _UserSettingsState extends State<UserSettings> {
                         Container(
                             alignment: Alignment.bottomCenter,
                             child: const Text("T: ",
-                                style: TextStyle(),
-                                textAlign: TextAlign.left)),
+                                style: TextStyle(), textAlign: TextAlign.left)),
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
@@ -243,11 +246,10 @@ class _UserSettingsState extends State<UserSettings> {
                               snapshot.data![index].loAlarm.toString()),
                           onChanged: (text) {
                             //controllerT.text =
-                             //   snapshot.data![index].t.toString();
+                            //   snapshot.data![index].t.toString();
                           },
                         ),
-                ]),
-
+                      ]),
                       Column(children: [
                         const Text("Hi alarm:"),
                         const Padding(
@@ -260,8 +262,8 @@ class _UserSettingsState extends State<UserSettings> {
                           decoration: _setInputDecoration(
                               snapshot.data![index].loAlarm.toString()),
                           onChanged: (text) {
-                           // controllerHiAlarm.text =
-                             //   snapshot.data![index].hiAlarm.toString();
+                            // controllerHiAlarm.text =
+                            //   snapshot.data![index].hiAlarm.toString();
                           },
                         ),
                         const Text(
@@ -279,8 +281,8 @@ class _UserSettingsState extends State<UserSettings> {
                               snapshot.data![index].loAlarm.toString()),
                           // labelText: data![index].loAlarm,,
                           onChanged: (text) {
-                           // controllerLoAlarm.text =
-                             //   snapshot.data![index].loAlarm.toString();
+                            // controllerLoAlarm.text =
+                            //   snapshot.data![index].loAlarm.toString();
                           },
                         )
                       ]),
@@ -313,7 +315,11 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  TextEditingController getTextEditController(String deviceName, String property, int index, List<TextEditingController> textEditControllerList){
+  TextEditingController getTextEditController(
+      String deviceName,
+      String property,
+      int index,
+      List<TextEditingController> textEditControllerList) {
     // Todo: najdi pravilen kontroler glede na index in parametre
     return textEditControllerList[index];
   }
@@ -323,11 +329,12 @@ class _UserSettingsState extends State<UserSettings> {
    *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
    * ***/
 
- // Todo: Generiraj specificen kontroler, build liste kontrolerjev
+  // Todo: Generiraj specificen kontroler, build liste kontrolerjev
 
-  List<TextEditingController> _generateTextEditControllerList(List<UserDataSettings> shapshotData) {
+  List<TextEditingController> _generateTextEditControllerList(
+      List<UserDataSettings> shapshotData) {
     List<TextEditingController> textEditControllerList = [];
-int i = 0;
+    int i = 0;
     for (var deviceProp in shapshotData) {
       var sensorAddress = deviceProp.sensorAddress;
 
@@ -339,14 +346,13 @@ int i = 0;
           .add(TextEditingController(text: controllerHiAlarm));
 
       String controllerU = "${sensorAddress}_u";
-      textEditControllerList
-          .add(TextEditingController(text: controllerU));
+      textEditControllerList.add(TextEditingController(text: controllerU));
 
       String controllerLoAlarm = "${sensorAddress}_loAlarm";
       textEditControllerList
           .add(TextEditingController(text: controllerLoAlarm));
     }
-      /** kontrolerji si sledijo:
+    /** kontrolerji si sledijo:
      *
      * 111_t_5
      * 111_u_8
@@ -367,9 +373,6 @@ int i = 0;
 
     return textEditControllerList;
   }
-
-
-
 
   // Todo: Kako posljemo vrednosti v kontrolerju
 
@@ -395,7 +398,7 @@ int i = 0;
 
   void saveMqttSettings(
       Key? key, String deviceName, String paramName, String paramValue) {
-       debugPrint(
+    debugPrint(
         "t, hiAlarm, loAlarm $key, $deviceName, $paramName, $paramValue");
   }
 
