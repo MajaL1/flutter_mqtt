@@ -207,8 +207,7 @@ class _UserSettingsState extends State<UserSettings> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<UserDataSettings>? userDataSettings = snapshot.data;
-          List<TextEditingController> textEditingControllers =
-              _generateTextEditController(userDataSettings!);
+          List<TextEditingController> textEditingControllers = _generateTextEditControllerList(userDataSettings!);
           debugPrint(textEditingControllers.toString());
           return ListView.builder(
               shrinkWrap: true,
@@ -314,14 +313,21 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
+  TextEditingController getTextEditController(String deviceName, String property, int index, List<TextEditingController> textEditControllerList){
+    // Todo: najdi pravilen kontroler glede na index in parametre
+    return textEditControllerList[index];
+  }
+
   /***
    * dynamically cretes controller text name based on device name and property
    *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
    * ***/
-  List<TextEditingController> _generateTextEditController(
-      List<UserDataSettings> shapshotData) {
-    List<TextEditingController> textEditControllerList = [];
 
+ // Todo: Generiraj specificen kontroler, build liste kontrolerjev
+
+  List<TextEditingController> _generateTextEditControllerList(List<UserDataSettings> shapshotData) {
+    List<TextEditingController> textEditControllerList = [];
+int i = 0;
     for (var deviceProp in shapshotData) {
       var sensorAddress = deviceProp.sensorAddress;
 
@@ -332,16 +338,40 @@ class _UserSettingsState extends State<UserSettings> {
       textEditControllerList
           .add(TextEditingController(text: controllerHiAlarm));
 
+      String controllerU = "${sensorAddress}_u";
+      textEditControllerList
+          .add(TextEditingController(text: controllerU));
+
       String controllerLoAlarm = "${sensorAddress}_loAlarm";
       textEditControllerList
           .add(TextEditingController(text: controllerLoAlarm));
     }
-    for (var t in textEditControllerList) {
-      debugPrint("0000000000000000000:  $t.toString()");
-    }
+      /** kontrolerji si sledijo:
+     *
+     * 111_t_5
+     * 111_u_8
+     * 111_hiAlarm_0
+     * 111_loAlarm_0
+     *
+     * 101_t_1
+     * 111_u_0
+     * 101_hiAlarm_0
+     * 101_loAlarm_0
+     *
+     * 135_t_7
+     * 111_u_8
+     * 135_hiAlarm_0
+     * 135_loAlarm_0
+     *
+     * **/
 
     return textEditControllerList;
   }
+
+
+
+
+  // Todo: Kako posljemo vrednosti v kontrolerju
 
 // finds specific TextEditingController
   TextEditingController _returnTextEditingController(
