@@ -27,17 +27,19 @@ class UserDataSettings {
           int hiAlarm = 0;
           int loAlarm = 0;
           for (String key1 in value.keys) {
-            value[key1];
-            int value1 = value[key1];
-            //print("key1: $key1, value1: $value1");
-            if (key1 == "t") {
-              t = value1;
-            }
-            if (key1 == "hi_alarm") {
-              hiAlarm = value1;
-            }
-            if (key1 == "lo_alarm") {
-              loAlarm = value1;
+            if(key1 != null) {
+              value[key1];
+              int value1 = value[key1];
+              //print("key1: $key1, value1: $value1");
+              if (key1 == "t") {
+                t = value1;
+              }
+              if (key1 == "hi_alarm") {
+                hiAlarm = value1;
+              }
+              if (key1 == "lo_alarm") {
+                loAlarm = value1;
+              }
             }
           }
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");

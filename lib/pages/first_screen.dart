@@ -48,9 +48,7 @@ class _FirstScreenState extends State<FirstScreen> {
   @override
   initState() {
     super.initState();
-    // ignore: avoid_print
-    print("-- firstScreen initstate");
-    //  initalizeConnection();
+    debugPrint("-- firstScreen initstate");
   }
 
   _initCurrentAppState() async {

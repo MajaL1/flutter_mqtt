@@ -8,9 +8,12 @@ import 'package:mqtt_test/mqtt/MQTTManager.dart';
 import '../components/drawer.dart';
 
 class MQTTView extends StatefulWidget {
-  const MQTTView(MQTTAppState currentAppState, MQTTConnectionManager manager, {Key? key}) : super(key: key);
+  const MQTTView(MQTTAppState currentAppState, MQTTManager manager,
+      {Key? key})
+      : super(key: key);
 
   const MQTTView.base({Key? key}) : super(key: key);
+
   //var sharedPreferences;
   //MQTTView();
 
@@ -28,10 +31,7 @@ class _MQTTViewState extends State<MQTTView> {
   final TextEditingController _messageTextController = TextEditingController();
   final TextEditingController _topicTextController = TextEditingController();
   late MQTTAppState currentAppState;
-//  late MQTTManager manager;
-  late MQTTConnectionManager manager;
-
-  //var sharedPreferences;
+  late MQTTManager manager;
 
   _MQTTViewState();
 
@@ -84,7 +84,7 @@ class _MQTTViewState extends State<MQTTView> {
             body: SingleChildScrollView(
               child: _buildColumn(),
             ),
-            drawer: NavDrawer(currentAppState, manager),
+            //drawer: NavDrawer(currentAppState, manager),
             appBar: AppBar(
               title: const Text("Alarms"),
             ),
@@ -207,9 +207,8 @@ class _MQTTViewState extends State<MQTTView> {
           // ignore: deprecated_member_use
           child: MaterialButton(
             color: Colors.redAccent,
-            onPressed: state == MQTTAppConnectionState.connected
-                ? _disconnect
-                : null,
+            onPressed:
+                state == MQTTAppConnectionState.connected ? _disconnect : null,
             child: const Text('Disconnect'),
           ),
         ),
@@ -249,7 +248,7 @@ class _MQTTViewState extends State<MQTTView> {
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android1';
     }
-    manager = MQTTConnectionManager(
+    manager = MQTTManager(
         host: _hostTextController.text,
         topic: _topicTextController.text,
         identifier: osPrefix,

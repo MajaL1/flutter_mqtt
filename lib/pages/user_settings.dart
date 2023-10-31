@@ -2,12 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
+import '../model/constants.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
+import '../widgets/constants.dart';
+import '../widgets/constants.dart';
+import '../widgets/constants.dart';
 
 class UserSettings extends StatefulWidget {
   MQTTAppState currentAppState;
@@ -184,12 +189,6 @@ class _UserSettingsState extends State<UserSettings> {
                   });
                 }),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text("Misc", style: headingStyle),
-            ],
-          ),
           const ListTile(
             leading: Icon(Icons.file_open_outlined),
             title: Text("Terms of Service"),
@@ -225,64 +224,34 @@ class _UserSettingsState extends State<UserSettings> {
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: ListView(shrinkWrap: true, children: [
                       Text(
-                          "Device id: ${snapshot.data![index].sensorAddress.toString()}",
-                          style: const TextStyle(color: Colors.black, fontSize: 16),
+                          "$Constants.DEVICE_ID: ${snapshot.data![index].sensorAddress.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
                       Column(children: [
                         Container(
                             alignment: Alignment.bottomCenter,
-                            child: const Text("T: ",
+                            child: const Text(Constants.T,
                                 style: TextStyle(), textAlign: TextAlign.left)),
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
-                        TextField(
-                          controller: _returnTextEditingController(
-                              snapshot.data![index].sensorAddress,
-                              snapshot.data?[index].t),
-                          decoration: _setInputDecoration(
-                              snapshot.data![index].loAlarm.toString()),
-                          onChanged: (text) {
-                            //controllerT.text =
-                            //   snapshot.data![index].t.toString();
-                          },
-                        ),
+                        _generateTextField(snapshot.data![index], "t")
                       ]),
                       Column(children: [
-                        const Text("Hi alarm:"),
+                        const Text(Constants.HI_ALARM),
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
-                        TextField(
-                          controller: _returnTextEditingController(
-                              snapshot.data![index].sensorAddress,
-                              snapshot.data?[index].hiAlarm),
-                          decoration: _setInputDecoration(
-                              snapshot.data![index].loAlarm.toString()),
-                          onChanged: (text) {
-                            // controllerHiAlarm.text =
-                            //   snapshot.data![index].hiAlarm.toString();
-                          },
-                        ),
+                        _generateTextField(snapshot.data![index], "hiAlarm"),
                         const Text(
-                          "Lo alarm:",
+                          Constants.LO_ALARM,
                           style: TextStyle(),
                         ),
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
-                        TextField(
-                          controller: _returnTextEditingController(
-                              snapshot.data![index].sensorAddress,
-                              snapshot.data?[index].loAlarm),
-                          decoration: _setInputDecoration(
-                              snapshot.data![index].loAlarm.toString()),
-                          // labelText: data![index].loAlarm,,
-                          onChanged: (text) {
-                            // controllerLoAlarm.text =
-                            //   snapshot.data![index].loAlarm.toString();
-                          },
-                        )
+                        _generateTextField(snapshot.data![index], "loAlarm")
                       ]),
                       Container(
                         height: 30,
@@ -297,7 +266,7 @@ class _UserSettingsState extends State<UserSettings> {
                             saveMqttSettingsTest();
                           },
                           child: const Text(
-                            'Save device settings',
+                            Constants.SAVE_DEVICE_SETTINGS,
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         ),
@@ -309,6 +278,37 @@ class _UserSettingsState extends State<UserSettings> {
         }
         // By default show a loading spinner.
         return const CircularProgressIndicator();
+      },
+    );
+  }
+
+  TextField _generateTextField(var snapshotItem, String type) {
+    int setting = 0;
+    switch (type) {
+      case "t":
+        setting = snapshotItem.t;
+        break;
+      case "hiAlarm":
+        setting = snapshotItem.hiAlarm;
+        break;
+      case "loAalarm":
+        setting = snapshotItem.loAlarm;
+        break;
+      case "u":
+        setting = snapshotItem.u;
+        break;
+    }
+    debugPrint("$setting, $snapshotItem.sensorAddress");
+    return TextField(
+      controller:
+          _returnTextEditingController(snapshotItem.sensorAddress, setting),
+      decoration: _setInputDecoration(setting.toString()),
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly
+      ],
+      onChanged: (text) {
+        //controllerT.text =
+        //   snapshot.data![index].t.toString();
       },
     );
   }
@@ -325,7 +325,7 @@ class _UserSettingsState extends State<UserSettings> {
   /***
    * dynamically cretes controller text name based on device name and property
    *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
-   * ***///
+   * ***/ //
 
   // Todo: Generiraj specificen kontroler, build liste kontrolerjev
 
@@ -389,7 +389,9 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("save test: ");
     if (MQTTAppConnectionState.connected ==
         widget.currentAppState.getAppConnectionState) {
-      widget.manager.publish("{t:200}");
+// 'set:c45bbe821261:101:hi_alarm'
+      var testText = "set:c45bbe821261:101:hi_alarm:333";
+      widget.manager.publish(testText);
     }
   }
 

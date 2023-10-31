@@ -32,7 +32,6 @@ Future<void> main() async {
   );
 }
 
-// ToDo: zamenjaj klic za awsome service
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
 
@@ -179,15 +178,13 @@ class NotificationsApp extends StatefulWidget {
 class _NotificationsAppState extends State<NotificationsApp> {
   var prefs = 1;
 
-  late MQTTConnectionManager? manager;
+  late MQTTConnectionManager manager;
 
-  late MQTTAppState? currentAppState;
+  late MQTTAppState currentAppState;
 
   @override
   void initState() {
     super.initState();
-    //initalizeConnection();
-
   }
 
   Future<void> setCurrentAppState(appState) async {
@@ -209,59 +206,53 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
     // NotificationController.initializeLocalNotifications(
     //    channelKey, channelDescription, channelName);
-    // SharedPreferences prefs =  getPrefs() ;
 
-    // home: LoginForm(), //
     return MultiProvider(
         providers: [
           //Provider for theme
           ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
         ],
         builder: (context, child) => Builder(builder: (context) {
-          final MQTTAppState appState =  Provider.of<MQTTAppState>(context);
-          setCurrentAppState(appState);
-          MQTTConnectionManager manager = MQTTConnectionManager(
-              host: 'test.navis-livedata.com', //_hostTextController.text,
-              topic: 'c45bbe821261/settings'
-                  '', //_topicTextController.text,
-              identifier: "Android",
-              state: appState);
+              final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+              setCurrentAppState(appState);
+              MQTTConnectionManager manager = MQTTConnectionManager(
+                  host: 'test.navis-livedata.com',
+                  //_hostTextController.text,
+                  topic1: 'c45bbe821261/settings'
+                      '',
+                  //_topicTextController.text,
+                  topic2: 'c45bbe821261/data',
+                  identifier: "Android",
+                  state: appState);
 
-          return MaterialApp(
-              home: FutureBuilder(
-              future: initalizeConnection(appState),
-              builder: (context, snapshot) {
-                //if (currentAppState != null) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  if (snapshot.hasError) {
-                    return ErrorWidget(Exception(
-                        'Error occured when fetching data from database'));
-                  } else if (!snapshot.hasData) {
-                    debugPrint("snapshot:: $snapshot");
-                    return const Center(child: Text('Data is empty!'));
-                  } else {
-                    return FirstScreen(appState, manager);
-                  }
-                // }
-              }}));
-         /* return MaterialApp(
-                title: 'Flutter Demo',
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
-                initialRoute: '/',
-                home: FirstScreen(appState, manager),
-              ); */
+              return MaterialApp(
+                  home: FutureBuilder(
+                      future: initalizeConnection(appState),
+                      builder: (context, snapshot) {
+                        //if (currentAppState != null) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          if (snapshot.hasError) {
+                            return ErrorWidget(Exception(
+                                'Error occured when fetching data from database'));
+                          } else if (!snapshot.hasData) {
+                            debugPrint("snapshot:: $snapshot");
+                            return const Center(child: Text('Data is empty!'));
+                          } else {
+                            return FirstScreen(appState, manager);
+                          }
+                          // }
+                        }
+                      }));
             }));
   }
 
   Future<void> connectToBroker(List<String> brokerAddressList) async {
     for (var brokerAddress in brokerAddressList) {
-      // ali vsebuje alarme
       if (brokerAddress.contains('/alarm')) {
       } else if (brokerAddress.contains('/settings')) {
       } else if (brokerAddress.contains('/data')) {}
@@ -275,6 +266,8 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
   // Initalize user data and connect
   Future<User> initalizeConnection(currentAppState) async {
+    debugPrint("calling initalizeConnection in main.dart");
+
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     const storage = FlutterSecureStorage();
 
@@ -287,7 +280,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
     debugPrint("preferences ${sharedPreferences.toString()}");
     await storage.write(key: 'jwt', value: 'jwtTokenTest');
-    // todo: inicializiraj Mqtt service za settingse
 //storage.containsKey(key: "jwt")
     String? readToken = await storage.read(key: "token");
     debugPrint("token from flutter secure storage: $readToken");
@@ -296,33 +288,29 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
   // Connect to brokers
   Future<void> _configureAndConnect(currentAppState) async {
-
     // TODO: Use UUID
     String osPrefix = 'Flutter_iOS';
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android';
     }
     manager = MQTTConnectionManager(
-        host: 'test.navis-livedata.com', //_hostTextController.text,
-        topic: 'c45bbe821261/settings'
-            '', //_topicTextController.text,
+        host: 'test.navis-livedata.com',
+        //_hostTextController.text,
+        topic1: 'c45bbe821261/settings'
+            '',
+        //_topicTextController.text,
+        topic2: 'c45bbe821261/data',
         identifier: osPrefix,
         state: currentAppState);
-    manager?.initializeMQTTClient();
-    await manager?.connect();
+    manager.initializeMQTTClient();
+    await manager.connect();
 
-    if (MQTTAppConnectionState.connected ==
-        currentAppState?.getAppConnectionState) {
-      String ? t = await currentAppState?.getHistoryText;
-
-      debugPrint("****************** $t");
-    }
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
     if (MQTTAppConnectionState.connected ==
         currentAppState?.getAppConnectionState) {
       //MQTTConnectionManager._publishMessage(topic, text);
-      String ? t = await currentAppState?.getHistoryText;
+      String? t = await currentAppState?.getHistoryText;
 
       debugPrint("****************** $t");
     }
