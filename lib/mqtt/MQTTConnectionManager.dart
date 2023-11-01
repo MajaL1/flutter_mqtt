@@ -18,6 +18,7 @@ class MQTTConnectionManager {
   final String _topic2;
 
 
+
   // Constructor
   // ignore: sort_constructors_first
   MQTTConnectionManager(
@@ -88,6 +89,12 @@ class MQTTConnectionManager {
     print('EXAMPLE::Subscription confirmed for topic $topic');
   }
 
+  /// The subscribed callback
+  void unsubscribe(String topic) {
+    print('EXAMPLE::Subscription confirmed for topic $topic');
+    client?.unsubscribe(topic);
+  }
+
   /// The unsolicited disconnect callback
   void onDisconnected() {
     print('EXAMPLE::OnDisconnected client callback - Client disconnection');
@@ -102,8 +109,8 @@ class MQTTConnectionManager {
   void onConnected() {
     _currentState.setAppConnectionState(MQTTAppConnectionState.connected);
     print('on Connected: EXAMPLE::Mosquitto client connected....');
-    client!.subscribe(_topic1, MqttQos.atLeastOnce);
-    client!.subscribe(_topic2, MqttQos.atLeastOnce);
+    client!.subscribe(_topic1, MqttQos.exactlyOnce);
+    //client!.subscribe(_topic2, MqttQos.exactlyOnce);
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
@@ -122,10 +129,14 @@ class MQTTConnectionManager {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString("settings_mqtt", decodeMessage);
-      print("======= pt: ${pt}");
+      print("======= pt: ${pt} , topic: $_topic1, $_topic2");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       print('');
+      //client!.unsubscribe(_topic1);
+      //client!.unsubscribe(_topic2);
+      //client!.disconnect();
+
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');

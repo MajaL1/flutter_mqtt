@@ -6,6 +6,7 @@ import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/mqtt/MQTTManager.dart';
 
 import '../components/drawer.dart';
+import '../model/constants.dart';
 
 class MQTTView extends StatefulWidget {
   const MQTTView(MQTTAppState currentAppState, MQTTManager manager,
@@ -86,7 +87,7 @@ class _MQTTViewState extends State<MQTTView> {
             ),
             //drawer: NavDrawer(currentAppState, manager),
             appBar: AppBar(
-              title: const Text("Alarms"),
+              title: const Text(Constants.ALARMS),
             ),
           );
           //return Text(context.watch<MQTTView>().toString());

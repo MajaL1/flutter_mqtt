@@ -17,7 +17,7 @@ class _TestNotificationsEditableState extends State<TestNotificationsEditable> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<NotificationMessage>>(
-      future: ApiService.getNotifMess(),
+      future: ApiService.getNotificationMessage(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

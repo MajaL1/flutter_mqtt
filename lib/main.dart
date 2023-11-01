@@ -145,7 +145,7 @@ void onStart(ServiceInstance service) async {
   final slovenia = tz.getLocation('Europe/London');
   final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
-  List<NotificationMessage> notificationList = await ApiService.getNotifMess();
+  List<NotificationMessage> notificationList = await ApiService.getNotificationMessage();
   for (var i = 0; i < notificationList.length; i++) {
     debugPrint("showing notification: ${notificationList[i].title}. $i");
 
@@ -215,17 +215,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         builder: (context, child) => Builder(builder: (context) {
               final MQTTAppState appState = Provider.of<MQTTAppState>(context);
               setCurrentAppState(appState);
-              MQTTConnectionManager manager = MQTTConnectionManager(
-                  host: 'test.navis-livedata.com',
-                  //_hostTextController.text,
-                  topic1: 'c45bbe821261/settings'
-                      '',
-                  //_topicTextController.text,
-                  topic2: 'c45bbe821261/data',
-                  identifier: "Android",
-                  state: appState);
-
-              return MaterialApp(
+                  return MaterialApp(
                   home: FutureBuilder(
                       future: initalizeConnection(appState),
                       builder: (context, snapshot) {
@@ -299,7 +289,8 @@ class _NotificationsAppState extends State<NotificationsApp> {
         topic1: 'c45bbe821261/settings'
             '',
         //_topicTextController.text,
-        topic2: 'c45bbe821261/data',
+        topic2: '',
+        // //'c45bbe821261/data',
         identifier: osPrefix,
         state: currentAppState);
     manager.initializeMQTTClient();

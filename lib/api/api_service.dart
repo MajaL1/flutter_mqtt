@@ -17,7 +17,7 @@ class ApiService {
   static Future<List<Alarm>> getAlarms() async {
     var data = await rootBundle.loadString("assets/alarms.json");
     final jsonResult = jsonDecode(data);
-    //print("jsonResult: $jsonResult");
+    //debugPrint("jsonResult from file: $jsonResult");
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 
     return parsed.map<Alarm>((json) => Alarm.fromJson(json)).toList();
@@ -34,7 +34,7 @@ class ApiService {
   Future<bool> createAlarms(Alarm data) async {
     String url = Constants.BASE_URL;
     final response = await client.post(
-      "${url}/api/alarm" as Uri,
+      "$url/api/alarm" as Uri,
       headers: {"content-type": "application/json"},
       body: alarmToJson(data),
     );
@@ -45,7 +45,7 @@ class ApiService {
     }
   }
 
-  /*static Future<User?> login(String email, password) async {
+  static Future<User?> login(String email, password) async {
     email = "test";
     password = "Test@1234";
     try {
@@ -61,10 +61,10 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
-        print(data['token']);
-        print('=====Login successfully');
+        debugPrint(data['token']);
+        debugPrint('=====Login successfully');
         List<UserTopic> topicList = [];
-        UserTopic topic = UserTopic(id: '1', name: "topic1", rw: "rw");
+        UserTopic topic = UserTopic(id: '1', topicList: []);
         topicList.add(topic);
         User user = User(
             id: 1,
@@ -72,19 +72,19 @@ class ApiService {
             date_login: DateTime.now(),
             date_register: DateTime.now(),
             email: 'test@test.com',
-            mqtt_pass: '12345',
-            topicList: topicList);
+            mqtt_pass: '12345', topic: topic
+        );
 
         return user;
       } else {
-        print('=====Login failed');
+        debugPrint('=====Login failed');
         return null;
       }
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
     return null;
-  } */
+  }
 
 /* Future<Map<String, dynamic>> register(String email, String password, String passwordConfirmation) async {
 
@@ -142,7 +142,7 @@ class ApiService {
 */
 
  */
-  static Future<List<NotificationMessage>> getNotifMess() async {
+  static Future<List<NotificationMessage>> getNotificationMessage() async {
     var data =
         await rootBundle.loadString("assets/test_notifications_list.json");
     final jsonResult = jsonDecode(data);
@@ -155,11 +155,11 @@ class ApiService {
         .toList();
   }
 
-  Future<bool> createNotifMessageFromJson(NotificationMessage data) async {
+  Future<bool> createNotificationMessageFromJson(NotificationMessage data) async {
     String url = Constants.BASE_URL;
-    final response = await client.post("${url}/api/alarm" as Uri,
+    final response = await client.post("$url/api/alarm" as Uri,
         headers: {"content-type": "application/json"}, body: data.toJson()
-        //NotifMessage().notifMessageToJson(data),
+        //NotificationMessage().notificationMessageToJson(data),
         );
     if (response.statusCode == 201) {
       return true;

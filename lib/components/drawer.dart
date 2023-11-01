@@ -8,6 +8,7 @@ import 'package:mqtt_test/widgets/mqttView.dart';
 
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
+import '../pages/details_page.dart';
 
 class NavDrawer extends StatefulWidget {
   MQTTConnectionManager manager;
@@ -168,7 +169,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               ),
                               const Divider(height: 10),
                               const Divider(height: 10),
-                              const ListTile(
+                              ListTile(
                                 hoverColor: Colors.blue,
                                 tileColor: Colors.blue,
                                 dense: false,
@@ -183,9 +184,11 @@ class _NavDrawerState extends State<NavDrawer> {
                                     color: Colors.white,
                                   ),
                                 ),
-                                /*onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => NotificationPage())), */
-                              ),
+                                onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailsPage()))
+                              )
+                              ,
                               const Divider(height: 10),
                               ListTile(
                                 hoverColor: Colors.blue,

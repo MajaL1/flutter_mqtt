@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import '../components/drawer.dart';
 import '../model/alarm.dart';
+import '../model/constants.dart';
 
 class AlarmHistory extends StatelessWidget {
   //var sharedPreferences;
@@ -22,7 +23,7 @@ class AlarmHistory extends StatelessWidget {
         if (snapshot.hasData) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text("History"),
+                title: const Text(Constants.HISTORY),
               ),
               //drawer: NavDrawer(),
               body: ListView.builder(

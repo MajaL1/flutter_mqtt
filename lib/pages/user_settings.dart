@@ -48,6 +48,7 @@ Future<List<UserDataSettings>> getUserDataSettings() async {
   // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
   List<UserDataSettings> userDataSettings =
       UserDataSettings.getUserDataSettings(jsonMap);
+
   return userDataSettings;
   // debugPrint("UserSettings from JSON: $userSettings");
 }
@@ -67,13 +68,14 @@ class _UserSettingsState extends State<UserSettings> {
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
       appBar: AppBar(
-        title: const Text("Settings"),
+        title: const Text(Constants.SETTINGS),
       ),
       drawer: NavDrawer(widget.currentAppState, widget.manager),
 
@@ -208,6 +210,7 @@ class _UserSettingsState extends State<UserSettings> {
       future: getUserDataSettings(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+         // widget.manager.unsubscribe("_topic1");
           List<UserDataSettings>? userDataSettings = snapshot.data;
           List<TextEditingController> textEditingControllers =
               _generateTextEditControllerList(userDataSettings!);

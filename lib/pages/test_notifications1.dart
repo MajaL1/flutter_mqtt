@@ -21,7 +21,7 @@ class TestNotifications1 extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return FutureBuilder<List<NotificationMessage>>(
-      future: ApiService.getNotifMess(),
+      future: ApiService.getNotificationMessage(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

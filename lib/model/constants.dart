@@ -8,6 +8,10 @@ class Constants {
   static const U = "u: ";
   static const T = "t: ";
 
+  static const SETTINGS = "Settings";
+  static const HISTORY = "History";
+  static const ALARMS = "Alarms";
+
 
   static const SAVE_DEVICE_SETTINGS = "Save device settings";
 
