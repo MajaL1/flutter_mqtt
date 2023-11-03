@@ -10,6 +10,7 @@ import 'package:mqtt_test/widgets/mqttView.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../components/drawer.dart';
+import '../model/constants.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
@@ -113,7 +114,7 @@ class _LoginFormValidationState extends State<LoginForm> {
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: const Text("Login Page"),
+            title: const Text(Constants.LOGIN_PAGE),
           ),
           body: FutureBuilder(
               future: _initCurrentAppState(),
@@ -148,16 +149,16 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     // child: //Image.asset('asset/images/flutter-logo.png')),
                                   ),
                                 )),
-                            const Text("Enter username and password"),
+                            const Text(Constants.ENTER_USERNAME_AND_PASS),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
-                                    labelText: 'Email',
+                                    labelText: Constants.EMAIL,
                                     hintText:
-                                        'Enter valid email id as abc@gmail.com'),
+                                        Constants.ENTER_VALID_EMAIL),
                                 controller: emailController,
                                 /*validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
@@ -174,8 +175,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 autocorrect: false,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
-                                    labelText: 'Password',
-                                    hintText: 'Enter secure password'),
+                                    labelText: Constants.PASSWORD,
+                                    hintText: Constants.ENTER_SECURE_PASS),
                                 controller: passwordController,
                                 /* validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
@@ -217,7 +218,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   // login();
                                 },
                                 child: const Text(
-                                  'Forgot password?',
+                                  Constants.FORGOT_PASS,
                                   style: TextStyle(
                                       color: Colors.indigoAccent,
                                       decoration: TextDecoration.underline,
@@ -233,7 +234,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   // login();
                                 },
                                 child: const Text(
-                                  'Create account',
+                                  Constants.CREATE_ACCOUNT,
                                   style: TextStyle(
                                       color: Colors.indigoAccent,
                                       decoration: TextDecoration.underline,

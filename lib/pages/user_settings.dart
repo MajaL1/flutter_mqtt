@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,9 +11,6 @@ import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
-import '../widgets/constants.dart';
-import '../widgets/constants.dart';
-import '../widgets/constants.dart';
 
 class UserSettings extends StatefulWidget {
   MQTTAppState currentAppState;
@@ -31,8 +29,6 @@ class UserSettings extends StatefulWidget {
   get connectionManager {
     return manager;
   }
-
-  // UserSettings.base();
 
   @override
   State<UserSettings> createState() => _UserSettingsState();
@@ -57,6 +53,8 @@ class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red);
 
+  Widget? _connectMqtt;
+  int countTest = 0;
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
   bool changePassSwitchVal = true;
@@ -68,6 +66,44 @@ class _UserSettingsState extends State<UserSettings> {
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
+  @override
+  void initState() {
+    super.initState();
+    debugPrint("user_settings initState");
+    _connectToTopic();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // widget.manager.unsubscribe("_topic1");
+      // widget.manager.disconnect();
+      // skonekta se na managerja
+      //widget.manager.initializeMQTTClient();
+      //widget.manager.connect();
+
+      print("WidgetsBinding");
+    });
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      // widget.manager.disconnect();
+      // print("SchedulerBinding");
+    });
+  }
+
+  // this is hack to ensure method is executed only once
+  Container _clientConnectToTopic() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          widget.manager.initializeMQTTClient();
+          countTest++;
+          debugPrint("counter: $countTest");
+          widget.manager.connect();
+        }));
+    return Container();
+  }
+
+  Widget _connectToTopic() {
+    if (_connectMqtt == null) {
+      _connectMqtt =
+          _clientConnectToTopic(); //Container(); // here put whatever your function used to be.
+    }
+    return _connectMqtt!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +246,7 @@ class _UserSettingsState extends State<UserSettings> {
       future: getUserDataSettings(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-         // widget.manager.unsubscribe("_topic1");
+          //widget.manager.unsubscribe("_topic1");
           List<UserDataSettings>? userDataSettings = snapshot.data;
           List<TextEditingController> textEditingControllers =
               _generateTextEditControllerList(userDataSettings!);
@@ -227,7 +263,7 @@ class _UserSettingsState extends State<UserSettings> {
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: ListView(shrinkWrap: true, children: [
                       Text(
-                          "$Constants.DEVICE_ID: ${snapshot.data![index].sensorAddress.toString()}",
+                          "${Constants.DEVICE_ID}: ${snapshot.data![index].sensorAddress.toString()}",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
@@ -239,14 +275,16 @@ class _UserSettingsState extends State<UserSettings> {
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
-                        _generateTextField(snapshot.data![index], "t")
+                        _generateTextField(
+                            snapshot.data![index], Constants.DEVICE_SETTING_T)
                       ]),
                       Column(children: [
                         const Text(Constants.HI_ALARM),
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
-                        _generateTextField(snapshot.data![index], "hiAlarm"),
+                        _generateTextField(snapshot.data![index],
+                            Constants.DEVICE_SETTING_HI_ALARM),
                         const Text(
                           Constants.LO_ALARM,
                           style: TextStyle(),
@@ -254,7 +292,8 @@ class _UserSettingsState extends State<UserSettings> {
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
-                        _generateTextField(snapshot.data![index], "loAlarm")
+                        _generateTextField(snapshot.data![index],
+                            Constants.DEVICE_SETTING_LO_ALARM)
                       ]),
                       Container(
                         height: 30,
@@ -294,14 +333,14 @@ class _UserSettingsState extends State<UserSettings> {
       case "hiAlarm":
         setting = snapshotItem.hiAlarm;
         break;
-      case "loAalarm":
+      case "loAlarm":
         setting = snapshotItem.loAlarm;
         break;
       case "u":
         setting = snapshotItem.u;
         break;
     }
-    debugPrint("$setting, $snapshotItem.sensorAddress");
+    //debugPrint("$setting, $snapshotItem.sensorAddress");
     return TextField(
       controller:
           _returnTextEditingController(snapshotItem.sensorAddress, setting),
@@ -338,17 +377,17 @@ class _UserSettingsState extends State<UserSettings> {
     for (var deviceProp in shapshotData) {
       var sensorAddress = deviceProp.sensorAddress;
 
-      String controllerT = "${sensorAddress}_t";
+      String controllerT = "t";
       textEditControllerList.add(TextEditingController(text: controllerT));
 
-      String controllerHiAlarm = "${sensorAddress}_hiAlarm";
+      String controllerHiAlarm = "hiAlarm";
       textEditControllerList
           .add(TextEditingController(text: controllerHiAlarm));
 
-      String controllerU = "${sensorAddress}_u";
+      String controllerU = "u";
       textEditControllerList.add(TextEditingController(text: controllerU));
 
-      String controllerLoAlarm = "${sensorAddress}_loAlarm";
+      String controllerLoAlarm = "loAlarm";
       textEditControllerList
           .add(TextEditingController(text: controllerLoAlarm));
     }
@@ -379,8 +418,8 @@ class _UserSettingsState extends State<UserSettings> {
 // finds specific TextEditingController
   TextEditingController _returnTextEditingController(
       String? index, int? parameter) {
-    String controllerName = "$index-$parameter";
-    debugPrint("controller: $controllerName");
+    String controllerName = "$parameter";
+    //debugPrint("controller: $controllerName");
     TextEditingController controller =
         TextEditingController(text: controllerName);
 

@@ -55,6 +55,7 @@ class MQTTConnectionManager {
         .withWillQos(MqttQos.atLeastOnce);
     print('EXAMPLE:: client connecting....');
     client!.connectionMessage = connMess;
+
   }
 
   // Connect to the host
@@ -110,7 +111,7 @@ class MQTTConnectionManager {
     _currentState.setAppConnectionState(MQTTAppConnectionState.connected);
     print('on Connected: EXAMPLE::Mosquitto client connected....');
     client!.subscribe(_topic1, MqttQos.exactlyOnce);
-    //client!.subscribe(_topic2, MqttQos.exactlyOnce);
+   // client!.subscribe(_topic2, MqttQos.exactlyOnce);
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;

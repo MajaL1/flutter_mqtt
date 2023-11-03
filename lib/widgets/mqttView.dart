@@ -198,7 +198,7 @@ class _MQTTViewState extends State<MQTTView> {
           child: MaterialButton(
             color: Colors.lightBlueAccent,
             onPressed: state == MQTTAppConnectionState.disconnected
-                ? _configureAndConnect
+                ? configureAndConnect
                 : null, //
             child: const Text('Connect'),
           ),
@@ -242,7 +242,7 @@ class _MQTTViewState extends State<MQTTView> {
     }
   }
 
-  void _configureAndConnect() {
+  void configureAndConnect() {
     // ignore: flutter_style_todos
     // TODO: Use UUID
     String osPrefix = 'Flutter_iOS';

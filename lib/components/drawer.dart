@@ -179,14 +179,15 @@ class _NavDrawerState extends State<NavDrawer> {
                                   color: Colors.white,
                                 ),
                                 title: Text(
-                                  'Test - Notifications',
+                                  'Notifications list',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
                                 ),
                                 onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (context) => DetailsPage()))
+                                        builder: (context) => DetailsPage( widget.appState,
+                                            widget.connectionManager)))
                               )
                               ,
                               const Divider(height: 10),

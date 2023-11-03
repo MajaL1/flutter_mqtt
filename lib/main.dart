@@ -1,22 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mqtt_test/api/api_service.dart';
 import 'package:mqtt_test/util/mqtt_connect_util.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-import 'model/notification_message.dart';
+import 'api/notification_helper.dart';
 import 'model/user.dart';
 import 'mqtt/MQTTConnectionManager.dart';
 import 'mqtt/state/MQTTAppState.dart';
 import 'util/app_preference_util.dart';
 import 'pages/first_screen.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
 
@@ -26,145 +22,15 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
-  await initializeService();
+  // init service for notifications
+  await NotificationHelper.initializeService();
   runApp(
     const NotificationsApp(),
   );
+  //ApiService.login("test", "Test1234");
 }
 
-Future<void> initializeService() async {
-  final service = FlutterBackgroundService();
 
-  /// OPTIONAL, using custom notification channel id
-  const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'my_foreground', // id
-    'MY FOREGROUND SERVICE', // title
-    description:
-        'This channel is used for important notifications.', // description
-    importance: Importance.low, // importance must be at low or higher level
-  );
-
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestPermission();
-
-  if (Platform.isIOS || Platform.isAndroid) {
-    await flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
-        iOS: DarwinInitializationSettings(),
-        android: AndroidInitializationSettings('ic_bg_service_small'),
-      ),
-    );
-  }
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  await service.configure(
-    androidConfiguration: AndroidConfiguration(
-      // this will be executed when app is in foreground or background in separated isolate
-      onStart: onStart,
-
-      // auto start service
-      autoStart: true,
-      isForegroundMode: false,
-
-      notificationChannelId: 'my_foreground',
-      initialNotificationTitle: 'TEST NOTIFICATIONS',
-      initialNotificationContent: 'Initializing',
-      foregroundServiceNotificationId: 888,
-    ),
-    iosConfiguration: IosConfiguration(
-      // auto start service
-      autoStart: true,
-
-      // this will be executed when app is in foreground in separated isolate
-      onForeground: onStart,
-
-      // you have to enable background fetch capability on xcode project
-      onBackground: onIosBackground,
-    ),
-  );
-  tzl.initializeTimeZones();
-  service.startService();
-}
-
-// to ensure this is executed
-// run app from xcode, then from xcode menu, select Simulate Background Fetch
-
-@pragma('vm:entry-point')
-Future<bool> onIosBackground(ServiceInstance service) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  DartPluginRegistrant.ensureInitialized();
-
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.reload();
-  final log = preferences.getStringList('log') ?? <String>[];
-  log.add(DateTime.now().toIso8601String());
-  await preferences.setStringList('log', log);
-
-  return true;
-}
-
-@pragma('vm:entry-point')
-void onStart(ServiceInstance service) async {
-  // Only available for flutter 3.0.0 and later
-  DartPluginRegistrant.ensureInitialized();
-
-  // For flutter prior to version 3.0.0
-  // We have to register the plugin manually
-
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.setString("hello", "world");
-
-  /// OPTIONAL when use custom notification
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  if (service is AndroidServiceInstance) {
-    service.on('setAsForeground').listen((event) {
-      service.setAsForegroundService();
-    });
-
-    service.on('setAsBackground').listen((event) {
-      service.setAsBackgroundService();
-    });
-  }
-
-  service.on('stopService').listen((event) {
-    service.stopSelf();
-  });
-
-  /******** tole sem probala in prikaze vse razen prvega*******/
-  tzl.initializeTimeZones();
-  final slovenia = tz.getLocation('Europe/London');
-  final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
-
-  List<NotificationMessage> notificationList = await ApiService.getNotificationMessage();
-  for (var i = 0; i < notificationList.length; i++) {
-    debugPrint("showing notification: ${notificationList[i].title}. $i");
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-        i,
-        "A Notification From My App ",
-        "$notificationList[i].title",
-        tz.TZDateTime.now(slovenia).add(const Duration(minutes: 5)),
-        //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
-        const NotificationDetails(
-            android: AndroidNotificationDetails(
-          "1",
-          "11",
-        )),
-        //androidScheduleMode: AndroidScheduleMode,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
-  }
-}
 
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -200,26 +66,21 @@ class _NotificationsAppState extends State<NotificationsApp> {
   @override
   Widget build(BuildContext context) {
     //SharedPreferences.getInstance().then((prefValue) => debugPrint(this));
-    String channelKey = "alerts1Main";
-    String channelName = "Alerts1Main";
-    String channelDescription = "Notification tests as alerts1Main";
 
-    // NotificationController.initializeLocalNotifications(
-    //    channelKey, channelDescription, channelName);
+    debugPrint("00000000000 main.dart build");
 
     return MultiProvider(
         providers: [
-          //Provider for theme
           ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
         ],
         builder: (context, child) => Builder(builder: (context) {
               final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+              debugPrint("build main.dart");
               setCurrentAppState(appState);
                   return MaterialApp(
                   home: FutureBuilder(
                       future: initalizeConnection(appState),
                       builder: (context, snapshot) {
-                        //if (currentAppState != null) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
@@ -250,7 +111,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     }
     if (MQTTAppConnectionState.disconnected ==
         currentAppState?.getAppConnectionState) {
-      await _configureAndConnect(currentAppState);
+        await configureAndConnect(currentAppState);
     }
   }
 
@@ -277,7 +138,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
   }
 
   // Connect to brokers
-  Future<void> _configureAndConnect(currentAppState) async {
+  Future<void> configureAndConnect(currentAppState) async {
     // TODO: Use UUID
     String osPrefix = 'Flutter_iOS';
     if (Platform.isAndroid) {
@@ -289,12 +150,13 @@ class _NotificationsAppState extends State<NotificationsApp> {
         topic1: 'c45bbe821261/settings'
             '',
         //_topicTextController.text,
+       // topic2:
         topic2: '',
-        // //'c45bbe821261/data',
+        // 'c45bbe821261/data',
         identifier: osPrefix,
         state: currentAppState);
-    manager.initializeMQTTClient();
-    await manager.connect();
+        //manager.initializeMQTTClient();
+        //await manager.connect();
 
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
@@ -306,10 +168,13 @@ class _NotificationsAppState extends State<NotificationsApp> {
       debugPrint("****************** $t");
     }
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+   /* SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("settings_mqtt").toString();
+
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** data $data");
+
+    */
     //Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
     // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
