@@ -38,7 +38,7 @@ Future<List<UserDataSettings>> getUserDataSettings() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String? data = preferences.get("settings_mqtt").toString();
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-  debugPrint("****************** data $data");
+  debugPrint("****************** user settings data $data");
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
   // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'

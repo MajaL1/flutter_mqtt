@@ -17,35 +17,16 @@ import '../util/mqtt_connect_util.dart';
 import 'login_form.dart';
 import 'alarm_history.dart';
 
-class FirstScreen extends StatefulWidget {
-  MQTTConnectionManager manager;
-  MQTTAppState currentAppState;
+class FirstScreen1 extends StatefulWidget {
 
-  FirstScreen(MQTTAppState appState, MQTTConnectionManager connectionManager,
-      {Key? key})
-      : currentAppState = appState,
-        manager = connectionManager,
-        super(key: key);
-
-
-  get appState {
-    return currentAppState;
-  }
-
-  get connectionManager {
-    return manager;
-  }
-
-  //FirstScreen.base();
-
-  var username = SharedPrefs().username;
+   var username = SharedPrefs().username;
   var token = SharedPrefs().token;
 
   @override
   State<StatefulWidget> createState() => _FirstScreenState();
 }
 
-class _FirstScreenState extends State<FirstScreen> {
+class _FirstScreenState extends State<FirstScreen1> {
   @override
   initState() {
     super.initState();

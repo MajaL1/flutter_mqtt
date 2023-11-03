@@ -24,7 +24,18 @@ Future<void> main() async {
   await SharedPrefs().init();
   // init service for notifications
   await NotificationHelper.initializeService();
+
+  //mqtt builder
+  //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+
+
   runApp(
+   /* ChangeNotifierProvider<MQTTAppState>(
+      create: (BuildContext context) => MQTTAppState(),
+      child: const MaterialApp(
+        home: NotificationsApp(),
+      ),
+    ), */
     const NotificationsApp(),
   );
   //ApiService.login("test", "Test1234");
@@ -74,9 +85,9 @@ class _NotificationsAppState extends State<NotificationsApp> {
           ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
         ],
         builder: (context, child) => Builder(builder: (context) {
-              final MQTTAppState appState = Provider.of<MQTTAppState>(context);
+              final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
               debugPrint("build main.dart");
-              setCurrentAppState(appState);
+                setCurrentAppState(appState);
                   return MaterialApp(
                   home: FutureBuilder(
                       future: initalizeConnection(appState),
@@ -151,8 +162,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
             '',
         //_topicTextController.text,
        // topic2:
-        topic2: '',
-        // 'c45bbe821261/data',
+        topic2: 'c45bbe821261/data',
         identifier: osPrefix,
         state: currentAppState);
         //manager.initializeMQTTClient();

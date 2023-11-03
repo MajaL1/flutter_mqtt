@@ -110,8 +110,8 @@ class MQTTConnectionManager {
   void onConnected() {
     _currentState.setAppConnectionState(MQTTAppConnectionState.connected);
     print('on Connected: EXAMPLE::Mosquitto client connected....');
-    client!.subscribe(_topic1, MqttQos.exactlyOnce);
-   // client!.subscribe(_topic2, MqttQos.exactlyOnce);
+    client!.subscribe(_topic1, MqttQos.atLeastOnce);
+    client!.subscribe(_topic2, MqttQos.atLeastOnce);
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
@@ -125,7 +125,10 @@ class MQTTConnectionManager {
       MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
 
+      debugPrint("___________________________________________________");
+      debugPrint("from which topic $recMess.variableHeader.topicName");
       debugPrint("__________ $decodeMessage");
+      debugPrint("___________________________________________________");
 
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
