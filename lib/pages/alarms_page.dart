@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import '../model/alarm.dart';
 import '../model/constants.dart';
@@ -68,7 +69,7 @@ class _AlarmsPageState extends State<AlarmsPage> {
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: ListView(shrinkWrap: true, children: [
                       Text(
-                          "${Constants.DEVICE_ID}: ${snapshot.data![index].sensorAddress.toString()}",
+                          "${Constants.SENSOR_ID}: ${snapshot.data![index].sensorAddress.toString()}",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
@@ -111,11 +112,15 @@ class _AlarmsPageState extends State<AlarmsPage> {
     String? data = preferences.get("alarm_mqtt").toString();
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** user settings data $data");
-    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-    // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-    List<UserDataSettings> userDataSettings =
-    UserDataSettings.getUserDataSettings(jsonMap);
+    List<UserDataSettings> userDataSettings = [];
+    if(data != "null") {
+      Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+
+      // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
+      userDataSettings =
+      UserDataSettings.getUserDataSettings(jsonMap);
+    }
 
     return userDataSettings;
     // debugPrint("UserSettings from JSON: $userSettings");

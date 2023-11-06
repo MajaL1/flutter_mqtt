@@ -17,10 +17,7 @@ class MQTTConnectionManager {
   final String _topic1;
   final String _topic2;
 
-
-
   // Constructor
-  // ignore: sort_constructors_first
   MQTTConnectionManager(
       {required String host,
         required String topic1,
@@ -63,8 +60,8 @@ class MQTTConnectionManager {
   Future<void> connect() async {
     assert(client != null);
     try {
-      String username= "test1";
-      String password = "MDQ0MThmZmM1NTI4OGQ4OQ==";
+      String username= "test";
+      String password = "MWQxYjRkZWJlZjQ2MWViNQ==";
       print('::Navis app client connecting....');
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
       await client!.connect(username, password);

@@ -152,8 +152,7 @@ class NotificationHelper extends StatelessWidget {
               android: AndroidNotificationDetails(
                 "1",
                 "11",
-              )),
-          //androidScheduleMode: AndroidScheduleMode,
+              )),          //androidScheduleMode: AndroidScheduleMode,
           uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime);
     }

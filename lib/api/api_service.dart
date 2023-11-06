@@ -20,7 +20,7 @@ class ApiService {
     //debugPrint("jsonResult from file: $jsonResult");
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 
-    return parsed.map<Alarm>((json) => Alarm.fromJson(json)).toList();
+    return parsed.map<Alarm>((json) => Alarm.getAlarmList(json));
   }
 
   static Future<User> getUserData() async {
@@ -31,7 +31,7 @@ class ApiService {
     return user;
   }
 
-  Future<bool> createAlarms(Alarm data) async {
+  /*Future<bool> createAlarms(Alarm data) async {
     String url = Constants.BASE_URL;
     final response = await client.post(
       "$url/api/alarm" as Uri,
@@ -43,7 +43,7 @@ class ApiService {
     } else {
       return false;
     }
-  }
+  } */
 
   static Future<User?> login(String email, password) async {
     email = "test";

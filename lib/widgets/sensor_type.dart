@@ -1,0 +1,22 @@
+enum SensorType {
+  Notset
+  ,
+  WS,
+  WSD,
+  LEVEL_NO_TEMP,
+  LEVEL,
+  CAP,
+  SU10,
+  SU11,
+  SU12,
+  SP10,
+  SP15,
+  SP20,
+  SP25,
+  SP30,
+  SP40,
+  SP50,
+  SP100,
+  SP150,
+  SP200
+}

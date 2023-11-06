@@ -12,7 +12,7 @@ class Constants {
   static const LO_ALARM = "Lo alarm: ";
   static const U = "u: ";
   static const T = "t: ";
-  static const DEVICE_ID = "Device id: ";
+  static const SENSOR_ID = "Sensor id: ";
   static const EMAIL = "Email";
   static const ENTER_VALID_EMAIL = "Enter valid email id as abc@gmail.com";
   static const PASSWORD = "Password";

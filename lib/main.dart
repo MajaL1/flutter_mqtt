@@ -165,8 +165,8 @@ class _NotificationsAppState extends State<NotificationsApp> {
         topic2: 'c45bbe821261/data',
         identifier: osPrefix,
         state: currentAppState);
-        //manager.initializeMQTTClient();
-        //await manager.connect();
+        manager.initializeMQTTClient();
+        await manager.connect();
 
 
     // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v object UserSettings

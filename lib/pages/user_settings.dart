@@ -262,7 +262,7 @@ class _UserSettingsState extends State<UserSettings> {
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: ListView(shrinkWrap: true, children: [
                       Text(
-                          "${Constants.DEVICE_ID}: ${snapshot.data![index].sensorAddress.toString()}",
+                          "${Constants.SENSOR_ID}: ${snapshot.data![index].sensorAddress.toString()}",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
@@ -431,13 +431,17 @@ class _UserSettingsState extends State<UserSettings> {
     if (MQTTAppConnectionState.connected ==
         widget.currentAppState.getAppConnectionState) {
 // 'set:c45bbe821261:101:hi_alarm'
-      var testText = "set:c45bbe821261:101:hi_alarm:333";
+      var testText = "{\"135\":{\"hi_alarm\":111}}";
+     // json.de
       widget.manager.publish(testText);
     }
+    setState(() {});
   }
 
   void saveMqttSettings(
       Key? key, String deviceName, String paramName, String paramValue) {
+    var testText = "{\"135\":{\"hi_alarm\":111}}";
+
     debugPrint(
         "t, hiAlarm, loAlarm $key, $deviceName, $paramName, $paramValue");
   }

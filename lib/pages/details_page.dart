@@ -69,7 +69,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: ListView(shrinkWrap: true, children: [
                       Text(
-                          "${Constants.DEVICE_ID}: ${snapshot.data![index].sensorAddress.toString()}",
+                          "${Constants.SENSOR_ID}: ${snapshot.data![index].sensorAddress.toString()}",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
@@ -118,6 +118,8 @@ class _DetailsPageState extends State<DetailsPage> {
     List<UserDataSettings> userDataSettings =
     UserDataSettings.getUserDataSettings(jsonMap);
 
+    //List<Alarm> alarmList =
+    // Alarm.getAlarms(jsonMap);
     return userDataSettings;
     // debugPrint("UserSettings from JSON: $userSettings");
   }

@@ -34,17 +34,12 @@ class AlarmHistory extends StatelessWidget {
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
                         child: ListTile(
-                            title: Text(snapshot.data![index].name),
+                            title: Text(snapshot.data![index].hiAlarm.toString()),
                             leading: const FlutterLogo(),
                             subtitle: Row(
                               children: <Widget>[
-                                Text(snapshot.data![index].date!),
+                                Text(snapshot.data![index].loAlarm.toString()!),
                                 const Text("  -  "),
-                                Text(
-                                  snapshot.data![index].description,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w800),
-                                ),
                               ],
                             ),
                             onTap: () {
