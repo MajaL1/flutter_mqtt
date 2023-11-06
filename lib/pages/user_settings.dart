@@ -70,16 +70,15 @@ class _UserSettingsState extends State<UserSettings> {
   void initState() {
     super.initState();
     debugPrint("user_settings initState");
-    _connectToTopic();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    //_connectToTopic();
+    //WidgetsBinding.instance.addPostFrameCallback((_) {
       // widget.manager.unsubscribe("_topic1");
       // widget.manager.disconnect();
       // skonekta se na managerja
       //widget.manager.initializeMQTTClient();
       //widget.manager.connect();
-
       print("WidgetsBinding");
-    });
+    //});
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // widget.manager.disconnect();
       // print("SchedulerBinding");

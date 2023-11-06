@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:html';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
@@ -197,10 +197,10 @@ class MQTTConnectionWrapper {
   Future<void> configureAndConnect(currentAppState) async {
     // TODO: Use UUID
     String osPrefix = 'Flutter_iOS';
-    if (Platform.isAndroid) {
+   // if (Platform.isAndroid()) {
       osPrefix = 'Flutter_Android';
     }
-    manager = MQTTConnectionManager(
+    wrapper = MQTTConnectionWrapper(
         host: 'test.navis-livedata.com',
         //_hostTextController.text,
         topic1: 'c45bbe821261/settings'

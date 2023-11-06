@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
+import '../model/user_data_settings.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
 
@@ -34,7 +38,7 @@ class _DetailsPageState extends State<DetailsPage> {
     {
       return Scaffold(
           appBar: AppBar(
-            title: const Text("Test details"),
+            title: const Text("Test data"),
           ),
           //drawer: NavDrawer(),
           body: _buildDetailsView());
@@ -44,26 +48,15 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   void initState() {
     super.initState();
-    _clientConnectToTopic();
-  }
-
-  Container _clientConnectToTopic() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          widget.manager.initializeMQTTClient();
-          countTest++;
-          debugPrint("counter: $countTest");
-          widget.manager.connect();
-        }));
-    return Container();
   }
 
   Widget _buildDetailsView() {
 
-    return FutureBuilder<List<Alarm>>(
-      //future: getAlams(),
+    return FutureBuilder<List<UserDataSettings>>(
+      future: getAlarmData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<Alarm>? alarmList = snapshot.data;
+          List<UserDataSettings>? alarmList = snapshot.data;
           return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -99,7 +92,18 @@ class _DetailsPageState extends State<DetailsPage> {
       },
     );
   }
-  /*Future<List<Alarm>> getAlams() async {
+  Future<List<UserDataSettings>> getAlarmData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? data = preferences.get("data_mqtt").toString();
+    String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+    debugPrint("****************** user settings data $data");
+    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-  }*/
+    // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
+    List<UserDataSettings> userDataSettings =
+    UserDataSettings.getUserDataSettings(jsonMap);
+
+    return userDataSettings;
+    // debugPrint("UserSettings from JSON: $userSettings");
+  }
 }
