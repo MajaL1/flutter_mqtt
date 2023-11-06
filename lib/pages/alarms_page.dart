@@ -2,17 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/alarm.dart';
+//import '../model/alarm.dart';
 import '../model/constants.dart';
 import '../model/user_data_settings.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
 
-class DetailsPage extends StatefulWidget {
+class AlarmsPage extends StatefulWidget {
   MQTTAppState currentAppState;
   MQTTConnectionManager manager;
 
-  DetailsPage(MQTTAppState appState, MQTTConnectionManager connectionManager,
+  AlarmsPage(MQTTAppState appState, MQTTConnectionManager connectionManager,
       {Key? key})
       : currentAppState = appState,
         manager = connectionManager,
@@ -27,10 +27,10 @@ class DetailsPage extends StatefulWidget {
   }
 
   @override
-  State<DetailsPage> createState() => _DetailsPageState();
+  State<AlarmsPage> createState() => _AlarmsPageState();
 }
 
-class _DetailsPageState extends State<DetailsPage> {
+class _AlarmsPageState extends State<AlarmsPage> {
   int countTest = 0;
 
   @override
@@ -38,10 +38,10 @@ class _DetailsPageState extends State<DetailsPage> {
     {
       return Scaffold(
           appBar: AppBar(
-            title: const Text("Test data"),
+            title: const Text("Test alarms"),
           ),
           //drawer: NavDrawer(),
-          body: _buildDetailsView());
+          body: _buildAlarmsView());
     }
   }
 
@@ -50,13 +50,12 @@ class _DetailsPageState extends State<DetailsPage> {
     super.initState();
   }
 
-  Widget _buildDetailsView() {
+  Widget _buildAlarmsView() {
 
     return FutureBuilder<List<UserDataSettings>>(
       future: getAlarmData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<UserDataSettings>? alarmList = snapshot.data;
           return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -109,7 +108,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
   Future<List<UserDataSettings>> getAlarmData() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? data = preferences.get("data_mqtt").toString();
+    String? data = preferences.get("alarm_mqtt").toString();
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** user settings data $data");
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);

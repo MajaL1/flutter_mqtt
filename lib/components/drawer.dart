@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/pages/alarms_page.dart';
 import 'package:mqtt_test/pages/test_notifications_editable.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
-import 'package:mqtt_test/widgets/mqttView.dart';
+//import 'package:mqtt_test/widgets/mqttView.dart';
 
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
@@ -111,7 +112,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   color: Colors.white,
                                 ),
                                 title: const Text(
-                                  '//Scheduled alarms',
+                                  '//Test alarms',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -134,7 +135,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   color: Colors.white,
                                 ),
                                 title: const Text(
-                                  'History',
+                                  '// Test history',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -173,13 +174,13 @@ class _NavDrawerState extends State<NavDrawer> {
                                 hoverColor: Colors.blue,
                                 tileColor: Colors.blue,
                                 dense: false,
-                                visualDensity: VisualDensity(vertical: -4),
-                                leading: Icon(
+                                visualDensity: const VisualDensity(vertical: -4),
+                                leading: const Icon(
                                   Icons.notifications,
                                   color: Colors.white,
                                 ),
-                                title: Text(
-                                  'Notifications list',
+                                title: const Text(
+                                  'Data',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -202,14 +203,16 @@ class _NavDrawerState extends State<NavDrawer> {
                                   color: Colors.white,
                                 ),
                                 title: const Text(
-                                  'Test MQTT',
+                                  'Alarms',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
                                 ),
                                 onTap: () => Navigator.of(context).push(
+                                   // MaterialPageRoute(
+                                   //     builder: (context) => const MQTTView.base())),
                                     MaterialPageRoute(
-                                        builder: (context) => const MQTTView.base())),
+                                        builder: (context) =>  AlarmsPage(widget.appState, widget.connectionManager))),
                               ),
                               const Divider(height: 10),
                               const Divider(height: 40),

@@ -90,7 +90,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
                 setCurrentAppState(appState);
                   return MaterialApp(
                   home: FutureBuilder(
-                      future: initalizeConnection(appState),
+                      future: initializeConnection(appState),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -121,14 +121,14 @@ class _NotificationsAppState extends State<NotificationsApp> {
       debugPrint("brokerAddress: $brokerAddress");
     }
     if (MQTTAppConnectionState.disconnected ==
-        currentAppState?.getAppConnectionState) {
+        currentAppState.getAppConnectionState) {
         await configureAndConnect(currentAppState);
     }
   }
 
-  // Initalize user data and connect
-  Future<User> initalizeConnection(currentAppState) async {
-    debugPrint("calling initalizeConnection in main.dart");
+  // Initialize user data and connect
+  Future<User> initializeConnection(currentAppState) async {
+    debugPrint("calling initializeConnection in main.dart");
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     const storage = FlutterSecureStorage();
@@ -169,7 +169,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         //await manager.connect();
 
 
-    // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
+    // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v object UserSettings
     if (MQTTAppConnectionState.connected ==
         currentAppState?.getAppConnectionState) {
       //MQTTConnectionManager._publishMessage(topic, text);
@@ -192,7 +192,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
     // debugPrint("UserSettings from JSON: $userSettings");
 
-    // napolnimo nov objekt UserSettings
+    // napolnimo nov object UserSettings
     // pridobivanje sporocil
     //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
     //if(MQTTAppConnectionState.connected == true){
