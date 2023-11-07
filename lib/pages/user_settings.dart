@@ -34,7 +34,7 @@ class UserSettings extends StatefulWidget {
   State<UserSettings> createState() => _UserSettingsState();
 }
 
-Future<List<UserDataSettings>> getUserDataSettings() async {
+Future<List<UserDataSettings>> _getUserDataSettings() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String? data = preferences.get("settings_mqtt").toString();
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
@@ -48,6 +48,23 @@ Future<List<UserDataSettings>> getUserDataSettings() async {
   return userDataSettings;
   // debugPrint("UserSettings from JSON: $userSettings");
 }
+
+// parse userDataSettings v navadno listo, izloci tiste, ki jih ne prikazujemo za dolocen tip naprave
+ List<UserDataSettings> _parseUserDataSettingsToList(List<UserDataSettings> dataSettingsList){
+
+  List<UserDataSettings> dataSettingsListNew = [];
+  for (UserDataSettings setting in dataSettingsList)
+    {
+      // Todo: ce ne prikazujemo tipov za veter
+      //if(){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
+      dataSettingsListNew.add(UserDataSettings(deviceName: setting.deviceName, hiAlarm: setting.hiAlarm));
+      // if(){} // prikazi za loAlarm
+      dataSettingsListNew.add(UserDataSettings(deviceName: setting.deviceName, loAlarm: setting.loAlarm));
+
+    }
+  return dataSettingsListNew;
+
+ }
 
 class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
@@ -242,7 +259,7 @@ class _UserSettingsState extends State<UserSettings> {
 
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: getUserDataSettings(),
+      future: _getUserDataSettings().then((dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           //widget.manager.unsubscribe("_topic1");
