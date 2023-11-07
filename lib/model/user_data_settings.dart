@@ -4,8 +4,18 @@ class UserDataSettings {
   int? t;
   int? hiAlarm;
   int? loAlarm;
+  String ? editableSetting;
 
-  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.hiAlarm, this.loAlarm});
+  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.hiAlarm, this.loAlarm, this.editableSetting});
+
+  /*String ? _editableSetting;
+  String ? get editableSetting => _editableSetting;
+
+  set editableSetting(String ? value) {
+    if (value!.isNotEmpty) {
+      _editableSetting = value;
+    }
+  } */
 
   Map<String, dynamic> toJson() {
     return {
@@ -13,9 +23,10 @@ class UserDataSettings {
       "sensor_address": sensorAddress,
       "t": t,
       "hi_alarm": hiAlarm,
-      "lo_alarm": loAlarm
+      "lo_alarm": loAlarm,
     };
   }
+
 
   static List<UserDataSettings> getUserDataSettings(Map<String, dynamic> json) {
     List<UserDataSettings> userSettingsList = [];

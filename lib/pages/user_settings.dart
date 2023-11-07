@@ -50,21 +50,20 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
 }
 
 // parse userDataSettings v navadno listo, izloci tiste, ki jih ne prikazujemo za dolocen tip naprave
- List<UserDataSettings> _parseUserDataSettingsToList(List<UserDataSettings> dataSettingsList){
-
+List<UserDataSettings> _parseUserDataSettingsToList(
+    List<UserDataSettings> dataSettingsList) {
   List<UserDataSettings> dataSettingsListNew = [];
-  for (UserDataSettings setting in dataSettingsList)
-    {
-      // Todo: ce ne prikazujemo tipov za veter
-      //if(){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
-      dataSettingsListNew.add(UserDataSettings(deviceName: setting.deviceName, hiAlarm: setting.hiAlarm));
-      // if(){} // prikazi za loAlarm
-      dataSettingsListNew.add(UserDataSettings(deviceName: setting.deviceName, loAlarm: setting.loAlarm));
-
-    }
+  for (UserDataSettings setting in dataSettingsList) {
+    // Todo: ce ne prikazujemo tipov za veter
+    //if(setting.equals(Constants.HI_ALARM)){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
+    dataSettingsListNew.add(UserDataSettings(
+        sensorAddress: setting.sensorAddress, hiAlarm: setting.hiAlarm, editableSetting: Constants.HI_ALARM));
+    // if(){} // prikazi za loAlarm
+    dataSettingsListNew.add(UserDataSettings(
+        sensorAddress: setting.sensorAddress, loAlarm: setting.loAlarm, editableSetting: Constants.HI_ALARM));
+  }
   return dataSettingsListNew;
-
- }
+}
 
 class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
@@ -259,7 +258,8 @@ class _UserSettingsState extends State<UserSettings> {
 
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: _getUserDataSettings().then((dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),
+      future: _getUserDataSettings().then(
+          (dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           //widget.manager.unsubscribe("_topic1");
@@ -274,9 +274,10 @@ class _UserSettingsState extends State<UserSettings> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 UserDataSettings item = snapshot.data![index];
-                String sensorAddress = snapshot.data![index].sensorAddress.toString();
-
-               TextEditingController controller = TextEditingController();
+                String sensorAddress =
+                    snapshot.data![index].sensorAddress.toString();
+                String? settingToChange = item.editableSetting;
+                TextEditingController controller = TextEditingController();
                 debugPrint("item: $item");
                 return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
@@ -298,22 +299,7 @@ class _UserSettingsState extends State<UserSettings> {
                         ),
                         /*_generateTextField(
                             snapshot.data![index], Constants.DEVICE_SETTING_T) */
-                        TextField(
-                         // key: ValueKey("${item.sensorAddress}-${item.t}"),
-                          decoration: _setInputDecoration("${item.t}"),
-                          //_setInputDecoration(snapshot.data![index].t.toString()),
-
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          controller: controller,
-                          onChanged: (text) {
-                            debugPrint("onChanged $text");
-                            debugPrint("onChanged $controller.value()");
-                            //   snapshot.data![index].t.toString();
-                          },
-                        ),
-                      ]),
+                       ]),
                       Column(children: [
                         const Text(
                           Constants.HI_ALARM,
@@ -322,7 +308,7 @@ class _UserSettingsState extends State<UserSettings> {
                           padding: EdgeInsets.only(top: 10.0),
                         ),
                         TextField(
-                         // key: ValueKey("${item.sensorAddress}-${item.hiAlarm}"),
+                          // key: ValueKey("${item.sensorAddress}-${item.hiAlarm}"),
                           decoration: _setInputDecoration("${item.hiAlarm}"),
                           //_setInputDecoration(snapshot.data![index].t.toString()),
 
@@ -337,26 +323,10 @@ class _UserSettingsState extends State<UserSettings> {
                           },
                         ),
                         const Text(
-                          Constants.LO_ALARM,
-                          style: TextStyle(),
+                          Constants.U,
                         ),
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
-                        ),
-                        TextField(
-                          //key: ValueKey("${item.sensorAddress}-${item.loAlarm}"),
-                          decoration: _setInputDecoration("${item.loAlarm}"),
-                          //_setInputDecoration(snapshot.data![index].t.toString()),
-
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          controller: controller,
-                          onChanged: (text) {
-                            debugPrint("onChanged $text");
-                            //controllerT.text =
-                            //   snapshot.data![index].t.toString();
-                          },
                         ),
                       ]),
                       Container(
@@ -368,10 +338,7 @@ class _UserSettingsState extends State<UserSettings> {
                             borderRadius: BorderRadius.circular(10)),
                         child: TextButton(
                           onPressed: () {
-                            saveMqttSettings(
-                                sensorAddress,
-                                item,
-                                controller);
+                            saveMqttSettings(sensorAddress, item, controller);
                             //saveMqttSettingsTest();
                           },
                           child: const Text(
@@ -506,9 +473,10 @@ class _UserSettingsState extends State<UserSettings> {
     setState(() {});
   }
 
-  void saveMqttSettings(
-      String? sensorName, UserDataSettings settings, TextEditingController controller) {
-    debugPrint("text editing controller: $controller.text, $settings.t, ${settings.hiAlarm}, ${settings.loAlarm}");
+  void saveMqttSettings(String? sensorName, UserDataSettings settings,
+      TextEditingController controller) {
+    debugPrint(
+        "text editing controller: $controller.text, $settings.t, ${settings.hiAlarm}, ${settings.loAlarm}");
     debugPrint(
         "saveMqttSettings::: sensorName, paramName, paramValue  $sensorName ");
     var testText = "{\"135\":{\"hi_alarm\":111}}";
