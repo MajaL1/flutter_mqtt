@@ -280,11 +280,10 @@ class _UserSettingsState extends State<UserSettings> {
                 String ? value = "";
                 if(item.editableSetting== Constants.HI_ALARM_JSON) {
                   value = item.hiAlarm.toString();
-                }else if(item.editableSetting== Constants.HI_ALARM_JSON){
+                }else if(item.editableSetting== Constants.LO_ALARM_JSON){
                   value = item.loAlarm.toString();
                 }
                 TextEditingController controller = TextEditingController();
-                debugPrint("item: $item");
                 return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
@@ -488,7 +487,9 @@ class _UserSettingsState extends State<UserSettings> {
         "saveMqttSettings: $controller.text, $sensorName, $settingToChange");
     debugPrint(
         "::: sensorName, paramName, paramValue  $sensorName ");
-    var testText = "{\"135\":{\"hi_alarm\":111}}";
+    var testText1 = "{\"135\":{\"hi_alarm\":111}}";
+    var testText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
+    debugPrint("concatenated text: $testText");
     widget.manager.publish(testText);
   }
 
