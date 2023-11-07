@@ -60,7 +60,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
         sensorAddress: setting.sensorAddress, hiAlarm: setting.hiAlarm, editableSetting: Constants.HI_ALARM));
     // if(){} // prikazi za loAlarm
     dataSettingsListNew.add(UserDataSettings(
-        sensorAddress: setting.sensorAddress, loAlarm: setting.loAlarm, editableSetting: Constants.HI_ALARM));
+        sensorAddress: setting.sensorAddress, loAlarm: setting.loAlarm, editableSetting: Constants.LO_ALARM));
   }
   return dataSettingsListNew;
 }
@@ -276,7 +276,8 @@ class _UserSettingsState extends State<UserSettings> {
                 UserDataSettings item = snapshot.data![index];
                 String sensorAddress =
                     snapshot.data![index].sensorAddress.toString();
-                String? settingToChange = item.editableSetting;
+                String ? settingToChange = item.editableSetting ?? "";
+
                 TextEditingController controller = TextEditingController();
                 debugPrint("item: $item");
                 return SingleChildScrollView(
@@ -301,8 +302,8 @@ class _UserSettingsState extends State<UserSettings> {
                             snapshot.data![index], Constants.DEVICE_SETTING_T) */
                        ]),
                       Column(children: [
-                        const Text(
-                          Constants.HI_ALARM,
+                         Text(
+                          settingToChange,
                         ),
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
