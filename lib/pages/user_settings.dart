@@ -57,10 +57,10 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     // Todo: ce ne prikazujemo tipov za veter
     //if(setting.equals(Constants.HI_ALARM)){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
     dataSettingsListNew.add(UserDataSettings(
-        sensorAddress: setting.sensorAddress, hiAlarm: setting.hiAlarm, editableSetting: Constants.HI_ALARM));
+        sensorAddress: setting.sensorAddress, hiAlarm: setting.hiAlarm, editableSetting: Constants.HI_ALARM_JSON));
     // if(){} // prikazi za loAlarm
     dataSettingsListNew.add(UserDataSettings(
-        sensorAddress: setting.sensorAddress, loAlarm: setting.loAlarm, editableSetting: Constants.LO_ALARM));
+        sensorAddress: setting.sensorAddress, loAlarm: setting.loAlarm, editableSetting: Constants.LO_ALARM_JSON));
   }
   return dataSettingsListNew;
 }
@@ -277,7 +277,12 @@ class _UserSettingsState extends State<UserSettings> {
                 String sensorAddress =
                     snapshot.data![index].sensorAddress.toString();
                 String ? settingToChange = item.editableSetting ?? "";
-
+                String ? value = "";
+                if(item.editableSetting== Constants.HI_ALARM_JSON) {
+                  value = item.hiAlarm.toString();
+                }else if(item.editableSetting== Constants.HI_ALARM_JSON){
+                  value = item.loAlarm.toString();
+                }
                 TextEditingController controller = TextEditingController();
                 debugPrint("item: $item");
                 return SingleChildScrollView(
@@ -310,7 +315,7 @@ class _UserSettingsState extends State<UserSettings> {
                         ),
                         TextField(
                           // key: ValueKey("${item.sensorAddress}-${item.hiAlarm}"),
-                          decoration: _setInputDecoration("${item.hiAlarm}"),
+                          decoration: _setInputDecoration("$value"),
                           //_setInputDecoration(snapshot.data![index].t.toString()),
 
                           inputFormatters: <TextInputFormatter>[
@@ -339,7 +344,7 @@ class _UserSettingsState extends State<UserSettings> {
                             borderRadius: BorderRadius.circular(10)),
                         child: TextButton(
                           onPressed: () {
-                            saveMqttSettings(sensorAddress, item, controller);
+                            saveMqttSettings(sensorAddress, item, controller, settingToChange);
                             //saveMqttSettingsTest();
                           },
                           child: const Text(
@@ -475,11 +480,14 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
   void saveMqttSettings(String? sensorName, UserDataSettings settings,
-      TextEditingController controller) {
+      TextEditingController controller, String settingToChange) {
+    String value = controller.text;
+
+
     debugPrint(
-        "text editing controller: $controller.text, $settings.t, ${settings.hiAlarm}, ${settings.loAlarm}");
+        "saveMqttSettings: $controller.text, $sensorName, $settingToChange");
     debugPrint(
-        "saveMqttSettings::: sensorName, paramName, paramValue  $sensorName ");
+        "::: sensorName, paramName, paramValue  $sensorName ");
     var testText = "{\"135\":{\"hi_alarm\":111}}";
     widget.manager.publish(testText);
   }
