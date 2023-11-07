@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/model/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
-import '../model/data.dart';
 import '../model/user_data_settings.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
@@ -119,7 +119,7 @@ class _DetailsPageState extends State<DetailsPage> {
     List<UserDataSettings> userDataSettings =
     UserDataSettings.getUserDataSettings(jsonMap);
 
-    List<Data> dataList = Data.getDataList(jsonMap);
+    //List<Data> dataList  = Data.getDataList();
     return userDataSettings;
     // debugPrint("UserSettings from JSON: $userSettings");
   }

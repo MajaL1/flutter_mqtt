@@ -1,13 +1,15 @@
 class UserDataSettings {
+  String? deviceName;
   String? sensorAddress;
   int? t;
   int? hiAlarm;
   int? loAlarm;
 
-  UserDataSettings({this.sensorAddress, this.t, this.hiAlarm, this.loAlarm});
+  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.hiAlarm, this.loAlarm});
 
   Map<String, dynamic> toJson() {
     return {
+      "device_name": deviceName,
       "sensor_address": sensorAddress,
       "t": t,
       "hi_alarm": hiAlarm,
