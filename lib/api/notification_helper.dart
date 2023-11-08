@@ -13,6 +13,7 @@ import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
 import '../main.dart';
 import '../model/notification_message.dart';
+import '../model/user_data_settings.dart';
 
 class NotificationHelper extends StatelessWidget {
   const NotificationHelper({Key? key}) : super(key: key);
@@ -113,7 +114,13 @@ class NotificationHelper extends StatelessWidget {
     // We have to register the plugin manually
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.setString("hello", "world");
+    String? data = preferences.get("settings_mqtt").toString();
+    String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+    debugPrint("****************** user settings data $data");
+    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+    List<UserDataSettings> userDataSettings =
+    UserDataSettings.getUserDataSettings(jsonMap);
+
 
     /// OPTIONAL when use custom notification
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -146,7 +153,7 @@ class NotificationHelper extends StatelessWidget {
           i,
           "A Notification From My App ",
           "$notificationList[i].title",
-          tz.TZDateTime.now(slovenia).add(const Duration(minutes: 5)),
+          tz.TZDateTime.now(slovenia).add(const Duration(seconds: 3)),
           //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
           const NotificationDetails(
               android: AndroidNotificationDetails(

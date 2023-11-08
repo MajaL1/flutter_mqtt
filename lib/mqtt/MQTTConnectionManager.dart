@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,18 +17,23 @@ class MQTTConnectionManager {
   final String _host;
   final String _topic1;
   final String _topic2;
+  final String _topic3;
+
 
   // Constructor
   MQTTConnectionManager(
       {required String host,
         required String topic1,
         required String topic2,
+        required String topic3,
         required String identifier,
         required MQTTAppState state})
       : _identifier = identifier,
         _host = host,
         _topic1 = topic1,
         _topic2 = topic2,
+        _topic3 = topic3,
+
       _currentState = state;
 
 
@@ -109,6 +115,8 @@ class MQTTConnectionManager {
     print('on Connected: EXAMPLE::Mosquitto client connected....');
     client!.subscribe(_topic1, MqttQos.atLeastOnce);
     client!.subscribe(_topic2, MqttQos.atLeastOnce);
+    client!.subscribe(_topic3, MqttQos.atLeastOnce);
+
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
@@ -139,7 +147,7 @@ class MQTTConnectionManager {
       if(topicName!.contains("alarm")){
         preferences.setString("alarm_mqtt", decodeMessage);
       }
-
+      NotificationHelper.initializeService();
      // preferences.setString("settings_mqtt", decodeMessage);
       print("======= pt: ${pt} , topic: $_topic1, $_topic2");
       print(

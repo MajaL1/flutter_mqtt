@@ -13,6 +13,8 @@ class Constants {
 
   static const HI_ALARM_JSON = "hi_alarm";
   static const LO_ALARM_JSON = "lo_alarm";
+
+
   static const U = "u: ";
   static const T = "t: ";
   static const SENSOR_ID = "Sensor id: ";

@@ -23,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
   // init service for notifications
-  await NotificationHelper.initializeService();
+ // await NotificationHelper.initializeService();
 
   //mqtt builder
   //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
@@ -163,6 +163,8 @@ class _NotificationsAppState extends State<NotificationsApp> {
         //_topicTextController.text,
        // topic2:
         topic2: 'c45bbe821261/data',
+        topic3: 'c45bbe821261/alarm',
+
         identifier: osPrefix,
         state: currentAppState);
         manager.initializeMQTTClient();

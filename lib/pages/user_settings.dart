@@ -41,7 +41,7 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
   debugPrint("****************** user settings data $data");
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-  // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
+  // vrne Listo UserSettingsov iz mqtt 'sensorId/settings'
   List<UserDataSettings> userDataSettings =
       UserDataSettings.getUserDataSettings(jsonMap);
 
@@ -264,10 +264,7 @@ class _UserSettingsState extends State<UserSettings> {
         if (snapshot.hasData) {
           //widget.manager.unsubscribe("_topic1");
           List<UserDataSettings>? userDataSettings = snapshot.data;
-          List<TextEditingController> textEditingControllerList =
-              _generateTextEditControllerList(userDataSettings!);
-          debugPrint(textEditingControllerList.toString());
-          return ListView.builder(
+              return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
               scrollDirection: Axis.vertical,
@@ -289,6 +286,7 @@ class _UserSettingsState extends State<UserSettings> {
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: ListView(shrinkWrap: true, children: [
+                      Column( children: [
                       Text(
                           "${Constants.SENSOR_ID}: ${sensorAddress.toString()}",
                           style: const TextStyle(
@@ -302,38 +300,33 @@ class _UserSettingsState extends State<UserSettings> {
                         const Padding(
                           padding: EdgeInsets.only(top: 10.0),
                         ),
-                        /*_generateTextField(
-                            snapshot.data![index], Constants.DEVICE_SETTING_T) */
+                          Text(
+                            settingToChange,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                          ),
+                          TextField(
+                            decoration: _setInputDecoration(value),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: controller,
+                            onChanged: (text) {
+                              debugPrint("onChanged $text");
+                              //controllerT.text =
+                              //   snapshot.data![index].t.toString();
+                            },
+                          ),
+                          const Text(
+                            Constants.U,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                          ),
+                        ]),
                        ]),
-                      Column(children: [
-                         Text(
-                          settingToChange,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                        ),
-                        TextField(
-                          // key: ValueKey("${item.sensorAddress}-${item.hiAlarm}"),
-                          decoration: _setInputDecoration("$value"),
-                          //_setInputDecoration(snapshot.data![index].t.toString()),
 
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          controller: controller,
-                          onChanged: (text) {
-                            debugPrint("onChanged $text");
-                            //controllerT.text =
-                            //   snapshot.data![index].t.toString();
-                          },
-                        ),
-                        const Text(
-                          Constants.U,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                        ),
-                      ]),
                       Container(
                         height: 30,
                         width: 50,
@@ -351,7 +344,7 @@ class _UserSettingsState extends State<UserSettings> {
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         ),
-                      )
+                      ),
                     ]));
               });
         } else if (snapshot.hasError) {
@@ -363,108 +356,6 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  TextField _generateTextField(var snapshotItem, String type) {
-    int setting = 0;
-    switch (type) {
-      case "t":
-        setting = snapshotItem.t;
-        break;
-      case "hiAlarm":
-        setting = snapshotItem.hiAlarm;
-        break;
-      case "loAlarm":
-        setting = snapshotItem.loAlarm;
-        break;
-      case "u":
-        setting = snapshotItem.u;
-        break;
-    }
-    //debugPrint("$setting, $snapshotItem.sensorAddress");
-    return TextField(
-      controller:
-          _returnTextEditingController(snapshotItem.sensorAddress, setting),
-      decoration: _setInputDecoration(setting.toString()),
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly
-      ],
-      onChanged: (text) {
-        //controllerT.text =
-        //   snapshot.data![index].t.toString();
-      },
-    );
-  }
-
-  TextEditingController getTextEditController(
-      String deviceName,
-      String property,
-      int index,
-      List<TextEditingController> textEditControllerList) {
-    // Todo: najdi pravilen kontroler glede na index in parametre
-    return textEditControllerList[index];
-  }
-
-  /***
-   * dynamically cretes controller text name based on device name and property
-   *  example: controller name: 135 ==>  135_t, 135_hiAlarm, 135_loAlarm
-   * ***/ //
-
-  // Todo: Generiraj specificen kontroler, build liste kontrolerjev
-
-  List<TextEditingController> _generateTextEditControllerList(
-      List<UserDataSettings> shapshotData) {
-    List<TextEditingController> textEditControllerList = [];
-    for (var deviceProp in shapshotData) {
-      var sensorAddress = deviceProp.sensorAddress;
-
-      String controllerT = "t";
-
-      textEditControllerList.add(TextEditingController(text: controllerT));
-
-      String controllerHiAlarm = "hiAlarm";
-      textEditControllerList
-          .add(TextEditingController(text: controllerHiAlarm));
-
-      String controllerU = "u";
-      textEditControllerList.add(TextEditingController(text: controllerU));
-
-      String controllerLoAlarm = "loAlarm";
-      textEditControllerList
-          .add(TextEditingController(text: controllerLoAlarm));
-    }
-    /** kontrolerji si sledijo:
-     *
-     * 111_t_5
-     * 111_u_8
-     * 111_hiAlarm_0
-     * 111_loAlarm_0
-     *
-     * 101_t_1
-     * 111_u_0
-     * 101_hiAlarm_0
-     * 101_loAlarm_0
-     *
-     * 135_t_7
-     * 111_u_8
-     * 135_hiAlarm_0
-     * 135_loAlarm_0
-     *
-     * **/
-
-    return textEditControllerList;
-  }
-
-  // Todo: Kako posljemo vrednosti v kontrolerju
-
-// finds specific TextEditingController
-  TextEditingController _returnTextEditingController(
-      String? index, int? parameter) {
-    String controllerName = "$parameter";
-    //debugPrint("controller: $controllerName");
-    TextEditingController controller =
-        TextEditingController(text: controllerName);
-
-    return controller;
-  }
 
 // test method with dummy parameters
   void saveMqttSettingsTest() {
