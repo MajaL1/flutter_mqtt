@@ -42,7 +42,7 @@ class Constants {
   static const DEVICE_SETTING_U = "u";
 
 
-  static const SAVE_DEVICE_SETTINGS = "Save device settings";
+  static const SAVE_DEVICE_SETTINGS = "Save";
   static const ENTER_USERNAME_AND_PASS = "Enter username and password";
 
 }

@@ -57,10 +57,14 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     // Todo: ce ne prikazujemo tipov za veter
     //if(setting.equals(Constants.HI_ALARM)){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
     dataSettingsListNew.add(UserDataSettings(
-        sensorAddress: setting.sensorAddress, hiAlarm: setting.hiAlarm, editableSetting: Constants.HI_ALARM_JSON));
+        sensorAddress: setting.sensorAddress,
+        hiAlarm: setting.hiAlarm,
+        editableSetting: Constants.HI_ALARM_JSON));
     // if(){} // prikazi za loAlarm
     dataSettingsListNew.add(UserDataSettings(
-        sensorAddress: setting.sensorAddress, loAlarm: setting.loAlarm, editableSetting: Constants.LO_ALARM_JSON));
+        sensorAddress: setting.sensorAddress,
+        loAlarm: setting.loAlarm,
+        editableSetting: Constants.LO_ALARM_JSON));
   }
   return dataSettingsListNew;
 }
@@ -264,7 +268,7 @@ class _UserSettingsState extends State<UserSettings> {
         if (snapshot.hasData) {
           //widget.manager.unsubscribe("_topic1");
           List<UserDataSettings>? userDataSettings = snapshot.data;
-              return ListView.builder(
+          return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
               scrollDirection: Axis.vertical,
@@ -273,11 +277,11 @@ class _UserSettingsState extends State<UserSettings> {
                 UserDataSettings item = snapshot.data![index];
                 String sensorAddress =
                     snapshot.data![index].sensorAddress.toString();
-                String ? settingToChange = item.editableSetting ?? "";
-                String ? value = "";
-                if(item.editableSetting== Constants.HI_ALARM_JSON) {
+                String? settingToChange = item.editableSetting ?? "";
+                String? value = "";
+                if (item.editableSetting == Constants.HI_ALARM_JSON) {
                   value = item.hiAlarm.toString();
-                }else if(item.editableSetting== Constants.LO_ALARM_JSON){
+                } else if (item.editableSetting == Constants.LO_ALARM_JSON) {
                   value = item.loAlarm.toString();
                 }
                 TextEditingController controller = TextEditingController();
@@ -285,66 +289,61 @@ class _UserSettingsState extends State<UserSettings> {
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
-                    child: ListView(shrinkWrap: true, children: [
-                      Column( children: [
-                      Text(
-                          "${Constants.SENSOR_ID}: ${sensorAddress.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Column(children: [
-                        Container(
-                            alignment: Alignment.bottomCenter,
-                            child: const Text(Constants.T,
-                                style: TextStyle(), textAlign: TextAlign.left)),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                        ),
-                          Text(
-                            settingToChange,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                          ),
-                          TextField(
-                            decoration: _setInputDecoration(value),
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: controller,
-                            onChanged: (text) {
-                              debugPrint("onChanged $text");
-                              //controllerT.text =
-                              //   snapshot.data![index].t.toString();
-                            },
-                          ),
-                          const Text(
-                            Constants.U,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                          ),
-                        ]),
-                       ]),
+                    child:
 
-                      Container(
-                        height: 30,
-                        width: 50,
-                        margin: const EdgeInsets.only(top: 20),
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: TextButton(
-                          onPressed: () {
-                            saveMqttSettings(sensorAddress, item, controller, settingToChange);
-                            //saveMqttSettingsTest();
+                      Column(children: [
+                        Row(
+                          //height: 100,
+                          //width: 300,
+                          children: [
+                          Text(
+                              "${Constants.SENSOR_ID}: ${sensorAddress.toString()}",
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 16),
+                              textAlign: TextAlign.center),
+                        ]),
+                        const Text(
+                          Constants.U,
+                        ),
+                        Text(
+                          settingToChange,
+                        ),
+                        TextField(
+                          decoration: _setInputDecoration(value),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          controller: controller,
+                          onChanged: (text) {
+                            debugPrint("onChanged $text");
+                            //controllerT.text =
+                            //   snapshot.data![index].t.toString();
                           },
-                          child: const Text(
-                            Constants.SAVE_DEVICE_SETTINGS,
-                            style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 5),
+                        ),
+                        Container(
+                          height: 60,
+                          width: 60,
+                          // margin: const EdgeInsets.only(top: 20),
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: TextButton(
+                            onPressed: () {
+                              saveMqttSettings(sensorAddress, item, controller,
+                                  settingToChange);
+                              //saveMqttSettingsTest();
+                            },
+                            child: const Text(
+                              Constants.SAVE_DEVICE_SETTINGS,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
                           ),
                         ),
-                      ),
+
                     ]));
               });
         } else if (snapshot.hasError) {
@@ -355,7 +354,6 @@ class _UserSettingsState extends State<UserSettings> {
       },
     );
   }
-
 
 // test method with dummy parameters
   void saveMqttSettingsTest() {
@@ -373,11 +371,9 @@ class _UserSettingsState extends State<UserSettings> {
       TextEditingController controller, String settingToChange) {
     String value = controller.text;
 
-
     debugPrint(
         "saveMqttSettings: $controller.text, $sensorName, $settingToChange");
-    debugPrint(
-        "::: sensorName, paramName, paramValue  $sensorName ");
+    debugPrint("::: sensorName, paramName, paramValue  $sensorName ");
     var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var testText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     debugPrint("concatenated text: $testText");
