@@ -23,20 +23,8 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
-  // init service for notifications
- // await NotificationHelper.initializeService();
-
-  //mqtt builder
-  //final MQTTAppState appState = Provider.of<MQTTAppState>(context);
-
 
   runApp(
-   /* ChangeNotifierProvider<MQTTAppState>(
-      create: (BuildContext context) => MQTTAppState(),
-      child: const MaterialApp(
-        home: NotificationsApp(),
-      ),
-    ), */
     const NotificationsApp(),
   );
   //ApiService.login("test", "Test1234");
@@ -64,6 +52,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
   void initState() {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
     initAlarmHistoryList();
+    NotificationHelper.initializeService();
     super.initState();
   }
 

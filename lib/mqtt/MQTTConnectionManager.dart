@@ -150,9 +150,12 @@ class MQTTConnectionManager {
         List alarmList = json.decode(alarmListData.toString());
         debugPrint("alarmList: $alarmList");
         // Todo: save alarm to alarmList in localstorage
+
+        // Todo: notifications
+        NotificationHelper.startMesagingService(message);
+
       }
-      NotificationHelper.initializeService();
-      NotificationHelper.startMesagingService();
+
       //NotificationHelper.initializeService();
       print("======= pt: ${pt} , topic: $_topic1, $_topic2");
       print(

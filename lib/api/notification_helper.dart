@@ -16,8 +16,13 @@ import '../model/notification_message.dart';
 import '../model/user_data_settings.dart';
 
 class NotificationHelper extends StatelessWidget {
-  const NotificationHelper({Key? key}) : super(key: key);
+
+
+  static String ? sendAlarm;
+
+  NotificationHelper(String sendAlarm, {Key? key}) : super(key: key);
   static FlutterBackgroundService service = FlutterBackgroundService();
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +93,10 @@ class NotificationHelper extends StatelessWidget {
     tzl.initializeTimeZones();
   }
 
- static void startMesagingService() {
-    debugPrint("Messaging service started");
+ static Future<void> startMesagingService(String message) async {
+    debugPrint("Messaging service started, message: $message");
+
+    setSendAlarm(message);
     service.startService();
   }
 
@@ -146,11 +153,25 @@ class NotificationHelper extends StatelessWidget {
       service.stopSelf();
     });
 
-    /******** tole sem probala in prikaze vse razen prvega*******/
     tzl.initializeTimeZones();
     final slovenia = tz.getLocation('Europe/London');
     final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        1,
+        "$sendAlarm Notification From My App ",
+        sendAlarm,
+        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 3)),
+        //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+              "1",
+              "11",
+            )),          //androidScheduleMode: AndroidScheduleMode,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime);
+
+/* // Test messagess
     List<NotificationMessage> notificationList = await ApiService.getNotificationMessage();
     for (var i = 0; i < notificationList.length; i++) {
       debugPrint("showing notification: ${notificationList[i].title}. $i");
@@ -169,5 +190,11 @@ class NotificationHelper extends StatelessWidget {
           uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime);
     }
+
+ */
+  }
+
+  static void setSendAlarm(String message) {
+    sendAlarm = message;
   }
 }
