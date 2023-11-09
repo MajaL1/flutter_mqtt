@@ -8,6 +8,7 @@ import 'package:mqtt_test/util/mqtt_connect_util.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api/notification_helper.dart';
+import 'model/alarm.dart';
 import 'model/user.dart';
 import 'mqtt/MQTTConnectionManager.dart';
 import 'mqtt/state/MQTTAppState.dart';
@@ -61,7 +62,20 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
   @override
   void initState() {
+    // ce shared preferences se nimajo objekta za alarme, ustvari novega
+    initAlarmHistoryList();
     super.initState();
+  }
+
+  Future<void> initAlarmHistoryList() async {
+     SharedPreferences preferences = await SharedPreferences.getInstance();
+    if(!preferences.containsKey("alarm_list_mqtt")){
+      List<Alarm> alarmList = [];
+      String alarmListData = json.encode(alarmList);
+      json.decode(alarmListData);
+      preferences.setString("alarm_list_mqtt", alarmListData);
+    }
+     preferences.get("alarm_list_mqtt");
   }
 
   Future<void> setCurrentAppState(appState) async {

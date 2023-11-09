@@ -145,7 +145,11 @@ class MQTTConnectionManager {
         preferences.setString("data_mqtt", decodeMessage);
       }
       if(topicName!.contains("alarm")){
-        preferences.setString("alarm_mqtt", decodeMessage);
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        Object ? alarmListData = preferences.get("alarm_list_mqtt");
+        List alarmList = json.decode(alarmListData.toString());
+        debugPrint("alarmList: $alarmList");
+        // Todo: save alarm to alarmList in localstorage
       }
       NotificationHelper.initializeService();
      // preferences.setString("settings_mqtt", decodeMessage);
