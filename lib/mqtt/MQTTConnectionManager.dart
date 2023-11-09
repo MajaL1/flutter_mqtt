@@ -7,6 +7,7 @@ import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/alarm.dart';
 import '../model/user_data_settings.dart';
 
 class MQTTConnectionManager {
@@ -147,8 +148,10 @@ class MQTTConnectionManager {
       if(topicName!.contains("alarm")){
         SharedPreferences preferences = await SharedPreferences.getInstance();
         //Object ? alarmListData = preferences.get("alarm_list_mqtt");
-        //List alarmList = json.decode(alarmListData.toString());
-        debugPrint("alarmList---: $decodeMessage");
+        Map<String, dynamic> alarmMessageJson = json.decode(decodeMessage);
+        List<Alarm> alarmList = Alarm.getAlarmList(alarmMessageJson);
+
+        debugPrint("alarmList---: $alarmMessageJson");
         // Todo: save alarm to alarmList in localstorage
 
         // Todo: notifications
