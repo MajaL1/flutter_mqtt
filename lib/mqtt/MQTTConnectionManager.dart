@@ -152,8 +152,7 @@ class MQTTConnectionManager {
         // Todo: save alarm to alarmList in localstorage
 
         // Todo: notifications
-        NotificationHelper.setSendAlarm(message);
-        NotificationHelper.startMesagingService(message);
+        NotificationHelper.sendMessage(message);
 
       }
 

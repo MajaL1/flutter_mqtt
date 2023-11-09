@@ -16,39 +16,31 @@ import '../model/notification_message.dart';
 import '../model/user_data_settings.dart';
 
 class NotificationHelper extends StatelessWidget {
-
-
-  static String ? sendAlarm;
-
-  NotificationHelper(String sendAlarm, {Key? key}) : super(key: key);
+  const NotificationHelper({Key? key}) : super(key: key);
   static FlutterBackgroundService service = FlutterBackgroundService();
-
 
   @override
   Widget build(BuildContext context) {
     return Container();
-
-
-   // List <NotifMessage> notifMessageList = new List<>();
   }
 
   static Future<void> initializeService() async {
     service = FlutterBackgroundService();
+
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'my_foreground', // id
       'MY FOREGROUND SERVICE', // title
       description:
-      'This channel is used for important notifications.', // description
+          'This channel is used for important notifications.', // description
       importance: Importance.low, // importance must be at low or higher level
     );
-
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
 
     if (Platform.isIOS || Platform.isAndroid) {
@@ -62,7 +54,7 @@ class NotificationHelper extends StatelessWidget {
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     await service.configure(
@@ -93,13 +85,12 @@ class NotificationHelper extends StatelessWidget {
     tzl.initializeTimeZones();
   }
 
- static Future<void> startMesagingService(String message) async {
+  static Future<void> startMesagingService(String message) async {
     debugPrint("Messaging service started, message: $message");
 
-   // setSendAlarm(message);
+    // setSendAlarm(message);
     service.startService();
   }
-
 
 // to ensure this is executed
 // run app from xcode, then from xcode menu, select Simulate Background Fetch
@@ -118,6 +109,24 @@ class NotificationHelper extends StatelessWidget {
     return true;
   }
 
+  static Future<void> sendMessage(String message) async {
+    final slovenia = tz.getLocation('Europe/London');
+    final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        1,
+        "$message Notification From My App ",
+        message,
+        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
+        //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+          "1",
+          "11",
+        )), //androidScheduleMode: AndroidScheduleMode,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
@@ -132,12 +141,11 @@ class NotificationHelper extends StatelessWidget {
     debugPrint("****************** user settings data $data");
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
     List<UserDataSettings> userDataSettings =
-    UserDataSettings.getUserDataSettings(jsonMap);
-
+        UserDataSettings.getUserDataSettings(jsonMap);
 
     /// OPTIONAL when use custom notification
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+        FlutterLocalNotificationsPlugin();
 
     if (service is AndroidServiceInstance) {
       service.on('setAsForeground').listen((event) {
@@ -154,7 +162,7 @@ class NotificationHelper extends StatelessWidget {
     });
 
     tzl.initializeTimeZones();
-    final slovenia = tz.getLocation('Europe/London');
+    /*final slovenia = tz.getLocation('Europe/London');
     final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
     String? sendAlarm = getSendAlarm();
     await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -169,7 +177,7 @@ class NotificationHelper extends StatelessWidget {
               "11",
             )),          //androidScheduleMode: AndroidScheduleMode,
         uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime);
+        UILocalNotificationDateInterpretation.absoluteTime); */
 
 /* // Test messagess
     List<NotificationMessage> notificationList = await ApiService.getNotificationMessage();
@@ -192,13 +200,5 @@ class NotificationHelper extends StatelessWidget {
     }
 
  */
-  }
-
-  static void setSendAlarm(String message) {
-    sendAlarm = message;
-  }
-
-  static String? getSendAlarm() {
-    return sendAlarm;
   }
 }
