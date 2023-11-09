@@ -156,12 +156,12 @@ class NotificationHelper extends StatelessWidget {
     tzl.initializeTimeZones();
     final slovenia = tz.getLocation('Europe/London');
     final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
-
+    String? sendAlarm = getSendAlarm();
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1,
         "$sendAlarm Notification From My App ",
         sendAlarm,
-        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 3)),
+       tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
         //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
         const NotificationDetails(
             android: AndroidNotificationDetails(
@@ -196,5 +196,9 @@ class NotificationHelper extends StatelessWidget {
 
   static void setSendAlarm(String message) {
     sendAlarm = message;
+  }
+
+  static String? getSendAlarm() {
+    return sendAlarm;
   }
 }
