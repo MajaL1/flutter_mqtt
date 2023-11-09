@@ -152,7 +152,8 @@ class MQTTConnectionManager {
         // Todo: save alarm to alarmList in localstorage
       }
       NotificationHelper.initializeService();
-     // preferences.setString("settings_mqtt", decodeMessage);
+      NotificationHelper.startMesagingService();
+      //NotificationHelper.initializeService();
       print("======= pt: ${pt} , topic: $_topic1, $_topic2");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');

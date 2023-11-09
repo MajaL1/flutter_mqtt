@@ -17,6 +17,7 @@ import '../model/user_data_settings.dart';
 
 class NotificationHelper extends StatelessWidget {
   const NotificationHelper({Key? key}) : super(key: key);
+  static FlutterBackgroundService service = FlutterBackgroundService();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class NotificationHelper extends StatelessWidget {
   }
 
   static Future<void> initializeService() async {
-    final service = FlutterBackgroundService();
+    service = FlutterBackgroundService();
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'my_foreground', // id
@@ -85,8 +86,13 @@ class NotificationHelper extends StatelessWidget {
       ),
     );
     tzl.initializeTimeZones();
+  }
+
+ static void startMesagingService() {
+    debugPrint("Messaging service started");
     service.startService();
   }
+
 
 // to ensure this is executed
 // run app from xcode, then from xcode menu, select Simulate Background Fetch
