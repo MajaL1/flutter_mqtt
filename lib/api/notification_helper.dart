@@ -96,7 +96,7 @@ class NotificationHelper extends StatelessWidget {
  static Future<void> startMesagingService(String message) async {
     debugPrint("Messaging service started, message: $message");
 
-    setSendAlarm(message);
+   // setSendAlarm(message);
     service.startService();
   }
 

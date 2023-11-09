@@ -108,10 +108,10 @@ class _UserSettingsState extends State<UserSettings> {
   // this is hack to ensure method is executed only once
   Container _clientConnectToTopic() {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          widget.manager.initializeMQTTClient();
+          //widget.manager.initializeMQTTClient();
           countTest++;
           debugPrint("counter: $countTest");
-          widget.manager.connect();
+          //widget.manager.connect();
         }));
     return Container();
   }
