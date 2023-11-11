@@ -150,12 +150,12 @@ class MQTTConnectionManager {
         //Object ? alarmListData = preferences.get("alarm_list_mqtt");
         Map<String, dynamic> alarmMessageJson = json.decode(decodeMessage);
         List<Alarm> alarmList = Alarm.getAlarmList(alarmMessageJson);
-Alarm ? alarm = Alarm.decodeAlarm(decodeMessage);
+//Alarm ? alarm = Alarm.decodeAlarm(decodeMessage);
         debugPrint("alarmList---: $alarmMessageJson");
         // Todo: save alarm to alarmList in localstorage
 
         // Todo: notifications
-        NotificationHelper.sendMessage(alarm);
+        NotificationHelper.sendMessage(alarmList.first);
 
       }
 

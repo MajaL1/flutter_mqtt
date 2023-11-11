@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'dart:io' show File, Platform;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
@@ -15,6 +16,7 @@ import '../main.dart';
 import '../model/alarm.dart';
 import '../model/notification_message.dart';
 import '../model/user_data_settings.dart';
+import '../util/utils.dart';
 
 class NotificationHelper extends StatelessWidget {
   const NotificationHelper({Key? key}) : super(key: key);
@@ -27,6 +29,7 @@ class NotificationHelper extends StatelessWidget {
 
   static Future<void> initializeService() async {
     service = FlutterBackgroundService();
+
 
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -48,7 +51,7 @@ class NotificationHelper extends StatelessWidget {
       await flutterLocalNotificationsPlugin.initialize(
         const InitializationSettings(
           iOS: DarwinInitializationSettings(),
-          android: AndroidInitializationSettings('ic_bg_service_small'),
+          android: AndroidInitializationSettings('launcher_notification'),
         ),
       );
     }
@@ -57,6 +60,9 @@ class NotificationHelper extends StatelessWidget {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
+
+
+
 
     await service.configure(
       androidConfiguration: AndroidConfiguration(
@@ -118,19 +124,42 @@ class NotificationHelper extends StatelessWidget {
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String date = alarmMessage?.ts.toString() ?? "";
 
+    final bigpicture = await Utils.getImageFilePathFromAssets(
+        'assets/images/bell.png', 'bigpicture');
+    final smallpicture = await Utils.getImageFilePathFromAssets(
+        'assets/images/bell.png', 'smallpicture');
+    print(bigpicture);
+
+    print(smallpicture);
+
+    final styleinformationDesign = BigPictureStyleInformation(
+      //for design adding images big and small in notificaitonbar
+      FilePathAndroidBitmap(smallpicture),
+      largeIcon: FilePathAndroidBitmap(bigpicture),
+    );
+
+    AndroidNotificationDetails androidNotificationDetails =
+    AndroidNotificationDetails(
+        "sensor: $sensorAddress, Hi alarm: $hiAlarm",
+        "date: $date",
+        color: Colors.redAccent,
+        styleInformation: styleinformationDesign,
+        importance: Importance.max,
+        priority: Priority.high
+    );
+
+    NotificationDetails notificationDetails =
+    NotificationDetails(android: androidNotificationDetails);
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1,
         "Alarm from sensor: $sensorAddress",
         "Hi alarm: $hiAlarm",
         tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
+        notificationDetails,
         //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
-        NotificationDetails(
-            android: AndroidNotificationDetails(
-          "sensor: $sensorAddress, Hi alarm: $hiAlarm",
-          "date: $date",
-        )), //androidScheduleMode: AndroidScheduleMode,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+        UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   @pragma('vm:entry-point')
@@ -207,4 +236,5 @@ class NotificationHelper extends StatelessWidget {
 
  */
   }
+
 }

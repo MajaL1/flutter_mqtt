@@ -7,11 +7,10 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../mqtt/MQTTConnectionManager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
@@ -233,12 +232,9 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 onPressed: () {
                                   // login();
                                 },
-                                child: const Text(
-                                  Constants.CREATE_ACCOUNT,
-                                  style: TextStyle(
-                                      color: Colors.indigoAccent,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 15),
+                                child:   InkWell(
+                                    child:  const Text(Constants.CREATE_ACCOUNT),
+                                    onTap: () => launchUrl(Constants.REGISTER_URL)
                                 ),
                               ),
                             ),

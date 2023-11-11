@@ -45,4 +45,10 @@ class Constants {
   static const SAVE_DEVICE_SETTINGS = "Save";
   static const ENTER_USERNAME_AND_PASS = "Enter username and password";
 
+
+
+  static final Uri REGISTER_URL = Uri(
+    scheme: 'http',
+    path: "test.navis-livedata.com:1002/index.php",
+  );
 }
