@@ -137,14 +137,15 @@ class NotificationHelper extends StatelessWidget {
     final styleinformationDesign = BigPictureStyleInformation(
       //for design adding images big and small in notificaitonbar
       FilePathAndroidBitmap(smallpicture),
-      summaryText: "Alarm for $sensorAddress",
+      //summaryText: "Alarm for $sensorAddress",
+      //contentTitle: "ABC"
       //largeIcon: FilePathAndroidBitmap(bigpicture),
     );
 
     AndroidNotificationDetails androidNotificationDetails =
     AndroidNotificationDetails(
-        "sensor: $sensorAddress, Hi alarm: $hiAlarm, Lo alarm: $loAlarm, date: $date",
-        "",
+        "sensor: $sensorAddress, --Hi alarm: $hiAlarm",
+        "Lo alarm: $loAlarm, date: $date",
         color: Colors.redAccent,
         largeIcon: FilePathAndroidBitmap(bigpicture),//const DrawableResourceAndroidBitmap('bell2.png'),
        // styleInformation: styleinformationDesign,
