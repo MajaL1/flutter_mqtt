@@ -122,6 +122,8 @@ class NotificationHelper extends StatelessWidget {
 
     String? sensorAddress = alarmMessage?.sensorAddress.toString();
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
+    String? loAlarm = alarmMessage?.loAlarm.toString();
+
     String date = alarmMessage?.ts.toString() ?? "";
 
     final bigpicture = await Utils.getImageFilePathFromAssets(
@@ -135,18 +137,17 @@ class NotificationHelper extends StatelessWidget {
     final styleinformationDesign = BigPictureStyleInformation(
       //for design adding images big and small in notificaitonbar
       FilePathAndroidBitmap(smallpicture),
-      summaryText: "Alarm",
-        hideExpandedLargeIcon: true
-
+      summaryText: "Alarm for $sensorAddress",
       //largeIcon: FilePathAndroidBitmap(bigpicture),
     );
 
     AndroidNotificationDetails androidNotificationDetails =
     AndroidNotificationDetails(
-        "sensor: $sensorAddress, Hi alarm: $hiAlarm",
-        "date: $date",
+        "sensor: $sensorAddress, Hi alarm: $hiAlarm, Lo alarm: $loAlarm, date: $date",
+        "",
         color: Colors.redAccent,
-        styleInformation: styleinformationDesign,
+        largeIcon: FilePathAndroidBitmap(bigpicture),//const DrawableResourceAndroidBitmap('bell2.png'),
+       // styleInformation: styleinformationDesign,
         importance: Importance.max,
         priority: Priority.high
     );
