@@ -12,6 +12,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
 import '../main.dart';
+import '../model/alarm.dart';
 import '../model/notification_message.dart';
 import '../model/user_data_settings.dart';
 
@@ -109,19 +110,24 @@ class NotificationHelper extends StatelessWidget {
     return true;
   }
 
-  static Future<void> sendMessage(String message) async {
+  static Future<void> sendMessage(Alarm? alarmMessage) async {
     final slovenia = tz.getLocation('Europe/London');
     final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
+
+    String? sensorAddress = alarmMessage?.sensorAddress.toString();
+    String? hiAlarm = alarmMessage?.hiAlarm.toString();
+    String date = alarmMessage?.ts.toString() ?? "";
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1,
-        "$message Notification From My App ",
-        message,
+        "Alarm from sensor: $sensorAddress",
+        "Hi alarm: $hiAlarm",
         tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
         //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
-        const NotificationDetails(
+        NotificationDetails(
             android: AndroidNotificationDetails(
-          "1",
-          "11",
+          "sensor: $sensorAddress, Hi alarm: $hiAlarm",
+          "date: $date",
         )), //androidScheduleMode: AndroidScheduleMode,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
