@@ -125,9 +125,9 @@ class NotificationHelper extends StatelessWidget {
     String date = alarmMessage?.ts.toString() ?? "";
 
     final bigpicture = await Utils.getImageFilePathFromAssets(
-        'assets/images/bell.png', 'bigpicture');
+        'assets/images/bell1.png', 'bigpicture');
     final smallpicture = await Utils.getImageFilePathFromAssets(
-        'assets/images/bell.png', 'smallpicture');
+        'assets/images/bell1.png', 'smallpicture');
     print(bigpicture);
 
     print(smallpicture);
@@ -135,7 +135,10 @@ class NotificationHelper extends StatelessWidget {
     final styleinformationDesign = BigPictureStyleInformation(
       //for design adding images big and small in notificaitonbar
       FilePathAndroidBitmap(smallpicture),
-      largeIcon: FilePathAndroidBitmap(bigpicture),
+      summaryText: "Alarm",
+        hideExpandedLargeIcon: true
+
+      //largeIcon: FilePathAndroidBitmap(bigpicture),
     );
 
     AndroidNotificationDetails androidNotificationDetails =

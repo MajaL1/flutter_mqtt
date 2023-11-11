@@ -74,10 +74,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/images/
     - assets/alarms.json
     - assets/user.json
     - assets/animated-bell.gif
-    - assets/bell.png
     - assets/test_notifications_list.json
 
   # To add assets to your application, add an assets section, like this:

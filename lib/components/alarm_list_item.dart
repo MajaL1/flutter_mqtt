@@ -25,7 +25,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
                 const EdgeInsets.only(left: 20, right: 10, top: 20, bottom: 20),
             title: Text(snapshot.data![index].title),
             leading: const ImageIcon(
-              AssetImage("assets/bell.png"),
+              AssetImage("assets/bell2.png"),
+              size: 3.0,
               color: Color(0xFF3A5A98),
             ),
             subtitle: Row(
