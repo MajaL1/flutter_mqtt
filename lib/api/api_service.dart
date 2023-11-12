@@ -4,6 +4,7 @@ import 'package:http/http.dart' show Client, Response, post;
 import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/user_topic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../model/alarm.dart';
 import '../model/user.dart';
@@ -24,6 +25,21 @@ class ApiService {
 
   static Future<List<Alarm>> getAlarmsHistory() async {
     List<Alarm> alarmList = [];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.containsKey("alarm_list_mqtt")) {
+      String alarmListData = preferences.get("alarm_list_mqtt") as String;
+      List alarmMessageJson = json.decode(alarmListData);
+
+      Map<String,dynamic> mapAlarmJson = {};
+
+      for (var element in alarmMessageJson) {
+        mapAlarmJson["sensorAddress"] = element;
+      }
+
+      alarmList = Alarm.getAlarmList(mapAlarmJson);//(alarmMap as Map<String, dynamic>);
+
+      debugPrint("alarmList-:: $alarmList");
+    }
     return alarmList;
   }
 

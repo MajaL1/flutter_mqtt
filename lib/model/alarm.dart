@@ -27,7 +27,7 @@ class Alarm {
     };
   }
 
-  static Alarm ? decodeAlarm(Map<String, dynamic> json) {
+  static Alarm? decodeAlarm(Map<String, dynamic> json) {
     for (String key in json.keys) {
 //print("key:  $key");
       if (key.isNotEmpty) {
@@ -70,7 +70,8 @@ class Alarm {
               loAlarm: loAlarm);
           return alarm;
         }
-      }throw Exception(["Cannot decode alarm"]);
+      }
+      throw Exception(["Cannot decode alarm"]);
     }
   }
 
@@ -87,31 +88,42 @@ class Alarm {
           int loAlarm = 0;
           int v = 0;
           int ts = 0;
+          String valueStr = "";
+
           for (String key1 in value.keys) {
             if (key1 != null) {
               value[key1];
-              int value1 = value[key1];
+              int valueInt;
+              if (value[key1] is String) {
+                valueStr = value[key1];
+              } else {
+                if (value[key1] != null) {
+                  valueInt = value[key1];
+                } else {
+                  valueInt = 0;
+                }
 //print("key1: $key1, value1: $value1");
-              if (key1 == "typ") {
-                typ = value1;
-              }
-              if (key1 == "v") {
-                v = value1;
-              }
-              if (key1 == "hi_alarm") {
+                if (key1 == "typ") {
+                  typ = valueInt;
+                }
+                if (key1 == "v") {
+                  v = valueInt;
+                }
+                if (key1 == "hi_alarm") {
+                  hiAlarm = valueInt;
+                }
+                if (key1 == "lo_alarm") {
+                  loAlarm = valueInt;
+                }
+                /* if (key1 == "dt") {
                 hiAlarm = value1;
-              }
-              if (key1 == "lo_alarm") {
-                loAlarm = value1;
-              }
-              if (key1 == "dt") {
-                hiAlarm = value1;
+              } */
               }
             }
           }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
-              sensorAddress: key,
+              sensorAddress: valueStr,
               typ: typ,
               v: v,
               hiAlarm: hiAlarm,

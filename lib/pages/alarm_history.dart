@@ -18,7 +18,7 @@ class AlarmHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
-      future: ApiService.getAlarms(),
+      future: ApiService.getAlarmsHistory(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
