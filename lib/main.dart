@@ -21,6 +21,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
+  tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
 

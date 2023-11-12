@@ -123,7 +123,7 @@ class NotificationHelper extends StatelessWidget {
     String? sensorAddress = alarmMessage?.sensorAddress.toString();
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();
-
+debugPrint("send message: $alarmMessage");
     String date = alarmMessage?.ts.toString() ?? "";
 
     final bigpicture = await Utils.getImageFilePathFromAssets(
@@ -161,10 +161,9 @@ class NotificationHelper extends StatelessWidget {
         "Alarm from sensor: $sensorAddress",
         "Hi alarm: $hiAlarm",
         tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
-        notificationDetails,
+        notificationDetails, uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
         //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime);
+        //uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   @pragma('vm:entry-point')

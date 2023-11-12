@@ -11,7 +11,6 @@ import '../model/user.dart';
 //import 'package:mqtt_test/assets/alarms.json' show rootBundle;
 
 class ApiService {
-
   static Client client = Client();
 
   static Future<List<Alarm>> getAlarms() async {
@@ -21,6 +20,11 @@ class ApiService {
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 
     return parsed.map<Alarm>((json) => Alarm.getAlarmList(json));
+  }
+
+  static Future<List<Alarm>> getAlarmsHistory() async {
+    List<Alarm> alarmList = [];
+    return alarmList;
   }
 
   static Future<User> getUserData() async {
@@ -56,8 +60,10 @@ class ApiService {
             'login_password': password,
             'login': '123'
           },
-          headers: {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/html,application/xhtml+xml,application/xml"}
-      );
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "Accept": "text/html,application/xhtml+xml,application/xml"
+          });
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
@@ -72,8 +78,8 @@ class ApiService {
             date_login: DateTime.now(),
             date_register: DateTime.now(),
             email: 'test@test.com',
-            mqtt_pass: '12345', topic: topic
-        );
+            mqtt_pass: '12345',
+            topic: topic);
 
         return user;
       } else {
@@ -155,7 +161,8 @@ class ApiService {
         .toList();
   }
 
-  Future<bool> createNotificationMessageFromJson(NotificationMessage data) async {
+  Future<bool> createNotificationMessageFromJson(
+      NotificationMessage data) async {
     String url = Constants.BASE_URL;
     final response = await client.post("$url/api/alarm" as Uri,
         headers: {"content-type": "application/json"}, body: data.toJson()
