@@ -10,6 +10,8 @@ class Constants {
 
   static const HI_ALARM = "Hi alarm: ";
   static const LO_ALARM = "Lo alarm: ";
+  static const TS = "Time: ";
+
 
   static const HI_ALARM_JSON = "hi_alarm";
   static const LO_ALARM_JSON = "lo_alarm";
@@ -18,6 +20,8 @@ class Constants {
   static const U = "u: ";
   static const T = "t: ";
   static const SENSOR_ID = "Sensor id: ";
+  static const SENSOR_ADDRESS = "Sensor address: ";
+
   static const EMAIL = "Email";
   static const ENTER_VALID_EMAIL = "Enter valid email id as abc@gmail.com";
   static const PASSWORD = "Password";

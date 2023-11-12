@@ -29,17 +29,27 @@ class AlarmHistory extends StatelessWidget {
               body: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
+                    String sensorAddress = snapshot.data![index].sensorAddress.toString()!;
+                    String hiAlarm = snapshot.data![index].hiAlarm.toString()!;
+                    String loAlarm = snapshot.data![index].hiAlarm.toString()!;
+                    String ts = snapshot.data![index].ts.toString()!;
                     return Container(
                         decoration: const BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
                         child: ListTile(
-                            title: Text(snapshot.data![index].hiAlarm.toString()),
+                            title: Text(sensorAddress),
                             leading: const FlutterLogo(),
                             subtitle: Row(
                               children: <Widget>[
-                                Text(snapshot.data![index].loAlarm.toString()!),
+                                const Text(Constants.HI_ALARM),
+                                Text(" $hiAlarm"),
                                 const Text("  -  "),
+                                const Text(Constants.LO_ALARM),
+                                Text(" $loAlarm"),
+                                const Text("  -  "),
+                                const Text(Constants.TS),
+                                Text(" $ts"),
                               ],
                             ),
                             onTap: () {
