@@ -7,8 +7,10 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
+import '../api/api_service.dart';
 import '../components/drawer.dart';
 import '../model/constants.dart';
+import '../model/user.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,8 +42,8 @@ class LoginForm extends StatefulWidget {
 class _LoginFormValidationState extends State<LoginForm> {
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(text: "test");
+  final passwordController = TextEditingController(text: "Test1234");
 
   getLoggedInState() async {
     /*await Helper.getUserLoggedInSharedPreference().then((value) {
@@ -80,8 +82,8 @@ class _LoginFormValidationState extends State<LoginForm> {
     //check email and password
     if (formkey.currentState!.validate()) {
       // todo: odkomentiraj login
-      // User? user = await ApiService.login(username, password);
-
+       User? user = await ApiService.login(username, password);
+        debugPrint("loginForm, user: $user.username, $user.password, $user.topic");
 
       Navigator.push(
           context,
