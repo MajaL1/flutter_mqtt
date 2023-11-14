@@ -1,13 +1,14 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_client/mqtt_client.dart';
-import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api/notification_helper.dart';
+import '../model/alarm.dart';
 import '../model/user.dart';
 import '../model/user_data_settings.dart';
 import '../util/mqtt_connect_util.dart';
@@ -15,26 +16,28 @@ import '../util/mqtt_connect_util.dart';
 class MQTTConnectionWrapper {
   // Private instance of client
   final MQTTAppState _currentState;
-  static MqttServerClient ?client;
+  static MqttServerClient? client;
   final String _identifier;
   final String _host;
   final String _topic1;
   final String _topic2;
-
+  final String _topic3;
 
   // Constructor
   // ignore: sort_constructors_first
-  MQTTConnectionWrapper({required String host,
-    required String topic1,
-    required String topic2,
-    required String identifier,
-    required MQTTAppState state})
+  MQTTConnectionWrapper(
+      {required String host,
+      required String topic1,
+      required String topic2,
+      required String topic3,
+      required String identifier,
+      required MQTTAppState state})
       : _identifier = identifier,
         _host = host,
         _topic1 = topic1,
         _topic2 = topic2,
+        _topic3 = topic3,
         _currentState = state;
-
 
   void initializeMQTTClient() {
     client = MqttServerClient(_host, _identifier);
@@ -51,7 +54,7 @@ class MQTTConnectionWrapper {
     final MqttConnectMessage connMess = MqttConnectMessage()
         .withClientIdentifier(_identifier)
         .withWillTopic(
-        'willtopic') // If you set this you must set a will message
+            'willtopic') // If you set this you must set a will message
         .withWillMessage('My Will message')
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
@@ -113,6 +116,8 @@ class MQTTConnectionWrapper {
     print('on Connected: EXAMPLE::Mosquitto client connected....');
     client!.subscribe(_topic1, MqttQos.atLeastOnce);
     client!.subscribe(_topic2, MqttQos.atLeastOnce);
+    client!.subscribe(_topic3, MqttQos.atLeastOnce);
+
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
       final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
@@ -130,32 +135,41 @@ class MQTTConnectionWrapper {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
       /***  polnjenje objekta - data ***/
-      if (topicName!.contains("settings")) {
+      if(topicName!.contains("settings")){
         debugPrint("___________________________________________________");
         debugPrint("from which topic $topicName");
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         preferences.setString("settings_mqtt", decodeMessage);
       }
-      if (topicName!.contains("data")) {
+      if(topicName!.contains("data")){
         preferences.setString("data_mqtt", decodeMessage);
       }
-      if (topicName!.contains("alarm")) {
-        preferences.setString("alarm_mqtt", decodeMessage);
+      if(topicName!.contains("alarm")){
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        //Object ? alarmListData = preferences.get("alarm_list_mqtt");
+        Map<String, dynamic> alarmMessageJson = json.decode(decodeMessage);
+        List<Alarm> alarmList = Alarm.getAlarmList(alarmMessageJson);
+//Alarm ? alarm = Alarm.decodeAlarm(decodeMessage);
+        debugPrint("alarmList---: $alarmMessageJson");
+        // Todo: save alarm to alarmList in localstorage
+
+        // Todo: notifications
+        NotificationHelper.sendMessage(alarmList.first);
+
       }
 
-      // preferences.setString("settings_mqtt", decodeMessage);
+      //NotificationHelper.initializeService();
       print("======= pt: ${pt} , topic: $_topic1, $_topic2");
       print(
-          'EXAMPLE::Change notification:: topic is <${c[0]
-              .topic}>, payload is <-- $pt -->');
+          'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       print('');
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
 
-  /*Future<void> connectToBroker(List<String> brokerAddressList) async {
+/*Future<void> connectToBroker(List<String> brokerAddressList) async {
     for (var brokerAddress in brokerAddressList) {
       if (brokerAddress.contains('/alarm')) {} else
       if (brokerAddress.contains('/settings')) {} else
@@ -166,61 +180,60 @@ class MQTTConnectionWrapper {
         currentAppState?.getAppConnectionState) {
       await configureAndConnect(currentAppState);
     } */
-  }
+}
 
-  /**********  Premakni v main.dart ******************/
-  // Initalize user data and connect
-  Future<User> initalizeConnection(currentAppState) async {
-    debugPrint("calling initalizeConnection in main.dart");
+/**********  Premakni v main.dart ******************/
+// Initalize user data and connect
+Future<User> initalizeConnection(currentAppState) async {
+  debugPrint("calling initalizeConnection in main.dart");
 
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    const storage = FlutterSecureStorage();
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  const storage = FlutterSecureStorage();
 
-    // ***************** connect to broker ****************
-    User user = await MqttConnectUtil.readUserData();
-    MqttConnectUtil.initalizeUserPrefs(user);
-    List<String> brokerAddressList = MqttConnectUtil.getBrokerAddressList(user);
-    //connectToBroker(brokerAddressList);
+  // ***************** connect to broker ****************
+  User user = await MqttConnectUtil.readUserData();
+  MqttConnectUtil.initalizeUserPrefs(user);
+  List<String> brokerAddressList = MqttConnectUtil.getBrokerAddressList(user);
+  //connectToBroker(brokerAddressList);
 
-    configureAndConnect(currentAppState);
-    // *****************************************************
+  configureAndConnect(currentAppState);
+  // *****************************************************
 
-    debugPrint("preferences ${sharedPreferences.toString()}");
-    await storage.write(key: 'jwt', value: 'jwtTokenTest');
+  debugPrint("preferences ${sharedPreferences.toString()}");
+  await storage.write(key: 'jwt', value: 'jwtTokenTest');
 //storage.containsKey(key: "jwt")
-    String? readToken = await storage.read(key: "token");
-    debugPrint("token from flutter secure storage: $readToken");
-    return user;
+  String? readToken = await storage.read(key: "token");
+  debugPrint("token from flutter secure storage: $readToken");
+  return user;
+}
+
+// Connect to brokers
+Future<void> configureAndConnect(currentAppState) async {
+  // TODO: Use UUID
+  String osPrefix = 'Flutter_iOS';
+  // if (Platform.isAndroid()) {
+  osPrefix = 'Flutter_Android';
+
+// pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
+  if (MQTTAppConnectionState.connected ==
+      currentAppState?.getAppConnectionState) {
+//MQTTConnectionManager._publishMessage(topic, text);
+    String? t = await currentAppState?.getHistoryText;
+
+    debugPrint("****************** $t");
   }
+}
+/**************** end premakni v main.dart ******************/
 
-  // Connect to brokers
-  Future<void> configureAndConnect(currentAppState) async {
-    // TODO: Use UUID
-    String osPrefix = 'Flutter_iOS';
-   // if (Platform.isAndroid()) {
-      osPrefix = 'Flutter_Android';
-    }
-    wrapper = MQTTConnectionWrapper(
-        host: 'test.navis-livedata.com',
-        //_hostTextController.text,
-        topic1: 'c45bbe821261/settings'
-            '',
-        //_topicTextController.text,
-        // topic2:
-        topic2: 'c45bbe821261/data',
-        identifier: osPrefix,
-        state: currentAppState);
-    //manager.initializeMQTTClient();
-    //await manager.connect();
-
-
-    // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
-    if (MQTTAppConnectionState.connected ==
-        currentAppState?.getAppConnectionState) {
-      //MQTTConnectionManager._publishMessage(topic, text);
-      String? t = await currentAppState?.getHistoryText;
-
-      debugPrint("****************** $t");
-    }
- /**************** end premakni v main.dart ******************/
+Future<void> connectToBroker(List<String> brokerAddressList) async {
+  for (var brokerAddress in brokerAddressList) {
+    if (brokerAddress.contains('/alarm')) {
+    } else if (brokerAddress.contains('/settings')) {
+    } else if (brokerAddress.contains('/data')) {}
+    debugPrint("brokerAddress: $brokerAddress");
+  }
+  if (MQTTAppConnectionState.disconnected ==
+      _currentState.getAppConnectionState) {
+    await configureAndConnect(_currentAppState);
+  }
 }

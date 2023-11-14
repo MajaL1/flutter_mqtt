@@ -14,6 +14,8 @@ import '../model/user.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../mqtt/MQTTConnectionWrapper.dart';
+
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
   MQTTConnectionManager manager;
@@ -63,14 +65,14 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
   _initCurrentAppState() async {
-    Timer(
-        const Duration(seconds: 2),
+    await Timer(
+        Duration(seconds: 2),
         () => {
               setCurrentAppState(widget.currentAppState),
               setManager(widget.manager),
               debugPrint("[[[ currentAppState: $widget.currentAppState ]]]")
             });
-    //return widget.currentAppState;
+    return widget.currentAppState;
   }
 
   Future<bool> hasNetwork() async {
@@ -81,7 +83,6 @@ class _LoginFormValidationState extends State<LoginForm> {
       return false;
     }
   }
-
   Future<void> login() async {
     var username = emailController.text;
     var password = passwordController.text;
@@ -104,6 +105,27 @@ class _LoginFormValidationState extends State<LoginForm> {
     }
   }
 
+  _initializeConnection(MQTTAppState appState) {
+    String osPrefix = 'Flutter_iOS';
+    if (Platform.isAndroid) {
+      osPrefix = 'Flutter_Android';
+    }
+    MQTTConnectionWrapper wrapper = MQTTConnectionWrapper(
+        host: 'test.navis-livedata.com',
+        //_hostTextController.text,
+        topic1: 'c45bbe821261/settings'
+            '',
+        //_topicTextController.text,
+        // topic2:
+        topic2: 'c45bbe821261/data',
+        topic3: 'c45bbe821261/alarm',
+        identifier: osPrefix,
+        state: currentAppState);
+
+    // manager.initializeMQTTClient();
+    //await manager.connect();
+  }
+
   String? validatePassword(String value) {
     if (value.isEmpty) {
       return "* Required";
@@ -118,7 +140,6 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    bool network = true; //hasNetwork().then((value) => value);
     return DefaultTabController(
       length: 3,
       // child: SingleChildScrollView(
@@ -136,10 +157,6 @@ class _LoginFormValidationState extends State<LoginForm> {
                     child: CircularProgressIndicator(),
                   );
                 } else {
-                  if (!network) {
-                    return ErrorWidget(Exception(
-                        'Problem with internet connection'));
-                  }
                   if (snapshot.hasError) {
                     return ErrorWidget(Exception(
                         'Error occured when fetching data from database $snapshot.error'));
