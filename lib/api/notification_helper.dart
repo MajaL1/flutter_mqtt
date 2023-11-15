@@ -158,8 +158,8 @@ debugPrint("send message: $alarmMessage");
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1,
-        "Alarm from sensor: $sensorAddress",
-        "Hi alarm: $hiAlarm",
+        "aAlarm from sensor: $sensorAddress",
+        "Lo alarm: $loAlarm",
         tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
         notificationDetails, uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
         //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),

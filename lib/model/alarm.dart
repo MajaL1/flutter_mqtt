@@ -71,7 +71,7 @@ class Alarm {
               if (key1 == "hi_alarm") {
                 hiAlarm = value1;
               }
-              if (key1 == "lo_alarm") {
+              if (key1 == "low_alarm") {
                 loAlarm = value1;
               }
               if (key1 == "ts") {
@@ -163,7 +163,7 @@ class Alarm {
                 if (key1 == "hi_alarm") {
                   hiAlarm = valueInt;
                 }
-                if (key1 == "lo_alarm") {
+                if (key1 == "low_alarm") {
                   loAlarm = valueInt;
                 }
                 if (key1 == "ts") {
