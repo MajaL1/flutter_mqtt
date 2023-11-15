@@ -39,7 +39,7 @@ class _DetailsPageState extends State<DetailsPage> {
     {
       return Scaffold(
           appBar: AppBar(
-            title: const Text("Test data"),
+            title: const Text("Alarm data"),
           ),
           //drawer: NavDrawer(),
           body: _buildDetailsView());
@@ -53,11 +53,11 @@ class _DetailsPageState extends State<DetailsPage> {
 
   Widget _buildDetailsView() {
 
-    return FutureBuilder<List<UserDataSettings>>(
+    return FutureBuilder<List<Alarm>>(
       future: getAlarmData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<UserDataSettings>? alarmList = snapshot.data;
+          List<Alarm>? alarmList = snapshot.data;
           return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -75,7 +75,37 @@ class _DetailsPageState extends State<DetailsPage> {
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
                       Text(
+                          "${Constants.T}: ${snapshot.data![index].ts.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
+                      Text(
+                          "${Constants.TYP}: ${snapshot.data![index].typ.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
+                      Text(
+                          "${Constants.R}: ${snapshot.data![index].r.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
+                      Text(
+                          "${Constants.LB}: ${snapshot.data![index].lb.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
+                      Text(
                           "${Constants.T}: ${snapshot.data![index].t.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
+                      Text(
+                          "${Constants.L}: ${snapshot.data![index].l.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
+                      Text(
+                          "${Constants.BV}: ${snapshot.data![index].bv.toString()}",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
@@ -108,19 +138,19 @@ class _DetailsPageState extends State<DetailsPage> {
       },
     );
   }
-  Future<List<UserDataSettings>> getAlarmData() async {
+  Future<List<Alarm>> getAlarmData() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("data_mqtt").toString();
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-    debugPrint("****************** user settings data $data");
+    debugPrint("****************** alarm data $data");
+    //alarm data {"135":{"typ":7,"l":0,"t":202,"b":0,"r":-73,"lb":1,"bv":384}}
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-    // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-    List<UserDataSettings> userDataSettings =
-    UserDataSettings.getUserDataSettings(jsonMap);
+    List<Alarm> alarmData =
+    Alarm.getAlarmList(jsonMap);
+    debugPrint("AlarmData from JSON: $alarmData");
 
     //List<Data> dataList  = Data.getDataList();
-    return userDataSettings;
-    // debugPrint("UserSettings from JSON: $userSettings");
+    return alarmData;
   }
 }

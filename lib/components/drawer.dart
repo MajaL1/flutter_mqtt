@@ -9,7 +9,7 @@ import 'package:mqtt_test/pages/alarm_history.dart';
 
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
-import '../pages/details_page.dart';
+import '../pages/data_page.dart';
 
 class NavDrawer extends StatefulWidget {
   MQTTConnectionManager manager;
