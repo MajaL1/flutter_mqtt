@@ -110,6 +110,11 @@ class _DetailsPageState extends State<DetailsPage> {
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
                       Text(
+                          "${Constants.TS}: ${snapshot.data![index].ts.toString()}",
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.justify),
+                      Text(
                           "${Constants.DEVICE_SETTING_HI_ALARM}: ${snapshot.data![index].hiAlarm.toString()}",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),
