@@ -52,7 +52,7 @@ class Alarm {
           int r = 0;
           int bv = 0;
           int b = 0;
-          int ts = 0;
+          DateTime ?ts = null;
           int t = 0;
           int l = 0;
 
@@ -75,7 +75,8 @@ class Alarm {
                 loAlarm = value1;
               }
               if (key1 == "ts") {
-                ts = value1;
+                ts = DateTime.fromMicrosecondsSinceEpoch(value1);
+                // ts = valueInt;
               }
               if (key1 == "lb") {
                 lb = value1;
@@ -130,7 +131,7 @@ class Alarm {
           int hiAlarm = 0;
           int loAlarm = 0;
           int v = 0;
-          int ts = 0;
+          DateTime? ts = null;
           int lb = 0;
           int r = 0;
           int l = 0;
@@ -166,7 +167,8 @@ class Alarm {
                   loAlarm = valueInt;
                 }
                 if (key1 == "ts") {
-                  ts = valueInt;
+                  ts = DateTime.fromMicrosecondsSinceEpoch(valueInt);
+                 // ts = valueInt;
                 }
                 if (key1 == "lb") {
                   lb = valueInt;

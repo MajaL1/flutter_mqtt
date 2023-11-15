@@ -147,7 +147,9 @@ class MQTTConnectionManager {
         preferences.setString("data_mqtt", decodeMessage);
       }
       if(topicName!.contains("alarm")){
-        debugPrint("from which topic -alarm $topicName");
+        debugPrint("from which topic -alarm $topicName, $decodeMessage");
+        //preferences.setString("data_mqtt", decodeMessage);
+
 
         SharedPreferences preferences = await SharedPreferences.getInstance();
         //Object ? alarmListData = preferences.get("alarm_list_mqtt");

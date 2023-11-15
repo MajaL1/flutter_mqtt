@@ -144,8 +144,8 @@ debugPrint("send message: $alarmMessage");
 
     AndroidNotificationDetails androidNotificationDetails =
     AndroidNotificationDetails(
-        "sensor: $sensorAddress, --Hi alarm: $hiAlarm",
-        "Lo alarm: $loAlarm, date: $date",
+        "sensor: $sensorAddress, --Lo alarm: $loAlarm",
+        "Hi alarm: $hiAlarm, date: $date",
         color: Colors.redAccent,
         largeIcon: FilePathAndroidBitmap(bigpicture),//const DrawableResourceAndroidBitmap('bell2.png'),
        // styleInformation: styleinformationDesign,
