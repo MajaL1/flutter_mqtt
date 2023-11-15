@@ -90,6 +90,8 @@ class _FirstScreenState extends State<FirstScreen> {
 
                   return Scaffold(
                       drawer: NavDrawer(widget.currentAppState, widget.manager),
+                      // TODO: preveri, ali je uporabnik logiran
+                      // body: !userLoggedIn ?? LoginForm(widget.currentAppState, widget.manager)) : UserSettings(widget.currentAppState, widget.manager);
                       body: LoginForm(widget.currentAppState, widget.manager));
                 }
               }

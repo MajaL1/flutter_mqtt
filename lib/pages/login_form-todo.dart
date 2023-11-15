@@ -7,13 +7,14 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../api/api_service.dart';
 import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../model/user.dart';
 import '../mqtt/MQTTConnectionManager.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../mqtt/MQTTConnectionWrapper.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
@@ -83,6 +84,7 @@ class _LoginFormValidationState extends State<LoginForm> {
       return false;
     }
   }
+
   Future<void> login() async {
     var username = emailController.text;
     var password = passwordController.text;
@@ -92,14 +94,16 @@ class _LoginFormValidationState extends State<LoginForm> {
     //check email and password
     if (formkey.currentState!.validate()) {
       // todo: odkomentiraj login
-       User? user = await ApiService.login(username, password);
-        debugPrint("loginForm, user: $user.username, $user.password, $user.topic");
+      User? user = await ApiService.login(username, password);
+      debugPrint(
+          "loginForm, user: $user.username, $user.password, $user.topic");
 
       Navigator.push(
           context,
           MaterialPageRoute(
 //              builder: (_) => MQTTView(widget.currentAppState, widget.manager)));
-              builder: (_) => UserSettings(widget.currentAppState, widget.manager)));
+              builder: (_) =>
+                  UserSettings(widget.currentAppState, widget.manager)));
 
       debugPrint("Validated");
     }
@@ -140,78 +144,61 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      // child: SingleChildScrollView(
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: const Text(Constants.LOGIN_PAGE),
-          ),
-          body: FutureBuilder(
-            // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
-          future: _initCurrentAppState(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  if (snapshot.hasError) {
-                    return ErrorWidget(Exception(
-                        'Error occured when fetching data from database $snapshot.error'));
-                  } else if (!snapshot.hasData) {
-                    debugPrint("snapshot:: $snapshot");
-                    //return ErrorWidget(Exception('e $snapshot.error'));
+    bool network = true; //hasNetwork().then((value) => value);
 
-                    return UserSettings(widget.currentAppState, widget.manager);
-                  } else {
-                    return SingleChildScrollView(
-
-                      child: Form(
-                        //autovalidate: true, //check for validation while typing
-                        key: formkey,
-                        child: Column(
-                          children: <Widget>[
-                            const Padding(
-                                padding: EdgeInsets.only(top: 60.0),
-                                child: Center(
-                                  child: SizedBox(
-                                    width: 200,
-                                    height: 30,
-                                    // child: //Image.asset('asset/images/flutter-logo.png')),
-                                  ),
-                                )),
-                            const Text(Constants.ENTER_USERNAME_AND_PASS),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: Constants.EMAIL,
-                                    hintText:
-                                        Constants.ENTER_VALID_EMAIL),
-                                controller: emailController,
-                                /*validator: MultiValidator([
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
+        ],
+        builder: (context, child) => Builder(builder: (context) {
+              final MQTTAppState appState =
+                  Provider.of<MQTTAppState>(context, listen: false);
+              debugPrint("build loginform.dart");
+              setCurrentAppState(appState);
+              return SingleChildScrollView(
+                child: Form(
+                  //autovalidate: true, //check for validation while typing
+                  key: formkey,
+                  child: Column(
+                    children: <Widget>[
+                      const Padding(
+                          padding: EdgeInsets.only(top: 60.0),
+                          child: Center(
+                            child: SizedBox(
+                              width: 200,
+                              height: 30,
+                              // child: //Image.asset('asset/images/flutter-logo.png')),
+                            ),
+                          )),
+                      const Text(Constants.ENTER_USERNAME_AND_PASS),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: Constants.EMAIL,
+                              hintText: Constants.ENTER_VALID_EMAIL),
+                          controller: emailController,
+                          /*validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       EmailValidator(errorText: "Enter valid email id"),
                     ])*/
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-                              child: TextFormField(
-                                obscureText: true,
-                                enableSuggestions: false,
-                                autocorrect: false,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: Constants.PASSWORD,
-                                    hintText: Constants.ENTER_SECURE_PASS),
-                                controller: passwordController,
-                                /* validator: MultiValidator([
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                        child: TextFormField(
+                          obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: Constants.PASSWORD,
+                              hintText: Constants.ENTER_SECURE_PASS),
+                          controller: passwordController,
+                          /* validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       MinLengthValidator(6,
                           errorText: "Password should be atleast 6 characters"),
@@ -219,67 +206,62 @@ class _LoginFormValidationState extends State<LoginForm> {
                           errorText:
                           "Password should not be greater than 15 characters")
                     ])*/
-                                //validatePassword,        //Function to check validation
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(
-                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-                            ),
-                            Container(
-                              height: 50,
-                              width: 250,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: TextButton(
-                                onPressed: () {
-                                  login();
-                                },
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 25),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-                              child: TextButton(
-                                onPressed: () {
-                                  // login();
-                                },
-                                child: const Text(
-                                  Constants.FORGOT_PASS,
-                                  style: TextStyle(
-                                      color: Colors.indigoAccent,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 15),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
-                              child: TextButton(
-                                onPressed: () {
-                                  // login();
-                                },
-                                child:   InkWell(
-                                    child:  const Text(Constants.CREATE_ACCOUNT),
-                                    onTap: () => launchUrl(Constants.REGISTER_URL)
-                                ),
-                              ),
-                            ),
-                          ],
+                          //validatePassword,        //Function to check validation
                         ),
                       ),
-                    );
-                  }
-                }
-              })),
-    );
+                      const Padding(
+                        padding: EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 250,
+                        decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: TextButton(
+                          onPressed: () {
+                            login();
+                          },
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                        child: TextButton(
+                          onPressed: () {
+                            // login();
+                          },
+                          child: const Text(
+                            Constants.FORGOT_PASS,
+                            style: TextStyle(
+                                color: Colors.indigoAccent,
+                                decoration: TextDecoration.underline,
+                                fontSize: 15),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15, bottom: 0),
+                        child: TextButton(
+                          onPressed: () {
+                            // login();
+                          },
+                          child: InkWell(
+                              child: const Text(Constants.CREATE_ACCOUNT),
+                              onTap: () => launchUrl(Constants.REGISTER_URL)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }));
   }
 
   Future<void> setCurrentAppState(appState) async {

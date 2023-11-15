@@ -124,9 +124,9 @@ class _LoginFormValidationState extends State<LoginForm> {
       // child: SingleChildScrollView(
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: const Text(Constants.LOGIN_PAGE),
-          ),
+          //appBar: AppBar(
+           // title: const Text(Constants.LOGIN_PAGE),
+          //),
           body: FutureBuilder(
             // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
           future: _initCurrentAppState(),
@@ -143,11 +143,6 @@ class _LoginFormValidationState extends State<LoginForm> {
                   if (snapshot.hasError) {
                     return ErrorWidget(Exception(
                         'Error occured when fetching data from database $snapshot.error'));
-                  } else if (!snapshot.hasData) {
-                    debugPrint("snapshot:: $snapshot");
-                    //return ErrorWidget(Exception('e $snapshot.error'));
-
-                    return UserSettings(widget.currentAppState, widget.manager);
                   } else {
                     return SingleChildScrollView(
 

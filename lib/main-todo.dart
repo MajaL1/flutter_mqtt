@@ -80,35 +80,28 @@ class _NotificationsAppState extends State<NotificationsApp> {
     debugPrint("00000000000 main.dart build");
     bool loggedIn = true;
 
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
-        ],
-        builder: (context, child) => Builder(builder: (context) {
-              final MQTTAppState appState =
-                  Provider.of<MQTTAppState>(context, listen: false);
-              debugPrint("build main.dart");
-              setCurrentAppState(appState);
-              return MaterialApp(home: FutureBuilder(
-                  //future: loggedIn ?? _initializeConnection(appState),
-                  builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  if (snapshot.hasError) {
-                    return ErrorWidget(Exception(
-                        'Error occured when fetching data from database'));
-                  } else if (!snapshot.hasData) {
-                    debugPrint("snapshot:: $snapshot");
-                    return const Center(child: Text('Data is empty!'));
-                  } else {
-                    return FirstScreen(appState, manager);
-                  }
-                  // }
-                }
-              }));
-            }));
+    // ali je MqttConnectionWrapper ze inicializiran?
+    // potem pridobi appState
+
+    return MaterialApp(home: FutureBuilder(
+        //future: loggedIn ?? _initializeConnection(appState),
+        builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        if (snapshot.hasError) {
+          return ErrorWidget(
+              Exception('Error occured when fetching data from database'));
+        } else if (!snapshot.hasData) {
+          debugPrint("snapshot:: $snapshot");
+          return const Center(child: Text('Data is empty!'));
+        } else {
+          return FirstScreen(appState, manager);
+        }
+        // }
+      }
+    }));
   }
 }
