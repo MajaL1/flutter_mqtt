@@ -4,9 +4,10 @@ class UserDataSettings {
   int? t;
   int? hiAlarm;
   int? loAlarm;
+  int? u;
   String ? editableSetting;
 
-  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.hiAlarm, this.loAlarm, this.editableSetting});
+  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.hiAlarm, this.loAlarm, this.u, this.editableSetting});
 
   /*String ? _editableSetting;
   String ? get editableSetting => _editableSetting;
@@ -22,6 +23,7 @@ class UserDataSettings {
       "device_name": deviceName,
       "sensor_address": sensorAddress,
       "t": t,
+      "u": u,
       "hi_alarm": hiAlarm,
       "lo_alarm": loAlarm,
     };
@@ -39,6 +41,7 @@ class UserDataSettings {
           int t = 0;
           int hiAlarm = 0;
           int loAlarm = 0;
+          int u = 0;
           for (String key1 in value.keys) {
             if(key1 != null) {
               value[key1];
@@ -53,11 +56,14 @@ class UserDataSettings {
               if (key1 == "lo_alarm") {
                 loAlarm = value1;
               }
+              if (key1 == "u") {
+                u = value1;
+              }
             }
           }
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
           UserDataSettings userSettings = UserDataSettings(
-              sensorAddress: key, t: t, hiAlarm: hiAlarm, loAlarm: loAlarm);
+              sensorAddress: key, t: t, hiAlarm: hiAlarm, loAlarm: loAlarm, u: u);
           userSettingsList.add(userSettings);
         }
       }

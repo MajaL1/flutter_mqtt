@@ -15,6 +15,8 @@ class Constants {
 
   static const HI_ALARM_JSON = "hi_alarm";
   static const LO_ALARM_JSON = "low_alarm";
+  static const U_JSON = "u";
+
   static const TYP = "typ";
   static const LB = "lb";
   static const R = "r";

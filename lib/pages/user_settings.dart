@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,12 +60,18 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     dataSettingsListNew.add(UserDataSettings(
         sensorAddress: setting.sensorAddress,
         hiAlarm: setting.hiAlarm,
+        u: setting.u,
         editableSetting: Constants.HI_ALARM_JSON));
     // if(){} // prikazi za loAlarm
     dataSettingsListNew.add(UserDataSettings(
         sensorAddress: setting.sensorAddress,
         loAlarm: setting.loAlarm,
+        u: setting.u,
         editableSetting: Constants.LO_ALARM_JSON));
+    dataSettingsListNew.add(UserDataSettings(
+        sensorAddress: setting.sensorAddress,
+        u: setting.u,
+        editableSetting: Constants.U));
   }
   return dataSettingsListNew;
 }
@@ -139,14 +146,15 @@ class _UserSettingsState extends State<UserSettings> {
         padding: const EdgeInsets.only(top: 30, bottom: 20),
         child: Column(children: <Widget>[
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 35),
+            padding: EdgeInsets.symmetric(horizontal: 45),
           ),
           const Text("Device settings: ",
               style: TextStyle(color: Colors.black, fontSize: 20)),
           _buildMqttSettingsView(),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 35),
+            padding: EdgeInsets.symmetric(vertical: 5),
           ),
+          const Divider(height: 40, color: Colors.black12, thickness: 5),
           const Text("Personal settings: ",
               style: TextStyle(color: Colors.black, fontSize: 20)),
           _buildUserPersonalSettings(),
@@ -157,7 +165,7 @@ class _UserSettingsState extends State<UserSettings> {
 
   Widget _buildUserPersonalSettings() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 20),
       alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,15 +173,7 @@ class _UserSettingsState extends State<UserSettings> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Common",
-                style: headingStyle,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+              const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
               Text("Account", style: headingStyle),
             ],
           ),
@@ -268,6 +268,8 @@ class _UserSettingsState extends State<UserSettings> {
                 UserDataSettings item = snapshot.data![index];
                 String sensorAddress =
                     snapshot.data![index].sensorAddress.toString();
+                int? u = item.u;
+
                 String? settingToChange = item.editableSetting ?? "";
                 String? value = "";
                 if (item.editableSetting == Constants.HI_ALARM_JSON) {
@@ -275,115 +277,23 @@ class _UserSettingsState extends State<UserSettings> {
                 } else if (item.editableSetting == Constants.LO_ALARM_JSON) {
                   value = item.loAlarm.toString();
                 }
+                bool savePressed = false;
                 TextEditingController controller = TextEditingController();
                 return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
                     child: Column(children: [
-                      /* Row(
-                          //height: 100,
-                          //width: 300,
-                          children: [
-                          Text(
-                              "${Constants.SENSOR_ID}: ${sensorAddress.toString()}",
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 16),
-                              textAlign: TextAlign.center),
-                        ]),
-                        const Text(
-                          Constants.U,
-                        ),
-                        Text(
-                          settingToChange,
-                        ),
-                        TextField(
-                          decoration: _setInputDecoration(value),
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          controller: controller,
-                          onChanged: (text) {
-                            debugPrint("onChanged $text");
-                            //controllerT.text =
-                            //   snapshot.data![index].t.toString();
-                          },
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(right: 5),
-                        ),
-                        Container(
-                          height: 60,
-                          width: 60,
-                          // margin: const EdgeInsets.only(top: 20),
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: TextButton(
-                            onPressed: () {
-                              saveMqttSettings(sensorAddress, item, controller,
-                                  settingToChange);
-                              //saveMqttSettingsTest();
-                            },
-                            child: const Text(
-                              Constants.SAVE_DEVICE_SETTINGS,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                          ),
-                        ), */
-                      ListTile(
-                        title: Text("Sensor address: $sensorAddress \n"),
-                        //leading: Text(
-                        //  "Sensor address: $sensorAddress",
-                        // ),
-                        subtitle: Row(
-                          children: <Widget>[
-                            Text(
+                      settingToChange != "u"
+                          ? _buildEditableSettingsItem(
+                              sensorAddress,
+                              u,
                               settingToChange,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 10.0),
-                            ),
-                            Expanded(
-                                child: TextField(
-                              decoration: _setInputDecoration(value),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              controller: controller,
-                              onChanged: (text) {
-                                debugPrint("onChanged $text");
-                                //controllerT.text =
-                                //   snapshot.data![index].t.toString();
-                              },
-                            )),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 10.0),
-                            ),
-                            Container(
-                              height: 60,
-                              width: 60,
-                              // margin: const EdgeInsets.only(top: 20),
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: TextButton(
-                                onPressed: () {
-                                  saveMqttSettings(sensorAddress, item,
-                                      controller, settingToChange);
-                                  //saveMqttSettingsTest();
-                                },
-                                child: const Text(
-                                  Constants.SAVE_DEVICE_SETTINGS,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                              value,
+                              controller,
+                              item,
+                              savePressed)
+                          : const ListTile(enabled: false)
                     ]));
               });
         } else if (snapshot.hasError) {
@@ -392,6 +302,71 @@ class _UserSettingsState extends State<UserSettings> {
         // By default show a loading spinner.
         return const CircularProgressIndicator();
       },
+    );
+  }
+
+  ListTile _buildEditableSettingsItem(
+      String sensorAddress,
+      int? u,
+      String settingToChange,
+      String value,
+      TextEditingController controller,
+      UserDataSettings item,
+      bool savePressed) {
+    return ListTile(
+      title: Text("Sensor address: $sensorAddress, u:  $u \n"),
+      //leading: Text(
+      //  "Sensor address: $sensorAddress",
+      // ),
+      subtitle: Row(
+        children: <Widget>[
+          Text(
+            settingToChange,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: 10.0),
+          ),
+          Expanded(
+              child: TextFormField(
+                  decoration: _setInputDecoration(value),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: controller,
+                  onChanged: (text) {
+                    debugPrint("onChanged $text");
+                    //controller.text = value!;
+                  },
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: "Required value"),
+                    MaxLengthValidator(6, errorText: "Value too long")
+                  ]))),
+          const Padding(
+            padding: EdgeInsets.only(right: 10.0),
+          ),
+          Container(
+            height: 60,
+            width: 60,
+            // margin: const EdgeInsets.only(top: 20),
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(10)),
+            child: TextButton(
+              onPressed: () {
+                saveMqttSettings(
+                    sensorAddress, item, controller, settingToChange);
+                setState(() {
+                  savePressed = !savePressed;
+                });
+                //saveMqttSettingsTest();
+              },
+              child: const Text(
+                Constants.SAVE_DEVICE_SETTINGS,
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
