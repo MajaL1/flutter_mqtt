@@ -135,7 +135,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   color: Colors.white,
                                 ),
                                 title: const Text(
-                                  '// Test history',
+                                  'Test history',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
@@ -216,7 +216,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               ),
                               const Divider(height: 10),
                               const Divider(height: 40),
-                              ListTile(
+                             /* ListTile(
                                 hoverColor: Colors.blue,
                                 tileColor: Colors.grey,
                                 dense: false,
@@ -233,7 +233,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   ),
                                 ),
                                 onTap: () {},
-                              ),
+                              ),*/
                             ],
                           )));
                 }

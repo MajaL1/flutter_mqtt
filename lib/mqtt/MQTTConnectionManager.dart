@@ -148,8 +148,6 @@ class MQTTConnectionManager {
       }
       if(topicName!.contains("alarm")){
         debugPrint("from which topic -alarm $topicName, $decodeMessage");
-        //preferences.setString("data_mqtt", decodeMessage);
-
 
         SharedPreferences preferences = await SharedPreferences.getInstance();
         //Object ? alarmListData = preferences.get("alarm_list_mqtt");
@@ -159,6 +157,10 @@ class MQTTConnectionManager {
         debugPrint("alarmList---: $alarmMessageJson");
         // Todo: save alarm to alarmList in localstorage
 
+        // TODO: ali je novo nastavljeni alarm iz settingov vecji od alarma,
+        // Todo: potem klici sendMessage in dodaj alarm v preferences - history list-  alarmListMqtt
+        //  if (alarmFromSettings.hiValue > alarmFromAlarm.hiValue)
+        //or
         // Todo: notifications
         NotificationHelper.sendMessage(alarmList.first);
 

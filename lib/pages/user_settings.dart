@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
@@ -171,17 +171,6 @@ class _UserSettingsState extends State<UserSettings> {
               ),
             ],
           ),
-          const ListTile(
-            leading: Icon(Icons.language),
-            title: Text("Language"),
-            subtitle: Text("English"),
-          ),
-          const Divider(),
-          const ListTile(
-            leading: Icon(Icons.cloud),
-            title: Text("Environment"),
-            subtitle: Text("Production"),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -200,7 +189,9 @@ class _UserSettingsState extends State<UserSettings> {
           const Divider(),
           const ListTile(
             leading: Icon(Icons.exit_to_app),
-            title: Text("Sign Out"),
+            title: Text("Log out",
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.w800)),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -289,10 +280,8 @@ class _UserSettingsState extends State<UserSettings> {
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
-                    child:
-
-                      Column(children: [
-                        Row(
+                    child: Column(children: [
+                      /* Row(
                           //height: 100,
                           //width: 300,
                           children: [
@@ -342,8 +331,59 @@ class _UserSettingsState extends State<UserSettings> {
                                   TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ),
+                        ), */
+                      ListTile(
+                        title: Text("Sensor address: $sensorAddress \n"),
+                        //leading: Text(
+                        //  "Sensor address: $sensorAddress",
+                        // ),
+                        subtitle: Row(
+                          children: <Widget>[
+                            Text(
+                              settingToChange,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 10.0),
+                            ),
+                            Expanded(
+                                child: TextField(
+                              decoration: _setInputDecoration(value),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              controller: controller,
+                              onChanged: (text) {
+                                debugPrint("onChanged $text");
+                                //controllerT.text =
+                                //   snapshot.data![index].t.toString();
+                              },
+                            )),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 10.0),
+                            ),
+                            Container(
+                              height: 60,
+                              width: 60,
+                              // margin: const EdgeInsets.only(top: 20),
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: TextButton(
+                                onPressed: () {
+                                  saveMqttSettings(sensorAddress, item,
+                                      controller, settingToChange);
+                                  //saveMqttSettingsTest();
+                                },
+                                child: const Text(
+                                  Constants.SAVE_DEVICE_SETTINGS,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-
+                      )
                     ]));
               });
         } else if (snapshot.hasError) {
@@ -384,7 +424,7 @@ class _UserSettingsState extends State<UserSettings> {
     return InputDecoration(
         labelText: val,
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.greenAccent, width: 5.0),
+          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 3.0),
         ),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),

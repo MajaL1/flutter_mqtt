@@ -75,11 +75,6 @@ class _DetailsPageState extends State<DetailsPage> {
                               color: Colors.black, fontSize: 16),
                           textAlign: TextAlign.justify),
                       Text(
-                          "${Constants.T}: ${snapshot.data![index].ts.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
                           "${Constants.TYP}: ${snapshot.data![index].typ.toString()}",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 16),

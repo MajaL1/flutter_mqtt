@@ -137,7 +137,7 @@ debugPrint("send message: $alarmMessage");
     final styleinformationDesign = BigPictureStyleInformation(
       //for design adding images big and small in notificaitonbar
       FilePathAndroidBitmap(smallpicture),
-      //summaryText: "Alarm for $sensorAddress",
+      summaryText: "Alarm for $sensorAddress",
       //contentTitle: "ABC"
       //largeIcon: FilePathAndroidBitmap(bigpicture),
     );

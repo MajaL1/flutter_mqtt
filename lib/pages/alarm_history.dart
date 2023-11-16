@@ -52,6 +52,7 @@ class AlarmHistory extends StatelessWidget {
                                 Text(" $ts"),
                               ],
                             ),
+
                             onTap: () {
                               showAlarmDetail(index);
                             }));

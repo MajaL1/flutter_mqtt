@@ -74,6 +74,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/bell.png
     - assets/images/
     - assets/alarms.json
     - assets/user.json
