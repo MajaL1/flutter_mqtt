@@ -71,7 +71,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     dataSettingsListNew.add(UserDataSettings(
         sensorAddress: setting.sensorAddress,
         u: setting.u,
-        editableSetting: Constants.U));
+        editableSetting: Constants.U_JSON));
   }
   return dataSettingsListNew;
 }
@@ -155,6 +155,9 @@ class _UserSettingsState extends State<UserSettings> {
             padding: EdgeInsets.symmetric(vertical: 5),
           ),
           const Divider(height: 40, color: Colors.black12, thickness: 5),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 15),
+          ),
           const Text("Personal settings: ",
               style: TextStyle(color: Colors.black, fontSize: 20)),
           _buildUserPersonalSettings(),
@@ -282,9 +285,9 @@ class _UserSettingsState extends State<UserSettings> {
                 return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
-                        top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
+                        top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
                     child: Column(children: [
-                      settingToChange != "u"
+                      settingToChange != Constants.U_JSON
                           ? _buildEditableSettingsItem(
                               sensorAddress,
                               u,
@@ -293,7 +296,7 @@ class _UserSettingsState extends State<UserSettings> {
                               controller,
                               item,
                               savePressed)
-                          : const ListTile(enabled: false)
+                          : Container(height: 0)//ListTile(enabled: false)
                     ]));
               });
         } else if (snapshot.hasError) {
@@ -335,7 +338,7 @@ class _UserSettingsState extends State<UserSettings> {
                   controller: controller,
                   onChanged: (text) {
                     debugPrint("onChanged $text");
-                    //controller.text = value!;
+                     text = value!;
                   },
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
