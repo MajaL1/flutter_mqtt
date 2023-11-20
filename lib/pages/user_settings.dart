@@ -73,6 +73,10 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
     userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
   }
   // vrne Listo UserSettingsov iz mqtt 'sensorId/settings'
+
+  String ? deviceName = preferences.getString("settings_mqtt_device_name");
+  userDataSettings[0].deviceName = deviceName;
+
   return userDataSettings;
   // debugPrint("UserSettings from JSON: $userSettings");
 }

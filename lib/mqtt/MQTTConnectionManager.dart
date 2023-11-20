@@ -141,6 +141,7 @@ class MQTTConnectionManager {
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         preferences.setString("settings_mqtt", decodeMessage);
+        preferences.setString("settings_mqtt_device_name", topicName);
       }
       if(topicName!.contains("data")){
         //debugPrint("from which topic -data $topicName");
