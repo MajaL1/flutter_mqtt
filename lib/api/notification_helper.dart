@@ -177,7 +177,7 @@ debugPrint("send message: $alarmMessage");
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("settings_mqtt").toString();
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-    debugPrint("****************** user settings data $data");
+    debugPrint("****************** preferences settings_mqtt $data");
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
     List<UserDataSettings> userDataSettings =
         UserDataSettings.getUserDataSettings(jsonMap);

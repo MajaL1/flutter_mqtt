@@ -143,8 +143,8 @@ class MQTTConnectionManager {
         preferences.setString("settings_mqtt", decodeMessage);
       }
       if(topicName!.contains("data")){
-        debugPrint("from which topic -data $topicName");
-        preferences.setString("data_mqtt", decodeMessage);
+        //debugPrint("from which topic -data $topicName");
+        //preferences.setString("data_mqtt", decodeMessage);
       }
       if(topicName!.contains("alarm")){
         debugPrint("from which topic -alarm $topicName, $decodeMessage");
@@ -175,4 +175,6 @@ class MQTTConnectionManager {
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
+
+
 }

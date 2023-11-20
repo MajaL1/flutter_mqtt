@@ -40,14 +40,62 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
   String? data = preferences.get("settings_mqtt").toString();
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   debugPrint("****************** user settings data $data");
+  List<UserDataSettings> userDataSettings = [];
+
+  // checks old user settings
+  preferences.setString("settings_mqtt_old", data);
+  bool? isSaved = preferences.getBool("is_mqtt_setting_saved");
+
+  isSaved ??= false;
+
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+  preferences.getBool("is_mqtt_setting_saved");
 
+  // ce smo kliknili save, potem preberi staro vrednost liste
+  if (isSaved) {
+    String? oldData = preferences.get("settings_mqtt_old").toString();
+    String decodeMessage = const Utf8Decoder().convert(oldData.codeUnits);
+    Map<String, dynamic> oldJsonMap = json.decode(decodeMessage);
+
+    List<UserDataSettings> oldUserDataSettings =
+        UserDataSettings.getUserDataSettings(oldJsonMap);
+
+    // preberi nove user data settinge
+    List<UserDataSettings> newUserDataSettings =
+        UserDataSettings.getUserDataSettings(jsonMap);
+
+    userDataSettings =
+        _mergeNewUserSettingsWithOld(oldUserDataSettings, newUserDataSettings);
+
+    preferences.setBool("is_mqtt_setting_saved", false);
+
+  } else {
+    userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+  }
   // vrne Listo UserSettingsov iz mqtt 'sensorId/settings'
-  List<UserDataSettings> userDataSettings =
-      UserDataSettings.getUserDataSettings(jsonMap);
-
   return userDataSettings;
   // debugPrint("UserSettings from JSON: $userSettings");
+}
+
+List<UserDataSettings> _mergeNewUserSettingsWithOld(
+    List<UserDataSettings> oldSettings, List<UserDataSettings> newSettings) {
+  //List<UserDataSettings> mergedUserDataSettings = [];
+
+  for(UserDataSettings newSetting in newSettings) {
+    if (newSetting.hiAlarm != null) {
+      for (UserDataSettings oldSetting in oldSettings) {
+        if (newSetting.hiAlarm != null &&
+            newSetting.hiAlarm != oldSetting.hiAlarm) {
+          oldSetting.hiAlarm = newSetting.hiAlarm;
+        }
+        if (newSetting.loAlarm != null &&
+            newSetting.loAlarm != oldSetting.loAlarm) {
+          oldSetting.loAlarm = newSetting.loAlarm;
+        }
+      }
+    }
+  }
+  return oldSettings;
 }
 
 // parse userDataSettings v navadno listo, izloci tiste, ki jih ne prikazujemo za dolocen tip naprave
@@ -56,12 +104,17 @@ List<UserDataSettings> _parseUserDataSettingsToList(
   List<UserDataSettings> dataSettingsListNew = [];
   for (UserDataSettings setting in dataSettingsList) {
     // Todo: ce ne prikazujemo tipov za veter
+    // tipa WS in WSD imata samo hi_alarm
+    //  if(SensorType.WS ==  setting.typ) {//nameof((setting)))) {
+    // pridobi device json
     //if(setting.equals(Constants.HI_ALARM)){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
+
     dataSettingsListNew.add(UserDataSettings(
         sensorAddress: setting.sensorAddress,
         hiAlarm: setting.hiAlarm,
         u: setting.u,
         editableSetting: Constants.HI_ALARM_JSON));
+
     // if(){} // prikazi za loAlarm
     dataSettingsListNew.add(UserDataSettings(
         sensorAddress: setting.sensorAddress,
@@ -296,7 +349,7 @@ class _UserSettingsState extends State<UserSettings> {
                               controller,
                               item,
                               savePressed)
-                          : Container(height: 0)//ListTile(enabled: false)
+                          : Container(height: 0) //ListTile(enabled: false)
                     ]));
               });
         } else if (snapshot.hasError) {
@@ -338,7 +391,7 @@ class _UserSettingsState extends State<UserSettings> {
                   controller: controller,
                   onChanged: (text) {
                     debugPrint("onChanged $text");
-                     text = value!;
+                    text = value!;
                   },
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
@@ -385,6 +438,11 @@ class _UserSettingsState extends State<UserSettings> {
     setState(() {});
   }
 
+  SharedPreferences? preferences;
+  Future<void> initializePreference() async{
+    preferences = await SharedPreferences.getInstance();
+  }
+
   void saveMqttSettings(String? sensorName, UserDataSettings settings,
       TextEditingController controller, String settingToChange) {
     String value = controller.text;
@@ -396,6 +454,13 @@ class _UserSettingsState extends State<UserSettings> {
     var testText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     debugPrint("concatenated text: $testText");
     widget.manager.publish(testText);
+
+    initializePreference().whenComplete((){
+     // setState(() {});
+      preferences?.setBool("is_mqtt_setting_saved", true);
+    });
+
+    setState(() {});
   }
 
   _setInputDecoration(val) {

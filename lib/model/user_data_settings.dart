@@ -2,6 +2,7 @@ class UserDataSettings {
   String? deviceName;
   String? sensorAddress;
   int? t;
+  int? typ;
   int? hiAlarm;
   int? loAlarm;
   int? u;

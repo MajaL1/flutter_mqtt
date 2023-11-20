@@ -116,7 +116,7 @@ class MQTTConnectionWrapper {
     print('on Connected: EXAMPLE::Mosquitto client connected....');
     client!.subscribe(_topic1, MqttQos.atLeastOnce);
     client!.subscribe(_topic2, MqttQos.atLeastOnce);
-    client!.subscribe(_topic3, MqttQos.atLeastOnce);
+    //client!.subscribe(_topic3, MqttQos.atLeastOnce);
 
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       // ignore: avoid_as
