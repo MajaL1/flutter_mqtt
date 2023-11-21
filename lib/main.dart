@@ -61,8 +61,10 @@ class _NotificationsAppState extends State<NotificationsApp> {
      SharedPreferences preferences = await SharedPreferences.getInstance();
     if(!preferences.containsKey("alarm_list_mqtt")){
       List<Alarm> alarmList = [];
+      //preferences.clear();
+     // preferences.remove("alarm_list_mqtt");
       String alarmListData = json.encode(alarmList);
-      json.decode(alarmListData);
+      //json.decode(alarmListData);
       preferences.setString("alarm_list_mqtt", alarmListData);
     }
      preferences.get("alarm_list_mqtt");

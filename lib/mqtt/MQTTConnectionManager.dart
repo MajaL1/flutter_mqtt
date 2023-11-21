@@ -141,7 +141,7 @@ class MQTTConnectionManager {
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         preferences.setString("settings_mqtt", decodeMessage);
-        preferences.setString("settings_mqtt_device_name", topicName);
+        preferences.setString("settings_mqtt_device_name", topicName.split("/settings").first);
       }
       if(topicName!.contains("data")){
         //debugPrint("from which topic -data $topicName");
@@ -150,20 +150,32 @@ class MQTTConnectionManager {
       if(topicName!.contains("alarm")){
         debugPrint("from which topic -alarm $topicName, $decodeMessage");
 
+        //prebere listo alarmov iz preferenc in jim doda nov alarm
         SharedPreferences preferences = await SharedPreferences.getInstance();
-        //Object ? alarmListData = preferences.get("alarm_list_mqtt");
-        Map<String, dynamic> alarmMessageJson = json.decode(decodeMessage);
-        List<Alarm> alarmList = Alarm.getAlarmList(alarmMessageJson);
-//Alarm ? alarm = Alarm.decodeAlarm(decodeMessage);
-        debugPrint("alarmList---: $alarmMessageJson");
-        // Todo: save alarm to alarmList in localstorage
 
-        // TODO: ali je novo nastavljeni alarm iz settingov vecji od alarma,
-        // Todo: potem klici sendMessage in dodaj alarm v preferences - history list-  alarmListMqtt
-        //  if (alarmFromSettings.hiValue > alarmFromAlarm.hiValue)
-        //or
-        // Todo: notifications
-        NotificationHelper.sendMessage(alarmList.first);
+        // 1. dobi listo prejsnjih alarmov
+        //String ? alarmListOldData = preferences.get("alarm_list_mqtt") as String;
+        String? alarmListOldData = preferences.get("alarm_list_mqtt") as String?;
+       // List<Alarm> alarmList = Alarm.getAlarmList(alarmMessageOldJson);
+        List a1 = json.decode(alarmListOldData!);
+
+        List<Alarm> a2 = [];
+
+
+        // 2. dobi trenuten alarm
+        Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
+        List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+        currentAlarmList.first.sensorAddress = topicName.split("/settings").first;
+        // 3. doda alarm na listo starih alarmov
+        a1.addAll(currentAlarmList);
+        String alarmListMqtt = jsonEncode(currentAlarmList);
+
+        preferences.setString("alarm_list_mqtt", alarmListMqtt);
+        debugPrint("alarmList---: $alarmListMqtt");
+
+
+        // prikaze sporocilo z alarmom
+        NotificationHelper.sendMessage(currentAlarmList.first);
 
       }
 

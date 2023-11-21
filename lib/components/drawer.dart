@@ -101,7 +101,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 ),
                               ),
                               const Divider(height: 40),
-                              ListTile(
+                              /*ListTile(
                                 hoverColor: Colors.blue,
                                 tileColor: Colors.blue,
                                 dense: false,
@@ -111,7 +111,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   Icons.notifications_active_outlined,
                                   color: Colors.white,
                                 ),
-                                title: const Text(
+                               title: const Text(
                                   '//Test alarms',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -122,7 +122,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                         //builder: (context) => TestNotifications1())),
                                         builder: (context) =>
                                             const TestNotificationsEditable())),
-                              ),
+                              ), */
                               const Divider(height: 10),
                               ListTile(
                                 hoverColor: Colors.blue,

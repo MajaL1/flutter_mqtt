@@ -26,16 +26,43 @@ class Alarm {
       this.l,
       this.t});
 
+
+  /*factory Alarm.fromJson(Map<String, dynamic> addjson){
+    return Alarm(
+        "sensor_address": sensorAddress,
+        "typ": typ,
+        "v": v,
+        "l": l,
+        "lb": lb,
+        "bv": bv,
+        "t": t,
+        "r": r,
+        "b": b,
+        "hi_alarm": hiAlarm,
+        "lo_alarm": loAlarm,
+        "ts": ts == null ? null : ts?.toIso8601String()
+    // "ts": ts
+
+    );
+  } */
   Map<String, dynamic> toJson() {
     return {
       "sensor_address": sensorAddress,
       "typ": typ,
       "v": v,
+      "l": l,
+      "lb": lb,
+      "bv": bv,
+      "t": t,
+      "r": r,
+      "b": b,
       "hi_alarm": hiAlarm,
       "lo_alarm": loAlarm,
-      "ts": ts
+      "ts": ts == null ? null : ts?.toIso8601String()
+     // "ts": ts
     };
   }
+
 
   static Alarm? decodeAlarm(Map<String, dynamic> json) {
     for (String key in json.keys) {
