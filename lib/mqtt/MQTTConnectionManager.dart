@@ -165,10 +165,10 @@ class MQTTConnectionManager {
         // 2. dobi trenuten alarm
         Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
-        currentAlarmList.first.sensorAddress = topicName.split("/settings").first;
+        currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
         // 3. doda alarm na listo starih alarmov
         a1.addAll(currentAlarmList);
-        String alarmListMqtt = jsonEncode(currentAlarmList);
+        String alarmListMqtt = jsonEncode(a1);
 
         preferences.setString("alarm_list_mqtt", alarmListMqtt);
         debugPrint("alarmList---: $alarmListMqtt");
