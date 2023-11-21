@@ -30,10 +30,19 @@ class ApiService {
       String alarmListData = preferences.get("alarm_list_mqtt") as String;
       List alarmMessageJson = json.decode(alarmListData);
 
+      //----------
+
+     // List currentAlarmJson = json.decode(alarmListData);
+      //List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+
+      //----------
+
+
       Map<String,dynamic> mapAlarmJson = {};
 
+      int i = 0;
       for (var element in alarmMessageJson) {
-        mapAlarmJson["sensorAddress"] = element;
+        mapAlarmJson[element] = element;
       }
 
       alarmList = Alarm.getAlarmList(mapAlarmJson);//(alarmMap as Map<String, dynamic>);

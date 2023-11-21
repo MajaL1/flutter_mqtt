@@ -154,13 +154,8 @@ class MQTTConnectionManager {
         SharedPreferences preferences = await SharedPreferences.getInstance();
 
         // 1. dobi listo prejsnjih alarmov
-        //String ? alarmListOldData = preferences.get("alarm_list_mqtt") as String;
         String? alarmListOldData = preferences.get("alarm_list_mqtt") as String?;
-       // List<Alarm> alarmList = Alarm.getAlarmList(alarmMessageOldJson);
         List a1 = json.decode(alarmListOldData!);
-
-        List<Alarm> a2 = [];
-
 
         // 2. dobi trenuten alarm
         Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
@@ -173,13 +168,9 @@ class MQTTConnectionManager {
         preferences.setString("alarm_list_mqtt", alarmListMqtt);
         debugPrint("alarmList---: $alarmListMqtt");
 
-
         // prikaze sporocilo z alarmom
         NotificationHelper.sendMessage(currentAlarmList.first);
-
       }
-
-      //NotificationHelper.initializeService();
       print("======= pt: ${pt} , topic: $_topic1, $_topic2");
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
