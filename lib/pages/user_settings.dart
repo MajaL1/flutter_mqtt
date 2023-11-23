@@ -112,9 +112,11 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     // tipa WS in WSD imata samo hi_alarm
 
       String sensorType = SensorTypeConstants.getSensorType(setting.typ);
-      if(SensorTypeConstants.WS ==  setting.typ) {
+      if(sensorType == SensorTypeConstants.WS || sensorType == SensorTypeConstants.WSD) {
         //nameof((setting)))) {
+        debugPrint("SensorType = WS");
       }
+
     // pridobi device json
     //if(setting.equals(Constants.HI_ALARM)){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
 
