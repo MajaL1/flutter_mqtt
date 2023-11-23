@@ -54,7 +54,7 @@ class SensorTypeConstants {
       case 13:
         return SP200;
       default:
-        return NotSet;
+        return Notset;
     }
   }
 }
