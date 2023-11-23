@@ -32,7 +32,6 @@ class ApiService {
       String alarmListData = preferences.get("alarm_list_mqtt") as String;
       List alarmMessageJson = json.decode(alarmListData);
 
-      List<Alarm> alarmList = [];
       alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
 
       debugPrint("alarmList-:: $alarmList");
