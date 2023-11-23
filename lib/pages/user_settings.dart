@@ -12,6 +12,7 @@ import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../mqtt/MQTTConnectionManager.dart';
 import '../mqtt/state/MQTTAppState.dart';
+import '../widgets/sensor_type.dart';
 
 class UserSettings extends StatefulWidget {
   MQTTAppState currentAppState;
@@ -109,7 +110,11 @@ List<UserDataSettings> _parseUserDataSettingsToList(
   for (UserDataSettings setting in dataSettingsList) {
     // Todo: ce ne prikazujemo tipov za veter
     // tipa WS in WSD imata samo hi_alarm
-    //  if(SensorType.WS ==  setting.typ) {//nameof((setting)))) {
+
+      String sensorType = SensorTypeConstants.getSensorType(setting.typ);
+      if(SensorTypeConstants.WS ==  setting.typ) {
+        //nameof((setting)))) {
+      }
     // pridobi device json
     //if(setting.equals(Constants.HI_ALARM)){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
 
