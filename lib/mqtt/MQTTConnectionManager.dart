@@ -73,7 +73,7 @@ class MQTTConnectionManager {
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
       await client!.connect(username, password);
     } on Exception catch (e) {
-      print('EXAMPLE::client exception - $e');
+      print('Navis app::client exception - $e');
       disconnect();
     }
   }
