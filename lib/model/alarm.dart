@@ -26,7 +26,6 @@ class Alarm {
       this.l,
       this.t});
 
-
   /*factory Alarm.fromJson(Map<String, dynamic> addjson){
     return Alarm(
         "sensor_address": sensorAddress,
@@ -59,10 +58,9 @@ class Alarm {
       "hi_alarm": hiAlarm,
       "lo_alarm": loAlarm,
       "ts": ts == null ? null : ts?.toIso8601String()
-     // "ts": ts
+      // "ts": ts
     };
   }
-
 
   static Alarm? decodeAlarm(Map<String, dynamic> json) {
     for (String key in json.keys) {
@@ -79,10 +77,9 @@ class Alarm {
           int r = 0;
           int bv = 0;
           int b = 0;
-          DateTime ?ts = null;
+          DateTime? ts = null;
           int t = 0;
           int l = 0;
-
 
           for (String key1 in value.keys) {
             if (key1 != null) {
@@ -146,6 +143,105 @@ class Alarm {
     }
   }
 
+  // vrne sparsano listo alarmov iz preferenc
+  static List<Alarm> getAlarmListFromPreferences(List json) {
+    List<Alarm> alarmList = [];
+    for (var alarm in json) {
+      String sensorAddress = "";
+      int typ = 0;
+      int hiAlarm = 0;
+      int loAlarm = 0;
+      int v = 0;
+      DateTime? ts = null;
+      int lb = 0;
+      int r = 0;
+      int l = 0;
+      int bv = 0;
+      int b = 0;
+      int t = 0;
+      // String key1 = "";
+      for (var key in alarm.keys) {
+//print("key:  $key");
+        var value = alarm[key];
+
+        if (key.isNotEmpty) {
+          // key1 = key;
+          String valueStr = "";
+          print("key: $key");
+          print("value: $value");
+
+          int valueInt = 0;
+          if (value is String) {
+            valueStr = value;
+          } else {
+            if (value != null) {
+              valueInt = value;
+            } else {
+              valueInt = 0;
+            }
+          }
+//print("key1: $key1, value1: $value1");
+          if (key == "typ") {
+            typ = valueInt;
+          }
+          if (key == "sensor_address") {
+            sensorAddress = value;
+          }
+          if (key == "v") {
+            v = valueInt;
+          }
+          if (key == "hi_alarm") {
+            hiAlarm = valueInt;
+          }
+          if (key == "lo_alarm") {
+            loAlarm = valueInt;
+          }
+          if (key == "ts") {
+            // ts = null;//DateTime.fromMicrosecondsSinceEpoch(valueInt);
+            print("ts");
+          }
+          if (key == "lb") {
+            lb = valueInt;
+          }
+          if (key == "t") {
+            t = valueInt;
+          }
+          if (key == "r") {
+            r = valueInt;
+          }
+          if (key == "bv") {
+            bv = valueInt;
+          }
+          if (key == "l") {
+            l = valueInt;
+          }
+          if (key == "b") {
+            b = valueInt;
+          }
+        }
+      }
+
+        print("Creating alarm: $sensorAddress, $typ, $t, $hiAlarm, $loAlarm");
+        Alarm newAlarm = Alarm(
+            sensorAddress: sensorAddress,
+            typ: typ,
+            v: v,
+            hiAlarm: hiAlarm,
+            loAlarm: loAlarm,
+            ts: ts,
+            lb: lb,
+            bv: bv,
+            r: r,
+            b: b,
+            l: l,
+            t: t);
+        alarmList.add(newAlarm);
+      }
+
+
+    return alarmList;
+  }
+
   static List<Alarm> getAlarmList(Map<String, dynamic> json) {
     List<Alarm> alarmList = [];
     for (String key in json.keys) {
@@ -195,7 +291,6 @@ class Alarm {
                 }
                 if (key1 == "ts") {
                   ts = DateTime.fromMicrosecondsSinceEpoch(valueInt);
-
                 }
                 if (key1 == "lb") {
                   lb = valueInt;
@@ -215,10 +310,6 @@ class Alarm {
                 if (key1 == "b") {
                   b = valueInt;
                 }
-
-                /* if (key1 == "dt") {
-                hiAlarm = value1;
-              } */
               }
             }
           }

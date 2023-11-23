@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' show Client, Response, post;
-import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/constants.dart';
+import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+
 import '../model/alarm.dart';
 import '../model/user.dart';
 
@@ -30,22 +32,8 @@ class ApiService {
       String alarmListData = preferences.get("alarm_list_mqtt") as String;
       List alarmMessageJson = json.decode(alarmListData);
 
-      //----------
-
-     // List currentAlarmJson = json.decode(alarmListData);
-      //List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
-
-      //----------
-
-
-      Map<String,dynamic> mapAlarmJson = {};
-
-      int i = 0;
-      for (var element in alarmMessageJson) {
-        mapAlarmJson[element] = element;
-      }
-
-      alarmList = Alarm.getAlarmList(mapAlarmJson);//(alarmMap as Map<String, dynamic>);
+      List<Alarm> alarmList = [];
+      alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
 
       debugPrint("alarmList-:: $alarmList");
     }

@@ -135,7 +135,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   color: Colors.white,
                                 ),
                                 title: const Text(
-                                  'Test history',
+                                  'History',
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
