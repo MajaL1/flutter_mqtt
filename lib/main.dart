@@ -96,7 +96,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
                 setCurrentAppState(appState);
                   return MaterialApp(
                   home: FutureBuilder(
-                      future: initializeConnection(appState),
+                      //future: initializeConnection(appState),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -104,18 +104,18 @@ class _NotificationsAppState extends State<NotificationsApp> {
                             child: CircularProgressIndicator(),
                           );
                         } else {
-                          if (snapshot.hasError) {
+                          /*if (snapshot.hasError) {
                             return ErrorWidget(Exception(
                                 'Error occured when fetching data from database'));
                           } else if (!snapshot.hasData) {
                             debugPrint("snapshot:: $snapshot");
                             return const Center(child: Text('Data is empty!'));
-                          } else {
-                            return FirstScreen(appState, manager);
+                          */
+                            return FirstScreen.base();
                           }
                           // }
                         }
-                      }));
+                      ));
             }));
   }
 

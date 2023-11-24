@@ -18,7 +18,7 @@ import 'login_form.dart';
 import 'alarm_history.dart';
 
 class FirstScreen extends StatefulWidget {
-  MQTTConnectionManager manager;
+  /*MQTTConnectionManager manager;
   MQTTAppState currentAppState;
 
   FirstScreen(MQTTAppState appState, MQTTConnectionManager connectionManager,
@@ -34,9 +34,9 @@ class FirstScreen extends StatefulWidget {
 
   get connectionManager {
     return manager;
-  }
+  } */
 
-  //FirstScreen.base();
+  FirstScreen.base();
 
   var username = SharedPrefs().username;
   var token = SharedPrefs().token;
@@ -52,7 +52,7 @@ class _FirstScreenState extends State<FirstScreen> {
     debugPrint("-- firstScreen initstate");
   }
 
-  _initCurrentAppState() async {
+  /*_initCurrentAppState() async {
     Timer(
         const Duration(seconds: 2),
         () => {
@@ -61,14 +61,14 @@ class _FirstScreenState extends State<FirstScreen> {
               debugPrint("[[[ currentAppState: $widget.currentAppState ]]]")
             });
     return widget.currentAppState;
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
 
     return Scaffold(
-        drawer: NavDrawer(widget.currentAppState, widget.manager),
+      //  drawer: NavDrawer(widget.currentAppState, widget.manager),
         body: FutureBuilder(
             future: _initCurrentAppState(),
             builder: (context, snapshot) {
@@ -83,26 +83,15 @@ class _FirstScreenState extends State<FirstScreen> {
                 } else if (!snapshot.hasData) {
                   debugPrint(
                       "first screen: snapshot:: $snapshot, $widget.currentAppState. ${widget.manager}");
-                  return LoginForm(widget.currentAppState, widget.manager);
-                } else {
-                  debugPrint(
-                      "first screen: currentAppState:: $widget.currentAppState, ${widget.currentAppState}, ${widget.manager}");
-
+                  return LoginForm.base();
+                }
                   return Scaffold(
-                      drawer: NavDrawer(widget.currentAppState, widget.manager),
+                     // drawer: NavDrawer(widget.currentAppState, widget.manager),
                       // TODO: preveri, ali je uporabnik logiran
                       // body: !userLoggedIn ?? LoginForm(widget.currentAppState, widget.manager)) : UserSettings(widget.currentAppState, widget.manager);
-                      body: LoginForm(widget.currentAppState, widget.manager));
+                      body: LoginForm.base());
                 }
               }
-            }));
-  }
-
-  Future<void> setCurrentAppState(appState) async {
-    widget.currentAppState = appState;
-  }
-
-  Future<void> setManager(manager) async {
-    widget.manager = manager;
+            ));
   }
 }

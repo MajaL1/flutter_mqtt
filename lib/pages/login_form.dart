@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
+import 'package:mqtt_test/util/app_preference_util.dart';
+import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/mqttView.dart';
 import '../api/api_service.dart';
 import '../components/drawer.dart';
@@ -16,7 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
-  MQTTConnectionManager manager;
+ /* MQTTConnectionManager manager;
   MQTTAppState currentAppState;
 
   LoginForm(MQTTAppState appState, MQTTConnectionManager connectionManager,
@@ -31,7 +33,7 @@ class LoginForm extends StatefulWidget {
 
   get connectionManager {
     return manager;
-  }
+  } */
 
   //LoginForm.base();
 
@@ -62,7 +64,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     print("-- loginform initstate");
   }
 
-  _initCurrentAppState() async {
+  /*_initCurrentAppState() async {
     Timer(
         const Duration(seconds: 2),
         () => {
@@ -71,7 +73,7 @@ class _LoginFormValidationState extends State<LoginForm> {
               debugPrint("[[[ currentAppState: $widget.currentAppState ]]]")
             });
     //return widget.currentAppState;
-  }
+  } */
 
   Future<bool> hasNetwork() async {
     try {
@@ -93,14 +95,25 @@ class _LoginFormValidationState extends State<LoginForm> {
       // todo: odkomentiraj login
        User? user = await ApiService.login(username, password);
         debugPrint("loginForm, user: $user.username, $user.password, $user.topic");
+      if(user != null) {
+        //********************** Todo, pozeni connection iz SmartMqtt.
+        // Preberi topice in se skonektaj na Mqtt
+        //SmartMqtt smartMqtt = SmartMqtt().init() as SmartMqtt;
+        SmartMqtt mqtt = SmartMqtt(host: "test", port: 1, ip: "test", topic1: "/settings", topic2: "/alarm", topic3: "/data");
+        //SharedPrefs p = SharedPrefs().init() as SharedPrefs;
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
+
+        mqtt.initializeMQTTClient();
+        mqtt.connect();
+        //*********************************************/
+        Navigator.push(
+            context,
+            MaterialPageRoute(
 //              builder: (_) => MQTTView(widget.currentAppState, widget.manager)));
-              builder: (_) => UserSettings(widget.currentAppState, widget.manager)));
+                builder: (_) => UserSettings.base()));
 
-      debugPrint("Validated");
+        debugPrint("Validated");
+      }
     }
   }
 
@@ -129,7 +142,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           //),
           body: FutureBuilder(
             // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
-          future: _initCurrentAppState(),
+         // future: _initCurrentAppState(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -258,13 +271,5 @@ class _LoginFormValidationState extends State<LoginForm> {
                 }
               })),
     );
-  }
-
-  Future<void> setCurrentAppState(appState) async {
-    widget.currentAppState = appState;
-  }
-
-  Future<void> setManager(manager) async {
-    widget.manager = manager;
   }
 }

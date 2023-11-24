@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt_test/mqtt/MQTTConnectionManager.dart';
 import 'package:mqtt_test/mqtt/state/MQTTAppState.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,29 +16,25 @@ import '../util/mqtt_connect_util.dart';
 
 class MQTTConnectionWrapper {
   // Private instance of client
-  final MQTTAppState _currentState;
-  static MqttServerClient? client;
-  final String _identifier;
-  final String _host;
-  final String _topic1;
-  final String _topic2;
-  final String _topic3;
+  late MQTTConnectionManager manager;
+  late MQTTAppState _currentState;
+  late MqttServerClient? client;
+  late String _identifier;
+  late String _host;
+  late String _topic1;
+  late String _topic2;
+  late String _topic3;
+
+  static final MQTTConnectionWrapper _instance = MQTTConnectionWrapper._internal();
+
+  MQTTConnectionWrapper._internal();
+
+  factory MQTTConnectionWrapper() {
+    return _instance;
+  }
 
   // Constructor
   // ignore: sort_constructors_first
-  MQTTConnectionWrapper(
-      {required String host,
-      required String topic1,
-      required String topic2,
-      required String topic3,
-      required String identifier,
-      required MQTTAppState state})
-      : _identifier = identifier,
-        _host = host,
-        _topic1 = topic1,
-        _topic2 = topic2,
-        _topic3 = topic3,
-        _currentState = state;
 
   void initializeMQTTClient() {
     client = MqttServerClient(_host, _identifier);
@@ -67,6 +64,8 @@ class MQTTConnectionWrapper {
   Future<void> connect() async {
     assert(client != null);
     try {
+      //String username = "test3";
+      //String password = "OTA1YzRhZDNlZjAxMjU4Zg==";
       String username = "test1";
       String password = "MDQ0MThmZmM1NTI4OGQ4OQ==";
       print('::Navis app client connecting....');
@@ -214,6 +213,23 @@ Future<void> configureAndConnect(currentAppState) async {
   // if (Platform.isAndroid()) {
   osPrefix = 'Flutter_Android';
 
+  MQTTConnectionManager  manager = MQTTConnectionManager(
+      host: 'test.navis-livedata.com',
+      //_hostTextController.text,
+      topic1: 'c45bbe821261/settings'
+          '',
+      //_topicTextController.text,
+      // topic2:
+      topic2: 'c45bbe821261/data',
+      topic3: 'c45bbe821261/alarm',
+
+      identifier: osPrefix,
+      state: currentAppState);
+  manager.initializeMQTTClient();
+  await manager.connect();
+
+
+
 // pridobivanje najprej settingov, samo za topic (naprave) -dodaj v objekt UserSettings
   if (MQTTAppConnectionState.connected ==
       currentAppState?.getAppConnectionState) {
@@ -232,8 +248,8 @@ Future<void> connectToBroker(List<String> brokerAddressList) async {
     } else if (brokerAddress.contains('/data')) {}
     debugPrint("brokerAddress: $brokerAddress");
   }
-  if (MQTTAppConnectionState.disconnected ==
+ /* if (MQTTAppConnectionState.disconnected ==
       _currentState.getAppConnectionState) {
     await configureAndConnect(_currentAppState);
-  }
+  } */
 }

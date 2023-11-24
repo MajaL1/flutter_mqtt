@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
+import 'package:mqtt_test/mqtt/MQTTConnectionWrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
@@ -15,7 +16,7 @@ import '../mqtt/state/MQTTAppState.dart';
 import '../widgets/sensor_type.dart';
 
 class UserSettings extends StatefulWidget {
-  MQTTAppState currentAppState;
+ /* MQTTAppState currentAppState;
   MQTTConnectionManager manager;
 
   UserSettings(MQTTAppState appState, MQTTConnectionManager connectionManager,
@@ -31,6 +32,8 @@ class UserSettings extends StatefulWidget {
   get connectionManager {
     return manager;
   }
+*/
+  UserSettings.base();
 
   @override
   State<UserSettings> createState() => _UserSettingsState();
@@ -176,24 +179,13 @@ class _UserSettingsState extends State<UserSettings> {
     });
   }
 
-  // this is hack to ensure method is executed only once
-  Container _clientConnectToTopic() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          //widget.manager.initializeMQTTClient();
-          countTest++;
-          debugPrint("counter: $countTest");
-          //widget.manager.connect();
-        }));
-    return Container();
-  }
-
-  Widget _connectToTopic() {
+  /* Widget _connectToTopic() {
     if (_connectMqtt == null) {
       _connectMqtt =
           _clientConnectToTopic(); //Container(); // here put whatever your function used to be.
     }
     return _connectMqtt!;
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +195,7 @@ class _UserSettingsState extends State<UserSettings> {
       appBar: AppBar(
         title: const Text(Constants.SETTINGS),
       ),
-      drawer: NavDrawer(widget.currentAppState, widget.manager),
+      //drawer: NavDrawer(widget.currentAppState, widget.manager),
 
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -438,16 +430,17 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
 // test method with dummy parameters
-  void saveMqttSettingsTest() {
+/*  void saveMqttSettingsTest() {
     debugPrint("save test: ");
+    // ToDo: MqttConnectionManager.getCurrentAppState
+    MQTTConnectionManager.getInstance();
     if (MQTTAppConnectionState.connected ==
-        widget.currentAppState.getAppConnectionState) {
+        .currentAppState.getAppConnectionState) {
 // 'set:c45bbe821261:101:hi_alarm'
       var testText = "{\"135\":{\"hi_alarm\":111}}";
       widget.manager.publish(testText);
     }
-    setState(() {});
-  }
+  } */
 
   SharedPreferences? preferences;
   Future<void> initializePreference() async{
@@ -464,14 +457,22 @@ class _UserSettingsState extends State<UserSettings> {
     var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var testText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     debugPrint("concatenated text: $testText");
-    widget.manager.publish(testText);
 
-    initializePreference().whenComplete((){
-     // setState(() {});
-      preferences?.setBool("is_mqtt_setting_saved", true);
-    });
 
-    setState(() {});
+    /*MQTTConnectionWrapper mqtt = MQTTConnectionWrapper();
+    if(mqtt.manager==null){
+      mqtt.manager.connect();
+    }
+    else {
+      mqtt.publish(testText);
+
+      initializePreference().whenComplete(() {
+        // setState(() {});
+        preferences?.setBool("is_mqtt_setting_saved", true);
+      });
+    }
+
+    setState(() {}); */
   }
 
   _setInputDecoration(val) {
@@ -485,28 +486,11 @@ class _UserSettingsState extends State<UserSettings> {
         ));
   }
 
-  Future<void> saveUserSettings() async {
-    debugPrint("Save user settings");
-
-    /** pridobivanje iz settingsov **/
-
-    // ali je mqtt state connected?
-    // kako dobimo connected state?
-    // verjetno je potrebno to dodati nekam na shared memory
-    //if (MQTTAppConnectionState.connected ==  // currentAppState.getAppConnectionState) {
-    //MQTTConnectionManager.publish("100");
-    //String t = await currentAppState.getHistoryText;
-
-    //print("****************** $t");
-
-    //this.publish('topic');
-  }
-
-  Future<void> setCurrentAppState(appState) async {
+  /*Future<void> setCurrentAppState(appState) async {
     widget.currentAppState = appState;
   }
 
   Future<void> setManager(manager) async {
     widget.manager = manager;
-  }
+  } */
 }

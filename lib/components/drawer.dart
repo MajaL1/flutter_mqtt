@@ -164,9 +164,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 ),
                                 onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (context) => UserSettings(
-                                            widget.appState,
-                                            widget.connectionManager))),
+                                        builder: (context) => UserSettings.base(
+                                            ))),
                               ),
                               const Divider(height: 10),
                               const Divider(height: 10),
