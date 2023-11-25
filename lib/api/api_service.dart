@@ -82,12 +82,14 @@ class ApiService {
         var data = jsonDecode(response.body.toString());
         debugPrint(data['token']);
         debugPrint('=====Login successfully');
-        List<UserTopic> topicList = [];
+        List<TopicData> topicList = [];
         if (data["topics"] != null) {
           topicList = getTopicList(data["topics"]);
         }
+        //UserTopic ut =
         UserTopic topic = UserTopic(id: '1', topicList: []);
-        topicList.add(topic);
+        topic.topicList = topicList;
+       // topicList.add(topic);
         User user = User(
             id: 1,
             username: 'User1',
@@ -108,23 +110,32 @@ class ApiService {
     return null;
   }
 
-  static List<UserTopic> getTopicList(Map topics) {
-    List<UserTopic> topicList = [];
+  static List<TopicData> getTopicList(Map topics) {
+    List<TopicData> topicList = [];
 
     for (var topic in topics.keys) {
       var deviceName = topic;
       String topicName = "";
       int rw = 0;
-      for (var topicVal in topic.keys) {
-        var topicName = topicVal[topic];
+      for (var topicVal in topics.values) {
+       // var topicName = topicVal[topic];
 
-        topicName = topics[topicVal];
-        debugPrint("topic: $topicName");
-        debugPrint("rw: $rw");
+        for (var topicVal1 in topicVal) {
+          //var topicName = topicVal[topic];
+          debugPrint("topicVal1: $topicVal1");
 
+          topicName = topicVal1["topic"];
+          rw = topicVal1["rw"];
+
+          debugPrint("topic: $topicName");
+          debugPrint("topic: $rw");
+
+          debugPrint("rw: $rw");
+        }
         // }
 
         TopicData topicData = TopicData(name: topicName, rw: rw);
+        topicList.add(topicData);
       }
     }
     return topicList;
