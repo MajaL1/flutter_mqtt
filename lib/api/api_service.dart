@@ -31,10 +31,10 @@ class ApiService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (preferences.containsKey("alarm_list_mqtt")) {
       String alarmListData = preferences.get("alarm_list_mqtt") as String;
-      List alarmMessageJson = json.decode(alarmListData);
-
-      alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
-
+      if (alarmListData.isNotEmpty) {
+        List alarmMessageJson = json.decode(alarmListData);
+        alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
+      }
       debugPrint("alarmList-:: $alarmList");
     }
     return alarmList;
@@ -116,7 +116,6 @@ class ApiService {
       String topicName = "";
       int rw = 0;
       for (var topicVal in topics.values) {
-
         for (var topicVal1 in topicVal) {
           debugPrint("topicVal1: $topicVal1");
 

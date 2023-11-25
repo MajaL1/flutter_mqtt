@@ -125,12 +125,13 @@ class _DetailsPageState extends State<DetailsPage> {
     String? data = preferences.get("data_mqtt").toString();
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** alarm data $data");
-    //alarm data {"135":{"typ":7,"l":0,"t":202,"b":0,"r":-73,"lb":1,"bv":384}}
-    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
-
-    List<Alarm> alarmData = Alarm.getAlarmList(jsonMap);
-    debugPrint("AlarmData from JSON: $alarmData");
-
+    //alarm data {"135":{"typ":7,"l":0,"t":202,"b":0,"r":-73,"lb":1,"bv":384}}{
+    List<Alarm> alarmData = [];
+    if(decodeMessage != null) {
+      Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+      alarmData = Alarm.getAlarmList(jsonMap);
+      debugPrint("AlarmData from JSON: $alarmData");
+    }
     //List<Data> dataList  = Data.getDataList();
     return alarmData;
   }

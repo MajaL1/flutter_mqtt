@@ -123,9 +123,9 @@ class SmartMqtt {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
-     /* preferences.remove("settings_mqtt");
+      preferences.remove("settings_mqtt");
       preferences.remove("alarm_mqtt");
-      preferences.clear(); */
+      preferences.clear();
 
       /***  polnjenje objekta - data ***/
       if (topicName!.contains("settings")) {
