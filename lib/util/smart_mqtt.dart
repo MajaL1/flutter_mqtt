@@ -123,9 +123,9 @@ class SmartMqtt {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
-      preferences.remove("settings_mqtt");
+     /* preferences.remove("settings_mqtt");
       preferences.remove("alarm_mqtt");
-      preferences.clear();
+      preferences.clear(); */
 
       /***  polnjenje objekta - data ***/
       if (topicName!.contains("settings")) {
@@ -150,17 +150,20 @@ class SmartMqtt {
         // 1. dobi listo prejsnjih alarmov
         String? alarmListOldData =
             preferences.get("alarm_list_mqtt") as String?;
-        List a1 = json.decode(alarmListOldData!);
+        List a1 = [];
+        if(alarmListOldData != null) {
+          a1 = json.decode(alarmListOldData!);
+        }
 
         // 2. dobi trenuten alarm
         Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
         currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
         // 3. doda alarm na listo starih alarmov
-        a1.addAll(currentAlarmList);
+        //a1.addAll(currentAlarmList);
         String alarmListMqtt = jsonEncode(a1);
         preferences.setString("alarm_list_mqtt", alarmListMqtt);
-        debugPrint("alarmList---: $alarmListMqtt");
+        //debugPrint("alarmList---: $alarmListMqtt");
 
         // prikaze sporocilo z alarmom
         //NotificationHelper.sendMessage(currentAlarmList.first);

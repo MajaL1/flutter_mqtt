@@ -39,7 +39,7 @@ class AlarmHistory extends StatelessWidget {
                   String sensorAddress = snapshot.data![index].sensorAddress
                       .toString()!;
                   String hiAlarm = snapshot.data![index].hiAlarm.toString()!;
-                  String loAlarm = snapshot.data![index].hiAlarm.toString()!;
+                  String loAlarm = snapshot.data![index].loAlarm.toString()!;
                   String ts = snapshot.data![index].ts.toString()!;
                   return Container(
                       decoration: const BoxDecoration(

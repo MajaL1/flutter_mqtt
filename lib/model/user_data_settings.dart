@@ -8,7 +8,7 @@ class UserDataSettings {
   int? u;
   String ? editableSetting;
 
-  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.hiAlarm, this.loAlarm, this.u, this.editableSetting});
+  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.typ, this.hiAlarm, this.loAlarm, this.u, this.editableSetting});
 
   /*String ? _editableSetting;
   String ? get editableSetting => _editableSetting;
@@ -40,6 +40,7 @@ class UserDataSettings {
         //print("value:  $value");
         if (key.isNotEmpty) {
           int t = 0;
+          int typ = 0;
           int hiAlarm = 0;
           int loAlarm = 0;
           int u = 0;
@@ -57,6 +58,9 @@ class UserDataSettings {
               if (key1 == "lo_alarm") {
                 loAlarm = value1;
               }
+              if (key1 == "typ") {
+                typ = value1;
+              }
               if (key1 == "u") {
                 u = value1;
               }
@@ -64,7 +68,7 @@ class UserDataSettings {
           }
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
           UserDataSettings userSettings = UserDataSettings(
-              sensorAddress: key, t: t, hiAlarm: hiAlarm, loAlarm: loAlarm, u: u);
+              sensorAddress: key, t: t, typ: typ, hiAlarm: hiAlarm, loAlarm: loAlarm, u: u);
           userSettingsList.add(userSettings);
         }
       }
