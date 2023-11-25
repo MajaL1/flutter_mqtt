@@ -5,7 +5,7 @@ import 'login_form.dart';
 
 class FirstScreen extends StatefulWidget {
 
-  FirstScreen.base();
+  FirstScreen.base({Key? key}) : super(key: key);
 
   var username = SharedPrefs().username;
   var token = SharedPrefs().token;

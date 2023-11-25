@@ -1,31 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/model/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../model/alarm.dart';
 import '../model/constants.dart';
-import '../model/user_data_settings.dart';
-import '../mqtt/MQTTConnectionManager.dart';
-import '../mqtt/state/MQTTAppState.dart';
 
 class DetailsPage extends StatefulWidget {
-  MQTTAppState currentAppState;
-  MQTTConnectionManager manager;
-
-  DetailsPage(MQTTAppState appState, MQTTConnectionManager connectionManager,
-      {Key? key})
-      : currentAppState = appState,
-        manager = connectionManager,
-        super(key: key);
-
-  get appState {
-    return currentAppState;
-  }
-
-  get connectionManager {
-    return manager;
-  }
+  const DetailsPage.base({Key? key}) : super(key: key);
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
@@ -52,12 +34,11 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Widget _buildDetailsView() {
-
     return FutureBuilder<List<Alarm>>(
       future: getAlarmData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<Alarm>? alarmList = snapshot.data;
+          //List<Alarm>? alarmList = snapshot.data;
           return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -138,6 +119,7 @@ class _DetailsPageState extends State<DetailsPage> {
       },
     );
   }
+
   Future<List<Alarm>> getAlarmData() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("data_mqtt").toString();
@@ -146,8 +128,7 @@ class _DetailsPageState extends State<DetailsPage> {
     //alarm data {"135":{"typ":7,"l":0,"t":202,"b":0,"r":-73,"lb":1,"bv":384}}
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-    List<Alarm> alarmData =
-    Alarm.getAlarmList(jsonMap);
+    List<Alarm> alarmData = Alarm.getAlarmList(jsonMap);
     debugPrint("AlarmData from JSON: $alarmData");
 
     //List<Data> dataList  = Data.getDataList();

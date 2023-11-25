@@ -11,29 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
 import '../model/constants.dart';
-import '../mqtt/MQTTConnectionManager.dart';
-import '../mqtt/state/MQTTAppState.dart';
 import '../widgets/sensor_type.dart';
 
 class UserSettings extends StatefulWidget {
- /* MQTTAppState currentAppState;
-  MQTTConnectionManager manager;
 
-  UserSettings(MQTTAppState appState, MQTTConnectionManager connectionManager,
-      {Key? key})
-      : currentAppState = appState,
-        manager = connectionManager,
-        super(key: key);
-
-  get appState {
-    return currentAppState;
-  }
-
-  get connectionManager {
-    return manager;
-  }
-*/
-  UserSettings.base();
+  const UserSettings.base({Key? key}) : super(key: key);
 
   @override
   State<UserSettings> createState() => _UserSettingsState();
@@ -195,8 +177,7 @@ class _UserSettingsState extends State<UserSettings> {
       appBar: AppBar(
         title: const Text(Constants.SETTINGS),
       ),
-      //drawer: NavDrawer(widget.currentAppState, widget.manager),
-
+      drawer: const NavDrawer.base(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         padding: const EdgeInsets.only(top: 30, bottom: 20),

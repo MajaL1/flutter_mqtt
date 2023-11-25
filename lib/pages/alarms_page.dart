@@ -1,31 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import '../model/alarm.dart';
+
 import '../model/constants.dart';
 import '../model/user_data_settings.dart';
-import '../mqtt/MQTTConnectionManager.dart';
-import '../mqtt/state/MQTTAppState.dart';
 
 class AlarmsPage extends StatefulWidget {
-  MQTTAppState currentAppState;
-  MQTTConnectionManager manager;
-
-  AlarmsPage(MQTTAppState appState, MQTTConnectionManager connectionManager,
-      {Key? key})
-      : currentAppState = appState,
-        manager = connectionManager,
-        super(key: key);
-
-  get appState {
-    return currentAppState;
-  }
-
-  get connectionManager {
-    return manager;
-  }
+  const AlarmsPage.base({Key? key}) : super(key: key);
 
   @override
   State<AlarmsPage> createState() => _AlarmsPageState();
@@ -52,7 +34,6 @@ class _AlarmsPageState extends State<AlarmsPage> {
   }
 
   Widget _buildAlarmsView() {
-
     return FutureBuilder<List<UserDataSettings>>(
       future: getAlarmData(),
       builder: (context, snapshot) {
@@ -107,6 +88,7 @@ class _AlarmsPageState extends State<AlarmsPage> {
       },
     );
   }
+
   Future<List<UserDataSettings>> getAlarmData() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("alarm_mqtt").toString();
@@ -114,12 +96,11 @@ class _AlarmsPageState extends State<AlarmsPage> {
     debugPrint("****************** user settings data $data");
 
     List<UserDataSettings> userDataSettings = [];
-    if(data != "null") {
+    if (data != "null") {
       Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
       // vrne Listo UserSettingsov iz mqtt 'sensorId/alarm'
-      userDataSettings =
-      UserDataSettings.getUserDataSettings(jsonMap);
+      userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
     }
 
     return userDataSettings;

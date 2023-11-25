@@ -19,7 +19,7 @@ class ApiService {
 
   static Future<List<Alarm>> getAlarms() async {
     var data = await rootBundle.loadString("assets/alarms.json");
-    final jsonResult = jsonDecode(data);
+    //final jsonResult = jsonDecode(data);
     //debugPrint("jsonResult from file: $jsonResult");
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 
@@ -116,10 +116,8 @@ class ApiService {
       String topicName = "";
       int rw = 0;
       for (var topicVal in topics.values) {
-        // var topicName = topicVal[topic];
 
         for (var topicVal1 in topicVal) {
-          //var topicName = topicVal[topic];
           debugPrint("topicVal1: $topicVal1");
 
           topicName = topicVal1["topic"];
@@ -135,7 +133,6 @@ class ApiService {
       }
     }
     topic.topicList = topicList;
-
     return topic;
   }
 
