@@ -23,7 +23,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> map) {
     Map topicsJson;
     topicsJson = map['topics']; // as List;
-    UserTopic userTopic = UserTopic(id: "", topicList: []);
+    UserTopic userTopic = UserTopic(sensorName: "", topicList: []);
     for (final key in topicsJson.keys) {
       //print("==== ${key}, ${topicsJson[key]}");
       List topicData1 = topicsJson[key];
@@ -35,7 +35,7 @@ class User {
         TopicData topicData = TopicData(name: topic['topic'], rw: topic['rw']);
         topicDataList.add(topicData);
       }
-      userTopic = UserTopic(id: key, topicList: topicDataList);
+      userTopic = UserTopic(sensorName: key, topicList: topicDataList);
     }
 
     return User(

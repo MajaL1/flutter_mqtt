@@ -17,11 +17,11 @@ class MqttConnectUtil {
     sharedPreferences.setString("mqtt_pass", user.mqtt_pass);
   }
 
-  static List<String> getBrokerAddressList(User user){
+  static List<String> getBrokerAddressList(User user) {
     List<String> brokerAddressList = [];
     var topicForUser = user.topic.topicList;
-    debugPrint("user.topic.id : ${user.topic.id}");
-    String deviceName = user.topic.id;
+    debugPrint("user.topic.sensorName : ${user.topic.sensorName}");
+    String deviceName = user.topic.sensorName;
     debugPrint("deviceName : $deviceName");
 
     for (var topic in topicForUser) {

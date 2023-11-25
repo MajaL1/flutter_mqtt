@@ -82,24 +82,20 @@ class ApiService {
         var data = jsonDecode(response.body.toString());
         debugPrint(data['token']);
         debugPrint('=====Login successfully');
-        List<TopicData> topicList = [];
+        UserTopic userTopic;
         if (data["topics"] != null) {
-          topicList = getTopicList(data["topics"]);
-        }
-        //UserTopic ut =
-        UserTopic topic = UserTopic(id: '1', topicList: []);
-        topic.topicList = topicList;
-       // topicList.add(topic);
-        User user = User(
-            id: 1,
-            username: 'User1',
-            date_login: DateTime.now(),
-            date_register: DateTime.now(),
-            email: 'test@test.com',
-            mqtt_pass: '12345',
-            topic: topic);
+          userTopic = getUserTopic(data["topics"]);
 
-        return user;
+          User user = User(
+              id: 1,
+              username: 'User1',
+              date_login: DateTime.now(),
+              date_register: DateTime.now(),
+              email: 'test@test.com',
+              mqtt_pass: '12345',
+              topic: userTopic);
+          return user;
+        }
       } else {
         debugPrint('=====Login failed');
         return null;
@@ -110,15 +106,17 @@ class ApiService {
     return null;
   }
 
-  static List<TopicData> getTopicList(Map topics) {
+  static UserTopic getUserTopic(Map topics) {
     List<TopicData> topicList = [];
+    UserTopic topic = UserTopic(sensorName: '1', topicList: []);
 
-    for (var topic in topics.keys) {
-      var deviceName = topic;
+    for (var devices in topics.keys) {
+      var deviceName = devices;
+      topic.sensorName = deviceName;
       String topicName = "";
       int rw = 0;
       for (var topicVal in topics.values) {
-       // var topicName = topicVal[topic];
+        // var topicName = topicVal[topic];
 
         for (var topicVal1 in topicVal) {
           //var topicName = topicVal[topic];
@@ -131,14 +129,14 @@ class ApiService {
           debugPrint("topic: $rw");
 
           debugPrint("rw: $rw");
+          TopicData topicData = TopicData(name: topicName, rw: rw);
+          topicList.add(topicData);
         }
-        // }
-
-        TopicData topicData = TopicData(name: topicName, rw: rw);
-        topicList.add(topicData);
       }
     }
-    return topicList;
+    topic.topicList = topicList;
+
+    return topic;
   }
 
 /* Future<Map<String, dynamic>> register(String email, String password, String passwordConfirmation) async {
