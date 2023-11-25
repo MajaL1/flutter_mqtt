@@ -35,7 +35,7 @@ class LoginForm extends StatefulWidget {
     return manager;
   } */
 
-  //LoginForm.base();
+  LoginForm.base();
 
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
@@ -47,13 +47,6 @@ class _LoginFormValidationState extends State<LoginForm> {
   final emailController = TextEditingController(text: "test");
   final passwordController = TextEditingController(text: "Test1234");
 
-  getLoggedInState() async {
-    /*await Helper.getUserLoggedInSharedPreference().then((value) {
-      setState(() {
-        userIsLoggedIn = value!;
-      });
-    }); */
-  }
 
   @override
   initState() {
@@ -64,16 +57,6 @@ class _LoginFormValidationState extends State<LoginForm> {
     print("-- loginform initstate");
   }
 
-  /*_initCurrentAppState() async {
-    Timer(
-        const Duration(seconds: 2),
-        () => {
-              setCurrentAppState(widget.currentAppState),
-              setManager(widget.manager),
-              debugPrint("[[[ currentAppState: $widget.currentAppState ]]]")
-            });
-    //return widget.currentAppState;
-  } */
 
   Future<bool> hasNetwork() async {
     try {
@@ -93,27 +76,22 @@ class _LoginFormValidationState extends State<LoginForm> {
     //check email and password
     if (formkey.currentState!.validate()) {
       // todo: odkomentiraj login
+
        User? user = await ApiService.login(username, password);
-        debugPrint("loginForm, user: $user.username, $user.password, $user.topic");
-      if(user != null) {
-        //********************** Todo, pozeni connection iz SmartMqtt.
-        // Preberi topice in se skonektaj na Mqtt
-        //SmartMqtt smartMqtt = SmartMqtt().init() as SmartMqtt;
-        SmartMqtt mqtt = SmartMqtt(host: "test", port: 1, ip: "test", topic1: "/settings", topic2: "/alarm", topic3: "/data");
-        //SharedPrefs p = SharedPrefs().init() as SharedPrefs;
+       if(user != null) {
+         debugPrint(
+           "loginForm, user: $user.username, $user.password, $user.topic");
 
-
-        mqtt.initializeMQTTClient();
-        mqtt.connect();
+         SmartMqtt().initializeMQTTClient();
+       }
         //*********************************************/
-        Navigator.push(
+        /*Navigator.push(
             context,
             MaterialPageRoute(
-//              builder: (_) => MQTTView(widget.currentAppState, widget.manager)));
                 builder: (_) => UserSettings.base()));
-
+*/
         debugPrint("Validated");
-      }
+      //}
     }
   }
 

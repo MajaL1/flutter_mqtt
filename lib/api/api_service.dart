@@ -82,6 +82,9 @@ class ApiService {
         debugPrint(data['token']);
         debugPrint('=====Login successfully');
         List<UserTopic> topicList = [];
+        if(data["topics"] != null) {
+          topicList = getTopicList(data["topics"]);
+        }
         UserTopic topic = UserTopic(id: '1', topicList: []);
         topicList.add(topic);
         User user = User(
@@ -103,7 +106,22 @@ class ApiService {
     }
     return null;
   }
+  static List<UserTopic> getTopicList(Map topics){
+    List<UserTopic> topicList = [];
 
+    for(var topic in topics.keys) {
+      String deviceName = topic;
+
+
+    var listT = topics[deviceName];
+      for (var topicVal in listT) {
+        String topicName = topicVal;
+        debugPrint("topic: $topicVal");
+      }
+    }
+    return topicList;
+  }
+  List<UserTopic> topicList = [];
 /* Future<Map<String, dynamic>> register(String email, String password, String passwordConfirmation) async {
 
     final Map<String, dynamic> registrationData = {

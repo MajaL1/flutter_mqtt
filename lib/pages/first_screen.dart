@@ -1,21 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mqtt_test/mqtt/MQTTConnectionManager.dart';
 import 'package:mqtt_test/util/app_preference_util.dart';
-import 'package:mqtt_test/pages/user_settings.dart';
-import 'package:mqtt_test/widgets/mqttView.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../components/drawer.dart';
-import '../model/user.dart';
-import '../mqtt/state/MQTTAppState.dart';
-import '../util/mqtt_connect_util.dart';
+
 import 'login_form.dart';
-import 'alarm_history.dart';
 
 class FirstScreen extends StatefulWidget {
   /*MQTTConnectionManager manager;
@@ -68,30 +54,21 @@ class _FirstScreenState extends State<FirstScreen> {
     debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
 
     return Scaffold(
-      //  drawer: NavDrawer(widget.currentAppState, widget.manager),
+        //  drawer: NavDrawer(widget.currentAppState, widget.manager),
         body: FutureBuilder(
-            future: _initCurrentAppState(),
+            //future: _initCurrentAppState(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                if (snapshot.hasError) {
-                  return ErrorWidget(Exception(
-                      'Error occured when fetching data from database $snapshot.error'));
-                } else if (!snapshot.hasData) {
-                  debugPrint(
-                      "first screen: snapshot:: $snapshot, $widget.currentAppState. ${widget.manager}");
-                  return LoginForm.base();
-                }
-                  return Scaffold(
-                     // drawer: NavDrawer(widget.currentAppState, widget.manager),
-                      // TODO: preveri, ali je uporabnik logiran
-                      // body: !userLoggedIn ?? LoginForm(widget.currentAppState, widget.manager)) : UserSettings(widget.currentAppState, widget.manager);
-                      body: LoginForm.base());
-                }
-              }
-            ));
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return Scaffold(
+            // drawer: NavDrawer(widget.currentAppState, widget.manager),
+            // TODO: preveri, ali je uporabnik logiran
+            // body: !userLoggedIn ?? LoginForm(widget.currentAppState, widget.manager)) : UserSettings(widget.currentAppState, widget.manager);
+            body: LoginForm.base());
+      }
+    }));
   }
 }

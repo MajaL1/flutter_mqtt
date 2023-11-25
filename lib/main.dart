@@ -28,7 +28,6 @@ Future<void> main() async {
   runApp(
     const NotificationsApp(),
   );
-  //ApiService.login("test", "Test1234");
 }
 
 
@@ -53,7 +52,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
   void initState() {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
     initAlarmHistoryList();
-    NotificationHelper.initializeService();
+    //NotificationHelper.initializeService();
     super.initState();
   }
 
@@ -91,9 +90,9 @@ class _NotificationsAppState extends State<NotificationsApp> {
           ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
         ],
         builder: (context, child) => Builder(builder: (context) {
-              final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
+            //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
               debugPrint("build main.dart");
-                setCurrentAppState(appState);
+                //setCurrentAppState(appState);
                   return MaterialApp(
                   home: FutureBuilder(
                       //future: initializeConnection(appState),
