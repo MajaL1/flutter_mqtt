@@ -9,6 +9,7 @@ import 'package:mqtt_test/model/user_topic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/alarm.dart';
+import '../model/topic_data.dart';
 import '../model/user.dart';
 
 //import 'package:mqtt_test/assets/alarms.json' show rootBundle;
@@ -82,7 +83,7 @@ class ApiService {
         debugPrint(data['token']);
         debugPrint('=====Login successfully');
         List<UserTopic> topicList = [];
-        if(data["topics"] != null) {
+        if (data["topics"] != null) {
           topicList = getTopicList(data["topics"]);
         }
         UserTopic topic = UserTopic(id: '1', topicList: []);
@@ -106,22 +107,29 @@ class ApiService {
     }
     return null;
   }
-  static List<UserTopic> getTopicList(Map topics){
+
+  static List<UserTopic> getTopicList(Map topics) {
     List<UserTopic> topicList = [];
 
-    for(var topic in topics.keys) {
-      String deviceName = topic;
+    for (var topic in topics.keys) {
+      var deviceName = topic;
+      String topicName = "";
+      int rw = 0;
+      for (var topicVal in topic.keys) {
+        var topicName = topicVal[topic];
 
+        topicName = topics[topicVal];
+        debugPrint("topic: $topicName");
+        debugPrint("rw: $rw");
 
-    var listT = topics[deviceName];
-      for (var topicVal in listT) {
-        String topicName = topicVal;
-        debugPrint("topic: $topicVal");
+        // }
+
+        TopicData topicData = TopicData(name: topicName, rw: rw);
       }
     }
     return topicList;
   }
-  List<UserTopic> topicList = [];
+
 /* Future<Map<String, dynamic>> register(String email, String password, String passwordConfirmation) async {
 
     final Map<String, dynamic> registrationData = {
