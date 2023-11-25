@@ -437,9 +437,10 @@ class _UserSettingsState extends State<UserSettings> {
         "saveMqttSettings: $controller.text, $sensorName, $settingToChange");
     debugPrint("::: sensorName, paramName, paramValue  $sensorName ");
     var testText1 = "{\"135\":{\"hi_alarm\":111}}";
-    var testText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
-    debugPrint("concatenated text: $testText");
-//SmartMqtt mqtt =
+    var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
+    debugPrint("concatenated text: $publishText");
+
+    SmartMqtt.instance.publish(publishText);
   //  mqtt.publish(testText);
     /*MQTTConnectionWrapper mqtt = MQTTConnectionWrapper();
     if(mqtt.manager==null){

@@ -31,6 +31,9 @@ class SmartMqtt {
 
   SmartMqtt._internal();
 
+  static SmartMqtt get instance => _instance;
+
+
   factory SmartMqtt(
       {required String host,
       required int port,
