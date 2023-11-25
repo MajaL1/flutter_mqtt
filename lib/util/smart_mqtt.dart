@@ -116,7 +116,14 @@ class SmartMqtt {
 
       String? topicName = recMess.variableHeader?.topicName;
 
+
+
       SharedPreferences preferences = await SharedPreferences.getInstance();
+
+     /* preferences.remove("settings_mqtt");
+      preferences.remove("alarm_mqtt");
+      preferences.clear(); */
+
       /***  polnjenje objekta - data ***/
       if (topicName!.contains("settings")) {
         debugPrint("___________________________________________________");
@@ -149,7 +156,6 @@ class SmartMqtt {
         // 3. doda alarm na listo starih alarmov
         a1.addAll(currentAlarmList);
         String alarmListMqtt = jsonEncode(a1);
-
         preferences.setString("alarm_list_mqtt", alarmListMqtt);
         debugPrint("alarmList---: $alarmListMqtt");
 
@@ -174,6 +180,7 @@ class SmartMqtt {
     client = MqttServerClient(host, identifier, maxConnectionAttempts: 10);
     client.port = 1883;
     client.keepAlivePeriod = 20;
+    client.autoReconnect = true;
     client.onDisconnected = onDisconnected;
     client.secure = false;
     client.logging(on: true);
@@ -183,7 +190,7 @@ class SmartMqtt {
     client.pongCallback = pong;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
-        //.authenticateAs(username, mqttPass)
+        .authenticateAs(username, mqttPass)
         .withClientIdentifier(_identifier)
         .withWillTopic('willtopic')
         .withWillMessage('My Will message')

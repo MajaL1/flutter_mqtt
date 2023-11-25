@@ -88,11 +88,11 @@ class ApiService {
 
           User user = User(
               id: 1,
-              username: 'User1',
+              username: data["username"],
               date_login: DateTime.now(),
               date_register: DateTime.now(),
               email: 'test@test.com',
-              mqtt_pass: '12345',
+              mqtt_pass: data["mqtt_pass"],
               topic: userTopic);
           return user;
         }

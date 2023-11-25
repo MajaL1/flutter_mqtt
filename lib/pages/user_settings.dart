@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/mqtt/MQTTConnectionWrapper.dart';
+import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
@@ -438,8 +439,8 @@ class _UserSettingsState extends State<UserSettings> {
     var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var testText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     debugPrint("concatenated text: $testText");
-
-
+//SmartMqtt mqtt =
+  //  mqtt.publish(testText);
     /*MQTTConnectionWrapper mqtt = MQTTConnectionWrapper();
     if(mqtt.manager==null){
       mqtt.manager.connect();
