@@ -13,33 +13,18 @@ import '../model/user.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
-  /* MQTTConnectionManager manager;
-  MQTTAppState currentAppState;
+  const LoginForm.base({Key? key}) : super(key: key);
 
-  LoginForm(MQTTAppState appState, MQTTConnectionManager connectionManager,
-      {Key? key})
-      : currentAppState = appState,
-        manager = connectionManager,
-        super(key: key);
-
-  get appState {
-    return currentAppState;
-  }
-
-  get connectionManager {
-    return manager;
-  } */
-
-  const LoginForm.base();
 
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
 }
 
 class _LoginFormValidationState extends State<LoginForm> {
+  bool loginError = false;
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController(text: "test");
+  final emailController = TextEditingController(text: "tes");
   final passwordController = TextEditingController(text: "Test1234");
 
   @override
@@ -91,7 +76,9 @@ class _LoginFormValidationState extends State<LoginForm> {
                 builder: (_) => UserSettings.base()));
 
       debugPrint("Validated");
-      //}
+    }
+    else {
+      loginError = true;
     }
   }
 
@@ -245,13 +232,19 @@ class _LoginFormValidationState extends State<LoginForm> {
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 15, bottom: 0),
                           child: TextButton(
-                            onPressed: () {
-                              // login();
-                            },
+                            onPressed: () {  },
                             child: InkWell(
                                 child: const Text(Constants.CREATE_ACCOUNT),
                                 onTap: () => launchUrl(Constants.REGISTER_URL)),
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 15.0, right: 15.0, top: 15, bottom: 0),
+                          child: loginError == true ? const Text(
+                            "Incorrect username or password",
+                          style: TextStyle(color: Colors.redAccent),
+                          ) : const Text (""),
                         ),
                       ],
                     ),

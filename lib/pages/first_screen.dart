@@ -7,8 +7,8 @@ class FirstScreen extends StatefulWidget {
 
   FirstScreen.base({Key? key}) : super(key: key);
 
-  var username = SharedPrefs().username;
-  var token = SharedPrefs().token;
+  final String username = SharedPrefs().username;
+  final String token = SharedPrefs().token;
 
   @override
   State<StatefulWidget> createState() => _FirstScreenState();
@@ -24,7 +24,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token == null}");
+    debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token}");
 
     return Scaffold(
         body: FutureBuilder(
@@ -35,7 +35,7 @@ class _FirstScreenState extends State<FirstScreen> {
           child: CircularProgressIndicator(),
         );
       } else {
-        return Scaffold(
+        return const Scaffold(
             // TODO: preveri, ali je uporabnik logiran
             // body: !userLoggedIn ?? LoginForm(widget.currentAppState, widget.manager)) : UserSettings(widget.currentAppState, widget.manager);
             body: LoginForm.base());

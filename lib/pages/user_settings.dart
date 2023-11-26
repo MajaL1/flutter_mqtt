@@ -6,7 +6,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
-import 'package:mqtt_test/mqtt/MQTTConnectionWrapper.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +14,6 @@ import '../model/constants.dart';
 import '../widgets/sensor_type.dart';
 
 class UserSettings extends StatefulWidget {
-
   const UserSettings.base({Key? key}) : super(key: key);
 
   @override
@@ -55,13 +53,12 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
         _mergeNewUserSettingsWithOld(oldUserDataSettings, newUserDataSettings);
 
     preferences.setBool("is_mqtt_setting_saved", false);
-
   } else {
     userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
   }
   // vrne Listo UserSettingsov iz mqtt 'sensorId/settings'
 
-  String ? deviceName = preferences.getString("settings_mqtt_device_name");
+  String? deviceName = preferences.getString("settings_mqtt_device_name");
   userDataSettings[0].deviceName = deviceName;
 
   return userDataSettings;
@@ -72,7 +69,7 @@ List<UserDataSettings> _mergeNewUserSettingsWithOld(
     List<UserDataSettings> oldSettings, List<UserDataSettings> newSettings) {
   //List<UserDataSettings> mergedUserDataSettings = [];
 
-  for(UserDataSettings newSetting in newSettings) {
+  for (UserDataSettings newSetting in newSettings) {
     if (newSetting.hiAlarm != null) {
       for (UserDataSettings oldSetting in oldSettings) {
         if (newSetting.hiAlarm != null &&
@@ -97,27 +94,26 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     // Todo: ce ne prikazujemo tipov za veter
     // tipa WS in WSD imata samo hi_alarm
 
-      String sensorType = SensorTypeConstants.getSensorType(setting.typ);
-      if(sensorType == SensorTypeConstants.WS || sensorType == SensorTypeConstants.WSD) {
-        //nameof((setting)))) {
-        debugPrint("SensorType = WS");
-      }
+    String sensorType = SensorTypeConstants.getSensorType(setting.typ);
 
-    // pridobi device json
-    //if(setting.equals(Constants.HI_ALARM)){} // if ne prikazi tipa za veter, prikazi samo hiAlarm in loAlarm
-
+    // Hi alarm prikazi za vse senzorje
     dataSettingsListNew.add(UserDataSettings(
         sensorAddress: setting.sensorAddress,
         hiAlarm: setting.hiAlarm,
         u: setting.u,
         editableSetting: Constants.HI_ALARM_JSON));
 
-    // if(){} // prikazi za loAlarm
-    dataSettingsListNew.add(UserDataSettings(
-        sensorAddress: setting.sensorAddress,
-        loAlarm: setting.loAlarm,
-        u: setting.u,
-        editableSetting: Constants.LO_ALARM_JSON));
+    // ce ni nobeden od tipov WS ali WSD -> lo alarm  prikazi samo za WS ali WSD
+    if (!(sensorType == SensorTypeConstants.WS ||
+        sensorType == SensorTypeConstants.WSD)) {
+      dataSettingsListNew.add(UserDataSettings(
+          sensorAddress: setting.sensorAddress,
+          loAlarm: setting.loAlarm,
+          u: setting.u,
+          editableSetting: Constants.LO_ALARM_JSON));
+      debugPrint("SensorType = WS");
+    }
+
     dataSettingsListNew.add(UserDataSettings(
         sensorAddress: setting.sensorAddress,
         u: setting.u,
@@ -425,7 +421,8 @@ class _UserSettingsState extends State<UserSettings> {
   } */
 
   SharedPreferences? preferences;
-  Future<void> initializePreference() async{
+
+  Future<void> initializePreference() async {
     preferences = await SharedPreferences.getInstance();
   }
 
@@ -441,7 +438,7 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("concatenated text: $publishText");
 
     SmartMqtt.instance.publish(publishText);
-  //  mqtt.publish(testText);
+    //  mqtt.publish(testText);
     /*MQTTConnectionWrapper mqtt = MQTTConnectionWrapper();
     if(mqtt.manager==null){
       mqtt.manager.connect();
@@ -469,7 +466,7 @@ class _UserSettingsState extends State<UserSettings> {
         ));
   }
 
-  /*Future<void> setCurrentAppState(appState) async {
+/*Future<void> setCurrentAppState(appState) async {
     widget.currentAppState = appState;
   }
 
