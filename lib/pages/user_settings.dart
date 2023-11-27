@@ -402,6 +402,17 @@ class _UserSettingsState extends State<UserSettings> {
               ),
             ),
           ),
+          Container(
+             child: ChangeNotifierProvider.value(
+                  value: SmartMqtt(),
+                  child: Consumer<SmartMqtt>(
+                    builder: (context, singleton, child) {
+                      return Text(
+                        '${singleton.isSaved}',
+                      );
+                    },
+                  ),
+          )
         ],
       ),
     );
