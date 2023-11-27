@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
@@ -150,7 +151,7 @@ class _UserSettingsState extends State<UserSettings> {
     // skonekta se na managerja
     //widget.manager.initializeMQTTClient();
     //widget.manager.connect();
-    print("WidgetsBinding");
+    debugPrint("WidgetsBinding");
     //});
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // widget.manager.disconnect();
@@ -168,6 +169,8 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
+
+    debugPrint("[[[[isSaved ${SmartMqtt.instance.isSaved.toString()}]]]]");
     return Scaffold(
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
@@ -372,7 +375,7 @@ class _UserSettingsState extends State<UserSettings> {
                   controller: controller,
                   onChanged: (text) {
                     debugPrint("onChanged $text");
-                    text = value!;
+                    text = value;
                   },
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
@@ -403,16 +406,12 @@ class _UserSettingsState extends State<UserSettings> {
             ),
           ),
           Container(
-             child: ChangeNotifierProvider.value(
-                  value: SmartMqtt(),
-                  child: Consumer<SmartMqtt>(
-                    builder: (context, singleton, child) {
-                      return Text(
-                        '${singleton.isSaved}',
-                      );
-                    },
-                  ),
-          )
+              child: ChangeNotifierProvider.value(
+                  value: SmartMqtt.instance,
+                  child:
+                      Consumer<SmartMqtt>(builder: (context, singleton, child) {
+                    return Text(singleton.isSaved.toString());
+                  }))),
         ],
       ),
     );
@@ -476,12 +475,4 @@ class _UserSettingsState extends State<UserSettings> {
           borderSide: BorderSide(color: Colors.grey, width: 1.0),
         ));
   }
-
-/*Future<void> setCurrentAppState(appState) async {
-    widget.currentAppState = appState;
-  }
-
-  Future<void> setManager(manager) async {
-    widget.manager = manager;
-  } */
 }

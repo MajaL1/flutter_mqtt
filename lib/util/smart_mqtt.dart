@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/alarm.dart';
 import '../mqtt/state/MQTTAppState.dart';
 
-class SmartMqtt extend ChangeNotifier {
+class SmartMqtt extends ChangeNotifier {
   late String host;
   late int port;
 
@@ -49,6 +49,10 @@ class SmartMqtt extend ChangeNotifier {
   }
 
   bool debug = true;
+  late bool isSaved;
+
+  //String get isSaved => null;
+
 
   void disconnect() {
     print('Disconnected');
@@ -153,7 +157,7 @@ class SmartMqtt extend ChangeNotifier {
             preferences.get("alarm_list_mqtt") as String?;
         List a1 = [];
         if(alarmListOldData != null) {
-          a1 = json.decode(alarmListOldData!);
+          a1 = json.decode(alarmListOldData);
         }
 
         // 2. dobi trenuten alarm
