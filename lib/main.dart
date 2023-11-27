@@ -7,14 +7,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_test/util/mqtt_connect_util.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-<<<<<<< Updated upstream
 import 'api/notification_helper.dart';
 import 'model/alarm.dart';
 import 'model/user.dart';
-=======
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-import 'model/notification_message.dart';
->>>>>>> Stashed changes
 import 'mqtt/MQTTConnectionManager.dart';
 import 'mqtt/state/MQTTAppState.dart';
 import 'util/app_preference_util.dart';
@@ -190,18 +185,8 @@ class _NotificationsAppState extends State<NotificationsApp> {
       debugPrint("****************** $t");
     }
 
-<<<<<<< Updated upstream
    /* SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("settings_mqtt").toString();
-=======
-class NotificationsApp extends StatefulWidget {
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-
-   const NotificationsApp({Key? key}) : super(key: key);
-
-
->>>>>>> Stashed changes
 
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** data $data");
@@ -214,44 +199,11 @@ class NotificationsApp extends StatefulWidget {
 
     // debugPrint("UserSettings from JSON: $userSettings");
 
-<<<<<<< Updated upstream
     // napolnimo nov object UserSettings
     // pridobivanje sporocil
     //ce je povezava connected, potem iniciramo zahtevo za pridobivanje alarmov
     //if(MQTTAppConnectionState.connected == true){
     //this.publish('topic');
     //}
-=======
-  @override
-  Widget build(BuildContext context) {
-    //SharedPreferences.getInstance().then((prefValue) => debugPrint(this));
-    String channelKey = "alerts1Main";
-    String channelName = "Alerts1Main";
-    String channelDescription = "Notification tests as alerts1Main";
-    late MQTTAppState currentAppState;
-    late MQTTConnectionManager manager = ;
-
-    // NotificationController.initializeLocalNotifications(
-    //    channelKey, channelDescription, channelName);
-    // SharedPreferences prefs =  getPrefs() ;
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: '/',
-        routes: <String, WidgetBuilder>{
-          '/login': (context) =>  LoginForm(currentAppState, manager),
-          '/user_settings': (context) => const UserSettings(currentAppState, manager),
-          '/history': (context) => const AlarmHistory(),
-          '/current_alarms': (context) => MQTTView(),
-          '/test_notifications1': (context) => TestNotifications1(),
-          // '/test_notifications': (context) => TestNotifications(),
-        },
-        // navigatorKey: super.navigatorKey,
-        // home: LoginForm(), //
-
-        home: FirstScreen());
->>>>>>> Stashed changes
   }
 }
