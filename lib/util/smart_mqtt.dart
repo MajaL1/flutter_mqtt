@@ -65,6 +65,7 @@ class SmartMqtt extend ChangeNotifier {
       }
     }
     client.publishMessage(currentTopic, MqttQos.exactlyOnce, builder.payload!);
+    notifyListeners();
   }
 
   /// PING response received
