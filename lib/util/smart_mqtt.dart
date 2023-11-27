@@ -49,7 +49,7 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   bool debug = true;
-  late bool isSaved;
+  late bool isSaved = false;
 
   //String get isSaved => null;
 
@@ -69,6 +69,7 @@ class SmartMqtt extends ChangeNotifier {
       }
     }
     client.publishMessage(currentTopic, MqttQos.exactlyOnce, builder.payload!);
+    isSaved = true;
     notifyListeners();
   }
 

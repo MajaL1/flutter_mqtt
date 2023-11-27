@@ -143,6 +143,7 @@ class _UserSettingsState extends State<UserSettings> {
   @override
   void initState() {
     super.initState();
+    SmartMqtt.instance.isSaved = false;
     debugPrint("user_settings initState");
     //_connectToTopic();
     //WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -169,7 +170,6 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-
     debugPrint("[[[[isSaved ${SmartMqtt.instance.isSaved.toString()}]]]]");
     return Scaffold(
       //padding: const EdgeInsets.all(12),

@@ -24,7 +24,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController(text: "tes");
+  final emailController = TextEditingController(text: "test");
   final passwordController = TextEditingController(text: "Test1234");
 
   @override
