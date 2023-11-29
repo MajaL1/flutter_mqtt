@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/api/api_service.dart';
-import '../components/drawer.dart';
+import 'package:flutter/services.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+
 import '../model/alarm.dart';
 import '../model/constants.dart';
 
@@ -19,21 +20,70 @@ class AlarmHistory extends StatelessWidget {
     return alarmList;
   }
 
+  _setInputDecoration(val) {
+    return InputDecoration(
+        labelText: val,
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 3.0),
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Alarm>>(
-        future: ApiService.getAlarmsHistory().then(
-                (alarmHistoryList) =>
-                    _returnAlarmList(alarmHistoryList)),
-        builder: (context, snapshot)
-    {
-      if (snapshot.hasData) {
-        return Scaffold(
-            appBar: AppBar(
-              title: const Text(Constants.HISTORY),
-            ),
-            //drawer: NavDrawer(),
-            body: ListView.builder(
+    TextEditingController testController = TextEditingController();
+
+    return Scaffold(
+        body: SingleChildScrollView(
+            //alignment: Alignment.bottomCenter,
+            child:
+            SizedBox(
+        child:
+            Column(children: [
+              const Padding(padding: EdgeInsets.all(30.0)),
+              TextFormField(
+                  decoration: _setInputDecoration("10"),
+                  //decoration: const InputDecoration(labelText: "Context"),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: testController,
+                  onChanged: (val) {
+                    //text = "abc";
+                  },
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: "Required value"),
+                    MaxLengthValidator(6, errorText: "Value too long")
+                  ])),
+              TextButton(style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.green) ),
+                onPressed: () {
+                  saveMqttSettings();
+                  // setState(() {
+                  //  savePressed = !savePressed;
+                  //});
+                  //saveMqttSettingsTest();
+                },
+                child: const Text(
+                  Constants.SAVE_DEVICE_SETTINGS,
+                  style: TextStyle(color: Colors.black, fontSize: 12),
+                ),
+              ),
+            ])
+            )
+            //return FutureBuilder<List<Alarm>>(
+            /*future: ApiService.getAlarmsHistory()
+          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text(Constants.HISTORY),
+              ),
+              body:
+
+              ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (BuildContext context, int index) {
                   String sensorAddress = snapshot.data![index].sensorAddress
@@ -45,7 +95,23 @@ class AlarmHistory extends StatelessWidget {
                       decoration: const BoxDecoration(
                           border: Border(
                               bottom: BorderSide(color: Colors.blueGrey))),
-                      child: ListTile(
+                      child: TextFormField(
+                        //decoration: _setInputDecoration(value),
+                        //decoration: const InputDecoration(labelText: "Context"),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          controller: testController,
+
+                          onChanged: (val) {
+                            //text = "abc";
+                          },
+                          validator: MultiValidator([
+                            RequiredValidator(errorText: "Required value"),
+                            MaxLengthValidator(6, errorText: "Value too long")
+                          ]))
+
+                      /*child: ListTile(
                           title: Text(sensorAddress),
                           leading: const FlutterLogo(),
                           subtitle: Row(
@@ -58,18 +124,20 @@ class AlarmHistory extends StatelessWidget {
                               const Text("  -  "),
                               const Text(Constants.TS),
                               Text(" $ts"),
-                            ],
+                                                          ],
+
                           ),
 
                           onTap: () {
                             showAlarmDetail(index);
-                          }));
-                }));
-      } else if (snapshot.hasError) {
-        return Text(snapshot.error.toString());
-      }
-      // By default show a loading spinner.
-      return const CircularProgressIndicator();
-    },);
+                          })*/);
+                })
+        */
+
+            ));
+  }
+
+  void saveMqttSettings() {
+    debugPrint("Save..test...");
   }
 }

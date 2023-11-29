@@ -87,6 +87,24 @@ List<UserDataSettings> _mergeNewUserSettingsWithOld(
   return oldSettings;
 }
 
+List<TextEditingController> _createControllerForEditSettings(
+    List<UserDataSettings> editableSettingsList) {
+  List<TextEditingController> editableSettingsControllerList = [];
+  for (UserDataSettings editableSetting in editableSettingsList) {
+    //todo: preverjanje, katere tocne editable vrednosti moramo dodati
+    String textController = "";
+    if(editableSetting.editableSetting == "hi_alarm") {
+      editableSettingsControllerList.add(
+          TextEditingController(text: editableSetting.hiAlarm.toString()));
+      }
+    else if(editableSetting.editableSetting == "lo_alarm") {
+      editableSettingsControllerList.add(
+          TextEditingController(text: editableSetting.loAlarm.toString()));
+    }
+    }
+return editableSettingsControllerList;
+}
+
 // parse userDataSettings v navadno listo, izloci tiste, ki jih ne prikazujemo za dolocen tip naprave
 List<UserDataSettings> _parseUserDataSettingsToList(
     List<UserDataSettings> dataSettingsList) {
@@ -145,13 +163,6 @@ class _UserSettingsState extends State<UserSettings> {
     super.initState();
     SmartMqtt.instance.isSaved = false;
     debugPrint("user_settings initState");
-    //_connectToTopic();
-    //WidgetsBinding.instance.addPostFrameCallback((_) {
-    // widget.manager.unsubscribe("_topic1");
-    // widget.manager.disconnect();
-    // skonekta se na managerja
-    //widget.manager.initializeMQTTClient();
-    //widget.manager.connect();
     debugPrint("WidgetsBinding");
     //});
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -298,7 +309,20 @@ class _UserSettingsState extends State<UserSettings> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           //widget.manager.unsubscribe("_topic1");
-          List<UserDataSettings>? userDataSettings = snapshot.data;
+          List<UserDataSettings>? editableSettingsList = snapshot.data;
+          List<TextEditingController> textControllerList = _createControllerForEditSettings(editableSettingsList!);
+          debugPrint("START print editableSettingsList: ");
+          for (UserDataSettings userDataSettings in editableSettingsList) {
+            debugPrint("// editableSetting: ${userDataSettings.deviceName}, ${userDataSettings.editableSetting}, ${userDataSettings.hiAlarm}, ${userDataSettings.hiAlarm}, ${userDataSettings.t}, $userDataSettings.typ, $userDataSettings.u");
+          }
+          debugPrint("END print editableSettingsList ");
+
+          debugPrint("START Generating editableControllerList: ");
+          for (TextEditingController controller in textControllerList) {
+            debugPrint("// texEditingController.text: ${controller.value}");
+          }
+          debugPrint("END Generating editableControllerList ");
+
           return ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
@@ -353,6 +377,8 @@ class _UserSettingsState extends State<UserSettings> {
       TextEditingController controller,
       UserDataSettings item,
       bool savePressed) {
+late String text;
+    TextEditingController testController = TextEditingController();
     return ListTile(
       title: Text("Sensor address: $sensorAddress, u:  $u \n"),
       //leading: Text(
@@ -369,13 +395,18 @@ class _UserSettingsState extends State<UserSettings> {
           Expanded(
               child: TextFormField(
                   decoration: _setInputDecoration(value),
+                  //decoration: const InputDecoration(labelText: "Context"),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
+
                   ],
-                  controller: controller,
-                  onChanged: (text) {
-                    debugPrint("onChanged $text");
-                    text = value;
+                  controller: testController,
+
+                  onChanged: (val) {
+                    text = val;
+                    /*setState(() {
+                      testController.text = val;
+                    }); */
                   },
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
@@ -448,22 +479,15 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("concatenated text: $publishText");
 
     SmartMqtt.instance.publish(publishText);
-    //  mqtt.publish(testText);
-    /*MQTTConnectionWrapper mqtt = MQTTConnectionWrapper();
-    if(mqtt.manager==null){
-      mqtt.manager.connect();
-    }
-    else {
-      mqtt.publish(testText);
 
-      initializePreference().whenComplete(() {
+    /*  initializePreference().whenComplete(() {
         // setState(() {});
         preferences?.setBool("is_mqtt_setting_saved", true);
-      });
-    }
+      }); */
 
-    setState(() {}); */
+    setState(() {});
   }
+
 
   _setInputDecoration(val) {
     return InputDecoration(
