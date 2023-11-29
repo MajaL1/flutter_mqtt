@@ -93,16 +93,17 @@ List<TextEditingController> _createControllerForEditSettings(
   for (UserDataSettings editableSetting in editableSettingsList) {
     //todo: preverjanje, katere tocne editable vrednosti moramo dodati
     String textController = "";
-    if(editableSetting.editableSetting == "hi_alarm") {
-      editableSettingsControllerList.add(
-          TextEditingController(text: editableSetting.hiAlarm.toString()));
-      }
-    else if(editableSetting.editableSetting == "lo_alarm") {
-      editableSettingsControllerList.add(
-          TextEditingController(text: editableSetting.loAlarm.toString()));
+    if (editableSetting.editableSetting == "hi_alarm") {
+      editableSettingsControllerList
+          .add(TextEditingController(text: editableSetting.hiAlarm.toString()));
+    } else if (editableSetting.editableSetting == "lo_alarm") {
+      editableSettingsControllerList
+          .add(TextEditingController(text: editableSetting.loAlarm.toString()));
+    } else {
+      editableSettingsControllerList.add(TextEditingController(text: ""));
     }
-    }
-return editableSettingsControllerList;
+  }
+  return editableSettingsControllerList;
 }
 
 // parse userDataSettings v navadno listo, izloci tiste, ki jih ne prikazujemo za dolocen tip naprave
@@ -310,10 +311,12 @@ class _UserSettingsState extends State<UserSettings> {
         if (snapshot.hasData) {
           //widget.manager.unsubscribe("_topic1");
           List<UserDataSettings>? editableSettingsList = snapshot.data;
-          List<TextEditingController> textControllerList = _createControllerForEditSettings(editableSettingsList!);
+          List<TextEditingController> textControllerList =
+              _createControllerForEditSettings(editableSettingsList!);
           debugPrint("START print editableSettingsList: ");
           for (UserDataSettings userDataSettings in editableSettingsList) {
-            debugPrint("// editableSetting: ${userDataSettings.deviceName}, ${userDataSettings.editableSetting}, ${userDataSettings.hiAlarm}, ${userDataSettings.hiAlarm}, ${userDataSettings.t}, $userDataSettings.typ, $userDataSettings.u");
+            debugPrint(
+                "// editableSetting: ${userDataSettings.deviceName}, ${userDataSettings.editableSetting}, ${userDataSettings.hiAlarm}, ${userDataSettings.hiAlarm}, ${userDataSettings.t}, $userDataSettings.typ, $userDataSettings.u");
           }
           debugPrint("END print editableSettingsList ");
 
@@ -377,7 +380,7 @@ class _UserSettingsState extends State<UserSettings> {
       TextEditingController controller,
       UserDataSettings item,
       bool savePressed) {
-late String text;
+    late String text;
     TextEditingController testController = TextEditingController();
     return ListTile(
       title: Text("Sensor address: $sensorAddress, u:  $u \n"),
@@ -398,10 +401,8 @@ late String text;
                   //decoration: const InputDecoration(labelText: "Context"),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
-
                   ],
                   controller: testController,
-
                   onChanged: (val) {
                     text = val;
                     /*setState(() {
@@ -487,7 +488,6 @@ late String text;
 
     setState(() {});
   }
-
 
   _setInputDecoration(val) {
     return InputDecoration(
