@@ -359,7 +359,8 @@ class _UserSettingsState extends State<UserSettings> {
                               value,
                               controller,
                               item,
-                              savePressed)
+                              savePressed,
+                              textControllerList[index])
                           : Container(height: 0) //ListTile(enabled: false)
                     ]));
               });
@@ -379,9 +380,10 @@ class _UserSettingsState extends State<UserSettings> {
       String value,
       TextEditingController controller,
       UserDataSettings item,
-      bool savePressed) {
+      bool savePressed,
+      TextEditingController textController) {
     late String text;
-    TextEditingController testController = TextEditingController();
+    //TextEditingController testController = TextEditingController();
     return ListTile(
       title: Text("Sensor address: $sensorAddress, u:  $u \n"),
       //leading: Text(
@@ -402,11 +404,13 @@ class _UserSettingsState extends State<UserSettings> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
-                  controller: testController,
+                  controller: textController,
                   onChanged: (val) {
-                    text = val;
+                    //text = val;
+                    debugPrint("onChanged: $val");
+                    textController.text = val;
                     /*setState(() {
-                      testController.text = val;
+                      textController.text = val;
                     }); */
                   },
                   validator: MultiValidator([

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
@@ -68,6 +69,8 @@ class _LoginFormValidationState extends State<LoginForm> {
             mqttPass: user.mqtt_pass,
             topicList: userTopicList);
         mqtt.initializeMQTTClient();
+        // inicializiraj servis za posiljanje sporocil
+        NotificationHelper.initializeService();
       }
       //*********************************************/
       Navigator.push(
