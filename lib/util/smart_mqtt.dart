@@ -142,8 +142,11 @@ class SmartMqtt extends ChangeNotifier {
         preferences.setString("settings_mqtt", decodeMessage);
         // ali je novo sporocilo loaded
 
-        newSettingsMessageLoaded = true;
-        notifyListeners();
+        if(isSaved) {
+          newSettingsMessageLoaded = true;
+         // isSaved = false;
+          notifyListeners();
+        }
         debugPrint("----- isNewSettings: $isNewSettings");
         preferences.setString(
             "settings_mqtt_device_name", topicName.split("/settings").first);

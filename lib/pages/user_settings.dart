@@ -192,8 +192,8 @@ class _UserSettingsState extends State<UserSettings> {
 
 
       //...
-      SmartMqtt.instance.isSaved = false;
-      SmartMqtt.instance.isNewSettings = false;
+    //  SmartMqtt.instance.isSaved = false;
+     // SmartMqtt.instance.isNewSettings = false;
 
     }
     return Scaffold(
@@ -318,7 +318,7 @@ class _UserSettingsState extends State<UserSettings> {
 
   Widget _buildMqttSettingsView() {
     // ce ni shranjen, pokazi normalno viex
-    if(!SmartMqtt.instance.isSaved) {
+    if(!SmartMqtt.instance.newSettingsMessageLoaded) {
       return FutureBuilder<List<UserDataSettings>>(
         future: _getUserDataSettings().then(
                 (dataSettingsList) =>
@@ -393,8 +393,12 @@ class _UserSettingsState extends State<UserSettings> {
       if(SmartMqtt.instance.newSettingsMessageLoaded){
 
 
+        debugPrint("user_settings newSettingsMessageLoaded $SmartMqtt.instance.newSettingsMessageLoaded, $SmartMqtt.instance.isSaved");
         SmartMqtt.instance.newSettingsMessageLoaded = false;
-      }
+        SmartMqtt.instance.isSaved = false;
+        setState(() {});
+        //
+            }
     }
     return const CircularProgressIndicator();
 
