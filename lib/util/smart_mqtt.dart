@@ -50,8 +50,8 @@ class SmartMqtt extends ChangeNotifier {
 
   bool debug = true;
   late bool isSaved = false;
-
-  //String get isSaved => null;
+  late bool isNewSettings = false;
+  late bool newSettingsMessageLoaded = false;
 
 
   void disconnect() {
@@ -140,8 +140,14 @@ class SmartMqtt extends ChangeNotifier {
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         preferences.setString("settings_mqtt", decodeMessage);
+        // ali je novo sporocilo loaded
+
+        newSettingsMessageLoaded = true;
+        notifyListeners();
+        debugPrint("----- isNewSettings: $isNewSettings");
         preferences.setString(
             "settings_mqtt_device_name", topicName.split("/settings").first);
+
       }
       if (topicName.contains("data")) {
         //debugPrint("from which topic -data $topicName");
@@ -181,6 +187,12 @@ class SmartMqtt extends ChangeNotifier {
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+  }
+
+  bool compareOldSettingsWithNew(String newDecodeMessage){
+
+
+    return false;
   }
 
   Future<MqttServerClient> initializeMQTTClient() async {
