@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
-import 'package:mqtt_test/pages/alarms_page.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 
 import '../pages/data_page.dart';
@@ -132,8 +131,8 @@ class _NavDrawerState extends State<NavDrawer> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     const DetailsPage.base()))),
-                    const Divider(height: 10),
-                    ListTile(
+                    const Divider(height: 5),
+                    /*ListTile(
                       hoverColor: Colors.blue,
                       tileColor: Colors.blue,
                       dense: false,
@@ -153,9 +152,9 @@ class _NavDrawerState extends State<NavDrawer> {
                           //     builder: (context) => const MQTTView.base())),
                           MaterialPageRoute(
                               builder: (context) => const AlarmsPage.base())),
-                    ),
-                    const Divider(height: 10),
-                    const Divider(height: 40),
+                    ),*/
+                    //const Divider(height: 10),
+                    //const Divider(height: 40),
                     /* ListTile(
                                 hoverColor: Colors.blue,
                                 tileColor: Colors.grey,

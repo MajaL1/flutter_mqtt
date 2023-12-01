@@ -47,6 +47,7 @@ class AlarmHistory extends StatelessWidget {
                               bottom: BorderSide(color: Colors.blueGrey))),
                       child: ListTile(
                         //style: const ListTileStyle(),
+                        contentPadding: EdgeInsets.all(10.0),
                         leading:
                             const Icon(Icons.notifications, color: Colors.blue, size: 30, grade: 5),
                         title: RichText(
