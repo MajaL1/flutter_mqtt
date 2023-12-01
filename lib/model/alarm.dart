@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class Alarm {
   String? sensorAddress;
   int? typ;
@@ -197,8 +199,8 @@ class Alarm {
             loAlarm = valueInt;
           }
           if (key == "ts") {
-            // ts = null;//DateTime.fromMicrosecondsSinceEpoch(valueInt);
-            print("ts");
+            ts = DateTime.fromMicrosecondsSinceEpoch(valueInt);
+            debugPrint("ts");
           }
           if (key == "lb") {
             lb = valueInt;
@@ -221,23 +223,22 @@ class Alarm {
         }
       }
 
-        print("Creating alarm: $sensorAddress, $typ, $t, $hiAlarm, $loAlarm");
-        Alarm newAlarm = Alarm(
-            sensorAddress: sensorAddress,
-            typ: typ,
-            v: v,
-            hiAlarm: hiAlarm,
-            loAlarm: loAlarm,
-            ts: ts,
-            lb: lb,
-            bv: bv,
-            r: r,
-            b: b,
-            l: l,
-            t: t);
-        alarmList.add(newAlarm);
-      }
-
+      print("Creating alarm: $sensorAddress, $typ, $t, $hiAlarm, $loAlarm");
+      Alarm newAlarm = Alarm(
+          sensorAddress: sensorAddress,
+          typ: typ,
+          v: v,
+          hiAlarm: hiAlarm,
+          loAlarm: loAlarm,
+          ts: ts,
+          lb: lb,
+          bv: bv,
+          r: r,
+          b: b,
+          l: l,
+          t: t);
+      alarmList.add(newAlarm);
+    }
 
     return alarmList;
   }

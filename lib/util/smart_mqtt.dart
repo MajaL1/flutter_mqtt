@@ -34,7 +34,6 @@ class SmartMqtt extends ChangeNotifier {
 
   static SmartMqtt get instance => _instance;
 
-
   factory SmartMqtt(
       {required String host,
       required int port,
@@ -53,7 +52,6 @@ class SmartMqtt extends ChangeNotifier {
   late bool isSaved = false;
   late bool isNewSettings = false;
   late bool newSettingsMessageLoaded = false;
-
 
   void disconnect() {
     print('Disconnected');
@@ -126,11 +124,9 @@ class SmartMqtt extends ChangeNotifier {
 
       String? topicName = recMess.variableHeader?.topicName;
 
-
-
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
-     /* preferences.remove("settings_mqtt");
+      /* preferences.remove("settings_mqtt");
       preferences.remove("alarm_mqtt");
       preferences.clear(); */
 
@@ -143,15 +139,14 @@ class SmartMqtt extends ChangeNotifier {
         preferences.setString("settings_mqtt", decodeMessage);
         // ali je novo sporocilo loaded
 
-        if(isSaved) {
+        if (isSaved) {
           newSettingsMessageLoaded = true;
-         // isSaved = false;
+          // isSaved = false;
           notifyListeners();
         }
         debugPrint("----- isNewSettings: $isNewSettings");
         preferences.setString(
             "settings_mqtt_device_name", topicName.split("/settings").first);
-
       }
       if (topicName.contains("data")) {
         //debugPrint("from which topic -data $topicName");
@@ -167,7 +162,7 @@ class SmartMqtt extends ChangeNotifier {
         String? alarmListOldData =
             preferences.get("alarm_list_mqtt") as String?;
         List a1 = [];
-        if(alarmListOldData != null) {
+        if (alarmListOldData != null) {
           a1 = json.decode(alarmListOldData);
         }
 
@@ -176,7 +171,8 @@ class SmartMqtt extends ChangeNotifier {
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
         currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
         // 3. doda alarm na listo starih alarmov
-        a1.addAll(currentAlarmList);
+        // odkomentiraj, da bo dodajalo alarm
+        // a1.addAll(currentAlarmList);
         String alarmListMqtt = jsonEncode(a1);
         preferences.setString("alarm_list_mqtt", alarmListMqtt);
         //debugPrint("alarmList---: $alarmListMqtt");
@@ -193,9 +189,7 @@ class SmartMqtt extends ChangeNotifier {
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
 
-  bool compareOldSettingsWithNew(String newDecodeMessage){
-
-
+  bool compareOldSettingsWithNew(String newDecodeMessage) {
     return false;
   }
 
