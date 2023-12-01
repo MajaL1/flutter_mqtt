@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mqtt_test/api/api_service.dart';
 
 import '../model/alarm.dart';
@@ -37,36 +38,31 @@ class AlarmHistory extends StatelessWidget {
                     String hiAlarm = snapshot.data![index].hiAlarm.toString()!;
                     String loAlarm = snapshot.data![index].loAlarm.toString()!;
                     String? ts = snapshot.data![index].ts?.toLocal().toString();
-                    String? ts = snapshot.data![index].ts?.toLocal().toString();
 
-                    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+                    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
+                        .format(snapshot.data![index].ts!);
                     return Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(color: Colors.blueGrey))),
-                        child: ListTile(
-                            title: Text("$sensorAddress $ts", style: TextStyle(fontWeight: FontWeight.bold)),
-                            leading: const FlutterLogo(),
-                            isThreeLine: true,
-
-                            subtitle: Row(
-                              children: <Widget>[
-
-                                const Text(Constants.HI_ALARM),
-                                Text(" $hiAlarm"),
-                                const Text("\n"),
-                                Row(children: [
-
-                                  const Text(Constants.LO_ALARM),
-                                  Text(" $loAlarm"),
-                                  const Text("\n"),
-                                  const Text("\n")
-                                ]),
-                               ],
-                            ),
-                            onTap: () {
-                              showAlarmDetail(index);
-                            }));
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.blueGrey))),
+                      child: ListTile(
+                        leading: FlutterLogo(size: 72.0),
+                        title: RichText(
+                            text: TextSpan(
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: sensorAddress,
+                                style: TextStyle(fontWeight: FontWeight.w500)),
+                          ],
+                        )),
+                        subtitle: Text('$formattedDate \nhi alarm: $hiAlarm \nlo alarm: $loAlarm'),
+                        isThreeLine: true,
+                      ),
+                    );
                   }));
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
