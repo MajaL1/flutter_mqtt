@@ -5,6 +5,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api/notification_helper.dart';
 import '../model/alarm.dart';
 import '../mqtt/state/MQTTAppState.dart';
 
@@ -175,13 +176,13 @@ class SmartMqtt extends ChangeNotifier {
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
         currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
         // 3. doda alarm na listo starih alarmov
-        //a1.addAll(currentAlarmList);
+        a1.addAll(currentAlarmList);
         String alarmListMqtt = jsonEncode(a1);
         preferences.setString("alarm_list_mqtt", alarmListMqtt);
         //debugPrint("alarmList---: $alarmListMqtt");
 
         // prikaze sporocilo z alarmom
-        //NotificationHelper.sendMessage(currentAlarmList.first);
+        NotificationHelper.sendMessage(currentAlarmList.first);
       }
       print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
       print(
