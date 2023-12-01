@@ -46,20 +46,23 @@ class AlarmHistory extends StatelessWidget {
                           border: Border(
                               bottom: BorderSide(color: Colors.blueGrey))),
                       child: ListTile(
-                        leading: FlutterLogo(size: 72.0),
+                        //style: const ListTileStyle(),
+                        leading:
+                            const Icon(Icons.notifications, color: Colors.blue, size: 30, grade: 5),
                         title: RichText(
                             text: TextSpan(
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
                           children: <TextSpan>[
                             TextSpan(
-                                text: sensorAddress,
+                                text: "$sensorAddress \n",
                                 style: TextStyle(fontWeight: FontWeight.w500)),
                           ],
                         )),
-                        subtitle: Text('$formattedDate \nhi alarm: $hiAlarm \nlo alarm: $loAlarm'),
+                        subtitle: Text(
+                            '$formattedDate \nhi alarm: $hiAlarm \nlo alarm: $loAlarm'),
                         isThreeLine: true,
                       ),
                     );
