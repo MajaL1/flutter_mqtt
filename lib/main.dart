@@ -70,12 +70,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
     preferences.get("alarm_list_mqtt");
   }
 
-  void sharedData() async {
-    SharedPreferences.getInstance().then((prefValue) => setState(() {
-          prefValue.setString("test", "test1");
-        }));
-  }
-
   @override
   Widget build(BuildContext context) {
     //SharedPreferences.getInstance().then((prefValue) => debugPrint(this));

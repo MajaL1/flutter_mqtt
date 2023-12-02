@@ -28,11 +28,7 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
 
-  // checks old user settings
-  //preferences.setString("settings_mqtt_old", data);
-  //bool? isSaved = preferences.getBool("is_mqtt_setting_saved");
 
-  //isSaved ??= false;
 
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
   //preferences.getBool("is_mqtt_setting_saved");
@@ -56,6 +52,11 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
     preferences.setBool("is_mqtt_setting_saved", false);
   } else { */
     userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+
+    //Todo: zaenkrat velja samo ce imamo 1 napravo
+   // preferences.setString("settings_val_hi_alarm", userDataSettings[0].hiAlarm as String);
+  //  preferences.setString("settings_val_lo_alarm", userDataSettings[0].loAlarm as String);
+
   //}
   // vrne Listo UserSettingsov iz mqtt 'sensorId/settings'
 

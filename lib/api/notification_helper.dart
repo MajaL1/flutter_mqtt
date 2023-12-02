@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show  Platform;
+import 'dart:io' show Platform;
 import 'dart:ui';
-import 'package:intl/intl.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
@@ -35,13 +36,12 @@ class NotificationHelper extends StatelessWidget {
       description:
           'This channel is used for important notifications.', // description
       importance: Importance.high,
-
     );
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     //flutterLocalNotificationsPlugin.
-    flutterLocalNotificationsPlugin.
-        resolvePlatformSpecificImplementation<
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
 
@@ -61,17 +61,16 @@ class NotificationHelper extends StatelessWidget {
 
     await service.configure(
       androidConfiguration: AndroidConfiguration(
-        // this will be executed when app is in foreground or background in separated isolate
-        onStart: onStart,
-        // auto start service
-        autoStart: true,
-        isForegroundMode: false,
-        notificationChannelId: 'my_foreground',
-        initialNotificationTitle: 'ALARM',
-        initialNotificationContent: 'Initializing',
-        foregroundServiceNotificationId: 888,
-        autoStartOnBoot: true
-      ),
+          // this will be executed when app is in foreground or background in separated isolate
+          onStart: onStart,
+          // auto start service
+          autoStart: true,
+          isForegroundMode: false,
+          notificationChannelId: 'my_foreground',
+          initialNotificationTitle: 'ALARM',
+          initialNotificationContent: 'Initializing',
+          foregroundServiceNotificationId: 888,
+          autoStartOnBoot: true),
       iosConfiguration: IosConfiguration(
         // auto start service
         autoStart: true,
@@ -117,25 +116,37 @@ class NotificationHelper extends StatelessWidget {
     String? sensorAddress = alarmMessage?.sensorAddress.toString();
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();
-    debugPrint("**************************alarm sending message  message: $alarmMessage");
+    String? v = alarmMessage?.v.toString();
+
+    String alarmValue = "";
+
+    if (alarmMessage?.hiAlarm != 0 && alarmMessage?.hiAlarm != null) {
+      alarmValue = "Hi alarm: $hiAlarm";
+    }
+    if (alarmMessage?.loAlarm != 0 && alarmMessage?.loAlarm != null) {
+      alarmValue += " Lo alarm: $loAlarm";
+    }
+
+    debugPrint(
+        "**************************alarm sending message  message: $alarmMessage");
     String date = alarmMessage?.ts.toString() ?? "";
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
-        .format(alarmMessage!.ts!);
+    String formattedDate =
+        DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
 
     final bigpicture = await Utils.getImageFilePathFromAssets(
         'assets/images/bell1.png', 'bigpicture');
     final smallpicture = await Utils.getImageFilePathFromAssets(
         'assets/images/bell1.png', 'smallpicture');
 
-   /* final styleinformationDesign = BigPictureStyleInformation(
+    /* final styleinformationDesign = BigPictureStyleInformation(
       FilePathAndroidBitmap(smallpicture),
       summaryText: "Alarm for $sensorAddress",
     ); */
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-            "sensor: $sensorAddress, --Lo alarm: $loAlarm",
-            "Hi alarm: $hiAlarm, date: $formattedDate",
+            "sensor: $sensorAddress",
+            "$alarmValue, date: $formattedDate",
             color: Colors.redAccent,
             largeIcon: FilePathAndroidBitmap(bigpicture),
             //const DrawableResourceAndroidBitmap('bell2.png'),
@@ -149,8 +160,8 @@ class NotificationHelper extends StatelessWidget {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1,
         "Alarm from sensor: $sensorAddress",
-        "Hi alarm: $hiAlarm, Lo alarm: $loAlarm \n$formattedDate",
-        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 30)),
+        "v: $v, $alarmValue \n$formattedDate",
+        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 3)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
@@ -175,8 +186,8 @@ class NotificationHelper extends StatelessWidget {
         UserDataSettings.getUserDataSettings(jsonMap);
 
     /// OPTIONAL when use custom notification
-   // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-   //     FlutterLocalNotificationsPlugin();
+    // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    //     FlutterLocalNotificationsPlugin();
 
     if (service is AndroidServiceInstance) {
       debugPrint("setAsForeground message : ");

@@ -37,8 +37,15 @@ class AlarmHistory extends StatelessWidget {
                         snapshot.data![index].sensorAddress.toString()!;
                     String hiAlarm = snapshot.data![index].hiAlarm.toString()!;
                     String loAlarm = snapshot.data![index].loAlarm.toString()!;
-                    String? ts = snapshot.data![index].ts?.toLocal().toString();
+                    String v = snapshot.data![index].v.toString();
+                    String alarmValue = "";
 
+                    if (snapshot.data![index].hiAlarm != 0 && snapshot.data![index].hiAlarm != null) {
+                      alarmValue = "Hi alarm: $hiAlarm";
+                    }
+                    if (snapshot.data![index].loAlarm != 0 && snapshot.data![index].loAlarm != null) {
+                      alarmValue += " Lo alarm: $loAlarm";
+                    }
                     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
                         .format(snapshot.data![index].ts!);
                     return Container(
@@ -47,7 +54,7 @@ class AlarmHistory extends StatelessWidget {
                               bottom: BorderSide(color: Colors.blueGrey))),
                       child: ListTile(
                         //style: const ListTileStyle(),
-                        contentPadding: EdgeInsets.all(10.0),
+                        contentPadding: EdgeInsets.all(5.0),
                         leading:
                             const Icon(Icons.notifications, color: Colors.blue, size: 30, grade: 5),
                         title: RichText(
@@ -58,12 +65,12 @@ class AlarmHistory extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                           children: <TextSpan>[
                             TextSpan(
-                                text: "$sensorAddress \n",
-                                style: TextStyle(fontWeight: FontWeight.w500)),
+                                text: sensorAddress,
+                                style: const TextStyle(fontWeight: FontWeight.w500)),
                           ],
                         )),
                         subtitle: Text(
-                            '$formattedDate \nhi alarm: $hiAlarm \nlo alarm: $loAlarm'),
+                            '$formattedDate\nv: $v \n$alarmValue'),
                         isThreeLine: true,
                       ),
                     );

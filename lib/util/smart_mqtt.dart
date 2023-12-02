@@ -153,7 +153,7 @@ class SmartMqtt extends ChangeNotifier {
         //preferences.setString("data_mqtt", decodeMessage);
       }
       if (topicName.contains("alarm")) {
-        debugPrint("from which topic -alarm $topicName, $decodeMessage");
+        debugPrint("from which topic-alarm $topicName, $decodeMessage");
 
         //prebere listo alarmov iz preferenc in jim doda nov alarm
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -172,13 +172,18 @@ class SmartMqtt extends ChangeNotifier {
         currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
         // 3. doda alarm na listo starih alarmov
         // odkomentiraj, da bo dodajalo alarm
-        // a1.addAll(currentAlarmList);
+        a1.addAll(currentAlarmList);
         String alarmListMqtt = jsonEncode(a1);
         preferences.setString("alarm_list_mqtt", alarmListMqtt);
         //debugPrint("alarmList---: $alarmListMqtt");
 
         // prikaze sporocilo z alarmom
         NotificationHelper.sendMessage(currentAlarmList.first);
+
+        // Todo: preveri vrednosti currentAlarmList.first in
+        // nastavitve v settingsih in prikazi alarm
+
+       // compareOldSettingsWithNew(currentAlarmList.first.hiAlarm!, preferences);
       }
       print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
       print(
@@ -189,8 +194,17 @@ class SmartMqtt extends ChangeNotifier {
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
 
-  bool compareOldSettingsWithNew(String newDecodeMessage) {
-    return false;
+  // preveri, ali je vrednost poslanega alarma vecja od alarma v nastavitvah
+  bool compareOldSettingsWithNew(
+      int hiAlarmFromAlarm, SharedPreferences preferences) {
+    /*String? hiAlarmFromSettings =
+        preferences.get("settings_val_hi_alarm").toString();
+    int hiAlarmFromSettingsInt = int.parse(hiAlarmFromSettings);
+    if (hiAlarmFromSettingsInt < hiAlarmFromAlarm) {
+      debugPrint("compare current alarm with settings: ");
+    }
+    return false; */
+    return true;
   }
 
   Future<MqttServerClient> initializeMQTTClient() async {

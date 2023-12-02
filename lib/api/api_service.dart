@@ -63,8 +63,7 @@ class ApiService {
   } */
 
   static Future<User?> login(String email, password) async {
-    //email = "test";
-    //password = "Test@1234";
+
     try {
       Response response = await post(
           Uri.parse('http://test.navis-livedata.com:1002/api/auth.php'),
