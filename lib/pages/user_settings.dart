@@ -28,8 +28,6 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
 
-
-
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
   //preferences.getBool("is_mqtt_setting_saved");
 
@@ -51,10 +49,10 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
 
     preferences.setBool("is_mqtt_setting_saved", false);
   } else { */
-    userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+  userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
 
-    //Todo: zaenkrat velja samo ce imamo 1 napravo
-   // preferences.setString("settings_val_hi_alarm", userDataSettings[0].hiAlarm as String);
+  //Todo: zaenkrat velja samo ce imamo 1 napravo
+  // preferences.setString("settings_val_hi_alarm", userDataSettings[0].hiAlarm as String);
   //  preferences.setString("settings_val_lo_alarm", userDataSettings[0].loAlarm as String);
 
   //}
@@ -67,33 +65,12 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
   // debugPrint("UserSettings from JSON: $userSettings");
 }
 
-List<UserDataSettings> _mergeNewUserSettingsWithOld(
-    List<UserDataSettings> oldSettings, List<UserDataSettings> newSettings) {
-  //List<UserDataSettings> mergedUserDataSettings = [];
-
-  for (UserDataSettings newSetting in newSettings) {
-    if (newSetting.hiAlarm != null) {
-      for (UserDataSettings oldSetting in oldSettings) {
-        if (newSetting.hiAlarm != null &&
-            newSetting.hiAlarm != oldSetting.hiAlarm) {
-          oldSetting.hiAlarm = newSetting.hiAlarm;
-        }
-        if (newSetting.loAlarm != null &&
-            newSetting.loAlarm != oldSetting.loAlarm) {
-          oldSetting.loAlarm = newSetting.loAlarm;
-        }
-      }
-    }
-  }
-  return oldSettings;
-}
 
 List<TextEditingController> _createControllerForEditSettings(
     List<UserDataSettings> editableSettingsList) {
   List<TextEditingController> editableSettingsControllerList = [];
   for (UserDataSettings editableSetting in editableSettingsList) {
     //todo: preverjanje, katere tocne editable vrednosti moramo dodati
-    String textController = "";
     if (editableSetting.editableSetting == "hi_alarm") {
       editableSettingsControllerList
           .add(TextEditingController(text: editableSetting.hiAlarm.toString()));
@@ -147,7 +124,6 @@ class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red);
 
-  Widget? _connectMqtt;
   int countTest = 0;
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
@@ -186,16 +162,14 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("calling build method user_settings.dart");
 
     debugPrint("[[[[isSaved ${SmartMqtt.instance.isSaved.toString()}]]]]");
-    debugPrint("[[[[newSettingsMessageLoaded ${SmartMqtt.instance.newSettingsMessageLoaded.toString()}]]]]");
+    debugPrint(
+        "[[[[newSettingsMessageLoaded ${SmartMqtt.instance.newSettingsMessageLoaded.toString()}]]]]");
 
     // ce je bilo shranjeno, potem pridobi nove mqtt settingse
-    if(SmartMqtt.instance.isSaved) {
-
-
+    if (SmartMqtt.instance.isSaved) {
       //...
-    //  SmartMqtt.instance.isSaved = false;
-     // SmartMqtt.instance.isNewSettings = false;
-
+      //  SmartMqtt.instance.isSaved = false;
+      // SmartMqtt.instance.isNewSettings = false;
     }
     return Scaffold(
       //padding: const EdgeInsets.all(12),
@@ -319,17 +293,16 @@ class _UserSettingsState extends State<UserSettings> {
 
   Widget _buildMqttSettingsView() {
     // ce ni shranjen, pokazi normalno viex
-    if(!SmartMqtt.instance.newSettingsMessageLoaded) {
+    //if (!SmartMqtt.instance.newSettingsMessageLoaded) {
       return FutureBuilder<List<UserDataSettings>>(
-        future: _getUserDataSettings().then(
-                (dataSettingsList) =>
-                _parseUserDataSettingsToList(dataSettingsList)),
+        future: _getUserDataSettings().then((dataSettingsList) =>
+            _parseUserDataSettingsToList(dataSettingsList)),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             //widget.manager.unsubscribe("_topic1");
             List<UserDataSettings>? editableSettingsList = snapshot.data;
             List<TextEditingController> textControllerList =
-            _createControllerForEditSettings(editableSettingsList!);
+                _createControllerForEditSettings(editableSettingsList!);
             /* debugPrint("START print editableSettingsList: ");
           for (UserDataSettings userDataSettings in editableSettingsList) {
             debugPrint(
@@ -351,7 +324,7 @@ class _UserSettingsState extends State<UserSettings> {
                 itemBuilder: (BuildContext context, int index) {
                   UserDataSettings item = snapshot.data![index];
                   String sensorAddress =
-                  snapshot.data![index].sensorAddress.toString();
+                      snapshot.data![index].sensorAddress.toString();
                   int? u = item.u;
 
                   String? settingToChange = item.editableSetting ?? "";
@@ -370,14 +343,14 @@ class _UserSettingsState extends State<UserSettings> {
                       child: Column(children: [
                         settingToChange != Constants.U_JSON
                             ? _buildEditableSettingsItem(
-                            sensorAddress,
-                            u,
-                            settingToChange,
-                            value,
-                            controller,
-                            item,
-                            savePressed,
-                            textControllerList[index])
+                                sensorAddress,
+                                u,
+                                settingToChange,
+                                value,
+                                controller,
+                                item,
+                                savePressed,
+                                textControllerList[index])
                             : Container(height: 0) //ListTile(enabled: false)
                       ]));
                 });
@@ -388,21 +361,19 @@ class _UserSettingsState extends State<UserSettings> {
           return const CircularProgressIndicator();
         },
       );
-    }
+    //}
     // ce je shranjen, pocakaj na nov message iz settingov
-    else {
-      if(SmartMqtt.instance.newSettingsMessageLoaded){
-
-
-        debugPrint("user_settings newSettingsMessageLoaded $SmartMqtt.instance.newSettingsMessageLoaded, $SmartMqtt.instance.isSaved");
+    /*else {
+      if (SmartMqtt.instance.newSettingsMessageLoaded) {
+        debugPrint(
+            "user_settings newSettingsMessageLoaded $SmartMqtt.instance.newSettingsMessageLoaded, $SmartMqtt.instance.isSaved");
         SmartMqtt.instance.newSettingsMessageLoaded = false;
         SmartMqtt.instance.isSaved = false;
         setState(() {});
         //
-            }
-    }
-    return const CircularProgressIndicator();
-
+      }
+    } */
+    //return const CircularProgressIndicator();
   }
 
   ListTile _buildEditableSettingsItem(
@@ -414,8 +385,6 @@ class _UserSettingsState extends State<UserSettings> {
       UserDataSettings item,
       bool savePressed,
       TextEditingController textController) {
-    late String text;
-    //TextEditingController testController = TextEditingController();
     return ListTile(
       title: Text("Sensor address: $sensorAddress, u:  $u \n"),
       //leading: Text(
@@ -519,7 +488,11 @@ class _UserSettingsState extends State<UserSettings> {
 
     debugPrint(
         "after publish:: saveMqttSettings: $controller.text, $sensorName, $settingToChange");
-
+    
+    String newUserSettings = SmartMqtt.instance.newUserSettings;
+    setState(() {
+       preferences?.setString("settings_mqtt", newUserSettings);
+    });
     // todo -> pocakaj, da smartMqtt vrne nove vrednosti
     /*  initializePreference().whenComplete(() {
         // setState(() {});

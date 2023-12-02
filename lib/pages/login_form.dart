@@ -25,18 +25,25 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  //final emailController = TextEditingController(text: "test");
-  //final passwordController = TextEditingController(text: "Test1234");
-  final emailController = TextEditingController(text: "test3");
-  final passwordController = TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
+  final emailController = TextEditingController(text: "test");
+  final passwordController = TextEditingController(text: "Test1234");
+  //final emailController = TextEditingController(text: "test3");
+  //final passwordController = TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
 
   @override
   initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    // _initCurrentAppState();
-    // ignore: avoid_print
+
     print("-- loginform initstate");
+
+    //bool isNetwork = checkNetwork().;
+
+  }
+
+  Future<bool> checkNetwork()  async {
+    Future<bool> network = hasNetwork();
+    return network;
   }
 
   Future<bool> hasNetwork() async {
@@ -119,7 +126,7 @@ bool _returnHasNetwork(bool val){
 
   @override
   Widget build(BuildContext context) {
-    bool network =  hasNetwork().then((value) => _returnHasNetwork(value)) as bool;// hasNetwork().then((value) => return false);
+    bool network = true;
     return DefaultTabController(
       length: 3,
       // child: SingleChildScrollView(
@@ -140,8 +147,8 @@ bool _returnHasNetwork(bool val){
               );
             } else {
               if (!network) {
-                return ErrorWidget(
-                    Exception('Problem with internet connection'));
+                return  Container(
+                    child: const Text('Problem with internet connection'));
               }
               if (snapshot.hasError) {
                 return ErrorWidget(Exception(

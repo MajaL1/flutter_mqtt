@@ -62,7 +62,8 @@ class _NotificationsAppState extends State<NotificationsApp> {
     if (!preferences.containsKey("alarm_list_mqtt")) {
       List<Alarm> alarmList = [];
       //preferences.clear();
-      // preferences.remove("alarm_list_mqtt");
+      // pocistimo settinge iz
+       preferences.remove("settings_mqtt");
       String alarmListData = json.encode(alarmList);
       //json.decode(alarmListData);
       preferences.setString("alarm_list_mqtt", alarmListData);

@@ -52,6 +52,8 @@ class SmartMqtt extends ChangeNotifier {
   late bool isSaved = false;
   late bool isNewSettings = false;
   late bool newSettingsMessageLoaded = false;
+  late String newUserSettings = "";
+
 
   void disconnect() {
     print('Disconnected');
@@ -136,18 +138,28 @@ class SmartMqtt extends ChangeNotifier {
         debugPrint("from which topic $topicName");
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
-        preferences.setString("settings_mqtt", decodeMessage);
-        // ali je novo sporocilo loaded
 
-        if (isSaved) {
-          newSettingsMessageLoaded = true;
-          // isSaved = false;
+        //preverimo, ker je prvo sporocilo
+        // po shranjevanju oblike {"135":{"hi_alarm":111}}
+        // in tega izpustimo
+        if(!decodeMessage.contains("v:")|| !decodeMessage.contains("typ") || !decodeMessage.contains("u")){
+          // ali je novo sporocilo loaded
+          if (isSaved) {
+            newSettingsMessageLoaded = true;
+            // isSaved = false;
+            //notifyListeners();
+          }
+          newUserSettings = decodeMessage;
           notifyListeners();
+          debugPrint("----- isNewSettings: $isNewSettings");
+          preferences.setString(
+              "settings_mqtt_device_name", topicName.split("/settings").first);
         }
-        debugPrint("----- isNewSettings: $isNewSettings");
-        preferences.setString(
-            "settings_mqtt_device_name", topicName.split("/settings").first);
-      }
+
+        preferences.setString("settings_mqtt", decodeMessage);
+
+
+          }
       if (topicName.contains("data")) {
         //debugPrint("from which topic -data $topicName");
         //preferences.setString("data_mqtt", decodeMessage);

@@ -116,15 +116,15 @@ class ApiService {
       int rw = 0;
       for (var topicVal in topics.values) {
         for (var topicVal1 in topicVal) {
-          debugPrint("topicVal1: $topicVal1");
+          //debugPrint("topicVal1: $topicVal1");
 
           topicName = topicVal1["topic"];
           rw = topicVal1["rw"];
 
-          debugPrint("topic: $topicName");
-          debugPrint("topic: $rw");
+          //debugPrint("topic: $topicName");
+          //debugPrint("topic: $rw");
 
-          debugPrint("rw: $rw");
+          //debugPrint("rw: $rw");
           TopicData topicData = TopicData(name: topicName, rw: rw);
           topicList.add(topicData);
         }
