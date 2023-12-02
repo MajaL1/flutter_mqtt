@@ -29,6 +29,9 @@ class NotificationHelper extends StatelessWidget {
   static Future<void> initializeService() async {
     service = FlutterBackgroundService();
 
+    String eventID = "as432445GFCLbd2in1en21093";
+    int notificationId = eventID.hashCode;
+
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'my_foreground', // id
@@ -64,12 +67,14 @@ class NotificationHelper extends StatelessWidget {
           // this will be executed when app is in foreground or background in separated isolate
           onStart: onStart,
           // auto start service
+
           autoStart: true,
           isForegroundMode: false,
-          notificationChannelId: 'my_foreground',
+          notificationChannelId: 'alarms',
+
           initialNotificationTitle: 'ALARM',
           initialNotificationContent: 'Initializing',
-          foregroundServiceNotificationId: 888,
+          foregroundServiceNotificationId: notificationId,
           autoStartOnBoot: true),
       iosConfiguration: IosConfiguration(
         // auto start service
@@ -129,11 +134,10 @@ class NotificationHelper extends StatelessWidget {
 
     debugPrint(
         "**************************alarm sending message  message: $alarmMessage");
-    String date = alarmMessage?.ts.toString() ?? "";
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
 
-    final bigpicture = await Utils.getImageFilePathFromAssets(
+    final bigPicture = await Utils.getImageFilePathFromAssets(
         'assets/images/bell1.png', 'bigpicture');
     final smallpicture = await Utils.getImageFilePathFromAssets(
         'assets/images/bell1.png', 'smallpicture');
@@ -145,20 +149,26 @@ class NotificationHelper extends StatelessWidget {
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-            "sensor: $sensorAddress",
-            "$alarmValue, date: $formattedDate",
-            color: Colors.redAccent,
-            largeIcon: FilePathAndroidBitmap(bigpicture),
-            //const DrawableResourceAndroidBitmap('bell2.png'),
-            // styleInformation: styleinformationDesign,
-            importance: Importance.max,
-            priority: Priority.high);
+      "sensor: $sensorAddress",
+      "$alarmValue, date: $formattedDate",
+      color: Colors.redAccent,
+      largeIcon: FilePathAndroidBitmap(bigPicture),
+      importance: Importance.max,
+      priority: Priority.high,
+      groupKey: "alarms",
+      colorized: true,
+      enableLights: true,
+      category: AndroidNotificationCategory.alarm,
+    );
 
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 
+    String eventID = "as432445GFCLbd2in1en21093";
+    int notificationId = eventID.hashCode;
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        1,
+        notificationId,
         "Alarm from sensor: $sensorAddress",
         "v: $v, $alarmValue \n$formattedDate",
         tz.TZDateTime.now(slovenia).add(const Duration(seconds: 3)),
@@ -182,8 +192,6 @@ class NotificationHelper extends StatelessWidget {
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** preferences settings_mqtt $data");
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
-    List<UserDataSettings> userDataSettings =
-        UserDataSettings.getUserDataSettings(jsonMap);
 
     /// OPTIONAL when use custom notification
     // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

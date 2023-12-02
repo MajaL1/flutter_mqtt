@@ -163,14 +163,13 @@ class Alarm {
       int t = 0;
       // String key1 = "";
       for (var key in alarm.keys) {
-//print("key:  $key");
+        //debugPrint("key:  $key");
         var value = alarm[key];
 
         if (key.isNotEmpty) {
-          // key1 = key;
           String valueStr = "";
-          print("key: $key");
-          print("value: $value");
+          //debugPrint("key: $key");
+          //debugPrint("value: $value");
 
           int valueInt = 0;
           if (value is String) {

@@ -25,10 +25,10 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController(text: "test");
-  final passwordController = TextEditingController(text: "Test1234");
-  //final emailController = TextEditingController(text: "test3");
-  //final passwordController = TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
+  //final emailController = TextEditingController(text: "test");
+  //final passwordController = TextEditingController(text: "Test1234");
+  final emailController = TextEditingController(text: "test3");
+  final passwordController = TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
 
   @override
   initState() {
@@ -113,10 +113,13 @@ class _LoginFormValidationState extends State<LoginForm> {
       return null;
     }
   }
+bool _returnHasNetwork(bool val){
+    return val;
+}
 
   @override
   Widget build(BuildContext context) {
-    bool network = true; //hasNetwork().then((value) => value);
+    bool network =  hasNetwork().then((value) => _returnHasNetwork(value)) as bool;// hasNetwork().then((value) => return false);
     return DefaultTabController(
       length: 3,
       // child: SingleChildScrollView(

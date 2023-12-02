@@ -43,7 +43,7 @@ class _TestNotificationsState extends State<TestNotifications> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         //backgroundColor: Colors.blue.withOpacity(0.5),
-        title: Text("Test notifications"),
+        title: const Text("Alarm"),
       ),
       body: Row(
         children: [
