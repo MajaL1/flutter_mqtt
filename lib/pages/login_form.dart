@@ -73,7 +73,7 @@ class _LoginFormValidationState extends State<LoginForm> {
         NotificationHelper.initializeService();
       }
       //*********************************************/
-      Navigator.push(
+      Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (_) => UserSettings.base()));
@@ -118,7 +118,9 @@ class _LoginFormValidationState extends State<LoginForm> {
     return DefaultTabController(
       length: 3,
       // child: SingleChildScrollView(
-      child: Scaffold(
+      child: WillPopScope(
+          onWillPop: () async => false,
+          child: Scaffold(
           backgroundColor: Colors.white,
           //appBar: AppBar(
           // title: const Text(Constants.LOGIN_PAGE),
@@ -255,7 +257,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                 );
               }
             }
-          })),
+          }))),
     );
   }
 }

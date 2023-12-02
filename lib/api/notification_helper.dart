@@ -117,7 +117,7 @@ class NotificationHelper extends StatelessWidget {
     String? sensorAddress = alarmMessage?.sensorAddress.toString();
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();
-    debugPrint("send message: $alarmMessage");
+    debugPrint("**************************alarm sending message  message: $alarmMessage");
     String date = alarmMessage?.ts.toString() ?? "";
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
         .format(alarmMessage!.ts!);
@@ -150,7 +150,7 @@ class NotificationHelper extends StatelessWidget {
         1,
         "Alarm from sensor: $sensorAddress",
         "Hi alarm: $hiAlarm, Lo alarm: $loAlarm \n$formattedDate",
-        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 180)),
+        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 30)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);

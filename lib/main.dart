@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
+import 'package:flutter/services.dart';
 
 import 'model/alarm.dart';
 import 'mqtt/state/MQTTAppState.dart';
@@ -36,6 +37,17 @@ class NotificationsApp extends StatefulWidget {
 
 class _NotificationsAppState extends State<NotificationsApp> {
   var prefs = 1;
+
+
+  static  MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
+
+  _NotificationsAppState() {
+    //methodChannel.setMethodCallHandler((call) => call.);
+    methodChannel.setMethodCallHandler((call) {
+      print(call.method);
+      return Future(() => call);
+    });
+  }
 
   @override
   void initState() {
