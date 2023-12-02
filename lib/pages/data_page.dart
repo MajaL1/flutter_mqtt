@@ -127,11 +127,11 @@ class _DetailsPageState extends State<DetailsPage> {
     debugPrint("****************** alarm data $data");
     //alarm data {"135":{"typ":7,"l":0,"t":202,"b":0,"r":-73,"lb":1,"bv":384}}{
     List<Alarm> alarmData = [];
-    if(decodeMessage != null) {
+    //if(decodeMessage != null) {
       Map<String, dynamic> jsonMap = json.decode(decodeMessage);
       alarmData = Alarm.getAlarmList(jsonMap);
       debugPrint("AlarmData from JSON: $alarmData");
-    }
+    //}
     //List<Data> dataList  = Data.getDataList();
     return alarmData;
   }

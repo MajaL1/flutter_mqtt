@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' show File, Platform;
+import 'dart:io' show  Platform;
 import 'dart:ui';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
@@ -34,13 +34,14 @@ class NotificationHelper extends StatelessWidget {
       'MY FOREGROUND SERVICE', // title
       description:
           'This channel is used for important notifications.', // description
-      importance: Importance.low, // importance must be at low or higher level
+      importance: Importance.high,
+
     );
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
+    //flutterLocalNotificationsPlugin.
+    flutterLocalNotificationsPlugin.
+        resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
 
@@ -62,15 +63,14 @@ class NotificationHelper extends StatelessWidget {
       androidConfiguration: AndroidConfiguration(
         // this will be executed when app is in foreground or background in separated isolate
         onStart: onStart,
-
         // auto start service
         autoStart: true,
         isForegroundMode: false,
-
         notificationChannelId: 'my_foreground',
-        initialNotificationTitle: 'TEST NOTIFICATIONS',
+        initialNotificationTitle: 'ALARM',
         initialNotificationContent: 'Initializing',
         foregroundServiceNotificationId: 888,
+        autoStartOnBoot: true
       ),
       iosConfiguration: IosConfiguration(
         // auto start service
@@ -119,22 +119,23 @@ class NotificationHelper extends StatelessWidget {
     String? loAlarm = alarmMessage?.loAlarm.toString();
     debugPrint("send message: $alarmMessage");
     String date = alarmMessage?.ts.toString() ?? "";
+    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
+        .format(alarmMessage!.ts!);
 
     final bigpicture = await Utils.getImageFilePathFromAssets(
         'assets/images/bell1.png', 'bigpicture');
     final smallpicture = await Utils.getImageFilePathFromAssets(
         'assets/images/bell1.png', 'smallpicture');
 
-    final styleinformationDesign = BigPictureStyleInformation(
-      //for design adding images big and small in notificaitonbar
+   /* final styleinformationDesign = BigPictureStyleInformation(
       FilePathAndroidBitmap(smallpicture),
       summaryText: "Alarm for $sensorAddress",
-    );
+    ); */
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
             "sensor: $sensorAddress, --Lo alarm: $loAlarm",
-            "Hi alarm: $hiAlarm, date: $date",
+            "Hi alarm: $hiAlarm, date: $formattedDate",
             color: Colors.redAccent,
             largeIcon: FilePathAndroidBitmap(bigpicture),
             //const DrawableResourceAndroidBitmap('bell2.png'),
@@ -148,8 +149,8 @@ class NotificationHelper extends StatelessWidget {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         1,
         "Alarm from sensor: $sensorAddress",
-        "Hi alarm: $hiAlarm, Lo alarm: $loAlarm \n$date",
-        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
+        "Hi alarm: $hiAlarm, Lo alarm: $loAlarm \n$formattedDate",
+        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 180)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
@@ -161,7 +162,7 @@ class NotificationHelper extends StatelessWidget {
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
-
+//service.runtimeType.
     // For flutter prior to version 3.0.0
     // We have to register the plugin manually
 
@@ -174,15 +175,17 @@ class NotificationHelper extends StatelessWidget {
         UserDataSettings.getUserDataSettings(jsonMap);
 
     /// OPTIONAL when use custom notification
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+   // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+   //     FlutterLocalNotificationsPlugin();
 
     if (service is AndroidServiceInstance) {
+      debugPrint("setAsForeground message : ");
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
       });
 
       service.on('setAsBackground').listen((event) {
+        debugPrint("setAsBackground : ");
         service.setAsBackgroundService();
       });
     }
@@ -192,43 +195,5 @@ class NotificationHelper extends StatelessWidget {
     });
 
     tzl.initializeTimeZones();
-    /*final slovenia = tz.getLocation('Europe/London');
-    final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
-    String? sendAlarm = getSendAlarm();
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-        1,
-        "$sendAlarm Notification From My App ",
-        sendAlarm,
-       tz.TZDateTime.now(slovenia).add(const Duration(seconds: 10)),
-        //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
-        const NotificationDetails(
-            android: AndroidNotificationDetails(
-              "1",
-              "11",
-            )),          //androidScheduleMode: AndroidScheduleMode,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime); */
-
-/* // Test messagess
-    List<NotificationMessage> notificationList = await ApiService.getNotificationMessage();
-    for (var i = 0; i < notificationList.length; i++) {
-      debugPrint("showing notification: ${notificationList[i].title}. $i");
-
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-          i,
-          "A Notification From My App ",
-          "$notificationList[i].title",
-          tz.TZDateTime.now(slovenia).add(const Duration(seconds: 3)),
-          //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
-          const NotificationDetails(
-              android: AndroidNotificationDetails(
-                "1",
-                "11",
-              )),          //androidScheduleMode: AndroidScheduleMode,
-          uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime);
-    }
-
- */
   }
 }
