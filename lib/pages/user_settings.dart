@@ -27,7 +27,6 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
 
   String data = await SmartMqtt.instance.getNewUserSettingsList();
 
-
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
@@ -68,7 +67,6 @@ Future<List<UserDataSettings>> _getUserDataSettings() async {
   return userDataSettings;
   // debugPrint("UserSettings from JSON: $userSettings");
 }
-
 
 List<TextEditingController> _createControllerForEditSettings(
     List<UserDataSettings> editableSettingsList) {
@@ -169,18 +167,13 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint(
         "[[[[newSettingsMessageLoaded ${SmartMqtt.instance.newSettingsMessageLoaded.toString()}]]]]");
 
-   // if(isSaved)
+    // if(isSaved)
     /*String newUserSettings = SmartMqtt.instance.newUserSettings;
     setState(() {
       preferences?.setString("settings_mqtt", newUserSettings);
     }); */
 
-    // ce je bilo shranjeno, potem pridobi nove mqtt settingse
-    if (SmartMqtt.instance.isSaved) {
-      //...
-      //  SmartMqtt.instance.isSaved = false;
-      // SmartMqtt.instance.isNewSettings = false;
-    }
+
     return Scaffold(
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
@@ -304,18 +297,18 @@ class _UserSettingsState extends State<UserSettings> {
   Widget _buildMqttSettingsView() {
     // ce ni shranjen, pokazi normalno viex
     //if (!SmartMqtt.instance.newSettingsMessageLoaded) {
-      return FutureBuilder<List<UserDataSettings>>(
-        future: //Provider.of<SmartMqtt>(context, listen: false)
-            //.getUserSettingsList().then(_getUserDataSettings().then((dataSettingsList) =>
+    return FutureBuilder<List<UserDataSettings>>(
+      future: //Provider.of<SmartMqtt>(context, listen: false)
+          //.getUserSettingsList().then(_getUserDataSettings().then((dataSettingsList) =>
           //_parseUserDataSettingsToList(dataSettingsList))),
           _getUserDataSettings().then((dataSettingsList) =>
-            _parseUserDataSettingsToList(dataSettingsList)),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<UserDataSettings>? editableSettingsList = snapshot.data;
-            List<TextEditingController> textControllerList =
-                _createControllerForEditSettings(editableSettingsList!);
-            /* debugPrint("START print editableSettingsList: ");
+              _parseUserDataSettingsToList(dataSettingsList)),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<UserDataSettings>? editableSettingsList = snapshot.data;
+          List<TextEditingController> textControllerList =
+              _createControllerForEditSettings(editableSettingsList!);
+          /* debugPrint("START print editableSettingsList: ");
           for (UserDataSettings userDataSettings in editableSettingsList) {
             debugPrint(
                 "// editableSetting: ${userDataSettings.deviceName}, ${userDataSettings.editableSetting}, ${userDataSettings.hiAlarm}, ${userDataSettings.hiAlarm}, ${userDataSettings.t}, $userDataSettings.typ, $userDataSettings.u");
@@ -328,57 +321,58 @@ class _UserSettingsState extends State<UserSettings> {
           }
           debugPrint("END Generating editableControllerList ");
 */
+          //SmartMqtt.instance.isNewSettings = false;
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length,
+              scrollDirection: Axis.vertical,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                UserDataSettings item = snapshot.data![index];
+                String sensorAddress =
+                    snapshot.data![index].sensorAddress.toString();
+                int? u = item.u;
 
-            // vrni prazen seznam newSettings SmartMqtt
-
-            SmartMqtt.instance.setNewUserSettings("");
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.length,
-                scrollDirection: Axis.vertical,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  UserDataSettings item = snapshot.data![index];
-                  String sensorAddress =
-                      snapshot.data![index].sensorAddress.toString();
-                  int? u = item.u;
-
-                  String? settingToChange = item.editableSetting ?? "";
-                  String? value = "";
-                  if (item.editableSetting == Constants.HI_ALARM_JSON) {
-                    value = item.hiAlarm.toString();
-                  } else if (item.editableSetting == Constants.LO_ALARM_JSON) {
-                    value = item.loAlarm.toString();
-                  }
-                  bool savePressed = false;
-                  TextEditingController controller = TextEditingController();
-                  return SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.only(
-                          top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
-                      child: Column(children: [
-                        settingToChange != Constants.U_JSON
-                            ? _buildEditableSettingsItem(
-                                sensorAddress,
-                                u,
-                                settingToChange,
-                                value,
-                                controller,
-                                item,
-                                savePressed,
-                                textControllerList[index])
-                            : Container(height: 0) //ListTile(enabled: false)
-                      ]));
-                });
-          } else if (snapshot.hasError) {
-            return const CircularProgressIndicator();
-
-            //return Text(snapshot.error.toString());
-          }
-          // By default show a loading spinner.
+                String? settingToChange = item.editableSetting ?? "";
+                String? value = "";
+                if (item.editableSetting == Constants.HI_ALARM_JSON) {
+                  value = item.hiAlarm.toString();
+                } else if (item.editableSetting == Constants.LO_ALARM_JSON) {
+                  value = item.loAlarm.toString();
+                }
+                bool savePressed = false;
+                TextEditingController controller = TextEditingController();
+                return SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    padding: const EdgeInsets.only(
+                        top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
+                    child: Column(children: [
+                      settingToChange != Constants.U_JSON
+                          ? _buildEditableSettingsItem(
+                              sensorAddress,
+                              u,
+                              settingToChange,
+                              value,
+                              controller,
+                              item,
+                              savePressed,
+                              textControllerList[index])
+                          : Container(height: 0) //ListTile(enabled: false)
+                    ]));
+              });
+        } else if (snapshot.hasData && SmartMqtt.instance.isNewSettings) {
           return const CircularProgressIndicator();
-        },
-      );
+
+          //return Text(snapshot.error.toString());
+        } else if (snapshot.hasError) {
+          return const CircularProgressIndicator();
+
+          //return Text(snapshot.error.toString());
+        }
+        // By default show a loading spinner.
+        return const CircularProgressIndicator();
+      },
+    );
     //}
     // ce je shranjen, pocakaj na nov message iz settingov
     /*else {
@@ -506,15 +500,7 @@ class _UserSettingsState extends State<UserSettings> {
 
     debugPrint(
         "after publish:: saveMqttSettings: $controller.text, $sensorName, $settingToChange");
-    
-
-    // todo -> pocakaj, da smartMqtt vrne nove vrednosti
-    /*  initializePreference().whenComplete(() {
-        // setState(() {});
-        preferences?.setBool("is_mqtt_setting_saved", true);
-      }); */
-
-    //setState(() {});
+    setState(() {});
   }
 
   _setInputDecoration(val) {

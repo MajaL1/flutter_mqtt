@@ -142,20 +142,29 @@ class SmartMqtt extends ChangeNotifier {
         //preverimo, ker je prvo sporocilo
         // po shranjevanju oblike {"135":{"hi_alarm":111}}
         // in tega izpustimo
-        if (!(decodeMessage.contains("v:") ||
+        if ((decodeMessage.contains("v") ||
             decodeMessage.contains("typ") ||
             decodeMessage.contains("u"))) {
           // ali je novo sporocilo loaded
-          if (isSaved) {
-            newSettingsMessageLoaded = true;
-            // isSaved = false;
-            //notifyListeners();
+
+
+          // ali novi settingi niso enaki prejsnim
+          if(newUserSettings.compareTo(decodeMessage)!=0){
+            newUserSettings = decodeMessage;
+            isNewSettings = true;
+            setNewUserSettings(newUserSettings);
+            notifyListeners();
           }
-          newUserSettings = decodeMessage;
-          setNewUserSettings(newUserSettings);
-          debugPrint("----- isNewSettings: $isNewSettings");
+
+
+          debugPrint("----- newUserSettings: $newUserSettings");
           preferences.setString(
               "settings_mqtt_device_name", topicName.split("/settings").first);
+        }
+        // ali je sporocilo po potrditvi publishanja
+        else{
+          isNewSettings = false;
+          notifyListeners();
         }
 
         preferences.setString("settings_mqtt", decodeMessage);
@@ -262,11 +271,6 @@ class SmartMqtt extends ChangeNotifier {
 
   // vrne listo user settingov
   Future<String> getNewUserSettingsList() async {
-
-
-    if(isNewSettings) {
-      return newUserSettings;
-    }
     return newUserSettings;
   }
 
