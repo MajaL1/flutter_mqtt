@@ -23,11 +23,7 @@ class UserSettings extends StatefulWidget {
 
 Future<List<UserDataSettings>> _getUserDataSettings() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  //String? data = preferences.get("settings_mqtt").toString();
-
-  String data = await SmartMqtt.instance.getNewUserSettingsList();
-
-
+  String? data = preferences.get("settings_mqtt").toString();
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
@@ -170,10 +166,10 @@ class _UserSettingsState extends State<UserSettings> {
         "[[[[newSettingsMessageLoaded ${SmartMqtt.instance.newSettingsMessageLoaded.toString()}]]]]");
 
    // if(isSaved)
-    /*String newUserSettings = SmartMqtt.instance.newUserSettings;
+    String newUserSettings = SmartMqtt.instance.newUserSettings;
     setState(() {
       preferences?.setString("settings_mqtt", newUserSettings);
-    }); */
+    });
 
     // ce je bilo shranjeno, potem pridobi nove mqtt settingse
     if (SmartMqtt.instance.isSaved) {
@@ -305,13 +301,11 @@ class _UserSettingsState extends State<UserSettings> {
     // ce ni shranjen, pokazi normalno viex
     //if (!SmartMqtt.instance.newSettingsMessageLoaded) {
       return FutureBuilder<List<UserDataSettings>>(
-        future: //Provider.of<SmartMqtt>(context, listen: false)
-            //.getUserSettingsList().then(_getUserDataSettings().then((dataSettingsList) =>
-          //_parseUserDataSettingsToList(dataSettingsList))),
-          _getUserDataSettings().then((dataSettingsList) =>
+        future: _getUserDataSettings().then((dataSettingsList) =>
             _parseUserDataSettingsToList(dataSettingsList)),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            //widget.manager.unsubscribe("_topic1");
             List<UserDataSettings>? editableSettingsList = snapshot.data;
             List<TextEditingController> textControllerList =
                 _createControllerForEditSettings(editableSettingsList!);
@@ -328,10 +322,6 @@ class _UserSettingsState extends State<UserSettings> {
           }
           debugPrint("END Generating editableControllerList ");
 */
-
-            // vrni prazen seznam newSettings SmartMqtt
-
-            SmartMqtt.instance.setNewUserSettings("");
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data!.length,
@@ -371,9 +361,7 @@ class _UserSettingsState extends State<UserSettings> {
                       ]));
                 });
           } else if (snapshot.hasError) {
-            return const CircularProgressIndicator();
-
-            //return Text(snapshot.error.toString());
+            return Text(snapshot.error.toString());
           }
           // By default show a loading spinner.
           return const CircularProgressIndicator();

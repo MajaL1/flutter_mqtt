@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt_test/widgets/shared_prefs_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notification_helper.dart';
@@ -54,7 +55,6 @@ class SmartMqtt extends ChangeNotifier {
   late bool newSettingsMessageLoaded = false;
   late String newUserSettings = "";
 
-
   void disconnect() {
     print('Disconnected');
     client.disconnect();
@@ -71,7 +71,7 @@ class SmartMqtt extends ChangeNotifier {
     }
     client.publishMessage(currentTopic, MqttQos.exactlyOnce, builder.payload!);
     isSaved = true;
-    notifyListeners();
+    //notifyListeners();
   }
 
   /// PING response received
@@ -142,7 +142,9 @@ class SmartMqtt extends ChangeNotifier {
         //preverimo, ker je prvo sporocilo
         // po shranjevanju oblike {"135":{"hi_alarm":111}}
         // in tega izpustimo
-        if(!decodeMessage.contains("v:")|| !decodeMessage.contains("typ") || !decodeMessage.contains("u")){
+        if (!(decodeMessage.contains("v:") ||
+            decodeMessage.contains("typ") ||
+            decodeMessage.contains("u"))) {
           // ali je novo sporocilo loaded
           if (isSaved) {
             newSettingsMessageLoaded = true;
@@ -150,16 +152,14 @@ class SmartMqtt extends ChangeNotifier {
             //notifyListeners();
           }
           newUserSettings = decodeMessage;
-          notifyListeners();
+          setNewUserSettings(newUserSettings);
           debugPrint("----- isNewSettings: $isNewSettings");
           preferences.setString(
               "settings_mqtt_device_name", topicName.split("/settings").first);
         }
 
         preferences.setString("settings_mqtt", decodeMessage);
-
-
-          }
+      }
       if (topicName.contains("data")) {
         //debugPrint("from which topic -data $topicName");
         //preferences.setString("data_mqtt", decodeMessage);
@@ -195,7 +195,7 @@ class SmartMqtt extends ChangeNotifier {
         // Todo: preveri vrednosti currentAlarmList.first in
         // nastavitve v settingsih in prikazi alarm
 
-       // compareOldSettingsWithNew(currentAlarmList.first.hiAlarm!, preferences);
+        // compareOldSettingsWithNew(currentAlarmList.first.hiAlarm!, preferences);
       }
       print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
       print(
@@ -258,6 +258,21 @@ class SmartMqtt extends ChangeNotifier {
       disconnect();
     }
     return client;
+  }
+
+  // vrne listo user settingov
+  Future<String> getNewUserSettingsList() async {
+
+
+    if(isNewSettings) {
+      return newUserSettings;
+    }
+    return newUserSettings;
+  }
+
+  void setNewUserSettings(String newUserSettings) {
+    this.newUserSettings = newUserSettings;
+    notifyListeners();
   }
 }
 

@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
-import 'package:flutter/services.dart';
 
 import 'model/alarm.dart';
 import 'mqtt/state/MQTTAppState.dart';
@@ -38,8 +39,7 @@ class NotificationsApp extends StatefulWidget {
 class _NotificationsAppState extends State<NotificationsApp> {
   var prefs = 1;
 
-
-  static  MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
+  static MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
 
   _NotificationsAppState() {
     //methodChannel.setMethodCallHandler((call) => call.);
@@ -63,7 +63,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
       List<Alarm> alarmList = [];
       //preferences.clear();
       // pocistimo settinge iz
-       preferences.remove("settings_mqtt");
+      preferences.remove("settings_mqtt");
       String alarmListData = json.encode(alarmList);
       //json.decode(alarmListData);
       preferences.setString("alarm_list_mqtt", alarmListData);
@@ -80,6 +80,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
+          ChangeNotifierProvider(create: (context) => SmartMqtt.instance)
         ],
         builder: (context, child) => Builder(builder: (context) {
               //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
