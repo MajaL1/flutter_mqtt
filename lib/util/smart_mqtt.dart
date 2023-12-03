@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:mqtt_test/widgets/shared_prefs_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notification_helper.dart';
@@ -70,7 +69,7 @@ class SmartMqtt extends ChangeNotifier {
       }
     }
     client.publishMessage(currentTopic, MqttQos.exactlyOnce, builder.payload!);
-    isSaved = true;
+    isNewSettings = true;
     //notifyListeners();
   }
 
@@ -147,25 +146,36 @@ class SmartMqtt extends ChangeNotifier {
             decodeMessage.contains("u"))) {
           // ali je novo sporocilo loaded
 
-
+          debugPrint("got new settings");
           // ali novi settingi niso enaki prejsnim
-          if(newUserSettings.compareTo(decodeMessage)!=0){
-            newUserSettings = decodeMessage;
-            isNewSettings = true;
-            setNewUserSettings(newUserSettings);
-            notifyListeners();
-          }
+          // ali ce so v zacetku prazni
+          if (newUserSettings.compareTo(decodeMessage) != 0) {
+            debugPrint("new user settings");
 
+            if (newUserSettings.isEmpty) {
+              isNewSettings = false;
+
+              debugPrint(
+                  "00000 new user settings IS empty, isNewSettings: $isNewSettings");
+            } else {
+              isNewSettings = true;
+
+              debugPrint(
+                  "00000 new user settings NOT empty, isNewSettings: $isNewSettings");
+            }
+            newUserSettings = decodeMessage;
+            setNewUserSettings(newUserSettings);
+          }
 
           debugPrint("----- newUserSettings: $newUserSettings");
           preferences.setString(
               "settings_mqtt_device_name", topicName.split("/settings").first);
         }
         // ali je sporocilo po potrditvi publishanja
-        else{
+        /*else{
           isNewSettings = false;
           notifyListeners();
-        }
+        }*/
 
         preferences.setString("settings_mqtt", decodeMessage);
       }
@@ -275,8 +285,12 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   void setNewUserSettings(String newUserSettings) {
+    isNewSettings = true;
+    debugPrint("setting new user settings: isNewSettings: $isNewSettings");
+
     this.newUserSettings = newUserSettings;
     notifyListeners();
+    debugPrint("notifiying listeners..");
   }
 }
 
