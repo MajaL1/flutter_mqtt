@@ -50,7 +50,6 @@ class SmartMqtt extends ChangeNotifier {
 
   bool debug = true;
   late bool isSaved = false;
-  late bool isNewSettings = false;
   late bool newSettingsMessageLoaded = false;
   late String newUserSettings = "";
 
@@ -68,8 +67,8 @@ class SmartMqtt extends ChangeNotifier {
         currentTopic = topic;
       }
     }
+    isSaved = true;
     client.publishMessage(currentTopic, MqttQos.exactlyOnce, builder.payload!);
-    isNewSettings = true;
     //notifyListeners();
   }
 
@@ -152,17 +151,6 @@ class SmartMqtt extends ChangeNotifier {
           if (newUserSettings.compareTo(decodeMessage) != 0) {
             debugPrint("new user settings");
 
-            if (newUserSettings.isEmpty) {
-              isNewSettings = false;
-
-              debugPrint(
-                  "00000 new user settings IS empty, isNewSettings: $isNewSettings");
-            } else {
-              isNewSettings = true;
-
-              debugPrint(
-                  "00000 new user settings NOT empty, isNewSettings: $isNewSettings");
-            }
             newUserSettings = decodeMessage;
             setNewUserSettings(newUserSettings);
           }
@@ -279,18 +267,14 @@ class SmartMqtt extends ChangeNotifier {
     return client;
   }
 
-  // vrne listo user settingov
-  String getNewUserSettingsList() {
+  Future<String> getNewUserSettingsList() async {
     return newUserSettings;
   }
 
   void setNewUserSettings(String newUserSettings) {
-    isNewSettings = true;
-    debugPrint("setting new user settings: isNewSettings: $isNewSettings");
-
     this.newUserSettings = newUserSettings;
     notifyListeners();
-    debugPrint("notifiying listeners..");
+    debugPrint("notifying listeners..");
   }
 }
 
