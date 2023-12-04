@@ -337,10 +337,10 @@ class _UserSettingsState extends State<UserSettings> {
           debugPrint("00000 !$SmartMqtt.instance.isNewSettings");
           return const CircularProgressIndicator();
         }
-        else if (!snapshot.hasData){// && SmartMqtt.instance.isNewSettings) {
+       /* else if (!snapshot.hasData){// && SmartMqtt.instance.isNewSettings) {
           debugPrint("00000 !snapshot.hasData: !$snapshot.hasData");
           return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
+        } */else if (snapshot.hasError) {
           debugPrint("00000 snapshot.hasError: $snapshot.hasError");
 
           // return const CircularProgressIndicator();
