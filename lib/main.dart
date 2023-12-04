@@ -79,7 +79,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
+          //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
           ChangeNotifierProvider(create: (context) => SmartMqtt.instance)
         ],
         builder: (context, child) => Builder(builder: (context) {

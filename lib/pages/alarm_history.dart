@@ -119,5 +119,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     setState(() {
       //snapshot.data![index].on = value;
     });
+
+    debugPrint("clear history");
   }
 }

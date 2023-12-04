@@ -21,27 +21,37 @@ class UserSettings extends StatefulWidget {
   State<UserSettings> createState() => _UserSettingsState();
 }
 
-Future<List<UserDataSettings>> _getUserDataSettings() async {
+Future<List<UserDataSettings>> _getUserDataSettingsTEST(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  //String? data = preferences.get("settings_mqtt").toString();
-
-  String data = await SmartMqtt.instance.getNewUserSettingsList();
 
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
 
-  //if(data.isNotEmpty) {
+  Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+
+  userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+  String? deviceName = preferences.getString("settings_mqtt_device_name");
+  userDataSettings[0].deviceName = deviceName;
+
+  return userDataSettings;
+}
+
+Future<List<UserDataSettings>> _getUserDataSettings() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String data =  SmartMqtt.instance.getNewUserSettingsList();
+
+  String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+  debugPrint("****************** user settings data $data");
+  List<UserDataSettings> userDataSettings = [];
+
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-    //preferences.getBool("is_mqtt_setting_saved");
     userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
     String? deviceName = preferences.getString("settings_mqtt_device_name");
     userDataSettings[0].deviceName = deviceName;
 
     return userDataSettings;
-//  }
-
 }
 
 List<TextEditingController> _createControllerForEditSettings(
@@ -271,18 +281,17 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
   Widget _buildMqttSettingsView() {
-    // ce ni shranjen, pokazi normalno viex
-    //if (!SmartMqtt.instance.newSettingsMessageLoaded) {
+
+    String testNew = Provider.of<SmartMqtt>(context, listen: true).getNewUserSettingsList();
+
+
     return FutureBuilder<List<UserDataSettings>>(
-      future: //Provider.of<SmartMqtt>(context, listen: false)
-          //.getUserSettingsList().then(_getUserDataSettings().then((dataSettingsList) =>
-          //_parseUserDataSettingsToList(dataSettingsList))),
-       _getUserDataSettings().then((dataSettingsList) =>
-              _parseUserDataSettingsToList(dataSettingsList)),
+      future:
+       _getUserDataSettingsTEST(testNew).then((dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),
       builder: (context, snapshot) {
         debugPrint(
             "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
-        if (snapshot.hasData &&  SmartMqtt.instance.isNewSettings) {
+        if (snapshot.hasData){// &&  SmartMqtt.instance.isNewSettings) {
           List<UserDataSettings>? editableSettingsList = snapshot.data;
           List<TextEditingController> textControllerList =
               _createControllerForEditSettings(editableSettingsList!);
@@ -292,7 +301,6 @@ class _UserSettingsState extends State<UserSettings> {
                 "// editableSetting: ${userDataSettings.deviceName}, ${userDataSettings.editableSetting}, ${userDataSettings.hiAlarm}, ${userDataSettings.hiAlarm}, ${userDataSettings.t}, $userDataSettings.typ, $userDataSettings.u");
           }
           debugPrint("END print editableSettingsList ");
-
           */
           SmartMqtt.instance.isNewSettings = false;
           return ListView.builder(
@@ -333,20 +341,20 @@ class _UserSettingsState extends State<UserSettings> {
                           : Container(height: 0) //ListTile(enabled: false)
                     ]));
               });
-        } else if (!SmartMqtt.instance.isNewSettings){// && SmartMqtt.instance.isNewSettings) {
-          debugPrint("00000 !$SmartMqtt.instance.isNewSettings");
-          return const CircularProgressIndicator();
-        }
+        }/* else if (!SmartMqtt.instance.isNewSettings){// && SmartMqtt.instance.isNewSettings) {
+          debugPrint("00001 !$SmartMqtt.instance.isNewSettings");
+          //return const CircularProgressIndicator();
+
+        } */
        /* else if (!snapshot.hasData){// && SmartMqtt.instance.isNewSettings) {
           debugPrint("00000 !snapshot.hasData: !$snapshot.hasData");
           return const CircularProgressIndicator();
         } */else if (snapshot.hasError) {
-          debugPrint("00000 snapshot.hasError: $snapshot.hasError");
-
+          debugPrint("00002 snapshot.hasError: $snapshot.hasError");
           // return const CircularProgressIndicator();
           return Text(snapshot.error.toString());
         }
-        debugPrint("default: snapshot.hasData: $snapshot.hasData, $SmartMqtt.instance.isNewSettings");
+        debugPrint("00003 default: snapshot.hasData: $snapshot.hasData, $SmartMqtt.instance.isNewSettings");
         // By default show a loading spinner.
         return const CircularProgressIndicator();
       },

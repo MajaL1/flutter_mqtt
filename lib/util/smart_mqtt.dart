@@ -280,7 +280,7 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   // vrne listo user settingov
-  Future<String> getNewUserSettingsList() async {
+  String getNewUserSettingsList() {
     return newUserSettings;
   }
 
