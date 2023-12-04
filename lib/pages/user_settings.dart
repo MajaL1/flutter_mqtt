@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:mqtt_test/widgets/units.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -370,15 +371,25 @@ class _UserSettingsState extends State<UserSettings> {
       UserDataSettings item,
       bool savePressed,
       TextEditingController textController) {
+    String settingText = "";
+
+    String unitText = UnitsConstants.getUnits(u);
+
+    if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
+      settingText = "High alarm";
+    }
+    if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
+      settingText = "Low alarm";
+    }
     return ListTile(
-      title: Text("Sensor address: $sensorAddress, u:  $u \n"),
-      //leading: Text(
-      //  "Sensor address: $sensorAddress",
-      // ),
+      title: Text("Sensor address: $sensorAddress, units: $unitText \n"),
+      leading: Text(
+        "Sensor address: $sensorAddress",
+      ),
       subtitle: Row(
         children: <Widget>[
           Text(
-            settingToChange,
+            settingText,
           ),
           const Padding(
             padding: EdgeInsets.only(right: 10.0),
