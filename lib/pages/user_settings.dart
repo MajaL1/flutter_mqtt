@@ -299,6 +299,7 @@ class _UserSettingsState extends State<UserSettings> {
                     snapshot.data![index].sensorAddress.toString();
                 int? u = item.u;
 
+                String? deviceName = snapshot.data![index].deviceName;
                 String? settingToChange = item.editableSetting ?? "";
                 String? value = "";
                 if (item.editableSetting == Constants.HI_ALARM_JSON) {
@@ -313,6 +314,14 @@ class _UserSettingsState extends State<UserSettings> {
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
                     child: Column(children: [
+                      index == 0
+                          ? Text("Device name: $deviceName",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w800))
+                          : const Text(""),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8),
+                      ),
                       settingToChange != Constants.U_JSON
                           ? _buildEditableSettingsItem(
                               sensorAddress,
@@ -383,9 +392,9 @@ class _UserSettingsState extends State<UserSettings> {
     }
     return ListTile(
       title: Text("Sensor address: $sensorAddress, units: $unitText \n"),
-      leading: Text(
+      /*leading: Text(
         "Sensor address: $sensorAddress",
-      ),
+      ),*/
       subtitle: Row(
         children: <Widget>[
           Text(
@@ -438,13 +447,11 @@ class _UserSettingsState extends State<UserSettings> {
               ),
             ),
           ),
-          Container(
-              child: ChangeNotifierProvider.value(
-                  value: SmartMqtt.instance,
-                  child:
-                      Consumer<SmartMqtt>(builder: (context, singleton, child) {
-                    return Text(singleton.isSaved.toString());
-                  }))),
+          ChangeNotifierProvider.value(
+              value: SmartMqtt.instance,
+              child: Consumer<SmartMqtt>(builder: (context, singleton, child) {
+                return Text(singleton.isSaved.toString());
+              })),
         ],
       ),
     );

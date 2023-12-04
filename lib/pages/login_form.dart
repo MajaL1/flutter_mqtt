@@ -229,12 +229,12 @@ bool _returnHasNetwork(bool val){
                             ),
                           ),
                         ),
-                        Padding(
+                       /* Padding(
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 15, bottom: 0),
                           child: TextButton(
                             onPressed: () {
-                              // login();
+                              // forgotPass();
                             },
                             child: const Text(
                               Constants.FORGOT_PASS,
@@ -244,7 +244,7 @@ bool _returnHasNetwork(bool val){
                                   fontSize: 15),
                             ),
                           ),
-                        ),
+                        ),*/
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 15, bottom: 0),
