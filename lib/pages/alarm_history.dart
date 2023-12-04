@@ -56,6 +56,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                 const Divider(height: 40, color: Colors.black12, thickness: 3),
                 ListView.builder(
                     shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
                       String sensorAddress =

@@ -222,7 +222,7 @@ class Alarm {
         }
       }
 
-      print("Creating alarm: $sensorAddress, $typ, $t, $hiAlarm, $loAlarm");
+      //print("Creating alarm: $sensorAddress, $typ, $t, $hiAlarm, $loAlarm");
       Alarm newAlarm = Alarm(
           sensorAddress: sensorAddress,
           typ: typ,
