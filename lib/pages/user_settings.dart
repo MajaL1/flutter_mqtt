@@ -356,19 +356,6 @@ class _UserSettingsState extends State<UserSettings> {
         return const CircularProgressIndicator();
       },
     );
-    //}
-    // ce je shranjen, pocakaj na nov message iz settingov
-    /*else {
-      if (SmartMqtt.instance.newSettingsMessageLoaded) {
-        debugPrint(
-            "user_settings newSettingsMessageLoaded $SmartMqtt.instance.newSettingsMessageLoaded, $SmartMqtt.instance.isSaved");
-        SmartMqtt.instance.newSettingsMessageLoaded = false;
-        SmartMqtt.instance.isSaved = false;
-        setState(() {});
-        //
-      }
-    } */
-    //return const CircularProgressIndicator();
   }
 
   ListTile _buildEditableSettingsItem(
@@ -447,11 +434,13 @@ class _UserSettingsState extends State<UserSettings> {
               ),
             ),
           ),
+          /*
           ChangeNotifierProvider.value(
               value: SmartMqtt.instance,
               child: Consumer<SmartMqtt>(builder: (context, singleton, child) {
                 return Text(singleton.isSaved.toString());
               })),
+              */
         ],
       ),
     );
