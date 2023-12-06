@@ -156,6 +156,7 @@ class NotificationHelper extends StatelessWidget {
       importance: Importance.max,
       priority: Priority.high,
       groupKey: "alarms",
+      setAsGroupSummary: false,
       colorized: true,
       enableLights: true,
 
