@@ -383,7 +383,7 @@ class _UserSettingsState extends State<UserSettings> {
       settingText = "Low alarm";
     }
     return ListTile(
-      title: index==0 ? Text("Sensor address: $sensorAddress, units: $unitText \n") : Container(),
+      title: index==0 ? Text("Sensor address: $sensorAddress, units: $unitText \n", maxLines: 2,) : Container(), //Text("", maxLines: 1),
       contentPadding:
       const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
       /*leading: Text(
