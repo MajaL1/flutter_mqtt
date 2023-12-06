@@ -158,6 +158,7 @@ class NotificationHelper extends StatelessWidget {
       groupKey: "alarms",
       colorized: true,
       enableLights: true,
+
       category: AndroidNotificationCategory.alarm,
     );
 

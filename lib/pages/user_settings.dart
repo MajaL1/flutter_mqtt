@@ -68,6 +68,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
 
     // Hi alarm prikazi za vse senzorje
     dataSettingsListNew.add(UserDataSettings(
+        deviceName: setting.deviceName,
         sensorAddress: setting.sensorAddress,
         hiAlarm: setting.hiAlarm,
         u: setting.u,
@@ -77,6 +78,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     if (!(sensorType == SensorTypeConstants.WS ||
         sensorType == SensorTypeConstants.WSD)) {
       dataSettingsListNew.add(UserDataSettings(
+          deviceName: setting.deviceName,
           sensorAddress: setting.sensorAddress,
           loAlarm: setting.loAlarm,
           u: setting.u,
@@ -85,6 +87,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     }
 
     dataSettingsListNew.add(UserDataSettings(
+        deviceName: setting.deviceName,
         sensorAddress: setting.sensorAddress,
         u: setting.u,
         editableSetting: Constants.U_JSON));
@@ -157,7 +160,7 @@ class _UserSettingsState extends State<UserSettings> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45),
           ),
-          const Text("Device settings: ",
+          const Text("Device settings ",
               style: TextStyle(color: Colors.black, fontSize: 20)),
           _buildMqttSettingsView(),
           const Padding(
@@ -317,14 +320,15 @@ class _UserSettingsState extends State<UserSettings> {
                       index == 0
                           ? Text("Device name: $deviceName",
                               style:
-                                  const TextStyle(fontWeight: FontWeight.w800))
+                                  const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),)
                           : const Text(""),
                       const Padding(
-                        padding: EdgeInsets.only(top: 8),
+                        padding: EdgeInsets.only(top: 15, bottom: 10),
                       ),
                       settingToChange != Constants.U_JSON
                           ? _buildEditableSettingsItem(
                               sensorAddress,
+                              index,
                               u,
                               settingToChange,
                               value,
@@ -360,6 +364,7 @@ class _UserSettingsState extends State<UserSettings> {
 
   ListTile _buildEditableSettingsItem(
       String sensorAddress,
+      int index,
       int? u,
       String settingToChange,
       String value,
@@ -378,10 +383,13 @@ class _UserSettingsState extends State<UserSettings> {
       settingText = "Low alarm";
     }
     return ListTile(
-      title: Text("Sensor address: $sensorAddress, units: $unitText \n"),
+      title: index==0 ? Text("Sensor address: $sensorAddress, units: $unitText \n") : Container(),
+      contentPadding:
+      const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
       /*leading: Text(
         "Sensor address: $sensorAddress",
       ),*/
+
       subtitle: Row(
         children: <Widget>[
           Text(
@@ -399,12 +407,7 @@ class _UserSettingsState extends State<UserSettings> {
                   ],
                   controller: textController,
                   onChanged: (val) {
-                    //text = val;
-                    debugPrint("onChanged: $val");
-                    //textController.text = val;
-                    /*setState(() {
-                      textController.text = val;
-                    });*/
+
                   },
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
