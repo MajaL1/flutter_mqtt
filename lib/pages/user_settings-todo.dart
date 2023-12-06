@@ -141,12 +141,11 @@ class _UserSettingsState extends State<UserSettings> {
     super.initState();
     SmartMqtt.instance.isSaved = false;
     debugPrint("user_settings initState");
-    debugPrint("WidgetsBinding");
-    //});
+    /*debugPrint("WidgetsBinding");
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // widget.manager.disconnect();
       // print("SchedulerBinding");
-    });
+    }); */
   }
 
   /* Widget _connectToTopic() {
@@ -161,22 +160,13 @@ class _UserSettingsState extends State<UserSettings> {
   Widget build(BuildContext context) {
     debugPrint("calling build method user_settings.dart");
 
-    debugPrint("[[[[isSaved ${SmartMqtt.instance.isSaved.toString()}]]]]");
-    debugPrint(
-        "[[[[newSettingsMessageLoaded ${SmartMqtt.instance.newSettingsMessageLoaded.toString()}]]]]");
+   // debugPrint("[[[[isSaved ${SmartMqtt.instance.isSaved.toString()}]]]]");
 
-   // if(isSaved)
     String newUserSettings = SmartMqtt.instance.newUserSettings;
     setState(() {
       preferences?.setString("settings_mqtt", newUserSettings);
     });
 
-    // ce je bilo shranjeno, potem pridobi nove mqtt settingse
-    if (SmartMqtt.instance.isSaved) {
-      //...
-      //  SmartMqtt.instance.isSaved = false;
-      // SmartMqtt.instance.isNewSettings = false;
-    }
     return Scaffold(
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,

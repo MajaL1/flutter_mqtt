@@ -122,6 +122,6 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       //snapshot.data![index].on = value;
     });
 
-    debugPrint("clear history");
+   // debugPrint("clear history");
   }
 }

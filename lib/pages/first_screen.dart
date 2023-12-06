@@ -24,7 +24,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token}");
+    //debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token}");
 
     return Scaffold(
         body: FutureBuilder(

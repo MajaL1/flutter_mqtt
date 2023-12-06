@@ -42,8 +42,8 @@ class _AlarmListItemState extends State<AlarmListItem> {
                   inactiveThumbColor: Colors.redAccent,
                   value: snapshot.data![index].on ? true : false,
                   onChanged: (bool value) {
-                    debugPrint("old value:: $snapshot.data![index].on");
-                    debugPrint("new value:: $value");
+                    //debugPrint("old value:: $snapshot.data![index].on");
+                    //debugPrint("new value:: $value");
                     setState(() {
                       snapshot.data![index].on = value;
                     });
@@ -59,7 +59,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
   }
 
   void changeAlarmEnabled(int id, bool value) {
-    debugPrint("calling changeAlarmEnabled: $id, $value");
+    //debugPrint("calling changeAlarmEnabled: $id, $value");
   }
 
   void showAlarmDetail(int id) {}

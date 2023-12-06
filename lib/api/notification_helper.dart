@@ -199,13 +199,13 @@ class NotificationHelper extends StatelessWidget {
     //     FlutterLocalNotificationsPlugin();
 
     if (service is AndroidServiceInstance) {
-      debugPrint("setAsForeground message : ");
+     // debugPrint("setAsForeground message : ");
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
       });
 
       service.on('setAsBackground').listen((event) {
-        debugPrint("setAsBackground : ");
+      //  debugPrint("setAsBackground : ");
         service.setAsBackgroundService();
       });
     }

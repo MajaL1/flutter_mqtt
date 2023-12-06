@@ -35,7 +35,7 @@ class ApiService {
         List alarmMessageJson = json.decode(alarmListData);
         alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
       }
-      debugPrint("alarmList-:: $alarmList");
+      //debugPrint("alarmList-:: $alarmList");
     }
     return alarmList;
   }
@@ -79,7 +79,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body.toString());
-        debugPrint(data['token']);
+       // debugPrint(data['token']);
         debugPrint('=====Login successfully');
         UserTopic userTopic;
         if (data["topics"] != null) {
@@ -194,7 +194,7 @@ class ApiService {
     var data =
         await rootBundle.loadString("assets/test_notifications_list.json");
     final jsonResult = jsonDecode(data);
-    debugPrint("jsonResult: $jsonResult");
+    //debugPrint("jsonResult: $jsonResult");
 
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 

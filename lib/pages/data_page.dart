@@ -130,7 +130,7 @@ class _DetailsPageState extends State<DetailsPage> {
     //if(decodeMessage != null) {
       Map<String, dynamic> jsonMap = json.decode(decodeMessage);
       alarmData = Alarm.getAlarmList(jsonMap);
-      debugPrint("AlarmData from JSON: $alarmData");
+      //debugPrint("AlarmData from JSON: $alarmData");
     //}
     //List<Data> dataList  = Data.getDataList();
     return alarmData;
