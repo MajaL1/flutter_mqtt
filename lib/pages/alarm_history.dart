@@ -81,7 +81,27 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                         decoration: const BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
-                        child: ListTile(
+                        child:
+                            Table(
+
+                                border: TableBorder.all(color: Colors.black),
+                                columnWidths: const {
+                                  0: FixedColumnWidth(80.0),
+                                  1: FixedColumnWidth(80.0),
+                                  2: FixedColumnWidth(80.0),
+
+                                },
+                                children: [
+                                    TableRow(children: [
+                                     Text("SensorAddress: $sensorAddress"),
+                                      Text("Value: $v"),
+                                      Text("$formattedDate  $alarmValue"),
+
+
+                                    ])]
+                            ),
+
+                       /* ListTile(
                           //style: const ListTileStyle(),
                           contentPadding: const EdgeInsets.all(5.0),
                           leading: const Icon(Icons.notifications,
@@ -101,7 +121,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                           )),
                           subtitle: Text('$formattedDate\nv: $v \n$alarmValue'),
                           isThreeLine: true,
-                        ),
+                        ),*/
                       );
                     })
               ])));

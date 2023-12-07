@@ -101,7 +101,7 @@ class Alarm {
                 loAlarm = value1;
               }
               if (key1 == "ts") {
-                ts = DateTime.fromMicrosecondsSinceEpoch(value1);
+                ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
                 // ts = valueInt;
               }
               if (key1 == "lb") {
@@ -198,8 +198,8 @@ class Alarm {
             loAlarm = valueInt;
           }
           if (key == "ts") {
-            ts = DateTime.fromMicrosecondsSinceEpoch(valueInt);
-            debugPrint("ts");
+            ts = DateTime.fromMillisecondsSinceEpoch(valueInt * 1000);
+            //debugPrint("ts");
           }
           if (key == "lb") {
             lb = valueInt;
@@ -290,7 +290,8 @@ class Alarm {
                   loAlarm = valueInt;
                 }
                 if (key1 == "ts") {
-                  ts = DateTime.fromMicrosecondsSinceEpoch(valueInt);
+                  ts = DateTime.fromMillisecondsSinceEpoch(valueInt * 1000);
+                    //  DateTime.fromMicrosecondsSinceEpoch(valueInt);
                 }
                 if (key1 == "lb") {
                   lb = valueInt;

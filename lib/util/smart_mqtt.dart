@@ -159,12 +159,6 @@ class SmartMqtt extends ChangeNotifier {
           preferences.setString(
               "settings_mqtt_device_name", topicName.split("/settings").first);
         }
-        // ali je sporocilo po potrditvi publishanja
-        /*else{
-          isNewSettings = false;
-          notifyListeners();
-        }*/
-
         preferences.setString("settings_mqtt", decodeMessage);
       }
       if (topicName.contains("data")) {
@@ -199,15 +193,13 @@ class SmartMqtt extends ChangeNotifier {
         // prikaze sporocilo z alarmom
         NotificationHelper.sendMessage(currentAlarmList.first);
 
-        // Todo: preveri vrednosti currentAlarmList.first in
-        // nastavitve v settingsih in prikazi alarm
-
-        // compareOldSettingsWithNew(currentAlarmList.first.hiAlarm!, preferences);
       }
-      print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
-      print(
-          'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
-      print('');
+
+      debugPrint("payload: $pt");
+     // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
+      //print(
+        //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+      //print('');
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
@@ -259,6 +251,7 @@ class SmartMqtt extends ChangeNotifier {
       print('::Navis app client connecting....');
       currentState = MQTTAppConnectionState.connecting;
       client.keepAlivePeriod = 20;
+      debugPrint("*********************** Connecting to broker *******************************");
       await client.connect(username, mqttPass);
     } on Exception catch (e) {
       print('Navis app::client exception - $e');
