@@ -155,7 +155,7 @@ class SmartMqtt extends ChangeNotifier {
             setNewUserSettings(newUserSettings);
           }
 
-          debugPrint("----- newUserSettings: $newUserSettings");
+         // debugPrint("----- newUserSettings: $newUserSettings");
           preferences.setString(
               "settings_mqtt_device_name", topicName.split("/settings").first);
         }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,24 +9,35 @@ import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
-
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'model/alarm.dart';
-import 'mqtt/state/MQTTAppState.dart';
 import 'pages/first_screen.dart';
-import 'util/app_preference_util.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+
+// Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
+@pragma('vm:entry-point')
+ void printHello() {
+final DateTime now = DateTime.now();
+final int isolateId = Isolate.current.hashCode;
+print("[$now] Hello, world! isolate=${isolateId} function='$printHello'");
+}
 Future<void> main() async {
   tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPrefs().init();
+ // await SharedPrefs().init();
+  await AndroidAlarmManager.initialize();
 
   runApp(
     const NotificationsApp(),
   );
+  final int helloAlarmID = 0;
+  await AndroidAlarmManager.periodic(const Duration(minutes: 1), helloAlarmID, printHello);
+
 }
+
 
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

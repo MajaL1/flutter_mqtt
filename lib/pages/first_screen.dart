@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mqtt_test/util/app_preference_util.dart';
 
 import 'login_form.dart';
 
@@ -7,8 +6,6 @@ class FirstScreen extends StatefulWidget {
 
   FirstScreen.base({Key? key}) : super(key: key);
 
-  final String username = SharedPrefs().username;
-  final String token = SharedPrefs().token;
 
   @override
   State<StatefulWidget> createState() => _FirstScreenState();
