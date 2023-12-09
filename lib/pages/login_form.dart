@@ -81,6 +81,7 @@ class _LoginFormValidationState extends State<LoginForm> {
         // inicializiraj servis za posiljanje sporocil
         NotificationHelper.initializeService();
       }
+
       //*********************************************/
       Navigator.pushReplacement(
             context,

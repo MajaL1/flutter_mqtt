@@ -66,6 +66,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
                       String alarmValue = "";
+                 //     DateTime ts = snapshot.data![index].ts!;
 
                       if (snapshot.data![index].hiAlarm != 0 &&
                           snapshot.data![index].hiAlarm != null) {
@@ -77,6 +78,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       }
                       String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
                           .format(snapshot.data![index].ts!);
+                  //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
                       return Container(
                         decoration: const BoxDecoration(
                             border: Border(
@@ -92,14 +94,14 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               TableRow(children: [
                                 Container(
                                     padding: const EdgeInsets.all(10.0),
-                                    child: Text("SensorAddress: $sensorAddress",
+                                    child: Text("$sensorAddress",
                                         textAlign: TextAlign.center)),
                                 Container(
                                     padding: const EdgeInsets.all(10.0),
-                                    child: Text("Value: $v",textAlign: TextAlign.center)),
+                                    child: Text("Value: $v \n$alarmValue",textAlign: TextAlign.center)),
                                 Container(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text("$formattedDate  $alarmValue", textAlign: TextAlign.center),
+                                  child: Text("$formattedDate ", textAlign: TextAlign.center),
                                 )
                               ])
                             ]),

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class Alarm {
   String? sensorAddress;
@@ -198,7 +199,9 @@ class Alarm {
             loAlarm = valueInt;
           }
           if (key == "ts") {
-            ts = DateTime.fromMillisecondsSinceEpoch(valueInt * 1000);
+            DateTime parse = DateTime.parse(value);
+            ts = parse;
+           // ts = value;//DateTime.fromMillisecondsSinceEpoch(int.parse(value) * 1000);
             //debugPrint("ts");
           }
           if (key == "lb") {

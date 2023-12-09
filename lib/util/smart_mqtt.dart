@@ -126,6 +126,8 @@ class SmartMqtt extends ChangeNotifier {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
+      int firstRetainMessage = 0;
+
       /* preferences.remove("settings_mqtt");
       preferences.remove("alarm_mqtt");
       preferences.clear(); */
@@ -155,7 +157,7 @@ class SmartMqtt extends ChangeNotifier {
             setNewUserSettings(newUserSettings);
           }
 
-         // debugPrint("----- newUserSettings: $newUserSettings");
+          // debugPrint("----- newUserSettings: $newUserSettings");
           preferences.setString(
               "settings_mqtt_device_name", topicName.split("/settings").first);
         }
@@ -167,38 +169,42 @@ class SmartMqtt extends ChangeNotifier {
       }
       if (topicName.contains("alarm")) {
         debugPrint("from which topic-alarm $topicName, $decodeMessage");
+        debugPrint("first retain message $firstRetainMessage");
 
-        //prebere listo alarmov iz preferenc in jim doda nov alarm
-        SharedPreferences preferences = await SharedPreferences.getInstance();
+        if (firstRetainMessage > 0) {
+          //prebere listo alarmov iz preferenc in jim doda nov alarm
+          SharedPreferences preferences = await SharedPreferences.getInstance();
 
-        // 1. dobi listo prejsnjih alarmov
-        String? alarmListOldData =
-            preferences.get("alarm_list_mqtt") as String?;
-        List a1 = [];
-        if (alarmListOldData != null) {
-          a1 = json.decode(alarmListOldData);
+          // 1. dobi listo prejsnjih alarmov
+          String? alarmListOldData =
+              preferences.get("alarm_list_mqtt") as String?;
+          List a1 = [];
+          if (alarmListOldData != null) {
+            a1 = json.decode(alarmListOldData);
+          }
+
+          // 2. dobi trenuten alarm
+          Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
+          List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+          currentAlarmList.first.sensorAddress =
+              topicName.split("/alarm").first;
+          // 3. doda alarm na listo starih alarmov
+          // odkomentiraj, da bo dodajalo alarm
+          a1.addAll(currentAlarmList);
+          String alarmListMqtt = jsonEncode(a1);
+          preferences.setString("alarm_list_mqtt", alarmListMqtt);
+          //debugPrint("alarmList---: $alarmListMqtt");
+
+          // prikaze sporocilo z alarmom
+          NotificationHelper.sendMessage(currentAlarmList.first);
+          firstRetainMessage++;
         }
-
-        // 2. dobi trenuten alarm
-        Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
-        List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
-        currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
-        // 3. doda alarm na listo starih alarmov
-        // odkomentiraj, da bo dodajalo alarm
-        a1.addAll(currentAlarmList);
-        String alarmListMqtt = jsonEncode(a1);
-        preferences.setString("alarm_list_mqtt", alarmListMqtt);
-        //debugPrint("alarmList---: $alarmListMqtt");
-
-        // prikaze sporocilo z alarmom
-        NotificationHelper.sendMessage(currentAlarmList.first);
-
       }
 
       debugPrint("payload: $pt");
-     // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
+      // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
       //print(
-        //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+      //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       //print('');
     });
     print(
@@ -251,7 +257,8 @@ class SmartMqtt extends ChangeNotifier {
       print('::Navis app client connecting....');
       currentState = MQTTAppConnectionState.connecting;
       client.keepAlivePeriod = 20;
-      debugPrint("*********************** Connecting to broker *******************************");
+      debugPrint(
+          "*********************** Connecting to broker *******************************");
       await client.connect(username, mqttPass);
     } on Exception catch (e) {
       print('Navis app::client exception - $e');
