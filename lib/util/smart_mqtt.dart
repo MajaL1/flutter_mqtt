@@ -21,6 +21,9 @@ class SmartMqtt extends ChangeNotifier {
 
   late String currentTopic;
 
+  int firstRetainMessage = 0;
+
+
   MQTTAppConnectionState currentState = MQTTAppConnectionState.disconnected;
 
   late MqttServerClient client;
@@ -126,11 +129,11 @@ class SmartMqtt extends ChangeNotifier {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
-      int firstRetainMessage = 0;
 
       /* preferences.remove("settings_mqtt");
       preferences.remove("alarm_mqtt");
       preferences.clear(); */
+
 
       /***  polnjenje objekta - data ***/
       if (topicName!.contains("settings")) {
@@ -169,9 +172,8 @@ class SmartMqtt extends ChangeNotifier {
       }
       if (topicName.contains("alarm")) {
         debugPrint("from which topic-alarm $topicName, $decodeMessage");
-        debugPrint("first retain message $firstRetainMessage");
 
-        if (firstRetainMessage > 0) {
+
           //prebere listo alarmov iz preferenc in jim doda nov alarm
           SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -198,7 +200,9 @@ class SmartMqtt extends ChangeNotifier {
           // prikaze sporocilo z alarmom
           NotificationHelper.sendMessage(currentAlarmList.first);
           firstRetainMessage++;
-        }
+          debugPrint("first retain message $firstRetainMessage");
+
+
       }
 
       debugPrint("payload: $pt");

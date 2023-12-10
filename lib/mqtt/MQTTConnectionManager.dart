@@ -137,18 +137,18 @@ class MQTTConnectionManager {
       /***  polnjenje objekta - data ***/
       if(topicName!.contains("settings")){
         debugPrint("___________________________________________________");
-        debugPrint("from which topic $topicName");
+        debugPrint("from topic $topicName");
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         preferences.setString("settings_mqtt", decodeMessage);
         preferences.setString("settings_mqtt_device_name", topicName.split("/settings").first);
       }
       if(topicName!.contains("data")){
-        //debugPrint("from which topic -data $topicName");
+        //debugPrint("from topic -data $topicName");
         //preferences.setString("data_mqtt", decodeMessage);
       }
       if(topicName!.contains("alarm")){
-        debugPrint("from which topic -alarm $topicName, $decodeMessage");
+        debugPrint("from topic -alarm $topicName, $decodeMessage");
 
         //prebere listo alarmov iz preferenc in jim doda nov alarm
         SharedPreferences preferences = await SharedPreferences.getInstance();
