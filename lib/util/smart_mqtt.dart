@@ -23,7 +23,6 @@ class SmartMqtt extends ChangeNotifier {
 
   int firstRetainMessage = 0;
 
-
   MQTTAppConnectionState currentState = MQTTAppConnectionState.disconnected;
 
   late MqttServerClient client;
@@ -103,7 +102,6 @@ class SmartMqtt extends ChangeNotifier {
 
   /// The successful connect callback
   void onConnected() {
-    //_currentState.setAppConnectionState(MQTTAppConnectionState.connected);
     currentState = MQTTAppConnectionState.connected;
 
     print('on Connected: EXAMPLE::Mosquitto client connected....');
@@ -129,16 +127,14 @@ class SmartMqtt extends ChangeNotifier {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
-
       /* preferences.remove("settings_mqtt");
       preferences.remove("alarm_mqtt");
       preferences.clear(); */
 
-
       /***  polnjenje objekta - data ***/
       if (topicName!.contains("settings")) {
         debugPrint("___________________________________________________");
-        debugPrint("from which topic $topicName");
+        debugPrint("from topic $topicName");
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
 
@@ -148,8 +144,6 @@ class SmartMqtt extends ChangeNotifier {
         if ((decodeMessage.contains("v") ||
             decodeMessage.contains("typ") ||
             decodeMessage.contains("u"))) {
-          // ali je novo sporocilo loaded
-
           debugPrint("got new settings");
           // ali novi settingi niso enaki prejsnim
           // ali ce so v zacetku prazni
@@ -167,42 +161,38 @@ class SmartMqtt extends ChangeNotifier {
         preferences.setString("settings_mqtt", decodeMessage);
       }
       if (topicName.contains("data")) {
-        //debugPrint("from which topic -data $topicName");
+        //debugPrint("from topic -data $topicName");
         //preferences.setString("data_mqtt", decodeMessage);
       }
       if (topicName.contains("alarm")) {
-        debugPrint("from which topic-alarm $topicName, $decodeMessage");
+        debugPrint("from topic-alarm $topicName, $decodeMessage");
 
+        //prebere listo alarmov iz preferenc in jim doda nov alarm
+        SharedPreferences preferences = await SharedPreferences.getInstance();
 
-          //prebere listo alarmov iz preferenc in jim doda nov alarm
-          SharedPreferences preferences = await SharedPreferences.getInstance();
+        // 1. dobi listo prejsnjih alarmov
+        String? alarmListOldData =
+            preferences.get("alarm_list_mqtt") as String?;
+        List a1 = [];
+        if (alarmListOldData != null) {
+          a1 = json.decode(alarmListOldData);
+        }
 
-          // 1. dobi listo prejsnjih alarmov
-          String? alarmListOldData =
-              preferences.get("alarm_list_mqtt") as String?;
-          List a1 = [];
-          if (alarmListOldData != null) {
-            a1 = json.decode(alarmListOldData);
-          }
+        // 2. dobi trenuten alarm
+        Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
+        List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+        currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
+        // 3. doda alarm na listo starih alarmov
+        // odkomentiraj, da bo dodajalo alarm
+        a1.addAll(currentAlarmList);
+        String alarmListMqtt = jsonEncode(a1);
+        preferences.setString("alarm_list_mqtt", alarmListMqtt);
+        //debugPrint("alarmList---: $alarmListMqtt");
 
-          // 2. dobi trenuten alarm
-          Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
-          List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
-          currentAlarmList.first.sensorAddress =
-              topicName.split("/alarm").first;
-          // 3. doda alarm na listo starih alarmov
-          // odkomentiraj, da bo dodajalo alarm
-          a1.addAll(currentAlarmList);
-          String alarmListMqtt = jsonEncode(a1);
-          preferences.setString("alarm_list_mqtt", alarmListMqtt);
-          //debugPrint("alarmList---: $alarmListMqtt");
-
-          // prikaze sporocilo z alarmom
-          NotificationHelper.sendMessage(currentAlarmList.first);
-          firstRetainMessage++;
-          debugPrint("first retain message $firstRetainMessage");
-
-
+        // prikaze sporocilo z alarmom
+        NotificationHelper.sendMessage(currentAlarmList.first);
+        firstRetainMessage++;
+        debugPrint("first retain message $firstRetainMessage");
       }
 
       debugPrint("payload: $pt");
@@ -213,19 +203,6 @@ class SmartMqtt extends ChangeNotifier {
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
-  }
-
-  // preveri, ali je vrednost poslanega alarma vecja od alarma v nastavitvah
-  bool compareOldSettingsWithNew(
-      int hiAlarmFromAlarm, SharedPreferences preferences) {
-    /*String? hiAlarmFromSettings =
-        preferences.get("settings_val_hi_alarm").toString();
-    int hiAlarmFromSettingsInt = int.parse(hiAlarmFromSettings);
-    if (hiAlarmFromSettingsInt < hiAlarmFromAlarm) {
-      debugPrint("compare current alarm with settings: ");
-    }
-    return false; */
-    return true;
   }
 
   Future<MqttServerClient> initializeMQTTClient() async {

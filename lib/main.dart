@@ -41,7 +41,6 @@ Future<void> main() async {
   //tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
-  //ServiceCompat.startForeground(0, notification, FOREGROUND_SERVICE_TYPE_LOCATION)
 
   runApp(
     const NotificationsApp(),
@@ -150,7 +149,7 @@ Future<void> main() async {
     });
 
     // bring to foreground
-    Timer.periodic(const Duration(seconds: 1), (timer) async {
+    Timer.periodic(const Duration(seconds: 60), (timer) async {
       if (service is AndroidServiceInstance) {
         if (await service.isForegroundService()) {
           /// OPTIONAL for use custom notification
