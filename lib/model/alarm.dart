@@ -269,7 +269,7 @@ class Alarm {
 
           for (String key1 in value.keys) {
             if (key1 != null) {
-              value[key1];
+              //value[key1];
               int valueInt;
               if (value[key1] is String) {
                 valueStr = value[key1];

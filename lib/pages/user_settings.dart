@@ -170,7 +170,7 @@ class _UserSettingsState extends State<UserSettings> {
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
           ),
-          const Text("Personal settings: ",
+          const Text("Personal settings ",
               style: TextStyle(color: Colors.black, fontSize: 20)),
           _buildUserPersonalSettings(),
         ]),
@@ -192,7 +192,7 @@ class _UserSettingsState extends State<UserSettings> {
               Text("Account", style: headingStyle),
             ],
           ),
-          const ListTile(
+         /* const ListTile(
             leading: Icon(Icons.phone),
             title: Text("Phone Number"),
           ),
@@ -200,15 +200,15 @@ class _UserSettingsState extends State<UserSettings> {
           const ListTile(
             leading: Icon(Icons.mail),
             title: Text("Email"),
-          ),
+          ), */
           const Divider(),
           const ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text("Log out",
                 style:
-                    TextStyle(color: Colors.red, fontWeight: FontWeight.w800)),
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w800)),
           ),
-          Row(
+          /*Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text("Security", style: headingStyle),
@@ -260,7 +260,7 @@ class _UserSettingsState extends State<UserSettings> {
           const ListTile(
             leading: Icon(Icons.file_copy_outlined),
             title: Text("Open Source and Licences"),
-          ),
+          ), */
         ],
       ),
     );

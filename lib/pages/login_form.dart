@@ -58,7 +58,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     var username = emailController.text;
     var password = passwordController.text;
 
-    debugPrint("u, p $username, $password");
+    //debugPrint("u, p $username, $password");
 
     //check email and password
     if (formkey.currentState!.validate()) {
@@ -76,7 +76,7 @@ class _LoginFormValidationState extends State<LoginForm> {
             username: user.username,
             mqttPass: user.mqtt_pass,
             topicList: userTopicList);
-        mqtt.initializeMQTTClient();
+        await mqtt.initializeMQTTClient();
         // inicializiraj servis za posiljanje sporocil
         await NotificationHelper.initializeService();
         await SharedPreferences.getInstance().then((value) {

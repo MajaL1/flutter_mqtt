@@ -31,7 +31,6 @@ class SmartMqtt extends ChangeNotifier {
   late bool isConnected = false;
   late bool userIsLoggedIn = false;
 
-
   static final SmartMqtt _instance = SmartMqtt._internal();
 
   SmartMqtt._internal();
@@ -167,37 +166,46 @@ class SmartMqtt extends ChangeNotifier {
         //preferences.setString("data_mqtt", decodeMessage);
       }
       if (topicName.contains("alarm")) {
-        debugPrint("from topic-alarm $topicName, $decodeMessage");
+        if (firstRetainMessage > 1) {
+          debugPrint("message for alarm, message count: $firstRetainMessage");
 
-        //prebere listo alarmov iz preferenc in jim doda nov alarm
-        SharedPreferences preferences = await SharedPreferences.getInstance();
+          debugPrint("from topic-alarm $topicName, $decodeMessage");
 
-        // 1. dobi listo prejsnjih alarmov
-        String? alarmListOldData =
-            preferences.get("alarm_list_mqtt") as String?;
-        List a1 = [];
-        if (alarmListOldData != null) {
-          a1 = json.decode(alarmListOldData);
+          //prebere listo alarmov iz preferenc in jim doda nov alarm
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+
+          // 1. dobi listo prejsnjih alarmov
+          String? alarmListOldData =
+              preferences.get("alarm_list_mqtt") as String?;
+          List a1 = [];
+          if (alarmListOldData != null) {
+            a1 = json.decode(alarmListOldData);
+          }
+
+          // 2. dobi trenuten alarm
+          Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
+          List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+          currentAlarmList.first.sensorAddress =
+              topicName.split("/alarm").first;
+          // 3. doda alarm na listo starih alarmov
+          // odkomentiraj, da bo dodajalo alarm
+          a1.addAll(currentAlarmList);
+          String alarmListMqtt = jsonEncode(a1);
+          preferences.setString("alarm_list_mqtt", alarmListMqtt);
+          //debugPrint("alarmList---: $alarmListMqtt");
+
+          // prikaze sporocilo z alarmom
+          NotificationHelper.sendMessage(currentAlarmList.first);
+          debugPrint("first retain message $firstRetainMessage");
         }
-
-        // 2. dobi trenuten alarm
-        Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
-        List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
-        currentAlarmList.first.sensorAddress = topicName.split("/alarm").first;
-        // 3. doda alarm na listo starih alarmov
-        // odkomentiraj, da bo dodajalo alarm
-        a1.addAll(currentAlarmList);
-        String alarmListMqtt = jsonEncode(a1);
-        preferences.setString("alarm_list_mqtt", alarmListMqtt);
-        //debugPrint("alarmList---: $alarmListMqtt");
-
-        // prikaze sporocilo z alarmom
-        NotificationHelper.sendMessage(currentAlarmList.first);
+        else {
+          debugPrint("first-retain message ignored $firstRetainMessage");
+        }
         firstRetainMessage++;
-        debugPrint("first retain message $firstRetainMessage");
+
+        debugPrint("payload: $pt");
       }
 
-      debugPrint("payload: $pt");
       // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
       //print(
       //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');

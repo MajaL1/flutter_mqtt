@@ -66,7 +66,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
                       String alarmValue = "";
-                 //     DateTime ts = snapshot.data![index].ts!;
+                      //     DateTime ts = snapshot.data![index].ts!;
 
                       if (snapshot.data![index].hiAlarm != 0 &&
                           snapshot.data![index].hiAlarm != null) {
@@ -78,30 +78,37 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       }
                       String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
                           .format(snapshot.data![index].ts!);
-                  //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
+                      //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
                       return Container(
                         decoration: const BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
                         child: Table(
-                            border: TableBorder.all(color: Colors.black),
+                            border: TableBorder.all(color: Colors.lightBlue.shade50),
                             columnWidths: const {
-                              0: FixedColumnWidth(80.0),
+                              0: FixedColumnWidth(5.0),
                               1: FixedColumnWidth(80.0),
                               2: FixedColumnWidth(80.0),
+                              3: FixedColumnWidth(80.0),
                             },
                             children: [
                               TableRow(children: [
+                                Container(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text("$index",
+                                        textAlign: TextAlign.center)),
                                 Container(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Text("$sensorAddress",
                                         textAlign: TextAlign.center)),
                                 Container(
                                     padding: const EdgeInsets.all(10.0),
-                                    child: Text("Value: $v \n$alarmValue",textAlign: TextAlign.center)),
+                                    child: Text("Value: $v \n$alarmValue",
+                                        textAlign: TextAlign.center)),
                                 Container(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text("$formattedDate ", textAlign: TextAlign.center),
+                                  child: Text("$formattedDate ",
+                                      textAlign: TextAlign.center),
                                 )
                               ])
                             ]),
@@ -131,7 +138,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                     })
               ])));
         } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
+          return Text("No alarm history.");
+
+          // return Text(snapshot.error.toString());
         }
         // By default show a loading spinner.
         return const CircularProgressIndicator();
