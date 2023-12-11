@@ -29,6 +29,8 @@ class SmartMqtt extends ChangeNotifier {
   late MqttConnectionState connectionState;
 
   late bool isConnected = false;
+  late bool userIsLoggedIn = false;
+
 
   static final SmartMqtt _instance = SmartMqtt._internal();
 

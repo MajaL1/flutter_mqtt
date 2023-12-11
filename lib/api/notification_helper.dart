@@ -173,7 +173,7 @@ class NotificationHelper extends StatelessWidget {
         notificationId,
         "Alarm from sensor: $sensorAddress",
         "v: $v, $alarmValue \n$formattedDate",
-        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 3)),
+        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 30)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);

@@ -6,6 +6,7 @@ import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../api/api_service.dart';
@@ -16,17 +17,16 @@ import '../model/user.dart';
 class LoginForm extends StatefulWidget {
   const LoginForm.base({Key? key}) : super(key: key);
 
-
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
 }
 
 class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
-  late bool userIsLoggedIn = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   final emailController = TextEditingController(text: "test");
   final passwordController = TextEditingController(text: "Test1234");
+
   //final emailController = TextEditingController(text: "test3");
   //final passwordController = TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
 
@@ -38,10 +38,9 @@ class _LoginFormValidationState extends State<LoginForm> {
     print("-- loginform initstate");
 
     //bool isNetwork = checkNetwork().;
-
   }
 
-  Future<bool> checkNetwork()  async {
+  Future<bool> checkNetwork() async {
     Future<bool> network = hasNetwork();
     return network;
   }
@@ -79,24 +78,26 @@ class _LoginFormValidationState extends State<LoginForm> {
             topicList: userTopicList);
         mqtt.initializeMQTTClient();
         // inicializiraj servis za posiljanje sporocil
-        NotificationHelper.initializeService();
+        await NotificationHelper.initializeService();
+        await SharedPreferences.getInstance().then((value) {
+          value.setBool("isLoggedIn", true);
+        });
       }
 
       //*********************************************/
-      Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (_) => UserSettings.base()));
+      await Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => UserSettings.base()));
+
+
 
       debugPrint("Validated");
-    }
-    else {
+    } else {
       loginError = true;
     }
   }
 
   List<String> createTopicListFromApi(User user) {
-     List<TopicData> userTopicDataList = user.topic.topicList;
+    List<TopicData> userTopicDataList = user.topic.topicList;
     List<String> userTopicList = [];
     String deviceName = user.topic.sensorName;
     for (TopicData topicData in userTopicDataList) {
@@ -121,9 +122,10 @@ class _LoginFormValidationState extends State<LoginForm> {
       return null;
     }
   }
-bool _returnHasNetwork(bool val){
+
+  bool _returnHasNetwork(bool val) {
     return val;
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,71 +136,71 @@ bool _returnHasNetwork(bool val){
       child: WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
-          backgroundColor: Colors.white,
-          //appBar: AppBar(
-          // title: const Text(Constants.LOGIN_PAGE),
-          //),
-          body: FutureBuilder(
-              // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
-              // future: _initCurrentAppState(),
-              builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              if (!network) {
-                return  Container(
-                    child: const Text('Problem with internet connection'));
-              }
-              if (snapshot.hasError) {
-                return ErrorWidget(Exception(
-                    'Error occured when fetching data from database $snapshot.error'));
-              } else {
-                return SingleChildScrollView(
-                  child: Form(
-                    //autovalidate: true, //check for validation while typing
-                    key: formkey,
-                    child: Column(
-                      children: <Widget>[
-                        const Padding(
-                            padding: EdgeInsets.only(top: 60.0),
-                            child: Center(
-                              child: SizedBox(
-                                width: 200,
-                                height: 30,
-                                // child: //Image.asset('asset/images/flutter-logo.png')),
-                              ),
-                            )),
-                        const Text(Constants.ENTER_USERNAME_AND_PASS),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: Constants.EMAIL,
-                                hintText: Constants.ENTER_VALID_EMAIL),
-                            controller: emailController,
-                            /*validator: MultiValidator([
+              backgroundColor: Colors.white,
+              //appBar: AppBar(
+              // title: const Text(Constants.LOGIN_PAGE),
+              //),
+              body: FutureBuilder(
+                  // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
+                  // future: _initCurrentAppState(),
+                  builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (!network) {
+                    return Container(
+                        child: const Text('Problem with internet connection'));
+                  }
+                  if (snapshot.hasError) {
+                    return ErrorWidget(Exception(
+                        'Error occured when fetching data from database $snapshot.error'));
+                  } else {
+                    return SingleChildScrollView(
+                      child: Form(
+                        //autovalidate: true, //check for validation while typing
+                        key: formkey,
+                        child: Column(
+                          children: <Widget>[
+                            const Padding(
+                                padding: EdgeInsets.only(top: 60.0),
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 200,
+                                    height: 30,
+                                    // child: //Image.asset('asset/images/flutter-logo.png')),
+                                  ),
+                                )),
+                            const Text(Constants.ENTER_USERNAME_AND_PASS),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: Constants.EMAIL,
+                                    hintText: Constants.ENTER_VALID_EMAIL),
+                                controller: emailController,
+                                /*validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       EmailValidator(errorText: "Enter valid email id"),
                     ])*/
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 15, bottom: 0),
-                          child: TextFormField(
-                            obscureText: true,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: Constants.PASSWORD,
-                                hintText: Constants.ENTER_SECURE_PASS),
-                            controller: passwordController,
-                            /* validator: MultiValidator([
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                              child: TextFormField(
+                                obscureText: true,
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: Constants.PASSWORD,
+                                    hintText: Constants.ENTER_SECURE_PASS),
+                                controller: passwordController,
+                                /* validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       MinLengthValidator(6,
                           errorText: "Password should be atleast 6 characters"),
@@ -206,31 +208,31 @@ bool _returnHasNetwork(bool val){
                           errorText:
                           "Password should not be greater than 15 characters")
                     ])*/
-                            //validatePassword,        //Function to check validation
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 15, bottom: 0),
-                        ),
-                        Container(
-                          height: 50,
-                          width: 250,
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: TextButton(
-                            onPressed: () {
-                              login();
-                            },
-                            child: const Text(
-                              'Login',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 25),
+                                //validatePassword,        //Function to check validation
+                              ),
                             ),
-                          ),
-                        ),
-                       /* Padding(
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                            ),
+                            Container(
+                              height: 50,
+                              width: 250,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: TextButton(
+                                onPressed: () {
+                                  login();
+                                },
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 25),
+                                ),
+                              ),
+                            ),
+                            /* Padding(
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 15, bottom: 0),
                           child: TextButton(
@@ -246,31 +248,34 @@ bool _returnHasNetwork(bool val){
                             ),
                           ),
                         ),*/
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 15, bottom: 0),
-                          child: TextButton(
-                            onPressed: () {  },
-                            child: InkWell(
-                                child: const Text(Constants.CREATE_ACCOUNT),
-                                onTap: () => launchUrl(Constants.REGISTER_URL)),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                              child: TextButton(
+                                onPressed: () {},
+                                child: InkWell(
+                                    child: const Text(Constants.CREATE_ACCOUNT),
+                                    onTap: () =>
+                                        launchUrl(Constants.REGISTER_URL)),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                              child: loginError == true
+                                  ? const Text(
+                                      "Incorrect username or password",
+                                      style: TextStyle(color: Colors.redAccent),
+                                    )
+                                  : const Text(""),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 15, bottom: 0),
-                          child: loginError == true ? const Text(
-                            "Incorrect username or password",
-                          style: TextStyle(color: Colors.redAccent),
-                          ) : const Text (""),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            }
-          }))),
+                      ),
+                    );
+                  }
+                }
+              }))),
     );
   }
 }
