@@ -97,7 +97,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
 
 class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red);
+      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
 
   int countTest = 0;
   bool lockAppSwitchVal = true;
@@ -201,13 +201,14 @@ class _UserSettingsState extends State<UserSettings> {
             leading: Icon(Icons.mail),
             title: Text("Email"),
           ), */
-          const Divider(),
+          const Divider(height: 40, color: Colors.black12, thickness: 2),
           const ListTile(
-            leading: Icon(Icons.exit_to_app),
+            leading: Icon(Icons.exit_to_app, color: Colors.black87),
             title: Text("Log out",
                 style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w800)),
+                    TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
           ),
+          const Divider(height: 40, color: Colors.black12, thickness: 2),
           /*Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

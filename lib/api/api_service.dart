@@ -37,6 +37,7 @@ class ApiService {
       }
       //debugPrint("alarmList-:: $alarmList");
     }
+    alarmList = alarmList.reversed.toList();
     return alarmList;
   }
 

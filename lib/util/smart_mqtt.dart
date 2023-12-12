@@ -166,7 +166,7 @@ class SmartMqtt extends ChangeNotifier {
         //preferences.setString("data_mqtt", decodeMessage);
       }
       if (topicName.contains("alarm")) {
-        if (firstRetainMessage > 1) {
+        if (firstRetainMessage > 0) {
           debugPrint("message for alarm, message count: $firstRetainMessage");
 
           debugPrint("from topic-alarm $topicName, $decodeMessage");
@@ -203,7 +203,7 @@ class SmartMqtt extends ChangeNotifier {
         }
         firstRetainMessage++;
 
-        debugPrint("payload: $pt");
+        //debugPrint("payload: $pt");
       }
 
       // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
