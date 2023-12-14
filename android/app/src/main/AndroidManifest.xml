@@ -16,7 +16,9 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="Alarm app">
+        android:label="Alarm app"
+        android:enableOnBackInvokedCallback="true"
+        >
 
 
         <activity

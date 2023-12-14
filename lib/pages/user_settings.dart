@@ -114,7 +114,9 @@ class _UserSettingsState extends State<UserSettings> {
   @override
   void initState() {
     super.initState();
+    // SmartMqtt.instance.isSaved = false;
     SmartMqtt.instance.isSaved = false;
+
     debugPrint("user_settings initState");
     debugPrint("WidgetsBinding");
     //});
@@ -192,7 +194,7 @@ class _UserSettingsState extends State<UserSettings> {
               Text("Account", style: headingStyle),
             ],
           ),
-         /* const ListTile(
+          /* const ListTile(
             leading: Icon(Icons.phone),
             title: Text("Phone Number"),
           ),
@@ -205,8 +207,8 @@ class _UserSettingsState extends State<UserSettings> {
           const ListTile(
             leading: Icon(Icons.exit_to_app, color: Colors.black87),
             title: Text("Log out",
-                style:
-                    TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
+                style: TextStyle(
+                    color: Colors.black87, fontWeight: FontWeight.w600)),
           ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           /*Row(
@@ -268,7 +270,6 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
   Widget _buildMqttSettingsView() {
-    SmartMqtt.instance.isSaved = false;
     return FutureBuilder<List<UserDataSettings>>(
       future: Provider.of<SmartMqtt>(context, listen: true)
           .getNewUserSettingsList()
@@ -319,9 +320,11 @@ class _UserSettingsState extends State<UserSettings> {
                         top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
                     child: Column(children: [
                       index == 0
-                          ? Text("Device name: $deviceName",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),)
+                          ? Text(
+                              "Device name: $deviceName",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w800, fontSize: 18),
+                            )
                           : const Text(""),
                       const Padding(
                         padding: EdgeInsets.only(top: 15, bottom: 10),
@@ -384,9 +387,14 @@ class _UserSettingsState extends State<UserSettings> {
       settingText = "Low alarm";
     }
     return ListTile(
-      title: index==0 ? Text("Sensor address: $sensorAddress, units: $unitText \n", maxLines: 2,) : Container(), //Text("", maxLines: 1),
+      title: index == 0
+          ? Text(
+              "Sensor address: $sensorAddress, units: $unitText \n",
+              maxLines: 2,
+            )
+          : Container(), //Text("", maxLines: 1),
       contentPadding:
-      const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
+          const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
       /*leading: Text(
         "Sensor address: $sensorAddress",
       ),*/
@@ -406,10 +414,10 @@ class _UserSettingsState extends State<UserSettings> {
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
+                  enableInteractiveSelection: false,
+                  // showCursor: false,
                   controller: textController,
-                  onChanged: (val) {
-
-                  },
+                  onChanged: (val) {},
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
                     MaxLengthValidator(6, errorText: "Value too long")
@@ -423,21 +431,31 @@ class _UserSettingsState extends State<UserSettings> {
             // margin: const EdgeInsets.only(top: 20),
             decoration: BoxDecoration(
                 color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-            child: TextButton(
-              onPressed: () {
-                saveMqttSettings(
-                    sensorAddress, item, textController, settingToChange);
-                setState(() {
-                  savePressed = !savePressed;
-                });
-                //saveMqttSettingsTest();
-              },
-              child: const Text(
-                Constants.SAVE_DEVICE_SETTINGS,
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
+            child: SmartMqtt.instance.isSaved != true
+                ? TextButton(
+                    onPressed: () {
+                      saveMqttSettings(
+                          sensorAddress, item, textController, settingToChange);
+                      setState(() {
+                        savePressed = !savePressed;
+                      });
+                      //saveMqttSettingsTest();
+                    },
+                    child: const Text(
+                      Constants.SAVE_DEVICE_SETTINGS,
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.access_alarm_outlined),
+                    onPressed: () {},
+
+                  ),
           ),
+          SmartMqtt.instance.isSaved == true
+              ? Text("=saved")
+              : Text("=not saved"),
+          //Text("aa")
           /*
           ChangeNotifierProvider.value(
               value: SmartMqtt.instance,
@@ -479,9 +497,19 @@ class _UserSettingsState extends State<UserSettings> {
     var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     debugPrint("concatenated text: $publishText");
 
+    /*** ToDo: ce hocemo shraniti isto vrednost kot
+        prej, potem ne klikni na gumb */
+    //List <UserDataSettings> userSettings = ;
+    //if(value.){
+
+    //}
+
     SmartMqtt.instance.publish(publishText);
 
-    setState(() {});
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      setState(() {});
+    });
+    //setState(() {});
     debugPrint(
         "after publish:: saveMqttSettings: $controller.text, $sensorName, $settingToChange");
   }

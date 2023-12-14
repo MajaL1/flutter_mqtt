@@ -21,7 +21,7 @@ class SmartMqtt extends ChangeNotifier {
 
   late String currentTopic;
 
-  int firstRetainMessage = 0;
+  int messageCount = 0;
 
   MQTTAppConnectionState currentState = MQTTAppConnectionState.disconnected;
 
@@ -78,6 +78,10 @@ class SmartMqtt extends ChangeNotifier {
   /// PING response received
   void pong() {
     print('Ping response client callback invoked');
+  }
+
+  void ping() {
+    print("-----ping");
   }
 
   /// The subscribed callback
@@ -166,8 +170,8 @@ class SmartMqtt extends ChangeNotifier {
         //preferences.setString("data_mqtt", decodeMessage);
       }
       if (topicName.contains("alarm")) {
-        if (firstRetainMessage > 0) {
-          debugPrint("message for alarm, message count: $firstRetainMessage");
+        if (messageCount > 0) {
+          debugPrint("message for alarm, message count: $messageCount");
 
           debugPrint("from topic-alarm $topicName, $decodeMessage");
 
@@ -193,15 +197,15 @@ class SmartMqtt extends ChangeNotifier {
           String alarmListMqtt = jsonEncode(a1);
           preferences.setString("alarm_list_mqtt", alarmListMqtt);
           //debugPrint("alarmList---: $alarmListMqtt");
+          messageCount++;
 
           // prikaze sporocilo z alarmom
-          NotificationHelper.sendMessage(currentAlarmList.first);
-          debugPrint("first retain message $firstRetainMessage");
+          await NotificationHelper.sendMessage(currentAlarmList.first);
+          // debugPrint("message is not retain, message count: $firstRetainMessage");
+        } else {
+          debugPrint("first-retain message ignored $messageCount");
+          messageCount++;
         }
-        else {
-          debugPrint("first-retain message ignored $firstRetainMessage");
-        }
-        firstRetainMessage++;
 
         //debugPrint("payload: $pt");
       }
@@ -223,15 +227,18 @@ class SmartMqtt extends ChangeNotifier {
     _identifier = identifier;
     client = MqttServerClient(host, identifier, maxConnectionAttempts: 10);
     client.port = 1883;
-    client.keepAlivePeriod = 20;
+    client.keepAlivePeriod = 200000;
     client.autoReconnect = true;
+    client.setProtocolV311();
     client.onDisconnected = onDisconnected;
-    client.secure = false;
     client.logging(on: true);
     client.onConnected = onConnected;
     client.onSubscribed = onSubscribed;
     client.onSubscribeFail = onSubscribeFail;
     client.pongCallback = pong;
+    client.secure = false;
+client.resubscribeOnAutoReconnect = true;
+
 
     final MqttConnectMessage connMess = MqttConnectMessage()
         .authenticateAs(username, mqttPass)
@@ -264,6 +271,7 @@ class SmartMqtt extends ChangeNotifier {
 
   void setNewUserSettings(String newUserSettings) {
     this.newUserSettings = newUserSettings;
+    this.isSaved = true;
     notifyListeners();
     debugPrint("notifying listeners..");
   }

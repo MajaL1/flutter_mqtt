@@ -45,10 +45,11 @@ class _FirstScreenState extends State<FirstScreen> {
                   child: CircularProgressIndicator(),
                 );
               } else {
-                return Scaffold(
-                    body: (snapshot.data == true
-                        ? LoginForm.base()
-                        : UserSettings.base()));
+                return const Scaffold(
+                    body: //(snapshot.data == false
+                    //    ?
+                    LoginForm.base());
+                      //  : UserSettings.base()));
                 //body: LoginForm.base());
               }
             }));

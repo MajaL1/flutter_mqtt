@@ -132,8 +132,8 @@ class NotificationHelper extends StatelessWidget {
       alarmValue += " Lo alarm: $loAlarm";
     }
 
-    debugPrint(
-        "**************************alarm sending message  message: $alarmMessage");
+ //   debugPrint(
+ //       "**************************alarm sending message  message: $alarmMessage");
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
 

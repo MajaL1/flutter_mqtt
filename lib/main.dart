@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
+//import 'packae:timezone/data/latest.dart' as tzl;
+
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'packae:timezone/data/latest.dart' as tzl;
-
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
 
 import 'model/alarm.dart';
+import 'mqtt/state/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -89,7 +89,6 @@ Future<void> initializeService() async {
       // auto start service
       autoStart: true,
       isForegroundMode: true,
-
       notificationChannelId: 'my_foreground',
       initialNotificationTitle: 'Alarm app',
       initialNotificationContent: 'Initializing',
@@ -140,6 +139,7 @@ void onStart(ServiceInstance service) async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  SmartMqtt.instance.addListener(() {});
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
@@ -151,11 +151,12 @@ void onStart(ServiceInstance service) async {
   }
 
   service.on('stopService').listen((event) {
+    debugPrint(">>>>>>>stopped service.");
     service.stopSelf();
   });
 
   // bring to foreground
-  Timer.periodic(const Duration(seconds: 60), (timer) async {
+  Timer.periodic(const Duration(seconds: 180), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
@@ -181,6 +182,13 @@ void onStart(ServiceInstance service) async {
         );
       }
     }
+    String currState= SmartMqtt.instance.currentState.toString();
+
+    if(MQTTAppConnectionState.disconnected ==SmartMqtt.instance.currentState){
+      print("SmartMqtt.instance.initializeMQTTClient()");
+      SmartMqtt.instance.client.connect();
+    }
+    debugPrint("current smartmqtt state: $currState");
 
     /// you can see this log in logcat
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
@@ -222,14 +230,14 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
   static SendPort? uiSendPort;
 
-  static MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
+  // static MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
 
   _NotificationsAppState() {
     //methodChannel.setMethodCallHandler((call) => call.);
-    methodChannel.setMethodCallHandler((call) {
+    /*  methodChannel.setMethodCallHandler((call) {
       print(call.method);
       return Future(() => call);
-    });
+    }); */
   }
 
   @override
