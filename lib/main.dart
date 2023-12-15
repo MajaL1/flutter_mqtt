@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
-import 'dart:isolate';
+//import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -37,7 +37,7 @@ const String countKey = 'count';
 const String isolateName = 'isolate';
 
 /// A port used to communicate from a background isolate to the UI isolate.
-ReceivePort port = ReceivePort();
+//ReceivePort port = ReceivePort();
 
 /// Global [SharedPreferences] object.
 SharedPreferences? prefs;
@@ -273,7 +273,7 @@ class NotificationsApp extends StatefulWidget {
 class _NotificationsAppState extends State<NotificationsApp> {
   var prefs = 1;
 
-  static SendPort? uiSendPort;
+  //static SendPort? uiSendPort;
 
   // static MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
 

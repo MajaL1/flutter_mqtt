@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
+import 'package:timezone/data/latest_10y.dart' as tz;
 
 import '../main.dart';
 import '../model/alarm.dart';
@@ -115,9 +116,11 @@ class NotificationHelper extends StatelessWidget {
   }
 
   static Future<void> sendMessage(Alarm? alarmMessage) async {
-    tzl.initializeTimeZones();
-    tz.initializeTimeZone();
-    final slovenia = tz.getLocation('Europe/London');
+    //tzl.initializeTimeZones();
+     tzl.initializeTimeZones();
+    // tz.setLocalLocation(tz.getLocation('Europe/London'));
+    final slovenia = await tz.getLocation('Europe/London');
+
     final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
     String? sensorAddress = alarmMessage?.sensorAddress.toString();
