@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-//import 'packae:timezone/data/latest.dart' as tzl;
+import 'packae:timezone/data/latest.dart' as tzl;
 
 import 'dart:io';
 import 'dart:isolate';
@@ -15,7 +15,11 @@ import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'api/api_service.dart';
 import 'model/alarm.dart';
+import 'model/constants.dart';
+import 'model/topic_data.dart';
+import 'model/user.dart';
 import 'mqtt/state/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
@@ -35,7 +39,7 @@ ReceivePort port = ReceivePort();
 SharedPreferences? prefs;
 
 Future<void> main() async {
-  //tzl.initializeTimeZones();
+  tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
 
@@ -124,6 +128,22 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
+// Todo: premakni v UTIL
+List<String> createTopicListFromApi(User user) {
+  List<TopicData> userTopicDataList = user.topic.topicList;
+  List<String> userTopicList = [];
+  String deviceName = user.topic.sensorName;
+  for (TopicData topicData in userTopicDataList) {
+    if (topicData.name.contains("settings")) {
+      userTopicList.add(deviceName + "/settings");
+    }
+    if (topicData.name.contains("alarm")) {
+      userTopicList.add(deviceName + "/alarm");
+    }
+  }
+  return userTopicList;
+}
+
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
@@ -182,13 +202,32 @@ void onStart(ServiceInstance service) async {
         );
       }
     }
-    String currState= SmartMqtt.instance.currentState.toString();
+    String currState = SmartMqtt.instance.currentState.toString();
 
-    if(MQTTAppConnectionState.disconnected ==SmartMqtt.instance.currentState){
+    if (MQTTAppConnectionState.disconnected ==
+        SmartMqtt.instance.currentState) {
       print("SmartMqtt.instance.initializeMQTTClient()");
-      SmartMqtt.instance.client.connect();
+
+      User? user = await ApiService.login("test", "Test1234");
+      if (user != null) {
+        debugPrint(
+            "loginForm, user: $user.username, $user.password, $user.topic");
+
+        List<String> userTopicList = createTopicListFromApi(user);
+        SmartMqtt mqtt = SmartMqtt(
+            host: Constants.BROKER_IP,
+            port: Constants.BROKER_PORT,
+            username: user.username,
+            mqttPass: user.mqtt_pass,
+            topicList: userTopicList);
+        await mqtt.initializeMQTTClient();
+        await SmartMqtt.instance.client.connect();
+        print("================== connectig to client =========================");
+        print("===========================================");
+
+        print("current smartmqtt state: $currState");
+      }
     }
-    debugPrint("current smartmqtt state: $currState");
 
     /// you can see this log in logcat
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');

@@ -255,7 +255,7 @@ client.resubscribeOnAutoReconnect = true;
       print('::Navis app client connecting....');
       currentState = MQTTAppConnectionState.connecting;
       client.keepAlivePeriod = 20;
-      debugPrint(
+      print(
           "*********************** Connecting to broker *******************************");
       await client.connect(username, mqttPass);
     } on Exception catch (e) {

@@ -88,8 +88,6 @@ class _LoginFormValidationState extends State<LoginForm> {
       await Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => UserSettings.base()));
 
-
-
       debugPrint("Validated");
     } else {
       loginError = true;
