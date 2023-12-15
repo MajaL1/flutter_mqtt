@@ -115,6 +115,8 @@ class NotificationHelper extends StatelessWidget {
   }
 
   static Future<void> sendMessage(Alarm? alarmMessage) async {
+    tzl.initializeTimeZones();
+    tz.initializeTimeZone();
     final slovenia = tz.getLocation('Europe/London');
     final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 

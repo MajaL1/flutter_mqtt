@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'dart:io';
+import 'dart:io' as io;
 import 'dart:isolate';
 import 'dart:ui';
 
@@ -21,9 +20,12 @@ import 'model/topic_data.dart';
 import 'model/user.dart';
 import 'mqtt/state/MQTTAppState.dart';
 import 'pages/first_screen.dart';
+import 'package:intl/intl_standalone.dart';
 
 import 'package:timezone/data/latest.dart' as tzl;
-import 'package:timezone/standalone.dart' as tz;
+//import 'package:timezone/standalone.dart' as tz;
+//import 'package:timezone/browser.dart' as tz;
+//import 'package:timezone/browser.dart' as tz;
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -41,8 +43,9 @@ ReceivePort port = ReceivePort();
 SharedPreferences? prefs;
 
 Future<void> main() async {
-  tzl.initializeTimeZones();
-  //tz.initializeTimeZone();
+  //tzl.initializeTimeZones();
+   tzl.initializeTimeZones();
+   //tz.initializeTimeZone();
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
 
@@ -74,7 +77,7 @@ Future<void> initializeService() async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  if (Platform.isIOS || Platform.isAndroid) {
+  if (io.Platform.isIOS || io.Platform.isAndroid) {
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         iOS: DarwinInitializationSettings(),
@@ -238,12 +241,12 @@ void onStart(ServiceInstance service) async {
     // test using external plugin
     final deviceInfo = DeviceInfoPlugin();
     String? device;
-    if (Platform.isAndroid) {
+    if (io.Platform.isAndroid) {
       final androidInfo = await deviceInfo.androidInfo;
       device = androidInfo.model;
     }
 
-    if (Platform.isIOS) {
+    if (io.Platform.isIOS) {
       final iosInfo = await deviceInfo.iosInfo;
       device = iosInfo.model;
     }
