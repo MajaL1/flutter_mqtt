@@ -10,6 +10,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:mqtt_test/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -135,20 +136,7 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 }
 
 // Todo: premakni v UTIL
-List<String> createTopicListFromApi(User user) {
-  List<TopicData> userTopicDataList = user.topic.topicList;
-  List<String> userTopicList = [];
-  String deviceName = user.topic.sensorName;
-  for (TopicData topicData in userTopicDataList) {
-    if (topicData.name.contains("settings")) {
-      userTopicList.add(deviceName + "/settings");
-    }
-    if (topicData.name.contains("alarm")) {
-      userTopicList.add(deviceName + "/alarm");
-    }
-  }
-  return userTopicList;
-}
+
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
@@ -219,7 +207,7 @@ void onStart(ServiceInstance service) async {
         debugPrint(
             "loginForm, user: $user.username, $user.password, $user.topic");
 
-        List<String> userTopicList = createTopicListFromApi(user);
+        List<String> userTopicList = Utils.createTopicListFromApi(user);
         SmartMqtt mqtt = SmartMqtt(
             host: Constants.BROKER_IP,
             port: Constants.BROKER_PORT,

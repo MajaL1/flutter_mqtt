@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../api/api_service.dart';
 import '../model/constants.dart';
 import '../model/user.dart';
+import '../util/utils.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
@@ -63,13 +64,16 @@ class _LoginFormValidationState extends State<LoginForm> {
     //check email and password
     if (formkey.currentState!.validate()) {
       // todo: odkomentiraj login
+      /** todo: dodaj v secure storage username, password
+          in usertopiclist. potem ne bomo potrebovali spodnjih vrstic
+          ampak samo tole: await NotificationHelper.initializeService(); **/
 
       User? user = await ApiService.login(username, password);
       if (user != null) {
         debugPrint(
             "loginForm, user: $user.username, $user.password, $user.topic");
 
-        List<String> userTopicList = createTopicListFromApi(user);
+        List<String> userTopicList = Utils.createTopicListFromApi(user);
         SmartMqtt mqtt = SmartMqtt(
             host: Constants.BROKER_IP,
             port: Constants.BROKER_PORT,

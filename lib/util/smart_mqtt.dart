@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt_test/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notification_helper.dart';
@@ -116,107 +117,122 @@ class SmartMqtt extends ChangeNotifier {
     // client!.subscribe(topic3, MqttQos.atLeastOnce);
 
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
-      // ignore: avoid_as
-      final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
-
-      // final MqttPublishMessage recMess = c![0].payload;
-      final String pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-      //_currentState.setReceivedText(pt);
-
-      String message =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-      String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
-
-      String? topicName = recMess.variableHeader?.topicName;
-
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-
-      /* preferences.remove("settings_mqtt");
-      preferences.remove("alarm_mqtt");
-      preferences.clear(); */
-
-      /***  polnjenje objekta - data ***/
-      if (topicName!.contains("settings")) {
-        debugPrint("___________________________________________________");
-        debugPrint("from topic $topicName");
-        debugPrint("__________ $decodeMessage");
-        debugPrint("___________________________________________________");
-
-        //preverimo, ker je prvo sporocilo
-        // po shranjevanju oblike {"135":{"hi_alarm":111}}
-        // in tega izpustimo
-        if ((decodeMessage.contains("v") ||
-            decodeMessage.contains("typ") ||
-            decodeMessage.contains("u"))) {
-          debugPrint("got new settings");
-          // ali novi settingi niso enaki prejsnim
-          // ali ce so v zacetku prazni
-          if (newUserSettings.compareTo(decodeMessage) != 0) {
-            debugPrint("new user settings");
-
-            newUserSettings = decodeMessage;
-            setNewUserSettings(newUserSettings);
-          }
-
-          // debugPrint("----- newUserSettings: $newUserSettings");
-          preferences.setString(
-              "settings_mqtt_device_name", topicName.split("/settings").first);
-        }
-        preferences.setString("settings_mqtt", decodeMessage);
-      }
-      if (topicName.contains("data")) {
-        //debugPrint("from topic -data $topicName");
-        //preferences.setString("data_mqtt", decodeMessage);
-      }
-      if (topicName.contains("alarm")) {
-        if (messageCount > 0) {
-          debugPrint("message for alarm, message count: $messageCount");
-
-          debugPrint("from topic-alarm $topicName, $decodeMessage");
-
-          //prebere listo alarmov iz preferenc in jim doda nov alarm
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-
-          // 1. dobi listo prejsnjih alarmov
-          String? alarmListOldData =
-              preferences.get("alarm_list_mqtt") as String?;
-          List a1 = [];
-          if (alarmListOldData != null) {
-            a1 = json.decode(alarmListOldData);
-          }
-
-          // 2. dobi trenuten alarm
-          Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
-          List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
-          currentAlarmList.first.sensorAddress =
-              topicName.split("/alarm").first;
-          // 3. doda alarm na listo starih alarmov
-          // odkomentiraj, da bo dodajalo alarm
-          a1.addAll(currentAlarmList);
-          String alarmListMqtt = jsonEncode(a1);
-          preferences.setString("alarm_list_mqtt", alarmListMqtt);
-          //debugPrint("alarmList---: $alarmListMqtt");
-          messageCount++;
-
-          // prikaze sporocilo z alarmom
-          await NotificationHelper.sendMessage(currentAlarmList.first);
-          // debugPrint("message is not retain, message count: $firstRetainMessage");
-        } else {
-          debugPrint("first-retain message ignored $messageCount");
-          messageCount++;
-        }
-
-        //debugPrint("payload: $pt");
-      }
-
-      // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
-      //print(
-      //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
-      //print('');
+      await mqttMessageProcessor(c);
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+  }
+
+  Future<void> mqttMessageProcessor(List<MqttReceivedMessage<MqttMessage?>>? c) async {
+     final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
+
+    // final MqttPublishMessage recMess = c![0].payload;
+    final String pt =
+        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+    //_currentState.setReceivedText(pt);
+
+    String message =
+        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+    String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
+
+    String? topicName = recMess.variableHeader?.topicName;
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    /* preferences.remove("settings_mqtt");
+    preferences.remove("alarm_mqtt");
+    preferences.clear(); */
+
+    /***  polnjenje objekta - data ***/
+    if (topicName!.contains("settings")) {
+      debugPrint("___________________________________________________");
+      debugPrint("from topic $topicName");
+      debugPrint("__________ $decodeMessage");
+      debugPrint("___________________________________________________");
+
+      //preverimo, ker je prvo sporocilo
+      // po shranjevanju oblike {"135":{"hi_alarm":111}}
+      // in tega izpustimo
+      if ((decodeMessage.contains("v") ||
+          decodeMessage.contains("typ") ||
+          decodeMessage.contains("u"))) {
+        debugPrint("got new settings");
+        // ali novi settingi niso enaki prejsnim
+        // ali ce so v zacetku prazni
+        if (newUserSettings.compareTo(decodeMessage) != 0) {
+          debugPrint("new user settings");
+
+          newUserSettings = decodeMessage;
+          setNewUserSettings(newUserSettings);
+        }
+
+        // debugPrint("----- newUserSettings: $newUserSettings");
+        preferences.setString(
+            "settings_mqtt_device_name", topicName.split("/settings").first);
+      }
+      preferences.setString("settings_mqtt", decodeMessage);
+    }
+    if (topicName.contains("data")) {
+      //debugPrint("from topic -data $topicName");
+      //preferences.setString("data_mqtt", decodeMessage);
+    }
+    if (topicName.contains("alarm")) {
+      if (messageCount > 0) {
+        /** Todo: ce je alarm nazadnje bil poslan 5 min nazaj,
+         * ga ne upostevaj
+         * */
+
+        Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
+        List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+        //prebere listo alarmov iz preferenc in jim doda nov alarm
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+
+        // 1. dobi listo prejsnjih alarmov
+        String? alarmListOldData =
+            preferences.get("alarm_list_mqtt") as String?;
+        List oldAlarmList = [];
+        if (alarmListOldData != null) {
+          oldAlarmList = json.decode(alarmListOldData);
+        }
+
+        // ali je vrednost trenutnega alarma vecja od prejsnje
+        // in ali je med tem in prejsnjim alarmom minilo vec kot 10 minut
+        // potem kreiraj nov alarm
+        /*if (currentAlarmList.first.hiAlarm! > oldAlarmList.last.hiAlarm) {
+          int minutes =
+              Utils.compareDatesInMinutes(currentAlarmList, oldAlarmList);
+          debugPrint("comparing dates: $minutes");
+        } */
+        debugPrint("message for alarm, message count: $messageCount");
+
+        debugPrint("from topic-alarm $topicName, $decodeMessage");
+
+        // 2. dobi trenuten alarm
+        currentAlarmList.first.sensorAddress =
+            topicName.split("/alarm").first;
+        // 3. doda alarm na listo starih alarmov
+        // odkomentiraj, da bo dodajalo alarm
+        oldAlarmList.addAll(currentAlarmList);
+        String alarmListMqtt = jsonEncode(oldAlarmList);
+        preferences.setString("alarm_list_mqtt", alarmListMqtt);
+        //debugPrint("alarmList---: $alarmListMqtt");
+        messageCount++;
+
+        // prikaze sporocilo z alarmom
+        await NotificationHelper.sendMessage(currentAlarmList.first);
+        // debugPrint("message is not retain, message count: $firstRetainMessage");
+      } else {
+        debugPrint("first-retain message ignored $messageCount");
+        messageCount++;
+      }
+
+      //debugPrint("payload: $pt");
+    }
+
+    // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
+    //print(
+    //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
+    //print('');
   }
 
   Future<MqttServerClient> initializeMQTTClient() async {
@@ -237,8 +253,7 @@ class SmartMqtt extends ChangeNotifier {
     client.onSubscribeFail = onSubscribeFail;
     client.pongCallback = pong;
     client.secure = false;
-client.resubscribeOnAutoReconnect = true;
-
+    client.resubscribeOnAutoReconnect = true;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
         .authenticateAs(username, mqttPass)
