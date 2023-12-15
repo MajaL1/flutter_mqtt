@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:timezone/data/latest.dart' as tzl;
 
 import 'dart:io';
 import 'dart:isolate';
@@ -23,6 +22,9 @@ import 'model/user.dart';
 import 'mqtt/state/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
+import 'package:timezone/data/latest.dart' as tzl;
+import 'package:timezone/standalone.dart' as tz;
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -40,6 +42,7 @@ SharedPreferences? prefs;
 
 Future<void> main() async {
   tzl.initializeTimeZones();
+  //tz.initializeTimeZone();
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
 
