@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'packae:timezone/data/latest.dart' as tzl;
+import 'package:timezone/data/latest.dart' as tzl;
 
 import 'dart:io';
 import 'dart:isolate';
