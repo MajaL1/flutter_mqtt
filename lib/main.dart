@@ -196,49 +196,8 @@ void onStart(ServiceInstance service) async {
         SmartMqtt.instance.currentState) {
       print("SmartMqtt.instance.initializeMQTTClient()");
 
-      /*** ce je povezava prekinjena, potem iz preferences vzemi login podatke **/
-
-      String? username;
-      String? password;
-
-      username = await SharedPreferences.getInstance().then((value) {
-        if (value.getString("username") != null) {
-          username = value.getString("username");
-          debugPrint("username from storage: $username");
-          return username;
-        }
-      });
-
-      password = await SharedPreferences.getInstance().then((value) {
-        if (value.getString("pass") != null) {
-          password = value.getString("pass");
-          debugPrint("password from storage: $password");
-          return password;
-        }
-      });
-
-      if(username != null && password!= null) {
-        User? user = await ApiService.login(username!, password);
-        if (user != null) {
-          debugPrint(
-              "loginForm, user: $user.username, $user.password, $user.topic");
-
-          List<String> userTopicList = Utils.createTopicListFromApi(user);
-          SmartMqtt mqtt = SmartMqtt(
-              host: Constants.BROKER_IP,
-              port: Constants.BROKER_PORT,
-              username: user.username,
-              mqttPass: user.mqtt_pass,
-              topicList: userTopicList);
-          await mqtt.initializeMQTTClient();
-          await SmartMqtt.instance.client.connect();
-          print(
-              "================== connectig to client =========================");
-          print("===========================================");
-
-          print("current smartmqtt state: $currState");
-        }
-      }
+      /*** ce je povezava prekinjena, reconnect **/
+      await reconnectToMqtt(currState);
     }
 
     /// you can see this log in logcat
@@ -265,6 +224,49 @@ void onStart(ServiceInstance service) async {
       },
     );
   });
+}
+
+Future<void> reconnectToMqtt(String currState) async {
+   String? username;
+  String? password;
+
+  username = await SharedPreferences.getInstance().then((value) {
+    if (value.getString("username") != null) {
+      username = value.getString("username");
+      return username;
+    }
+  });
+
+  password = await SharedPreferences.getInstance().then((value) {
+    if (value.getString("pass") != null) {
+      password = value.getString("pass");
+      return password;
+    }
+  });
+
+  if(username != null && password!= null) {
+    User? user = await ApiService.login(username!, password);
+    if (user != null) {
+      debugPrint(
+          "loginForm, user: $user.username, $user.password, $user.topic");
+
+      List<String> userTopicList = Utils.createTopicListFromApi(user);
+      SmartMqtt mqtt = SmartMqtt(
+          host: Constants.BROKER_IP,
+          port: Constants.BROKER_PORT,
+          username: user.username,
+          mqttPass: user.mqtt_pass,
+          topicList: userTopicList);
+      await mqtt.initializeMQTTClient();
+      await SmartMqtt.instance.client.connect();
+      print(
+          "================== connectig to client =========================");
+      print("===========================================");
+
+      print("current smartmqtt state: $currState");
+    }
+  }
+
 }
 
 class NotificationsApp extends StatefulWidget {
