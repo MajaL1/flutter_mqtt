@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -74,12 +75,27 @@ class _LoginFormValidationState extends State<LoginForm> {
             "loginForm, user: $user.username, $user.password, $user.topic");
 
         List<String> userTopicList = Utils.createTopicListFromApi(user);
+
         SmartMqtt mqtt = SmartMqtt(
             host: Constants.BROKER_IP,
             port: Constants.BROKER_PORT,
             username: user.username,
             mqttPass: user.mqtt_pass,
             topicList: userTopicList);
+
+        /** saving user data in shared prefs **/
+        await SharedPreferences.getInstance().then((value) {
+          value.setString("username", username);
+          value.setString("pass", password);
+
+          value.setString("mqtt_username", user.username);
+          value.setString("mqtt_pass", user.mqtt_pass);
+
+          String userTopicListPref = jsonEncode(userTopicList);
+          value.setString("userTopicList", userTopicListPref);
+        });
+
+
         await mqtt.initializeMQTTClient();
         // inicializiraj servis za posiljanje sporocil
         await NotificationHelper.initializeService();

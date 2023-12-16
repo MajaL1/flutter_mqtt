@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
+
 //import 'dart:isolate';
 import 'dart:ui';
 
@@ -13,20 +14,14 @@ import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tzl;
 
 import 'api/api_service.dart';
 import 'model/alarm.dart';
 import 'model/constants.dart';
-import 'model/topic_data.dart';
 import 'model/user.dart';
 import 'mqtt/state/MQTTAppState.dart';
 import 'pages/first_screen.dart';
-import 'package:intl/intl_standalone.dart';
-
-import 'package:timezone/data/latest.dart' as tzl;
-//import 'package:timezone/standalone.dart' as tz;
-//import 'package:timezone/browser.dart' as tz;
-//import 'package:timezone/browser.dart' as tz;
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -45,8 +40,8 @@ SharedPreferences? prefs;
 
 Future<void> main() async {
   //tzl.initializeTimeZones();
-   tzl.initializeTimeZones();
-   //tz.initializeTimeZone();
+  tzl.initializeTimeZones();
+  //tz.initializeTimeZone();
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
 
@@ -137,7 +132,6 @@ Future<bool> onIosBackground(ServiceInstance service) async {
 
 // Todo: premakni v UTIL
 
-
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
@@ -202,29 +196,53 @@ void onStart(ServiceInstance service) async {
         SmartMqtt.instance.currentState) {
       print("SmartMqtt.instance.initializeMQTTClient()");
 
-      User? user = await ApiService.login("test", "Test1234");
-      if (user != null) {
-        debugPrint(
-            "loginForm, user: $user.username, $user.password, $user.topic");
+      /*** ce je povezava prekinjena, potem iz preferences vzemi login podatke **/
 
-        List<String> userTopicList = Utils.createTopicListFromApi(user);
-        SmartMqtt mqtt = SmartMqtt(
-            host: Constants.BROKER_IP,
-            port: Constants.BROKER_PORT,
-            username: user.username,
-            mqttPass: user.mqtt_pass,
-            topicList: userTopicList);
-        await mqtt.initializeMQTTClient();
-        await SmartMqtt.instance.client.connect();
-        print("================== connectig to client =========================");
-        print("===========================================");
+      String? username;
+      String? password;
 
-        print("current smartmqtt state: $currState");
+      username = await SharedPreferences.getInstance().then((value) {
+        if (value.getString("username") != null) {
+          username = value.getString("username");
+          debugPrint("username from storage: $username");
+          return username;
+        }
+      });
+
+      password = await SharedPreferences.getInstance().then((value) {
+        if (value.getString("pass") != null) {
+          password = value.getString("pass");
+          debugPrint("password from storage: $password");
+          return password;
+        }
+      });
+
+      if(username != null && password!= null) {
+        User? user = await ApiService.login(username!, password);
+        if (user != null) {
+          debugPrint(
+              "loginForm, user: $user.username, $user.password, $user.topic");
+
+          List<String> userTopicList = Utils.createTopicListFromApi(user);
+          SmartMqtt mqtt = SmartMqtt(
+              host: Constants.BROKER_IP,
+              port: Constants.BROKER_PORT,
+              username: user.username,
+              mqttPass: user.mqtt_pass,
+              topicList: userTopicList);
+          await mqtt.initializeMQTTClient();
+          await SmartMqtt.instance.client.connect();
+          print(
+              "================== connectig to client =========================");
+          print("===========================================");
+
+          print("current smartmqtt state: $currState");
+        }
       }
     }
 
     /// you can see this log in logcat
-    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
+    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
 
     // test using external plugin
     final deviceInfo = DeviceInfoPlugin();
