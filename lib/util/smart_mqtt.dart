@@ -123,8 +123,9 @@ class SmartMqtt extends ChangeNotifier {
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }
 
-  Future<void> mqttMessageProcessor(List<MqttReceivedMessage<MqttMessage?>>? c) async {
-     final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
+  Future<void> mqttMessageProcessor(
+      List<MqttReceivedMessage<MqttMessage?>>? c) async {
+    final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
 
     // final MqttPublishMessage recMess = c![0].payload;
     final String pt =
@@ -178,10 +179,6 @@ class SmartMqtt extends ChangeNotifier {
     }
     if (topicName.contains("alarm")) {
       if (messageCount > 0) {
-        /** Todo: ce je alarm nazadnje bil poslan 5 min nazaj,
-         * ga ne upostevaj
-         * */
-
         Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
         //prebere listo alarmov iz preferenc in jim doda nov alarm
@@ -195,31 +192,43 @@ class SmartMqtt extends ChangeNotifier {
           oldAlarmList = json.decode(alarmListOldData);
         }
 
-        // ali je vrednost trenutnega alarma vecja od prejsnje
-        // in ali je med tem in prejsnjim alarmom minilo vec kot 10 minut
-        // potem kreiraj nov alarm
-        /*if (currentAlarmList.first.hiAlarm! > oldAlarmList.last.hiAlarm) {
-          int minutes =
-              Utils.compareDatesInMinutes(currentAlarmList, oldAlarmList);
-          debugPrint("comparing dates: $minutes");
-        } */
-        debugPrint("message for alarm, message count: $messageCount");
+        DateTime? lastAlarmDate =
+            await SharedPreferences.getInstance().then((value) {
+          if (value.getString("last_sent_alarm_date") != null) {
+            String? lastAlarmDateString =
+                value.getString("last_sent_alarm_date");
+            debugPrint(
+                "last_sent_alarm_date 0 $lastAlarmDateString 1: $DateTime.parse(lastAlarmDateString)!");
+            return DateTime.parse(lastAlarmDateString!);
+          }
+        });
+        int minutes = Utils.compareDatesInMinutes(lastAlarmDate!);
+        debugPrint("comparedDatesInMinutes:: $minutes");
 
-        debugPrint("from topic-alarm $topicName, $decodeMessage");
+        //ali je vec kot 5 minut od alarma
+        if (minutes >= 5) {
+          debugPrint("message for alarm, message count: $messageCount");
 
-        // 2. dobi trenuten alarm
-        currentAlarmList.first.sensorAddress =
-            topicName.split("/alarm").first;
-        // 3. doda alarm na listo starih alarmov
-        // odkomentiraj, da bo dodajalo alarm
-        oldAlarmList.addAll(currentAlarmList);
-        String alarmListMqtt = jsonEncode(oldAlarmList);
-        preferences.setString("alarm_list_mqtt", alarmListMqtt);
-        //debugPrint("alarmList---: $alarmListMqtt");
-        messageCount++;
+          debugPrint("from topic-alarm $topicName, $decodeMessage");
 
-        // prikaze sporocilo z alarmom
-        await NotificationHelper.sendMessage(currentAlarmList.first);
+          // 2. dobi trenuten alarm
+          currentAlarmList.first.sensorAddress =
+              topicName.split("/alarm").first;
+          // 3. doda alarm na listo starih alarmov
+          // odkomentiraj, da bo dodajalo alarm
+          oldAlarmList.addAll(currentAlarmList);
+          String alarmListMqtt = jsonEncode(oldAlarmList);
+          preferences.setString("alarm_list_mqtt", alarmListMqtt);
+          //debugPrint("alarmList---: $alarmListMqtt");
+          messageCount++;
+
+          // prikaze sporocilo z alarmom
+          await NotificationHelper.sendMessage(currentAlarmList.first);
+          await SharedPreferences.getInstance().then((value) {
+            value.setString(
+                "last_sent_alarm_date", currentAlarmList.first.ts.toString());
+          });
+        }
         // debugPrint("message is not retain, message count: $firstRetainMessage");
       } else {
         debugPrint("first-retain message ignored $messageCount");

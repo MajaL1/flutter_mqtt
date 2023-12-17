@@ -431,8 +431,9 @@ class _UserSettingsState extends State<UserSettings> {
             // margin: const EdgeInsets.only(top: 20),
             decoration: BoxDecoration(
                 color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-            child: SmartMqtt.instance.isSaved != true
-                ? TextButton(
+            child: //SmartMqtt.instance.isSaved != true
+              //  ?
+              TextButton(
                     onPressed: () {
                       saveMqttSettings(
                           sensorAddress, item, textController, settingToChange);
@@ -446,15 +447,15 @@ class _UserSettingsState extends State<UserSettings> {
                       style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   )
-                : IconButton(
+               /* : IconButton(
                     icon: const Icon(Icons.access_alarm_outlined),
                     onPressed: () {},
 
-                  ),
+                  ),*/
           ),
-          SmartMqtt.instance.isSaved == true
+          /*SmartMqtt.instance.isSaved == true
               ? Text("=saved")
-              : Text("=not saved"),
+              : Text("=not saved"), */
           //Text("aa")
           /*
           ChangeNotifierProvider.value(
