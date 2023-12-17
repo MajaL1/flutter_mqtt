@@ -95,7 +95,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               TableRow(children: [
                                 Container(
                                     padding: const EdgeInsets.all(10.0),
-                                    child: Text("$index",
+                                    child: Text("${index+1}",
                                         textAlign: TextAlign.center)),
                                 Container(
                                     padding: const EdgeInsets.all(10.0),

@@ -197,19 +197,20 @@ class SmartMqtt extends ChangeNotifier {
           if (value.getString("last_sent_alarm_date") != null) {
             String? lastAlarmDateString =
                 value.getString("last_sent_alarm_date");
-            debugPrint(
-                "last_sent_alarm_date 0 $lastAlarmDateString 1: $DateTime.parse(lastAlarmDateString)!");
+            debugPrint("last_sent_alarm_date $lastAlarmDateString");
             return DateTime.parse(lastAlarmDateString!);
           }
         });
-        int minutes = Utils.compareDatesInMinutes(lastAlarmDate!);
-        debugPrint("comparedDatesInMinutes:: $minutes");
+
+        int minutes = 6;
+        if (lastAlarmDate != null) {
+          minutes = Utils.compareDatesInMinutes(lastAlarmDate!);
+        }
 
         //ali je vec kot 5 minut od alarma
-        if (minutes >= 5) {
-          debugPrint("message for alarm, message count: $messageCount");
-
-          debugPrint("from topic-alarm $topicName, $decodeMessage");
+        if (minutes > 5) {
+          debugPrint(
+              "from topic-alarm $topicName, $decodeMessage, message count: $messageCount, comparedDatesInMinutes:: $minutes ");
 
           // 2. dobi trenuten alarm
           currentAlarmList.first.sensorAddress =
