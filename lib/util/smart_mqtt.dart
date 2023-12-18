@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notification_helper.dart';
 import '../model/alarm.dart';
-import '../mqtt/state/MQTTAppState.dart';
+import '../mqtt/MQTTAppState.dart';
 
 class SmartMqtt extends ChangeNotifier {
   late String host;

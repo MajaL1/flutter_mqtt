@@ -17,7 +17,7 @@ import 'package:timezone/data/latest.dart' as tzl;
 
 import 'model/alarm.dart';
 import 'model/constants.dart';
-import 'mqtt/state/MQTTAppState.dart';
+import 'mqtt/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -268,7 +268,7 @@ Future<void> _reconnectToMqtt(String currState) async {
         topicList: userTopicList);
     await mqtt.initializeMQTTClient();
     await SmartMqtt.instance.client.connect();
-    print("================== connectig to client =========================");
+    print("================== connecting to client =========================");
     print("===========================================");
 
     print("current smartmqtt state: $currState");
