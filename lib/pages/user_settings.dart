@@ -28,7 +28,7 @@ Future<List<UserDataSettings>> _getUserDataSettings(String data) async {
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
-
+  debugPrint("user_settings decodeMessage $decodeMessage");
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
   userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
@@ -269,11 +269,17 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
+  Future<String> _getNewUserSettingsList() async{
+   return await Provider.of<SmartMqtt>(context, listen: true)
+        .getNewUserSettingsList();
+  }
+
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: Provider.of<SmartMqtt>(context, listen: true)
-          .getNewUserSettingsList()
-          .then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
+      future: //Provider.of<SmartMqtt>(context, listen: true)
+          //.getNewUserSettingsList()
+        _getNewUserSettingsList()
+        .then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
           .then((dataSettingsList) =>
               _parseUserDataSettingsToList(dataSettingsList)),
 

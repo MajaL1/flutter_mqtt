@@ -79,7 +79,7 @@ class ApiService {
           });
 
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body.toString());
+        var data = await jsonDecode(response.body.toString());
        // debugPrint(data['token']);
         debugPrint('=====Login successfully');
         UserTopic userTopic;
@@ -102,6 +102,7 @@ class ApiService {
       }
     } catch (e) {
       debugPrint(e.toString());
+      return null;
     }
     return null;
   }

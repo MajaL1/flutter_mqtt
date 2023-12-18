@@ -11,15 +11,12 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
-import 'package:mqtt_test/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 
-import 'api/api_service.dart';
 import 'model/alarm.dart';
 import 'model/constants.dart';
-import 'model/user.dart';
 import 'mqtt/state/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
@@ -144,8 +141,8 @@ void onStart(ServiceInstance service) async {
   await preferences.setString("hello", "world");
 
   /// OPTIONAL when use custom notification
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //  FlutterLocalNotificationsPlugin();
 
   SmartMqtt.instance.addListener(() {});
   if (service is AndroidServiceInstance) {
@@ -169,7 +166,7 @@ void onStart(ServiceInstance service) async {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
         /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-        flutterLocalNotificationsPlugin.show(
+        /* flutterLocalNotificationsPlugin.show(
           888,
           'COOL SERVICE',
           'Awesome ${DateTime.now()}',
@@ -181,13 +178,15 @@ void onStart(ServiceInstance service) async {
               ongoing: true,
             ),
           ),
-        );
+        ); */
 
         // if you don't using custom notification, uncomment this
-        service.setForegroundNotificationInfo(
+        /* service.setForegroundNotificationInfo(
           title: "My App Service",
           content: "Updated at ${DateTime.now()}",
         );
+
+        */
       }
     }
     String currState = SmartMqtt.instance.currentState.toString();
@@ -197,7 +196,7 @@ void onStart(ServiceInstance service) async {
       print("SmartMqtt.instance.initializeMQTTClient()");
 
       /*** ce je povezava prekinjena, reconnect **/
-      await reconnectToMqtt(currState);
+      await _reconnectToMqtt(currState);
     }
 
     /// you can see this log in logcat
@@ -226,47 +225,54 @@ void onStart(ServiceInstance service) async {
   });
 }
 
-Future<void> reconnectToMqtt(String currState) async {
-   String? username;
-  String? password;
+Future<void> _reconnectToMqtt(String currState) async {
+  String username;
+  String mqttPassword;
 
   username = await SharedPreferences.getInstance().then((value) {
     if (value.getString("username") != null) {
-      username = value.getString("username");
+      username = value.getString("username")!;
       return username;
     }
+    return "";
   });
 
-  password = await SharedPreferences.getInstance().then((value) {
-    if (value.getString("pass") != null) {
-      password = value.getString("pass");
-      return password;
+  mqttPassword = await SharedPreferences.getInstance().then((value) {
+    if (value.getString("mqtt_pass") != null) {
+      mqttPassword = value.getString("mqtt_pass")!;
+      return mqttPassword;
     }
+    return "";
   });
 
-  if(username != null && password!= null) {
-    User? user = await ApiService.login(username!, password);
-    if (user != null) {
-      debugPrint(
-          "loginForm, user: $user.username, $user.password, $user.topic");
-
-      List<String> userTopicList = Utils.createTopicListFromApi(user);
-      SmartMqtt mqtt = SmartMqtt(
-          host: Constants.BROKER_IP,
-          port: Constants.BROKER_PORT,
-          username: user.username,
-          mqttPass: user.mqtt_pass,
-          topicList: userTopicList);
-      await mqtt.initializeMQTTClient();
-      await SmartMqtt.instance.client.connect();
-      print(
-          "================== connectig to client =========================");
-      print("===========================================");
-
-      print("current smartmqtt state: $currState");
+  String? userTopicListPref =
+      await SharedPreferences.getInstance().then((value) {
+    if (value.getString("user_topic_list") != null) {
+      return value.getString("user_topic_list");
     }
+  });
+  List? userTopicList = [];
+
+  if (userTopicListPref != null) {
+    userTopicList = json.decode(userTopicListPref);
   }
 
+  if (username.isNotEmpty &&
+      mqttPassword.isNotEmpty &&
+      userTopicList!.isNotEmpty) {
+    SmartMqtt mqtt = SmartMqtt(
+        host: Constants.BROKER_IP,
+        port: Constants.BROKER_PORT,
+        username: username,
+        mqttPass: mqttPassword,
+        topicList: userTopicList);
+    await mqtt.initializeMQTTClient();
+    await SmartMqtt.instance.client.connect();
+    print("================== connectig to client =========================");
+    print("===========================================");
+
+    print("current smartmqtt state: $currState");
+  }
 }
 
 class NotificationsApp extends StatefulWidget {

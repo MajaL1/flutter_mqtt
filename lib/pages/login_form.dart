@@ -69,48 +69,55 @@ class _LoginFormValidationState extends State<LoginForm> {
           in usertopiclist. potem ne bomo potrebovali spodnjih vrstic
           ampak samo tole: await NotificationHelper.initializeService(); **/
 
-      User? user = await ApiService.login(username, password);
-      if (user != null) {
-        debugPrint(
-            "loginForm, user: $user.username, $user.password, $user.topic");
+      try {
+        User? user = await ApiService.login(username, password);
+        if (user != null) {
+          debugPrint(
+              "loginForm, user: $user.username, $user.password, $user.topic");
 
-        List<String> userTopicList = Utils.createTopicListFromApi(user);
+          List<String> userTopicList = Utils.createTopicListFromApi(user);
 
-        SmartMqtt mqtt = SmartMqtt(
-            host: Constants.BROKER_IP,
-            port: Constants.BROKER_PORT,
-            username: user.username,
-            mqttPass: user.mqtt_pass,
-            topicList: userTopicList);
+          SmartMqtt mqtt = SmartMqtt(
+              host: Constants.BROKER_IP,
+              port: Constants.BROKER_PORT,
+              username: user.username,
+              mqttPass: user.mqtt_pass,
+              topicList: userTopicList);
 
-        /** saving user data in shared prefs **/
-        await SharedPreferences.getInstance().then((value) {
-          value.setString("username", username);
-          value.setString("pass", password);
+          /** saving user data in shared prefs **/
+          await SharedPreferences.getInstance().then((value) {
+            //value.setString("username", username);
+            //value.setString("pass", password);
 
-          value.setString("mqtt_username", user.username);
-          value.setString("mqtt_pass", user.mqtt_pass);
+            value.setString("mqtt_username", user.username);
+            value.setString("mqtt_pass", user.mqtt_pass);
 
-          String userTopicListPref = jsonEncode(userTopicList);
-          value.setString("userTopicList", userTopicListPref);
-        });
+            String userTopicListPref = jsonEncode(userTopicList);
+            value.setString("user_topic_list", userTopicListPref);
+          });
 
+          await mqtt.initializeMQTTClient();
+          // inicializiraj servis za posiljanje sporocil
+          await NotificationHelper.initializeService();
+          await SharedPreferences.getInstance().then((value) {
+            value.setBool("isLoggedIn", true);
+          });
+          //*********************************************/
+          await Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => UserSettings.base()));
 
-        await mqtt.initializeMQTTClient();
-        // inicializiraj servis za posiljanje sporocil
-        await NotificationHelper.initializeService();
-        await SharedPreferences.getInstance().then((value) {
-          value.setBool("isLoggedIn", true);
+          debugPrint("Validated");
+        } else {
+          setState(() {
+            loginError = true;
+
+          });
+        }
+      } catch (e) {
+        setState(() {
+          loginError = true;
         });
       }
-
-      //*********************************************/
-      await Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => UserSettings.base()));
-
-      debugPrint("Validated");
-    } else {
-      loginError = true;
     }
   }
 
@@ -282,7 +289,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   left: 15.0, right: 15.0, top: 15, bottom: 0),
                               child: loginError == true
                                   ? const Text(
-                                      "Incorrect username or password",
+                                      "Login error",
                                       style: TextStyle(color: Colors.redAccent),
                                     )
                                   : const Text(""),

@@ -39,7 +39,7 @@ class MQTTConnectionManager {
 
 
   void initializeMQTTClient() {
-    client = MqttServerClient(_host, _identifier);
+    client = MqttServerClient(_host, _identifier);y
     client!.port = 1883;
     client!.keepAlivePeriod = 20;
     client!.onDisconnected = onDisconnected;

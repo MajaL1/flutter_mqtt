@@ -164,7 +164,7 @@ class SmartMqtt extends ChangeNotifier {
           debugPrint("new user settings");
 
           newUserSettings = decodeMessage;
-          setNewUserSettings(newUserSettings);
+          await setNewUserSettings(newUserSettings);
         }
 
         // debugPrint("----- newUserSettings: $newUserSettings");
@@ -201,6 +201,29 @@ class SmartMqtt extends ChangeNotifier {
             return DateTime.parse(lastAlarmDateString!);
           }
         });
+
+
+        int ? lastSentHiAlarmValue =
+        await SharedPreferences.getInstance().then((value) {
+          if (value.getString("last_sent_hi_alarm_value") != null) {
+            int? lastSentHiAlarmValue =
+            value.getInt("last_sent_hi_alarm_value");
+            debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
+            return lastSentHiAlarmValue;
+          }
+        });
+
+        int ? lastSentLoAlarmValue =
+        await SharedPreferences.getInstance().then((value) {
+          if (value.getString("last_sent_lo_alarm_value") != null) {
+            int? lastSentLoAlarmValue =
+            value.getInt("last_sent_lo_alarm_value");
+            debugPrint("last_sent_lo_alarm_value $lastSentLoAlarmValue");
+            return lastSentLoAlarmValue;
+          }
+        });
+
+
 
         int minutes = 6;
         if (lastAlarmDate != null) {
@@ -291,11 +314,14 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   Future<String> getNewUserSettingsList() async {
-    return newUserSettings;
+    // if(newUserSettings != null) {
+        return newUserSettings;
+     //}
   }
 
-  void setNewUserSettings(String newUserSettings) {
+  Future<void> setNewUserSettings(String newUserSettings) async{
     this.newUserSettings = newUserSettings;
+
     this.isSaved = true;
     notifyListeners();
     debugPrint("notifying listeners..");
