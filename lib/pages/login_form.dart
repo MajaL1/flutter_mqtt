@@ -110,7 +110,6 @@ class _LoginFormValidationState extends State<LoginForm> {
         } else {
           setState(() {
             loginError = true;
-
           });
         }
       } catch (e) {
@@ -189,21 +188,39 @@ class _LoginFormValidationState extends State<LoginForm> {
                         child: Column(
                           children: <Widget>[
                             const Padding(
-                                padding: EdgeInsets.only(top: 60.0),
+                                padding:
+                                    EdgeInsets.only(top: 120.0, bottom: 20),
                                 child: Center(
                                   child: SizedBox(
-                                    width: 200,
-                                    height: 30,
-                                    // child: //Image.asset('asset/images/flutter-logo.png')),
+                                    width: 120,
+                                    height: 50,
+                                    child: FlutterLogo(size: 200),
                                   ),
                                 )),
-                            const Text(Constants.ENTER_USERNAME_AND_PASS),
+                            const Text(
+                              Constants.LOGIN_TO_NAVIS,
+                              style: TextStyle(
+                                  color: Color.fromRGBO(0, 87, 153, 100),
+                                  fontWeight: FontWeight.w900,
+                                  fontStyle: FontStyle.normal,
+                                  fontFamily: 'Roboto',
+                                  fontSize: 20),
+                            ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 10),
+                              padding: const EdgeInsets.only(
+                                  left: 65.0, right: 65.0, top: 35, bottom: 30),
                               child: TextFormField(
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
+                                style: const TextStyle(fontFamily: 'Roboto'),
+                                decoration: InputDecoration(
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 2, color: Color.fromRGBO(108, 165, 222, 60)), //<-- SEE HERE
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.indigo, width: 1.5),
+                                    ),
                                     labelText: Constants.EMAIL,
                                     hintText: Constants.ENTER_VALID_EMAIL),
                                 controller: emailController,
@@ -215,13 +232,22 @@ class _LoginFormValidationState extends State<LoginForm> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0, top: 15, bottom: 0),
+                                  left: 65.0, right: 65.0, top: 15, bottom: 30),
                               child: TextFormField(
                                 obscureText: true,
                                 enableSuggestions: false,
                                 autocorrect: false,
-                                decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
+                                style: const TextStyle(fontFamily: 'Roboto'),
+                                decoration: InputDecoration(
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 2, color:  Color.fromRGBO(108, 165, 222, 60)), //<-- SEE HERE
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: const BorderSide(
+                                          color: Colors.indigo, width: 8.5),
+                                    ),
                                     labelText: Constants.PASSWORD,
                                     hintText: Constants.ENTER_SECURE_PASS),
                                 controller: passwordController,
@@ -244,8 +270,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                               height: 50,
                               width: 250,
                               decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(20)),
+                                  color: Color.fromRGBO(0, 67, 200, 100),
+                                  borderRadius: BorderRadius.circular(16)),
                               child: TextButton(
                                 onPressed: () {
                                   login();
@@ -253,7 +279,9 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 child: const Text(
                                   'Login',
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 25),
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                      fontFamily: 'Roboto'),
                                 ),
                               ),
                             ),
@@ -290,7 +318,9 @@ class _LoginFormValidationState extends State<LoginForm> {
                               child: loginError == true
                                   ? const Text(
                                       "Login error",
-                                      style: TextStyle(color: Colors.redAccent),
+                                      style: TextStyle(
+                                          color: Colors.redAccent,
+                                          fontFamily: 'Roboto'),
                                     )
                                   : const Text(""),
                             ),
