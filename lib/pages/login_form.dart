@@ -26,7 +26,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController(text: "test");
+  final emailController = TextEditingController(text: "test",);
   final passwordController = TextEditingController(text: "Test1234");
 
   //final emailController = TextEditingController(text: "test3");
@@ -200,7 +200,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                             const Text(
                               Constants.LOGIN_TO_NAVIS,
                               style: TextStyle(
-                                  color: Color.fromRGBO(0, 87, 153, 100),
+                                  color: Color.fromRGBO(0, 87, 153, 60),
                                   fontWeight: FontWeight.w900,
                                   fontStyle: FontStyle.normal,
                                   fontFamily: 'Roboto',
@@ -210,11 +210,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                               padding: const EdgeInsets.only(
                                   left: 65.0, right: 65.0, top: 35, bottom: 30),
                               child: TextFormField(
-                                style: const TextStyle(fontFamily: 'Roboto'),
+                                style: const TextStyle(fontFamily: 'Roboto', color: Color.fromRGBO(00,20,20,80), fontSize: 20),
                                 decoration: InputDecoration(
                                     enabledBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          width: 2, color: Color.fromRGBO(108, 165, 222, 60)), //<-- SEE HERE
+                                          width: 2,
+                                          color: Color.fromRGBO(108, 165, 222,
+                                              60)), //<-- SEE HERE
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(16),
@@ -222,8 +224,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           color: Colors.indigo, width: 1.5),
                                     ),
                                     labelText: Constants.EMAIL,
-                                    hintText: Constants.ENTER_VALID_EMAIL),
+                                    hintText: Constants.ENTER_VALID_EMAIL,
+
+                                ),
                                 controller: emailController,
+
                                 /*validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       EmailValidator(errorText: "Enter valid email id"),
@@ -237,11 +242,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 obscureText: true,
                                 enableSuggestions: false,
                                 autocorrect: false,
-                                style: const TextStyle(fontFamily: 'Roboto'),
+                                style: const TextStyle(fontFamily: 'Roboto', color: Color.fromRGBO(00,20,20,80), fontSize: 20),
                                 decoration: InputDecoration(
                                     enabledBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          width: 2, color:  Color.fromRGBO(108, 165, 222, 60)), //<-- SEE HERE
+                                          width: 2,
+                                          color: Color.fromRGBO(108, 165, 222,
+                                              60)), //<-- SEE HERE
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(16),
@@ -270,14 +277,15 @@ class _LoginFormValidationState extends State<LoginForm> {
                               height: 50,
                               width: 180,
                               decoration: BoxDecoration(
-                                  color: Color.fromRGBO(0, 87, 153, 60),
-                                  borderRadius: BorderRadius.circular(9),
+                                color: Color.fromRGBO(0, 87, 153, 60),
+                                borderRadius: BorderRadius.circular(9),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.25),
                                     spreadRadius: 5,
                                     blurRadius: 7,
-                                    offset: Offset(0, 3), // changes position of shadow
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
                                   ),
                                 ],
                               ),
