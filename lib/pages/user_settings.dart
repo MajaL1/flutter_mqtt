@@ -22,20 +22,22 @@ class UserSettings extends StatefulWidget {
   State<UserSettings> createState() => _UserSettingsState();
 }
 
-Future<List<UserDataSettings>> _getUserDataSettings(String data) async {
+Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
 
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
   debugPrint("user_settings decodeMessage $decodeMessage");
+  if(decodeMessage.isNotEmpty){
   Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
   userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
   String? deviceName = preferences.getString("settings_mqtt_device_name");
   userDataSettings[0].deviceName = deviceName;
 
-  return userDataSettings;
+  return userDataSettings;}
+  return null;
 }
 
 List<TextEditingController> _createControllerForEditSettings(
@@ -281,7 +283,7 @@ class _UserSettingsState extends State<UserSettings> {
         _getNewUserSettingsList()
         .then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
           .then((dataSettingsList) =>
-              _parseUserDataSettingsToList(dataSettingsList)),
+              _parseUserDataSettingsToList(dataSettingsList!)),
 
       // tole spodaj dela, stem da se najprej osvezi na staro vrednost, potem pa na novo
       // _getUserDataSettingsTEST(testNew).then((dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),

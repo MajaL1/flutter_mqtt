@@ -277,15 +277,15 @@ class _LoginFormValidationState extends State<LoginForm> {
                               height: 50,
                               width: 180,
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(0, 87, 153, 60),
+                                color: Colors.blue,//Color.fromRGBO(0, 87, 153, 60),
                                 borderRadius: BorderRadius.circular(9),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.25),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
+                                    color: Colors.grey.withOpacity(0.15),
+                                    spreadRadius: 4,
+                                    blurRadius: 5,
                                     offset: Offset(
-                                        0, 3), // changes position of shadow
+                                        0, 2), // changes position of shadow
                                   ),
                                 ],
                               ),
