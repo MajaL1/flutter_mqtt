@@ -43,7 +43,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                   width: 100,
                   decoration: BoxDecoration(
                       color: Colors.blue,
-                      borderRadius: BorderRadius.circular(20)),
+                      borderRadius: BorderRadius.circular(6)),
                   child: TextButton(
                       onPressed: () {
                         clearHistory();
@@ -66,6 +66,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
                       String alarmValue = "";
+                      bool isHeader = index == 0;
                       //     DateTime ts = snapshot.data![index].ts!;
 
                       if (snapshot.data![index].hiAlarm != 0 &&
@@ -84,7 +85,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
                         child: Table(
-                            border: TableBorder.all(color: Colors.lightBlue.shade50),
+                            border: TableBorder.all(
+                                color: Colors.lightBlue.shade50),
                             columnWidths: const {
                               0: FixedColumnWidth(5.0),
                               1: FixedColumnWidth(80.0),
@@ -92,25 +94,45 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               3: FixedColumnWidth(80.0),
                             },
                             children: [
-                              TableRow(children: [
-                                Container(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text("${index+1}",
-                                        textAlign: TextAlign.center)),
-                                Container(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text("$sensorAddress",
-                                        textAlign: TextAlign.center)),
-                                Container(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text("Value: $v \n$alarmValue",
-                                        textAlign: TextAlign.center)),
-                                Container(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text("$formattedDate ",
-                                      textAlign: TextAlign.center),
-                                )
-                              ])
+                              isHeader
+                                  ? TableRow(children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: const Text("index",
+                                              textAlign: TextAlign.center)),
+                                      Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: const Text("sensor address",
+                                              textAlign: TextAlign.center)),
+                                      Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: const Text("values",
+                                              textAlign: TextAlign.center)),
+                                      Container(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: const Text("date ",
+                                            textAlign: TextAlign.center),
+                                      )
+                                    ]) : const TableRow(),
+                                   TableRow(children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text("${index + 1}",
+                                              textAlign: TextAlign.center)),
+                                      Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text("$sensorAddress",
+                                              textAlign: TextAlign.center)),
+                                      Container(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text("Value: $v \n$alarmValue",
+                                              textAlign: TextAlign.center)),
+                                      Container(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text("$formattedDate ",
+                                            textAlign: TextAlign.center),
+                                      )
+                                    ])
                             ]),
 
                         /* ListTile(

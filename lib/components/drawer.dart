@@ -43,7 +43,7 @@ class _NavDrawerState extends State<NavDrawer> {
                       visualDensity: VisualDensity(vertical: -4),
                       enabled: false,
                       title: Text(
-                        'Welcome, User1',
+                        'User1',
                         style: TextStyle(
                           color: Colors.white,
                         ),
