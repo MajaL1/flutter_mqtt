@@ -251,10 +251,10 @@ Future<void> _reconnectToMqtt(String currState) async {
       return value.getString("user_topic_list");
     }
   });
-  List? userTopicList = [];
+  List userTopicList = [];
 
   if (userTopicListPref != null) {
-    userTopicList = json.decode(userTopicListPref);
+    userTopicList = json.decode(userTopicListPref).cast<String>();
   }
 
   if (username.isNotEmpty &&
