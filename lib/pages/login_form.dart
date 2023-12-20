@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
@@ -229,10 +230,10 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 ),
                                 controller: emailController,
 
-                                /*validator: MultiValidator([
+                             /*   validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       EmailValidator(errorText: "Enter valid email id"),
-                    ])*/
+                    ]) */
                               ),
                             ),
                             Padding(

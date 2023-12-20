@@ -230,8 +230,8 @@ Future<void> _reconnectToMqtt(String currState) async {
   String mqttPassword;
 
   username = await SharedPreferences.getInstance().then((value) {
-    if (value.getString("username") != null) {
-      username = value.getString("username")!;
+    if (value.getString("mqtt_username") != null) {
+      username = value.getString("mqtt_username")!;
       return username;
     }
     return "";
