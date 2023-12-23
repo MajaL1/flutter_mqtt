@@ -97,24 +97,35 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               isHeader
                                   ? TableRow(children: [
                                       Container(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: const Text("#",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w800)),
+                                      ),
+                                      Container(
                                           padding: const EdgeInsets.all(5.0),
-                                          child: const Text("index",
-                                              textAlign: TextAlign.center)),
+                                          child: const Text("Sensor address",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.w800))),
                                       Container(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: const Text("sensor address",
-                                              textAlign: TextAlign.center)),
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: const Text("Values",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.w800))),
                                       Container(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: const Text("values",
-                                              textAlign: TextAlign.center)),
-                                      Container(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: const Text("date ",
-                                            textAlign: TextAlign.center),
-                                      )])
-                                    :
-                                   TableRow(children: [
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: const Text("Date ",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w800)),
+                                      )
+                                    ])
+                                  : TableRow(children: [
                                       Container(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Text("${index + 1}",
