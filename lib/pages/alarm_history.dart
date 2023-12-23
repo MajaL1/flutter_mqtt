@@ -88,8 +88,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                             border: TableBorder.all(
                                 color: Colors.lightBlue.shade50),
                             columnWidths: const {
-                              0: FixedColumnWidth(5.0),
-                              1: FixedColumnWidth(80.0),
+                              0: FixedColumnWidth(15.0),
+                              1: FixedColumnWidth(70.0),
                               2: FixedColumnWidth(80.0),
                               3: FixedColumnWidth(80.0),
                             },
@@ -97,7 +97,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               isHeader
                                   ? TableRow(children: [
                                       Container(
-                                          padding: const EdgeInsets.all(10.0),
+                                          padding: const EdgeInsets.all(5.0),
                                           child: const Text("index",
                                               textAlign: TextAlign.center)),
                                       Container(
@@ -112,8 +112,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                         padding: const EdgeInsets.all(10.0),
                                         child: const Text("date ",
                                             textAlign: TextAlign.center),
-                                      )
-                                    ]) : const TableRow(),
+                                      )])
+                                    :
                                    TableRow(children: [
                                       Container(
                                           padding: const EdgeInsets.all(10.0),

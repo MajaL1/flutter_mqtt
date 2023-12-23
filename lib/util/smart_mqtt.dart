@@ -157,7 +157,7 @@ class SmartMqtt extends ChangeNotifier {
       if ((decodeMessage.contains("v") ||
           decodeMessage.contains("typ") ||
           decodeMessage.contains("u"))) {
-        debugPrint("got new settings");
+       // debugPrint("got new settings");
         // ali novi settingi niso enaki prejsnim
         // ali ce so v zacetku prazni
         if (newUserSettings.compareTo(decodeMessage) != 0) {
@@ -208,7 +208,7 @@ class SmartMqtt extends ChangeNotifier {
           if (value.getString("last_sent_hi_alarm_value") != null) {
             int? lastSentHiAlarmValue =
             value.getInt("last_sent_hi_alarm_value");
-            debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
+            //debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
             return lastSentHiAlarmValue;
           }
         });
