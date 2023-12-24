@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
 import '../model/constants.dart';
+import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
 class UserSettings extends StatefulWidget {
@@ -29,14 +30,15 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
   debugPrint("user_settings decodeMessage $decodeMessage");
-  if(decodeMessage.isNotEmpty){
-  Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+  if (decodeMessage.isNotEmpty) {
+    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-  userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
-  String? deviceName = preferences.getString("settings_mqtt_device_name");
-  userDataSettings[0].deviceName = deviceName;
+    userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+    String? deviceName = preferences.getString("settings_mqtt_device_name");
+    userDataSettings[0].deviceName = deviceName;
 
-  return userDataSettings;}
+    return userDataSettings;
+  }
   return null;
 }
 
@@ -165,7 +167,8 @@ class _UserSettingsState extends State<UserSettings> {
             padding: EdgeInsets.symmetric(horizontal: 45),
           ),
           const Text("Device settings ",
-              style: TextStyle(color: Colors.black, fontSize: 20)),
+              style: TextStyle(color: Colors.black,decorationColor: Colors.blueAccent,fontSize: 20)),
+          const Divider(height: 40, color: Colors.black12, thickness: 5),
           _buildMqttSettingsView(),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 5),
@@ -176,6 +179,7 @@ class _UserSettingsState extends State<UserSettings> {
           ),
           const Text("Personal settings ",
               style: TextStyle(color: Colors.black, fontSize: 20)),
+          const Divider(height: 40, color: Colors.black12, thickness: 2),
           _buildUserPersonalSettings(),
         ]),
       ),
@@ -271,8 +275,8 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  Future<String> _getNewUserSettingsList() async{
-   return await Provider.of<SmartMqtt>(context, listen: true)
+  Future<String> _getNewUserSettingsList() async {
+    return await Provider.of<SmartMqtt>(context, listen: true)
         .getNewUserSettingsList();
   }
 
@@ -280,10 +284,11 @@ class _UserSettingsState extends State<UserSettings> {
     return FutureBuilder<List<UserDataSettings>>(
       future: //Provider.of<SmartMqtt>(context, listen: true)
           //.getNewUserSettingsList()
-        _getNewUserSettingsList()
-        .then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
-          .then((dataSettingsList) =>
-              _parseUserDataSettingsToList(dataSettingsList!)),
+          _getNewUserSettingsList()
+              .then(
+                  (dataSettingsList) => _getUserDataSettings(dataSettingsList))
+              .then((dataSettingsList) =>
+                  _parseUserDataSettingsToList(dataSettingsList!)),
 
       // tole spodaj dela, stem da se najprej osvezi na staro vrednost, potem pa na novo
       // _getUserDataSettingsTEST(testNew).then((dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),
@@ -337,8 +342,9 @@ class _UserSettingsState extends State<UserSettings> {
                       const Padding(
                         padding: EdgeInsets.only(top: 15, bottom: 10),
                       ),
+                      Column(children: [Text("a1"), Text("a2")]),
                       settingToChange != Constants.U_JSON
-                          ? _buildEditableSettingsItem(
+                          ? _buildEditableSettingsItem1(
                               sensorAddress,
                               index,
                               u,
@@ -389,10 +395,10 @@ class _UserSettingsState extends State<UserSettings> {
     String unitText = UnitsConstants.getUnits(u);
 
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
-      settingText = "High alarm";
+      settingText = "High alarm:  ";
     }
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
-      settingText = "Low alarm";
+      settingText = "Low alarm:  ";
     }
     return ListTile(
       title: index == 0
@@ -415,10 +421,11 @@ class _UserSettingsState extends State<UserSettings> {
           const Padding(
             padding: EdgeInsets.only(right: 10.0),
           ),
-          Expanded(
+          Container(
+              height: 50,
+              width: 90,
               child: TextFormField(
                   decoration: _setInputDecoration(value),
-                  //decoration: const InputDecoration(labelText: "Context"),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
@@ -434,33 +441,32 @@ class _UserSettingsState extends State<UserSettings> {
             padding: EdgeInsets.only(right: 10.0),
           ),
           Container(
-            height: 60,
-            width: 60,
-            // margin: const EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-                color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-            child: //SmartMqtt.instance.isSaved != true
-              //  ?
-              TextButton(
-                    onPressed: () {
-                      saveMqttSettings(
-                          sensorAddress, item, textController, settingToChange);
-                      setState(() {
-                        savePressed = !savePressed;
-                      });
-                      //saveMqttSettingsTest();
-                    },
-                    child: const Text(
-                      Constants.SAVE_DEVICE_SETTINGS,
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  )
-               /* : IconButton(
+              height: 50,
+              width: 70,
+              // margin: const EdgeInsets.only(top: 20),
+              decoration: Utils.buildBoxDecoration(),
+              child: //SmartMqtt.instance.isSaved != true
+                  //  ?
+                  TextButton(
+                onPressed: () {
+                  saveMqttSettings(
+                      sensorAddress, item, textController, settingToChange);
+                  setState(() {
+                    savePressed = !savePressed;
+                  });
+                  //saveMqttSettingsTest();
+                },
+                child: const Text(
+                  Constants.SAVE_DEVICE_SETTINGS,
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              )
+              /* : IconButton(
                     icon: const Icon(Icons.access_alarm_outlined),
                     onPressed: () {},
 
                   ),*/
-          ),
+              ),
           /*SmartMqtt.instance.isSaved == true
               ? Text("=saved")
               : Text("=not saved"), */
@@ -474,6 +480,91 @@ class _UserSettingsState extends State<UserSettings> {
               */
         ],
       ),
+    );
+  }
+
+  Widget _buildEditableSettingsItem1(
+      String sensorAddress,
+      int index,
+      int? u,
+      String settingToChange,
+      String value,
+      TextEditingController controller,
+      UserDataSettings item,
+      bool savePressed,
+      TextEditingController textController) {
+    String settingText = "";
+
+    String unitText = UnitsConstants.getUnits(u);
+
+    if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
+      settingText = "High alarm:  ";
+    }
+    if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
+      settingText = "Low alarm:  ";
+    }
+    return Table(
+    /*  title: index == 0
+          ? Text(
+        "Sensor address: $sensorAddress, units: $unitText \n",
+        maxLines: 2,
+      )
+          : Container(), //Text("", maxLines: 1),
+      contentPadding:
+      const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
+      */
+      children: [TableRow(
+        children: <Widget>[
+          Text(
+            settingText,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: 10.0),
+          ),
+          Container(
+              height: 50,
+              width: 90,
+              child: TextFormField(
+                  decoration: _setInputDecoration(value),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  enableInteractiveSelection: false,
+                  // showCursor: false,
+                  controller: textController,
+                  onChanged: (val) {},
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: "Required value"),
+                    MaxLengthValidator(6, errorText: "Value too long")
+                  ]))),
+          const Padding(
+            padding: EdgeInsets.only(right: 10.0),
+          ),
+          Container(
+              height: 50,
+              width: 70,
+              // margin: const EdgeInsets.only(top: 20),
+              decoration: Utils.buildBoxDecoration(),
+              child: //SmartMqtt.instance.isSaved != true
+              //  ?
+              TextButton(
+                onPressed: () {
+                  saveMqttSettings(
+                      sensorAddress, item, textController, settingToChange);
+                  setState(() {
+                    savePressed = !savePressed;
+                  });
+
+                },
+                child: const Text(
+                  Constants.SAVE_DEVICE_SETTINGS,
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              )
+          ),
+
+        ],
+      )],
     );
   }
 

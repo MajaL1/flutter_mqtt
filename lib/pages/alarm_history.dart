@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/alarm.dart';
 import '../model/constants.dart';
+import '../util/utils.dart';
 
 class AlarmHistory extends StatefulWidget {
   //var sharedPreferences;
@@ -41,10 +42,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                 Container(
                   height: 30,
                   width: 100,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(6)),
-                  child: TextButton(
+                  decoration: Utils.buildBoxDecoration(),                  child: TextButton(
                       onPressed: () {
                         clearHistory();
                       },

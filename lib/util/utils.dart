@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../model/alarm.dart';
 import '../model/topic_data.dart';
 import '../model/user.dart';
 
@@ -58,4 +59,35 @@ class Utils {
 
     return file.path;
   }
+  static BoxDecoration buildBoxDecoration() {
+    return BoxDecoration(
+      color: Colors.blue,//Color.fromRGBO(0, 87, 153, 60),
+      borderRadius: BorderRadius.circular(9),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.15),
+          spreadRadius: 4,
+          blurRadius: 5,
+          offset: const Offset(
+              0, 2), // changes position of shadow
+        ),
+      ],
+    );
+  }
+}
+
+BoxDecoration buildBoxDecoration() {
+  return BoxDecoration(
+    color: Colors.blue,//Color.fromRGBO(0, 87, 153, 60),
+    borderRadius: BorderRadius.circular(9),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.15),
+        spreadRadius: 4,
+        blurRadius: 5,
+        offset: Offset(
+            0, 2), // changes position of shadow
+      ),
+    ],
+  );
 }

@@ -249,8 +249,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                       borderSide: BorderSide(
                                           width: 2,
                                           color: Color.fromRGBO(108, 165, 222,
-                                              60)), //<-- SEE HERE
-                                    ),
+                                              60))), //                                  ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(16),
                                       borderSide: const BorderSide(
@@ -259,14 +258,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     labelText: Constants.PASSWORD,
                                     hintText: Constants.ENTER_SECURE_PASS),
                                 controller: passwordController,
-                                /* validator: MultiValidator([
+                                 validator: MultiValidator([
                       RequiredValidator(errorText: "* Required"),
                       MinLengthValidator(6,
-                          errorText: "Password should be atleast 6 characters"),
-                      MaxLengthValidator(15,
-                          errorText:
-                          "Password should not be greater than 15 characters")
-                    ])*/
+                          errorText: "Password should be at least 6 characters"),
+                    ])
                                 //validatePassword,        //Function to check validation
                               ),
                             ),
@@ -277,19 +273,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                             Container(
                               height: 50,
                               width: 180,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,//Color.fromRGBO(0, 87, 153, 60),
-                                borderRadius: BorderRadius.circular(9),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.15),
-                                    spreadRadius: 4,
-                                    blurRadius: 5,
-                                    offset: Offset(
-                                        0, 2), // changes position of shadow
-                                  ),
-                                ],
-                              ),
+                              decoration: buildBoxDecoration(),
                               child: TextButton(
                                 onPressed: () {
                                   login();
