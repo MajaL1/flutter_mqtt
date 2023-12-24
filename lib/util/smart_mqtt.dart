@@ -197,7 +197,7 @@ class SmartMqtt extends ChangeNotifier {
           if (value.getString("last_sent_alarm_date") != null) {
             String? lastAlarmDateString =
                 value.getString("last_sent_alarm_date");
-            debugPrint("last_sent_alarm_date $lastAlarmDateString");
+            //debugPrint("last_sent_alarm_date $lastAlarmDateString");
             return DateTime.parse(lastAlarmDateString!);
           }
         });
