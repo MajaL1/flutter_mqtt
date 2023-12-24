@@ -334,39 +334,45 @@ class _UserSettingsState extends State<UserSettings> {
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
                         top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
-                    child: Container(
-                        color: Color.fromRGBO(104, 205, 255, 0.2),
-                        child: Column(children: [
-                          index == 0
-                              ? Column(children: [
-                                  Text(
-                                    "Device: ",
-                                  ),
-                                  Text(
-                                    "$deviceName",
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 18),
-                                  )
-                                ])
-                              : const Text(""),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 15, bottom: 10),
-                          ),
-                          // Column(children: [Text("a1"), Text("a2")]),
-                          settingToChange != Constants.U_JSON
-                              ? _buildEditableSettingsItem1(
-                                  sensorAddress,
-                                  index,
-                                  u,
-                                  settingToChange,
-                                  value,
-                                  controller,
-                                  item,
-                                  savePressed,
-                                  textControllerList[index])
-                              : Container(height: 0) //ListTile(enabled: false)
-                        ])));
+                    child: Column(children: [
+                      Container(
+                          child: Column(children: [
+                        index == 0
+                            ? Column(children: [
+                                Text(
+                                  "Device: ",
+                                ),
+                                Text(
+                                  "$deviceName",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 18),
+                                )
+                              ])
+                            : const Text(""),
+                      ])),
+                      Container(
+                          color: Color.fromRGBO(104, 205, 255, 0.2),
+                          child: Column(children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 15, bottom: 10),
+                            ),
+                            // Column(children: [Text("a1"), Text("a2")]),
+                            settingToChange != Constants.U_JSON
+                                ? _buildEditableSettingsItem1(
+                                    sensorAddress,
+                                    index,
+                                    u,
+                                    settingToChange,
+                                    value,
+                                    controller,
+                                    item,
+                                    savePressed,
+                                    textControllerList[index])
+                                : Container(height: 0)
+                            //ListTile(enabled: false)
+                          ]))
+                    ]));
               });
         }
         /* else if (!SmartMqtt.instance.isNewSettings){// && SmartMqtt.instance.isNewSettings) {
@@ -529,13 +535,23 @@ class _UserSettingsState extends State<UserSettings> {
       const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
       */
           children: [
-            index==0 ? TableRow(children: [
-              SizedBox(
-                width: 400,
-                  child: Row( mainAxisSize: MainAxisSize.max,
-                      children: [Text("ensor address: $sensorAddress , units: $u")]))
-              ,Container(width: 0),Container(width: 0,)
-            ]) : TableRow(children:[Container(width: 0),Container(width: 0),Container(width: 0)]),
+            index == 0
+                ? TableRow(children: [
+                    Container(
+                        width: 300,
+                        child: Column(children: [
+                          Text("sensor address: $sensorAddress , units: $u")
+                        ])),
+                    Container(width: 0),
+                    Container(
+                      width: 0,
+                    )
+                  ])
+                : TableRow(children: [
+                    Container(width: 0),
+                    Container(width: 0),
+                    Container(width: 0)
+                  ]),
             TableRow(
                 /* decoration: const BoxDecoration(
                     border: Border(
@@ -547,7 +563,7 @@ class _UserSettingsState extends State<UserSettings> {
                 children: [
                   Container(
                       padding: EdgeInsets.only(
-                         top: 30, bottom: 30, left: 5, right: 5),
+                          top: 30, bottom: 30, left: 5, right: 5),
                       width: 300,
                       child: Text(settingText,
                           maxLines: 1,
@@ -575,7 +591,7 @@ class _UserSettingsState extends State<UserSettings> {
                           ]))),
                   Container(
                       height: 50,
-                      width: 70,
+                      width: 50,
                       // margin: const EdgeInsets.only(top: 20),
                       decoration: Utils.buildBoxDecoration(),
                       child: //SmartMqtt.instance.isSaved != true
