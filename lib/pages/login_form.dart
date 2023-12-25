@@ -247,7 +247,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             borderSide: BorderSide(
                                                 width: 2,
                                                 color: Color.fromRGBO(108, 165,
-                                                    222, 60)), //<-- SEE HERE
+                                                    222, 60)), //
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(14),
+                                            borderSide: BorderSide(color: Color.fromRGBO(108, 165,
+                                                222, 60), width: 3.0),
                                           ),
                                           border: OutlineInputBorder(
                                             borderRadius:
@@ -292,6 +298,12 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                               165,
                                                               222,
                                                               60))),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(14),
+                                                borderSide: BorderSide(color: Color.fromRGBO(108, 165,
+                                                    222, 60), width: 3.0),
+                                              ),
                                               //                                  ),
                                               border: OutlineInputBorder(
                                                 borderRadius:
