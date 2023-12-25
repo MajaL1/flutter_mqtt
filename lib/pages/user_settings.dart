@@ -333,14 +333,14 @@ class _UserSettingsState extends State<UserSettings> {
                 return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
-                        top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
+                        top: 40.0, bottom: 1.0, left: 30.0, right: 40.0),
                     child: Column(children: [
                       Container(
                           //padding: EdgeInsets.all(5),
                           child: Row(children: [
                             index == 0
                                 ? Container(
-                                //padding: EdgeInsets.all(5),
+                                padding: EdgeInsets.only(right: 25),
 
                                 child: Row(children: [
                                     Container(
