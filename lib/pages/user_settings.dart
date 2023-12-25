@@ -336,21 +336,40 @@ class _UserSettingsState extends State<UserSettings> {
                         top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
                     child: Column(children: [
                       Container(
-                          child: Column(children: [
-                        index == 0
-                            ? Column(children: [
-                                Text(
-                                  "Device: ",
-                                ),
-                                Text(
-                                  "$deviceName",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 18),
-                                )
-                              ])
-                            : const Text(""),
-                      ])),
+                          padding: EdgeInsets.only(bottom: 15),
+                          child: Row(children: [
+                            index == 0
+                                ? Container(
+                                    child: Row(children: [
+                                    Container(
+                                        child: Column(children: [
+                                      Text(
+                                        "Device: ",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          letterSpacing: 0.1,
+                                        ),
+                                      ),
+                                      Text(
+                                        "$deviceName",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 18,
+                                          letterSpacing: 1,
+                                        ),
+                                      ),
+                                      Text("\n"),
+                                      Column(
+                                          // padding: EdgeInsets.only(bottom: 15),
+
+                                          children: [
+                                            Text(
+                                                "sensor address: $sensorAddress, units: $u"),
+                                          ])
+                                    ]))
+                                  ]))
+                                : const Text(""),
+                          ])),
                       Container(
                           color: Color.fromRGBO(104, 205, 255, 0.2),
                           child: Column(children: [
@@ -537,11 +556,12 @@ class _UserSettingsState extends State<UserSettings> {
           children: [
             index == 0
                 ? TableRow(children: [
-                    Container(
+                   /* Container(
                         width: 300,
                         child: Column(children: [
                           Text("sensor address: $sensorAddress , units: $u")
-                        ])),
+                        ])), */
+                    Container(width: 0),
                     Container(width: 0),
                     Container(
                       width: 0,
@@ -563,7 +583,7 @@ class _UserSettingsState extends State<UserSettings> {
                 children: [
                   Container(
                       padding: EdgeInsets.only(
-                          top: 30, bottom: 30, left: 5, right: 5),
+                          top: 15, bottom: 20, left: 5, right: 5),
                       width: 300,
                       child: Text(settingText,
                           maxLines: 1,
@@ -576,6 +596,8 @@ class _UserSettingsState extends State<UserSettings> {
                   Container(
                       height: 50,
                       width: 30,
+                      padding: EdgeInsets.only(
+                          top: 0, bottom: 0, left: 25, right: 25),
                       child: TextFormField(
                           decoration: _setInputDecoration(value),
                           inputFormatters: <TextInputFormatter>[
@@ -591,8 +613,8 @@ class _UserSettingsState extends State<UserSettings> {
                           ]))),
                   Container(
                       height: 50,
-                      width: 50,
-                      // margin: const EdgeInsets.only(top: 20),
+                      width: 20,
+                      margin: const EdgeInsets.only(right: 40),
                       decoration: Utils.buildBoxDecoration(),
                       child: //SmartMqtt.instance.isSaved != true
                           //  ?
