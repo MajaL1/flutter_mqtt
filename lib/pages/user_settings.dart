@@ -336,12 +336,15 @@ class _UserSettingsState extends State<UserSettings> {
                         top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
                     child: Column(children: [
                       Container(
-                          padding: EdgeInsets.only(bottom: 15),
+                          //padding: EdgeInsets.all(5),
                           child: Row(children: [
                             index == 0
                                 ? Container(
-                                    child: Row(children: [
+                                //padding: EdgeInsets.all(5),
+
+                                child: Row(children: [
                                     Container(
+                                        padding: EdgeInsets.all(5),
                                         child: Column(children: [
                                       Text(
                                         "Device: ",
@@ -365,17 +368,18 @@ class _UserSettingsState extends State<UserSettings> {
                                           children: [
                                             Text(
                                                 "sensor address: $sensorAddress, units: $u"),
+                                            Text("\n"),
                                           ])
                                     ]))
                                   ]))
                                 : const Text(""),
                           ])),
                       Container(
-                          color: Color.fromRGBO(104, 205, 255, 0.2),
+                          color: Color.fromRGBO(104, 205, 255, 0.1),
                           child: Column(children: [
-                            const Padding(
-                              padding: EdgeInsets.only(top: 15, bottom: 10),
-                            ),
+                           /* const Padding(
+                              padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
+                            ), */
                             // Column(children: [Text("a1"), Text("a2")]),
                             settingToChange != Constants.U_JSON
                                 ? _buildEditableSettingsItem1(
@@ -536,10 +540,10 @@ class _UserSettingsState extends State<UserSettings> {
     String unitText = UnitsConstants.getUnits(u);
 
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
-      settingText = "High alarm:  ";
+      settingText = " High alarm:  ";
     }
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
-      settingText = "Low alarm:  ";
+      settingText = " Low alarm:  ";
     }
     return Container(
         width: 400,
@@ -583,7 +587,7 @@ class _UserSettingsState extends State<UserSettings> {
                 children: [
                   Container(
                       padding: EdgeInsets.only(
-                          top: 15, bottom: 20, left: 5, right: 5),
+                          top: 15, bottom: 0, left: 5, right: 5),
                       width: 300,
                       child: Text(settingText,
                           maxLines: 1,
@@ -595,7 +599,7 @@ class _UserSettingsState extends State<UserSettings> {
                               fontWeight: FontWeight.bold))),
                   Container(
                       height: 50,
-                      width: 30,
+                      width: 70,
                       padding: EdgeInsets.only(
                           top: 0, bottom: 0, left: 25, right: 25),
                       child: TextFormField(
