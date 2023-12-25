@@ -252,7 +252,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           fontFamily: 'Roboto',
                                           color:
                                           Color.fromRGBO(00, 20, 20, 80),
-                                          fontSize: 12 ),
+                                          fontSize: 16 ),
                                       decoration: InputDecoration(
                                         /* enabledBorder:
                                               const OutlineInputBorder(
