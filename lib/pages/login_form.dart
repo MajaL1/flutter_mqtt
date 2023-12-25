@@ -203,7 +203,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     ),
                                   )),
                               Container(
-                                width: 370,
+                                width: 330,
                                 // color: Color.fromRGBO(24, 125, 255, 0.05),
                                 decoration: const BoxDecoration(
                                   //color: Colors.,
@@ -239,7 +239,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         fontWeight: FontWeight.w900,
                                         fontStyle: FontStyle.normal,
                                         fontFamily: 'Roboto',
-                                        fontSize: 20),
+                                        fontSize: 12),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -252,7 +252,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           fontFamily: 'Roboto',
                                           color:
                                           Color.fromRGBO(00, 20, 20, 80),
-                                          fontSize: 20),
+                                          fontSize: 12 ),
                                       decoration: InputDecoration(
                                         /* enabledBorder:
                                               const OutlineInputBorder(
@@ -285,12 +285,14 @@ class _LoginFormValidationState extends State<LoginForm> {
                     ]) */
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
+                                  Container(
+                                    height: 50,
+                                    width: 200,
+                                   /* padding: const EdgeInsets.only(
                                         left: 65.0,
                                         right: 65.0,
                                         top: 15,
-                                        bottom: 30),
+                                        bottom: 30), */
                                     child: TextFormField(
                                         obscureText: true,
                                         enableSuggestions: false,
@@ -299,24 +301,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             fontFamily: 'Roboto',
                                             color: Color.fromRGBO(
                                                 00, 20, 20, 80),
-                                            fontSize: 20),
+                                            fontSize: 16),
                                         decoration: InputDecoration(
-                                          /*enabledBorder:
-                                                  const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          width: 2,
-                                                          color: Color.fromRGBO(
-                                                              108,
-                                                              165,
-                                                              222,
-                                                              60))),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(14),
-                                                borderSide: BorderSide(color: Color.fromRGBO(108, 165,
-                                                    222, 60), width: 3.0),
-                                              ), */
-                                          //                                  ),
                                             border: OutlineInputBorder(
                                               borderRadius:
                                               BorderRadius.circular(16),
@@ -343,11 +329,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         left: 15.0,
                                         right: 15.0,
                                         top: 15,
-                                        bottom: 0),
+                                        bottom: 10),
                                   ),
                                   Container(
-                                    height: 50,
-                                    width: 180,
+                                    height: 42,
+                                    width: 120,
                                     decoration: buildBoxDecoration(),
                                     child: TextButton(
                                       onPressed: () {
@@ -357,7 +343,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         'Login',
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 25,
+                                            fontSize: 18,
                                             fontFamily: 'Roboto'),
                                       ),
                                     ),
