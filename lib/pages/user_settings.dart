@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:mqtt_test/api/api_service.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
@@ -170,7 +171,7 @@ class _UserSettingsState extends State<UserSettings> {
               style: TextStyle(
                   color: Colors.black,
                   decorationColor: Colors.blueAccent,
-                  fontSize: 20)),
+                  fontSize: 18)),
           const Divider(height: 40, color: Colors.black12, thickness: 5),
           _buildMqttSettingsView(),
           const Padding(
@@ -181,7 +182,7 @@ class _UserSettingsState extends State<UserSettings> {
             padding: EdgeInsets.symmetric(vertical: 15),
           ),
           const Text("Personal settings ",
-              style: TextStyle(color: Colors.black, fontSize: 20)),
+              style: TextStyle(color: Colors.black, fontSize: 18)),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           _buildUserPersonalSettings(),
         ]),
@@ -200,7 +201,7 @@ class _UserSettingsState extends State<UserSettings> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-              Text("Account", style: headingStyle),
+              Text("  Account", style: headingStyle),
             ],
           ),
           /* const ListTile(
@@ -217,7 +218,11 @@ class _UserSettingsState extends State<UserSettings> {
             leading: Icon(Icons.exit_to_app, color: Colors.black87),
             title: Text("Log out",
                 style: TextStyle(
-                    color: Colors.black87, fontWeight: FontWeight.w600)),
+                    color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 14)),
+           /* onTap: () {
+              ApiService.logout();
+              }, */
+
           ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           /*Row(

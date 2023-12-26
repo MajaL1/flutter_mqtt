@@ -107,6 +107,9 @@ class ApiService {
     return null;
   }
 
+  static void logout() {
+
+  }
   static UserTopic getUserTopic(Map topics) {
     List<TopicData> topicList = [];
     UserTopic topic = UserTopic(sensorName: '1', topicList: []);
