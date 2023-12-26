@@ -168,33 +168,32 @@ class _LoginFormValidationState extends State<LoginForm> {
               // title: const Text(Constants.LOGIN_PAGE),
               //),
               body: FutureBuilder(
-                // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
-                // future: _initCurrentAppState(),
+                  // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
+                  // future: _initCurrentAppState(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      if (!network) {
-                        return Container(
-                            child: const Text(
-                                'Problem with internet connection'));
-                      }
-                      if (snapshot.hasError) {
-                        return ErrorWidget(Exception(
-                            'Error occured when fetching data from database $snapshot.error'));
-                      } else {
-                        return SingleChildScrollView(
-                            child: Form(
-                              //autovalidate: true, //check for validation while typing
-                              key: formkey,
-                              child: Container(
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (!network) {
+                    return Container(
+                        child: const Text('Problem with internet connection'));
+                  }
+                  if (snapshot.hasError) {
+                    return ErrorWidget(Exception(
+                        'Error occured when fetching data from database $snapshot.error'));
+                  } else {
+                    return SingleChildScrollView(
+                        child: Form(
+                            //autovalidate: true, //check for validation while typing
+                            key: formkey,
+                            child: Container(
                                 //color: Colors.tealAccent,
-                                  child: Column(children: <Widget>[
-                                  const Padding(
+                                child: Column(children: <Widget>[
+                              const Padding(
                                   padding:
-                                  EdgeInsets.only(top: 120.0, bottom: 40),
+                                      EdgeInsets.only(top: 120.0, bottom: 40),
                                   child: Center(
                                     child: SizedBox(
                                       width: 120,
@@ -207,54 +206,55 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 // color: Color.fromRGBO(24, 125, 255, 0.05),
                                 decoration: const BoxDecoration(
                                   //color: Colors.,
-                                  color: Color.fromRGBO(124, 125, 255, 0.03),
+                                  color: Color.fromRGBO(24, 125, 255, 0.10),
                                   border: Border(
-                                      bottom:
-                                      BorderSide(color: Colors.black12),
+                                      bottom: BorderSide(color: Colors.black12),
                                       top: BorderSide(color: Colors.black12),
-                                      left:
-                                      BorderSide(color: Colors.black12),
-                                      right: BorderSide(color: Colors.black12
-                                      )),
+                                      left: BorderSide(color: Colors.black12),
+                                      right: BorderSide(color: Colors.black12)),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black12,
                                       blurStyle: BlurStyle.outer,
                                       spreadRadius: 2,
-                                      blurRadius: 6,
-                                     // offset: Offset(
-                                       //   2, 2), // changes position of shadow
+                                      blurRadius: 4,
+                                      // offset: Offset(
+                                      //   2, 2), // changes position of shadow
                                     ),
                                   ],
                                 ),
 
-                              child: Column(
-                                children: [
-                                  Text(""),
-                                  Text(""),
-                                  const Text(
-                                    Constants.LOGIN_TO_NAVIS,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 87, 153, 60),
-                                        fontWeight: FontWeight.w900,
-                                        fontStyle: FontStyle.normal,
-                                        fontFamily: 'Roboto',
-                                        fontSize: 12),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 65.0,
-                                        right: 65.0,
-                                        top: 35,
-                                        bottom: 30),
-                                    child: TextFormField(
-                                      style: const TextStyle(
+                                child: Column(
+                                  children: [
+                                    Text(""),
+                                    Text(""),
+                                    const Text(
+                                      Constants.LOGIN_TO_NAVIS,
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(0, 87, 153, 60),
+                                          fontWeight: FontWeight.w900,
+                                          fontStyle: FontStyle.normal,
                                           fontFamily: 'Roboto',
-                                          color:
-                                          Color.fromRGBO(00, 20, 20, 80),
-                                          fontSize: 16 ),
-                                      decoration: InputDecoration(
-                                        /* enabledBorder:
+                                          fontSize: 14),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 65.0,
+                                          right: 65.0,
+                                          top: 35,
+                                          bottom: 30),
+                                      child: TextFormField(
+                                        style: const TextStyle(
+                                            //backgroundColor: Colors.white,
+                                            //background: Colors.white,
+                                            fontFamily: 'Roboto',
+                                            color:
+                                                Color.fromRGBO(00, 20, 20, 80),
+                                            fontSize: 16),
+                                        decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            /* enabledBorder:
                                               const OutlineInputBorder(
                                             borderSide: BorderSide(
                                                 width: 2,
@@ -267,88 +267,89 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             borderSide: BorderSide(color: Color.fromRGBO(108, 165,
                                                 222, 60), width: 3.0),
                                           ), */
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(16),
-                                          borderSide: const BorderSide(
-                                              color: Colors.indigo,
-                                              width: 1.5),
-                                        ),
-                                        labelText: Constants.EMAIL,
-                                        hintText: Constants.ENTER_VALID_EMAIL,
-                                      ),
-                                      controller: emailController,
-
-                                      /*   validator: MultiValidator([
-                      RequiredValidator(errorText: "* Required"),
-                      EmailValidator(errorText: "Enter valid email id"),
-                    ]) */
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 60,
-                                    width: 200,
-                                   /* padding: const EdgeInsets.only(
-                                        left: 65.0,
-                                        right: 65.0,
-                                        top: 15,
-                                        bottom: 30), */
-                                    child: TextFormField(
-                                        obscureText: true,
-                                        enableSuggestions: false,
-                                        autocorrect: false,
-                                        style: const TextStyle(
-                                            fontFamily: 'Roboto',
-                                            color: Color.fromRGBO(
-                                                00, 20, 20, 80),
-                                            fontSize: 16),
-                                        decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderRadius:
-                                              BorderRadius.circular(16),
+                                                  BorderRadius.circular(16),
                                               borderSide: const BorderSide(
-                                                  color: Colors.indigo,
-                                                  width: 8.5),
+                                                  color: Colors.black12,
+                                                  width: 1.5),
                                             ),
-                                            labelText: Constants.PASSWORD,
+                                            labelText: Constants.USER,
                                             hintText:
-                                            Constants.ENTER_SECURE_PASS),
-                                        controller: passwordController,
-                                        validator: MultiValidator([
-                                          RequiredValidator(
-                                              errorText: "* Required"),
-                                          MinLengthValidator(6,
-                                              errorText:
-                                              "Password should be at least 6 characters"),
-                                        ])
-                                      //validatePassword,        //Function to check validation
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 15.0,
-                                        right: 15.0,
-                                        top: 15,
-                                        bottom: 10),
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 120,
-                                    decoration: buildBoxDecoration(),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        login();
-                                      },
-                                      child: const Text(
-                                        'Login',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontFamily: 'Roboto'),
+                                                Constants.ENTER_VALID_USER,
+                                            hintStyle:
+                                                const TextStyle(fontSize: 12)),
+                                        controller: emailController,
+
+                                        /*   validator: MultiValidator([
+                      RequiredValidator(errorText: "* Required"),
+                      EmailValidator(errorText: "Enter valid username),
+                    ]) */
                                       ),
                                     ),
-                                  ),
-                                  /* Padding(
+                                    Container(
+                                      height: 60,
+                                      width: 200,
+                                      child: TextFormField(
+                                          obscureText: true,
+                                          enableSuggestions: false,
+                                          autocorrect: false,
+                                          style: const TextStyle(
+                                              fontFamily: 'Roboto',
+                                              color: Color.fromRGBO(
+                                                  00, 20, 20, 80),
+                                              fontSize: 16),
+                                          decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                borderSide: const BorderSide(
+                                                    color: Colors.indigo,
+                                                    width: 8.5),
+                                              ),
+                                              labelText: Constants.PASSWORD,
+                                              hintText:
+                                                  Constants.ENTER_SECURE_PASS,
+                                              hintStyle: const TextStyle(
+                                                  fontSize: 12)),
+                                          controller: passwordController,
+                                          validator: MultiValidator([
+                                            RequiredValidator(
+                                                errorText: "* Required"),
+                                            MinLengthValidator(6,
+                                                errorText:
+                                                    "Password should be at least 6 characters"),
+                                          ])
+                                          //validatePassword,        //Function to check validation
+                                          ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 15.0,
+                                          top: 15,
+                                          bottom: 10),
+                                    ),
+                                    Container(
+                                      height: 50,
+                                      width: 120,
+                                      decoration: buildBoxDecoration(),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          login();
+                                        },
+                                        child: const Text(
+                                          'Login',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontFamily: 'Roboto'),
+                                        ),
+                                      ),
+                                    ),
+                                    /* Padding(
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 15, bottom: 0),
                           child: TextButton(
@@ -364,45 +365,43 @@ class _LoginFormValidationState extends State<LoginForm> {
                             ),
                           ),
                         ),*/
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15.0,
-                                        right: 15.0,
-                                        top: 15,
-                                        bottom: 0),
-                                    child: TextButton(
-                                      onPressed: () {},
-                                      child: InkWell(
-                                          child: const Text(
-                                              Constants.CREATE_ACCOUNT),
-                                          onTap: () =>
-                                              launchUrl(
-                                                  Constants.REGISTER_URL)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 15.0,
+                                          top: 35,
+                                          bottom: 0),
+                                      child: TextButton(
+                                        onPressed: () {},
+                                        child: InkWell(
+                                            child: const Text(
+                                                Constants.CREATE_ACCOUNT),
+                                            onTap: () => launchUrl(
+                                                Constants.REGISTER_URL)),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15.0,
-                                        right: 15.0,
-                                        top: 15,
-                                        bottom: 0),
-                                    child: loginError == true
-                                        ? const Text(
-                                      "Login error",
-                                      style: TextStyle(
-                                          color: Colors.redAccent,
-                                          fontFamily: 'Roboto'),
-                                    )
-                                        : const Text(""),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 15.0,
+                                          top: 15,
+                                          bottom: 20),
+                                      child: loginError == true
+                                          ? const Text(
+                                              "Login error",
+                                              style: TextStyle(
+                                                  color: Colors.redAccent,
+                                                  fontFamily: 'Roboto'),
+                                            )
+                                          : const Text(""),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            ])))
-                    );
+                            ]))));
                   }
-                  }
-                  }))),
+                }
+              }))),
     );
   }
 }

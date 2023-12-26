@@ -35,8 +35,12 @@ class Constants {
 
   static const EMAIL = "Email";
   static const ENTER_VALID_EMAIL = "Enter valid email id as abc@gmail.com";
+
+  static const USER = "Username";
+  static const ENTER_VALID_USER = "Enter username";
+
   static const PASSWORD = "Password";
-  static const ENTER_SECURE_PASS = "Enter secure password";
+  static const ENTER_SECURE_PASS = "Enter password";
   static const FORGOT_PASS = "Forgot password?";
   static const CREATE_ACCOUNT = "Create account";
 
