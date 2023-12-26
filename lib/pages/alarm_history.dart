@@ -30,7 +30,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         if (snapshot.hasData) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text(Constants.HISTORY),
+                title: const Text(Constants.HISTORY,style: TextStyle(fontSize: 16)),
               ),
               //drawer: NavDrawer(),
               body: SingleChildScrollView(

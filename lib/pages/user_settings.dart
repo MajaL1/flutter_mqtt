@@ -156,7 +156,7 @@ class _UserSettingsState extends State<UserSettings> {
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
       appBar: AppBar(
-        title: const Text(Constants.SETTINGS),
+        title: const Text(Constants.SETTINGS, style: TextStyle(fontSize: 16),),
       ),
       drawer: const NavDrawer.base(),
       body: SingleChildScrollView(

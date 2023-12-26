@@ -72,6 +72,10 @@ class _LoginFormValidationState extends State<LoginForm> {
           in usertopiclist. potem ne bomo potrebovali spodnjih vrstic
           ampak samo tole: await NotificationHelper.initializeService(); **/
 
+      // test
+      await Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => UserSettings.base()));
+
       try {
         User? user = await ApiService.login(username, password);
         if (user != null) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/data_page.dart';
 
@@ -9,6 +10,7 @@ class NavDrawer extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _NavDrawerState();
+ // late String ? username;
 }
 
 class _NavDrawerState extends State<NavDrawer> {
@@ -16,13 +18,28 @@ class _NavDrawerState extends State<NavDrawer> {
   initState() {
     super.initState();
     debugPrint("-- navDrawer initstate");
+
+    //final SharedPreferences prefs =  SharedPreferences.getInstance();
+
+
   }
 
+
+  String getUserName(){
+   // String username = SharedPreferences.getInstance().then((value) {
+
+      return "test1";
+     /* if (value.getString("username") != null) {
+        return value.getString("username");
+      } */
+   // });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
         color: Colors.blue,
-        width: MediaQuery.of(context).size.width * 0.55,
+        width: MediaQuery.of(context).size.width * 0.50,
+        height: 750,
         child: Drawer(
             child: ConstrainedBox(
                 //color: Colors.blue,
@@ -35,15 +52,17 @@ class _NavDrawerState extends State<NavDrawer> {
                       tileColor: Colors.indigo,
                       dense: false,
                       leading: Icon(
-                        Icons.person_rounded,
+                        Icons.person_3_sharp,//person_2_outlined,
                         color: Colors.white,
                       ),
                       contentPadding: EdgeInsets.only(
-                          top: 25, bottom: 25, left: 20, right: 10),
+                          top: 25, bottom: 35, left: 20, right: 10),
                       visualDensity: VisualDensity(vertical: -4),
                       enabled: false,
                       title: Text(
-                        'User1',
+                        //'User1',
+                        //getUserName();
+                        "username",
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -72,10 +91,13 @@ class _NavDrawerState extends State<NavDrawer> {
                                         builder: (context) =>
                                             const TestNotificationsEditable())),
                               ), */
-                    const Divider(height: 10),
+                    const Divider(height: 20),
                     ListTile(
                       hoverColor: Colors.blue,
                       tileColor: Colors.blue,
+                      selectedColor: Colors.blueAccent,
+                      //style: ,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16.0),
                       dense: false,
                       visualDensity: const VisualDensity(vertical: -4),
                       leading: const Icon(
@@ -91,11 +113,12 @@ class _NavDrawerState extends State<NavDrawer> {
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const AlarmHistory())),
                     ),
-                    const Divider(height: 10),
+                    const Divider(height: 20),
                     ListTile(
                       hoverColor: Colors.blue,
                       tileColor: Colors.blue,
                       dense: false,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16.0),
                       visualDensity: const VisualDensity(vertical: -4),
                       leading: const Icon(
                         Icons.settings,
@@ -116,6 +139,7 @@ class _NavDrawerState extends State<NavDrawer> {
                         hoverColor: Colors.blue,
                         tileColor: Colors.blue,
                         dense: false,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16.0),
                         visualDensity: const VisualDensity(vertical: -4),
                         leading: const Icon(
                           Icons.notifications,
