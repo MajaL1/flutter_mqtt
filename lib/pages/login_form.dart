@@ -286,7 +286,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     ),
                                   ),
                                   Container(
-                                    height: 50,
+                                    height: 60,
                                     width: 200,
                                    /* padding: const EdgeInsets.only(
                                         left: 65.0,
@@ -332,7 +332,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         bottom: 10),
                                   ),
                                   Container(
-                                    height: 42,
+                                    height: 50,
                                     width: 120,
                                     decoration: buildBoxDecoration(),
                                     child: TextButton(
