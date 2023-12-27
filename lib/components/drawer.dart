@@ -11,26 +11,36 @@ class NavDrawer extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _NavDrawerState();
- // late String ? username;
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+
+  String username = "";
+
   @override
   initState() {
     super.initState();
-    _getPrefs();
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() => prefs = prefs);
+
+    SharedPreferences.getInstance().then((prefValue) => {
+      setState(() {
+        username = prefValue.getString('username')!;
+      //  _name = prefValue.getString('name')?? "";
+        //Text text =  Text(username!);
+      })
     });
 
     debugPrint("-- navDrawer initstate");
   }
-  late SharedPreferences prefs;
 
-  Future<dynamic> _getPrefs() async {
-    prefs = await SharedPreferences.getInstance();
+  Future getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    username = prefs.getString("username")!;
   }
-  String  getUserName() {
+
+ /* Future<dynamic> _getPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  } */
+  /*String  getUserName() {
     _getPrefs();
     String username = "";
     if(prefs.getString("username") != null) {
@@ -39,7 +49,7 @@ class _NavDrawerState extends State<NavDrawer> {
     }
     //username="test2";
     return username;
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +76,11 @@ class _NavDrawerState extends State<NavDrawer> {
                           top: 25, bottom: 35, left: 20, right: 10),
                       visualDensity: VisualDensity(vertical: -4),
                       enabled: false,
-                      title: Text(
+                      title:
+                      Text(
                         //'User1',
-                        getUserName(),
-                        //"username",
+                       // getUserName(),
+                        username,
                         style: TextStyle(
                           color: Colors.white,
                         ),
