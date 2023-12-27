@@ -30,8 +30,12 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         if (snapshot.hasData) {
           return Scaffold(
               appBar: AppBar(
-                title: const Text(Constants.HISTORY,style: TextStyle(fontSize: 16)),
-              ),
+                  shadowColor: Colors.black,
+                  title: Container(
+                    //decoration: buildBoxDecoration(),
+                    child: const Text(Constants.HISTORY,
+                        style: TextStyle(fontSize: 16)),
+                  )),
               //drawer: NavDrawer(),
               body: SingleChildScrollView(
                   child: Column(children: [
@@ -42,14 +46,17 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                 Container(
                   height: 30,
                   width: 100,
-                  decoration: Utils.buildBoxDecoration(),                  child: TextButton(
+                  decoration: Utils.buildButtonDecoration(),
+                  child: TextButton(
                       onPressed: () {
                         clearHistory();
                       },
-                      child: const Text(
-                        'Clear history',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      )),
+                      child: Container(
+                          //decoration: Utils.buildButtonDecoration(),
+                          child: const Text(
+                            'Clear history',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ))),
                 ),
                 const Divider(height: 40, color: Colors.black12, thickness: 3),
                 ListView.builder(

@@ -195,7 +195,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                             //autovalidate: true, //check for validation while typing
                             key: formkey,
                             child: Container(
-                                //color: Colors.tealAccent,
+                                color: Colors.white54,
                                 child: Column(children: <Widget>[
                               const Padding(
                                   padding:
@@ -215,13 +215,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   color: Color.fromRGBO(24, 125, 255, 0.10),
                                   border: Border(
                                       bottom: BorderSide(
-                                          color: Colors.black12, width: 4),
+                                          color:  Color.fromRGBO(0, 87, 153, 0.2), width: 3),
                                       top: BorderSide(
-                                          color: Colors.black12, width: 4),
+                                          color:  Color.fromRGBO(0, 87, 153, 0.2), width: 3),
                                       left: BorderSide(
-                                          color: Colors.black12, width: 4),
+                                          color:  Color.fromRGBO(0, 87, 153, 0.2), width: 3),
                                       right: BorderSide(
-                                          color: Colors.black12, width: 4)),
+                                          color:  Color.fromRGBO(0, 87, 153, 0.2), width: 3)),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black12,
@@ -363,7 +363,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     Container(
                                       height: 50,
                                       width: 120,
-                                      decoration: buildBoxDecoration(),
+
+                                      decoration: Utils.buildBoxDecoration(),
                                       child: TextButton(
                                         onPressed: () {
                                           login();

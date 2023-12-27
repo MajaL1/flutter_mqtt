@@ -157,15 +157,20 @@ class _UserSettingsState extends State<UserSettings> {
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
       appBar: AppBar(
-        title: const Text(
+
+          shadowColor: Colors.black,
+          title: Container(
+        //decoration: buildBoxDecoration(),
+        child: const Text(
           Constants.SETTINGS,
           style: TextStyle(fontSize: 16),
         ),
-      ),
+      )),
       drawer: const NavDrawer.base(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        padding: const EdgeInsets.only(left: 40, right:40, top: 30, bottom: 20),
+        padding:
+            const EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 20),
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45),
@@ -191,6 +196,22 @@ class _UserSettingsState extends State<UserSettings> {
         ]),
       ),
     );
+  }
+
+  BoxDecoration buildBoxDecoration() {
+    return BoxDecoration(
+      color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+      borderRadius: BorderRadius.circular(9),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.15),
+          spreadRadius: 4,
+          blurRadius: 5,
+          offset: Offset(0, 2), // changes position of shadow
+        ),
+      ],
+    );
+
   }
 
   Widget _buildUserPersonalSettings() {

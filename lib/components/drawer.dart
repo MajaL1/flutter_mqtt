@@ -52,10 +52,11 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.blue,
+        //color: Colors.white12,
         width: MediaQuery.of(context).size.width * 0.50,
         height: 750,
         child: Drawer(
+          backgroundColor: Colors.grey.shade400,
             child: ConstrainedBox(
                 //color: Colors.blue,
                 constraints: const BoxConstraints(
@@ -85,31 +86,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 color: Colors.white,
                               ),
                             )))),
-                    const Divider(height: 40),
-                    /*ListTile(
-                                hoverColor: Colors.blue,
-                                tileColor: Colors.blue,
-                                dense: false,
-                                visualDensity:
-                                    const VisualDensity(vertical: -4),
-                                leading: const Icon(
-                                  Icons.notifications_active_outlined,
-                                  color: Colors.white,
-                                ),
-                               title: const Text(
-                                  '//Test alarms',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                onTap: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        //builder: (context) => TestNotifications1())),
-                                        builder: (context) =>
-                                            const TestNotificationsEditable())),
-                              ), */
-                    const Divider(height: 20),
-                    Container(
+                    const Divider(height: 60),
+                      Container(
                         decoration: buildBoxDecoration(),
                         child: ListTile(
                           hoverColor: Colors.blue,
@@ -134,7 +112,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               MaterialPageRoute(
                                   builder: (context) => const AlarmHistory())),
                         )),
-                    const Divider(height: 20),
+                    const Divider(height: 35),
                     Container(
                         decoration: buildBoxDecoration(),
                         child: ListTile(
@@ -159,8 +137,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   builder: (context) =>
                                       const UserSettings.base())),
                         )),
-                    const Divider(height: 10),
-                    const Divider(height: 10),
+                    const Divider(height: 35),
                     Container(
                         decoration: buildBoxDecoration(),
                         child: ListTile(
