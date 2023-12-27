@@ -8,13 +8,11 @@ import '../pages/data_page.dart';
 class NavDrawer extends StatefulWidget {
   const NavDrawer.base({Key? key}) : super(key: key);
 
-
   @override
   State<StatefulWidget> createState() => _NavDrawerState();
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-
   String username = "";
 
   @override
@@ -22,12 +20,12 @@ class _NavDrawerState extends State<NavDrawer> {
     super.initState();
 
     SharedPreferences.getInstance().then((prefValue) => {
-      setState(() {
-        username = prefValue.getString('username')!;
-      //  _name = prefValue.getString('name')?? "";
-        //Text text =  Text(username!);
-      })
-    });
+          setState(() {
+            username = prefValue.getString('username')!;
+            //  _name = prefValue.getString('name')?? "";
+            //Text text =  Text(username!);
+          })
+        });
 
     debugPrint("-- navDrawer initstate");
   }
@@ -37,7 +35,7 @@ class _NavDrawerState extends State<NavDrawer> {
     username = prefs.getString("username")!;
   }
 
- /* Future<dynamic> _getPrefs() async {
+  /* Future<dynamic> _getPrefs() async {
     prefs = await SharedPreferences.getInstance();
   } */
   /*String  getUserName() {
@@ -64,28 +62,29 @@ class _NavDrawerState extends State<NavDrawer> {
                     minHeight: 50, minWidth: 150, maxHeight: 100),
                 child: ListView(
                   children: [
-                     ListTile(
-                      hoverColor: Colors.blue,
-                      tileColor: Colors.indigo,
-                      dense: false,
-                      leading: const Icon(
-                        Icons.person_3_sharp,//person_2_outlined,
-                        color: Colors.white,
-                      ),
-                      contentPadding: const EdgeInsets.only(
-                          top: 25, bottom: 35, left: 20, right: 10),
-                      visualDensity: VisualDensity(vertical: -4),
-                      enabled: false,
-                      title:
-                      Text(
-                        //'User1',
-                       // getUserName(),
-                        username,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    Container(
+                        decoration: buildBoxDecoration(),
+                        child: ListTile(
+                            hoverColor: Colors.blue,
+                            tileColor: Colors.indigo,
+                            dense: false,
+                            leading: const Icon(
+                              Icons.person_3_sharp, //person_2_outlined,
+                              color: Colors.white,
+                            ),
+                            contentPadding: const EdgeInsets.only(
+                                top: 25, bottom: 35, left: 20, right: 10),
+                            visualDensity: VisualDensity(vertical: -4),
+                            enabled: false,
+                            title: ListTile(
+                                //'User1',
+                                // getUserName(),
+                                title: Text(
+                              username,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            )))),
                     const Divider(height: 40),
                     /*ListTile(
                                 hoverColor: Colors.blue,
@@ -110,69 +109,81 @@ class _NavDrawerState extends State<NavDrawer> {
                                             const TestNotificationsEditable())),
                               ), */
                     const Divider(height: 20),
-                    ListTile(
-                      hoverColor: Colors.blue,
-                      tileColor: Colors.blue,
-                      selectedColor: Colors.blueAccent,
-                      //style: ,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16.0),
-                      dense: false,
-                      visualDensity: const VisualDensity(vertical: -4),
-                      leading: const Icon(
-                        Icons.history,
-                        color: Colors.white,
-                      ),
-                      title: const Text(
-                        'History',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const AlarmHistory())),
-                    ),
-                    const Divider(height: 20),
-                    ListTile(
-                      hoverColor: Colors.blue,
-                      tileColor: Colors.blue,
-                      dense: false,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16.0),
-                      visualDensity: const VisualDensity(vertical: -4),
-                      leading: const Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                      ),
-                      title: const Text(
-                        'Settings',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const UserSettings.base())),
-                    ),
-                    const Divider(height: 10),
-                    const Divider(height: 10),
-                    ListTile(
-                        hoverColor: Colors.blue,
-                        tileColor: Colors.blue,
-                        dense: false,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16.0),
-                        visualDensity: const VisualDensity(vertical: -4),
-                        leading: const Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                        ),
-                        title: const Text(
-                          'Data',
-                          style: TextStyle(
+                    Container(
+                        decoration: buildBoxDecoration(),
+                        child: ListTile(
+                          hoverColor: Colors.blue,
+                          tileColor: Colors.blue,
+                          selectedColor: Colors.blueAccent,
+                          //style: ,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16.0),
+                          dense: false,
+                          visualDensity: const VisualDensity(vertical: -4),
+                          leading: const Icon(
+                            Icons.history,
                             color: Colors.white,
                           ),
-                        ),
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const DetailsPage.base()))),
+                          title: const Text(
+                            'History',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const AlarmHistory())),
+                        )),
+                    const Divider(height: 20),
+                    Container(
+                        decoration: buildBoxDecoration(),
+                        child: ListTile(
+                          hoverColor: Colors.blue,
+                          tileColor: Colors.blue,
+                          dense: false,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16.0),
+                          visualDensity: const VisualDensity(vertical: -4),
+                          leading: const Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                          ),
+                          title: const Text(
+                            'Settings',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const UserSettings.base())),
+                        )),
+                    const Divider(height: 10),
+                    const Divider(height: 10),
+                    Container(
+                        decoration: buildBoxDecoration(),
+                        child: ListTile(
+                            hoverColor: Colors.blue,
+                            tileColor: Colors.blue,
+                            dense: false,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 16.0),
+                            visualDensity: const VisualDensity(vertical: -4),
+                            leading: const Icon(
+                              Icons.notifications,
+                              color: Colors.white,
+                            ),
+                            title: const Text(
+                              'Data',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DetailsPage.base())))),
                     const Divider(height: 5),
                     /*ListTile(
                       hoverColor: Colors.blue,
@@ -217,5 +228,20 @@ class _NavDrawerState extends State<NavDrawer> {
                               ),*/
                   ],
                 ))));
+  }
+
+  BoxDecoration buildBoxDecoration() {
+    return const BoxDecoration(
+      // Create a gradient background
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color.fromRGBO(0, 87, 153, 60),
+          Colors.indigoAccent,
+          Colors.blueAccent
+        ],
+      ),
+    );
   }
 }

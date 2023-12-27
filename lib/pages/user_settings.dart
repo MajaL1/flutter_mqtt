@@ -28,9 +28,9 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
 
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-  debugPrint("****************** user settings data $data");
+  //debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
-  debugPrint("user_settings decodeMessage $decodeMessage");
+  //debugPrint("user_settings decodeMessage $decodeMessage");
   if (decodeMessage.isNotEmpty) {
     Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
@@ -165,7 +165,7 @@ class _UserSettingsState extends State<UserSettings> {
       drawer: const NavDrawer.base(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        padding: const EdgeInsets.only(top: 30, bottom: 20),
+        padding: const EdgeInsets.only(left: 40, right:40, top: 30, bottom: 20),
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45),

@@ -73,8 +73,8 @@ class _LoginFormValidationState extends State<LoginForm> {
           ampak samo tole: await NotificationHelper.initializeService(); **/
 
       // test - odkomentiraj, ce ni connectiona
-     // await Navigator.pushReplacement(
-       //   context, MaterialPageRoute(builder: (_) => UserSettings.base()));
+      // await Navigator.pushReplacement(
+      //   context, MaterialPageRoute(builder: (_) => UserSettings.base()));
 
       try {
         User? user = await ApiService.login(username, password);
@@ -208,16 +208,20 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     ),
                                   )),
                               Container(
-                                width: 330,
+                                width: 340,
                                 // color: Color.fromRGBO(24, 125, 255, 0.05),
                                 decoration: const BoxDecoration(
                                   //color: Colors.,
                                   color: Color.fromRGBO(24, 125, 255, 0.10),
                                   border: Border(
-                                      bottom: BorderSide(color: Colors.black12),
-                                      top: BorderSide(color: Colors.black12),
-                                      left: BorderSide(color: Colors.black12),
-                                      right: BorderSide(color: Colors.black12)),
+                                      bottom: BorderSide(
+                                          color: Colors.black12, width: 4),
+                                      top: BorderSide(
+                                          color: Colors.black12, width: 4),
+                                      left: BorderSide(
+                                          color: Colors.black12, width: 4),
+                                      right: BorderSide(
+                                          color: Colors.black12, width: 4)),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black12,
@@ -238,6 +242,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                       Constants.LOGIN_TO_NAVIS,
                                       style: TextStyle(
                                           color: Color.fromRGBO(0, 87, 153, 60),
+                                          wordSpacing: 0.4,
                                           fontWeight: FontWeight.w900,
                                           fontStyle: FontStyle.normal,
                                           fontFamily: 'Roboto',
@@ -260,22 +265,24 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         decoration: InputDecoration(
                                             filled: true,
                                             fillColor: Colors.white,
-                                            /* enabledBorder:
-                                              const OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                width: 2,
-                                                color: Color.fromRGBO(108, 165,
-                                                    222, 60)), //
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(14),
-                                            borderSide: BorderSide(color: Color.fromRGBO(108, 165,
-                                                222, 60), width: 3.0),
-                                          ), */
+                                            enabledBorder:
+                                                const OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: Color.fromRGBO(
+                                                      108, 165, 222, 60)), //
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              borderSide: BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      108, 165, 222, 60),
+                                                  width: 3.0),
+                                            ),
                                             border: OutlineInputBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16),
+                                                  BorderRadius.circular(14),
                                               borderSide: const BorderSide(
                                                   color: Colors.black12,
                                                   width: 1.5),
@@ -312,8 +319,23 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                 borderRadius:
                                                     BorderRadius.circular(16),
                                                 borderSide: const BorderSide(
-                                                    color: Colors.indigo,
+                                                    color: Colors.black12,
                                                     width: 8.5),
+                                              ),
+                                              enabledBorder:
+                                                  const OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    width: 2,
+                                                    color: Color.fromRGBO(
+                                                        108, 165, 222, 60)), //
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(14),
+                                                borderSide: BorderSide(
+                                                    color: Color.fromRGBO(
+                                                        108, 165, 222, 60),
+                                                    width: 3.0),
                                               ),
                                               labelText: Constants.PASSWORD,
                                               hintText:
