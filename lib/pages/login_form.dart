@@ -72,9 +72,9 @@ class _LoginFormValidationState extends State<LoginForm> {
           in usertopiclist. potem ne bomo potrebovali spodnjih vrstic
           ampak samo tole: await NotificationHelper.initializeService(); **/
 
-      // test
-      await Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => UserSettings.base()));
+      // test - odkomentiraj, ce ni connectiona
+     // await Navigator.pushReplacement(
+       //   context, MaterialPageRoute(builder: (_) => UserSettings.base()));
 
       try {
         User? user = await ApiService.login(username, password);
@@ -95,6 +95,8 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance().then((value) {
             //value.setString("username", username);
             //value.setString("pass", password);
+
+            value.setString("username", user.username);
 
             value.setString("mqtt_username", user.username);
             value.setString("mqtt_pass", user.mqtt_pass);

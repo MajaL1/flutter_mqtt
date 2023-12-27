@@ -157,7 +157,10 @@ class _UserSettingsState extends State<UserSettings> {
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
       appBar: AppBar(
-        title: const Text(Constants.SETTINGS, style: TextStyle(fontSize: 16),),
+        title: const Text(
+          Constants.SETTINGS,
+          style: TextStyle(fontSize: 16),
+        ),
       ),
       drawer: const NavDrawer.base(),
       body: SingleChildScrollView(
@@ -214,16 +217,16 @@ class _UserSettingsState extends State<UserSettings> {
             title: Text("Email"),
           ), */
           const Divider(height: 40, color: Colors.black12, thickness: 2),
-          const ListTile(
-            leading: Icon(Icons.exit_to_app, color: Colors.black87),
-            title: Text("Log out",
-                style: TextStyle(
-                    color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 14)),
-           /* onTap: () {
-              ApiService.logout();
-              }, */
-
-          ),
+          ListTile(
+              leading: const Icon(Icons.exit_to_app, color: Colors.black87),
+              title: const Text("Log out",
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14)),
+              onTap: () {
+                ApiService.logout();
+              }),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           /*Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -343,14 +346,14 @@ class _UserSettingsState extends State<UserSettings> {
                       Container(
                           //padding: EdgeInsets.all(5),
                           child: Row(children: [
-                            index == 0
-                                ? Container(
+                        index == 0
+                            ? Container(
                                 //padding: EdgeInsets.all(5),
 
                                 child: Row(children: [
-                                    Container(
-                                        padding: EdgeInsets.all(5),
-                                        child: Column(children: [
+                                Container(
+                                    padding: EdgeInsets.all(5),
+                                    child: Column(children: [
                                       Text(
                                         "Device: ",
                                         style: const TextStyle(
@@ -376,13 +379,13 @@ class _UserSettingsState extends State<UserSettings> {
                                             Text("\n"),
                                           ])
                                     ]))
-                                  ]))
-                                : const Text(""),
-                          ])),
+                              ]))
+                            : const Text(""),
+                      ])),
                       Container(
                           color: Color.fromRGBO(104, 205, 255, 0.1),
                           child: Column(children: [
-                           /* const Padding(
+                            /* const Padding(
                               padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
                             ), */
                             // Column(children: [Text("a1"), Text("a2")]),
@@ -565,7 +568,7 @@ class _UserSettingsState extends State<UserSettings> {
           children: [
             index == 0
                 ? TableRow(children: [
-                   /* Container(
+                    /* Container(
                         width: 300,
                         child: Column(children: [
                           Text("sensor address: $sensorAddress , units: $u")

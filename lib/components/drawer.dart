@@ -8,6 +8,7 @@ import '../pages/data_page.dart';
 class NavDrawer extends StatefulWidget {
   const NavDrawer.base({Key? key}) : super(key: key);
 
+
   @override
   State<StatefulWidget> createState() => _NavDrawerState();
  // late String ? username;
@@ -17,23 +18,29 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   initState() {
     super.initState();
+    _getPrefs();
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() => prefs = prefs);
+    });
+
     debugPrint("-- navDrawer initstate");
+  }
+  late SharedPreferences prefs;
 
-    //final SharedPreferences prefs =  SharedPreferences.getInstance();
-
-
+  Future<dynamic> _getPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+  String  getUserName() {
+    _getPrefs();
+    String username = "";
+    if(prefs.getString("username") != null) {
+      username = prefs.getString("username")!;
+      return username;
+    }
+    //username="test2";
+    return username;
   }
 
-
-  String getUserName(){
-   // String username = SharedPreferences.getInstance().then((value) {
-
-      return "test1";
-     /* if (value.getString("username") != null) {
-        return value.getString("username");
-      } */
-   // });
-  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,22 +54,22 @@ class _NavDrawerState extends State<NavDrawer> {
                     minHeight: 50, minWidth: 150, maxHeight: 100),
                 child: ListView(
                   children: [
-                    const ListTile(
+                     ListTile(
                       hoverColor: Colors.blue,
                       tileColor: Colors.indigo,
                       dense: false,
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.person_3_sharp,//person_2_outlined,
                         color: Colors.white,
                       ),
-                      contentPadding: EdgeInsets.only(
+                      contentPadding: const EdgeInsets.only(
                           top: 25, bottom: 35, left: 20, right: 10),
                       visualDensity: VisualDensity(vertical: -4),
                       enabled: false,
                       title: Text(
                         //'User1',
-                        //getUserName();
-                        "username",
+                        getUserName(),
+                        //"username",
                         style: TextStyle(
                           color: Colors.white,
                         ),

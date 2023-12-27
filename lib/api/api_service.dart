@@ -108,7 +108,12 @@ class ApiService {
   }
 
   static void logout() {
-
+    debugPrint("logging out");
+    SharedPreferences.getInstance().then((value) {
+      if (value.getString("username") != null) {
+        value.remove("username");
+      }
+    });
   }
   static UserTopic getUserTopic(Map topics) {
     List<TopicData> topicList = [];
