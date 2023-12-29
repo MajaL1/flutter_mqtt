@@ -292,7 +292,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                 enabledBorder:
                                                     const OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      width: 2,
+                                                      width: 0.5,
                                                       color: Color.fromRGBO(108,
                                                           165, 222, 60)), //
                                                 ),
@@ -310,7 +310,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                       BorderRadius.circular(19),
                                                   borderSide: const BorderSide(
                                                       color: Colors.black12,
-                                                      width: 1.5),
+                                                      width: 0.5),
                                                 ),
                                                 labelText: Constants.USER, labelStyle: const TextStyle(letterSpacing: 1.8),
                                                 hintText:
@@ -356,7 +356,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                   enabledBorder:
                                                       const OutlineInputBorder(
                                                     borderSide: BorderSide(
-                                                        width: 2,
+                                                        width: 0.5,
                                                         color: Color.fromRGBO(
                                                             108,
                                                             165,
@@ -371,7 +371,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                     borderSide: BorderSide(
                                                         color: Color.fromRGBO(
                                                             108, 165, 222, 60),
-                                                        width: 3.0),
+                                                        width: 1.0),
                                                   ),
                                                   labelText: Constants.PASSWORD , labelStyle: const TextStyle(letterSpacing: 1.8),
                                                   hintText: Constants
