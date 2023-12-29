@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/custom_app_bar.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
 
@@ -20,9 +21,7 @@ class _DetailsPageState extends State<DetailsPage> {
   Widget build(BuildContext context) {
     {
       return Scaffold(
-          appBar: AppBar(
-            title: const Text("Alarm data"),
-          ),
+          appBar: CustomAppBar("Data"),
           //drawer: NavDrawer(),
           body: _buildDetailsView());
     }
@@ -128,9 +127,9 @@ class _DetailsPageState extends State<DetailsPage> {
     //alarm data {"135":{"typ":7,"l":0,"t":202,"b":0,"r":-73,"lb":1,"bv":384}}{
     List<Alarm> alarmData = [];
     //if(decodeMessage != null) {
-      Map<String, dynamic> jsonMap = json.decode(decodeMessage);
-      alarmData = Alarm.getAlarmList(jsonMap);
-      //debugPrint("AlarmData from JSON: $alarmData");
+    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+    alarmData = Alarm.getAlarmList(jsonMap);
+    //debugPrint("AlarmData from JSON: $alarmData");
     //}
     //List<Data> dataList  = Data.getDataList();
     return alarmData;

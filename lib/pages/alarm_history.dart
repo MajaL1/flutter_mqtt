@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/custom_app_bar.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
 import '../util/utils.dart';
@@ -30,13 +31,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         if (snapshot.hasData) {
           return Scaffold(
            // backgroundColor: Colors.,
-              appBar: AppBar(
-                  shadowColor: Colors.black,
-                  title: Container(
-                    //decoration: buildBoxDecoration(),
-                    child: const Text(Constants.HISTORY,
-                        style: TextStyle(fontSize: 16)),
-                  )),
+              appBar: CustomAppBar(Constants.HISTORY),
               //drawer: NavDrawer(),
               body: SingleChildScrollView(
                   child: Column(children: [
