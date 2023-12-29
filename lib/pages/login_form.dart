@@ -26,7 +26,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormValidationState extends State<LoginForm> {
   InternetStatus? _connectionStatus;
-  String ? connectionStatusText;
+  String? connectionStatusText;
   late StreamSubscription<InternetStatus> _subscription;
 
   bool loginError = false;
@@ -46,7 +46,8 @@ class _LoginFormValidationState extends State<LoginForm> {
     _subscription = InternetConnection().onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
-        connectionStatusText = status == InternetStatus.connected ? "" : "No internet connection";
+        connectionStatusText =
+            status == InternetStatus.connected ? "" : "No internet connection";
       });
     });
     print("-- loginform initstate");
@@ -199,10 +200,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                                       padding: const EdgeInsets.only(
                                           top: 25.0, bottom: 0),
                                       child: Text(
-                                        connectionStatusText!= null ? connectionStatusText! : "",
-                                    style:
-                                        Theme.of(context).textTheme.labelLarge,
-                                  )),
+                                        connectionStatusText != null
+                                            ? connectionStatusText!
+                                            : "",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge,
+                                      )),
                                   const Padding(
                                       padding: EdgeInsets.only(
                                           top: 100.0, bottom: 40),
@@ -255,13 +259,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         const Text(
                                           Constants.LOGIN_TO_NAVIS,
                                           style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  0, 87, 153, 60),
-                                              wordSpacing: 0.4,
+                                              color:
+                                                  Color.fromRGBO(0, 0, 220, 1),
+                                              wordSpacing: 0.6,
                                               fontWeight: FontWeight.w900,
                                               fontStyle: FontStyle.normal,
-                                              fontFamily: 'Roboto',
-                                              fontSize: 14),
+                                              fontFamily: 'Ariel',
+                                              fontSize: 16),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
@@ -271,6 +275,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               bottom: 30),
                                           child: TextFormField(
                                             style: const TextStyle(
+
                                                 //backgroundColor: Colors.white,
                                                 //background: Colors.white,
                                                 fontFamily: 'Roboto',
@@ -278,6 +283,10 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                     00, 20, 20, 80),
                                                 fontSize: 16),
                                             decoration: InputDecoration(
+                                                prefixIcon: const Icon(
+                                                  Icons.person,
+                                                  color: Colors.blueAccent,
+                                                ),
                                                 filled: true,
                                                 fillColor: Colors.white,
                                                 enabledBorder:
@@ -298,12 +307,12 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                 ),
                                                 border: OutlineInputBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(14),
+                                                      BorderRadius.circular(19),
                                                   borderSide: const BorderSide(
                                                       color: Colors.black12,
                                                       width: 1.5),
                                                 ),
-                                                labelText: Constants.USER,
+                                                labelText: Constants.USER, labelStyle: const TextStyle(letterSpacing: 1.8),
                                                 hintText:
                                                     Constants.ENTER_VALID_USER,
                                                 hintStyle: const TextStyle(
@@ -329,6 +338,9 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                       00, 20, 20, 80),
                                                   fontSize: 16),
                                               decoration: InputDecoration(
+                                                  prefixIcon: const Icon(
+                                                      Icons.lock,
+                                                      color: Colors.blueAccent),
                                                   filled: true,
                                                   fillColor: Colors.white,
                                                   border: OutlineInputBorder(
@@ -361,7 +373,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                             108, 165, 222, 60),
                                                         width: 3.0),
                                                   ),
-                                                  labelText: Constants.PASSWORD,
+                                                  labelText: Constants.PASSWORD , labelStyle: const TextStyle(letterSpacing: 1.8),
                                                   hintText: Constants
                                                       .ENTER_SECURE_PASS,
                                                   hintStyle: const TextStyle(
@@ -387,8 +399,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         Container(
                                           height: 50,
                                           width: 120,
-                                          decoration:
-                                              Utils.buildBoxDecoration(),
+                                          decoration: Utils
+                                              .buildLoginButtonBoxDecoration(),
                                           child: TextButton(
                                             onPressed: () {
                                               login();
@@ -428,7 +440,12 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             onPressed: () {},
                                             child: InkWell(
                                                 child: const Text(
-                                                    Constants.CREATE_ACCOUNT),
+                                                  Constants.CREATE_ACCOUNT,
+                                                  style: TextStyle(
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 220, 1),
+                                                  ),
+                                                ),
                                                 onTap: () => launchUrl(
                                                     Constants.REGISTER_URL)),
                                           ),
