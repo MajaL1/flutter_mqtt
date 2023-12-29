@@ -230,7 +230,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           style: TextStyle(
                                               color:
                                                   Color.fromRGBO(0, 0, 102, 1),
-                                              wordSpacing: 1.9,
+                                              wordSpacing: 2.9,
                                               fontWeight: FontWeight.w900,
                                               fontStyle: FontStyle.normal,
                                               fontFamily: 'Ariel',
@@ -244,14 +244,12 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               bottom: 30),
                                           child: TextFormField(
                                             style: const TextStyle(
-
-                                                //backgroundColor: Colors.white,
-                                                //background: Colors.white,
                                                 fontFamily: 'Roboto',
                                                 color: Color.fromRGBO(
                                                     00, 20, 20, 80),
                                                 fontSize: 16),
-                                            decoration: buildInputFieldLoginDecoration(),
+                                            decoration:
+                                                buildInputUsernameLoginDecoration(),
                                             controller: emailController,
 
                                             /*   validator: MultiValidator([
@@ -272,7 +270,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                   color: Color.fromRGBO(
                                                       00, 20, 20, 80),
                                                   fontSize: 16),
-                                              decoration: buildInputFieldUsername(),
+                                              decoration:
+                                                  buildInputUsernamePasswordDecoration(),
                                               controller: passwordController,
                                               validator: MultiValidator([
                                                 RequiredValidator(
@@ -305,7 +304,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 18,
-                                                  fontFamily: 'Roboto'),
+                                                  fontFamily: 'Roboto',
+                                              letterSpacing: 1.5),
                                             ),
                                           ),
                                         ),
@@ -370,126 +370,80 @@ class _LoginFormValidationState extends State<LoginForm> {
     );
   }
 
-  InputDecoration buildInputFieldUsername() {
+  InputDecoration buildInputUsernamePasswordDecoration() {
     return InputDecoration(
-                                                prefixIcon: const Icon(
-                                                    Icons.lock,
-                                                    color: Colors.blueAccent),
-                                                filled: true,
-                                                fillColor: Colors.white,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          16),
-                                                  borderSide:
-                                                      const BorderSide(
-                                                          color:
-                                                              Colors.black12,
-                                                          width: 8.5),
-                                                ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: const BorderSide(
-                                                      width: 0.5,
-                                                      color: Color.fromRGBO(
-                                                          108,
-                                                          165,
-                                                          222,
-                                                          60))
-                                                      ,
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          16),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          14),
-                                                  borderSide: BorderSide(
-                                                      color: Color.fromRGBO(
-                                                          108, 165, 222, 60),
-                                                      width: 2),
-                                                ),
-                                                labelText: Constants.PASSWORD , labelStyle: const TextStyle(letterSpacing: 1.8),
-                                                hintText: Constants
-                                                    .ENTER_SECURE_PASS,
-                                                hintStyle: const TextStyle(
-                                                    fontSize: 12));
+        prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.black12, width: 8.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+              width: 0.5, color: Color.fromRGBO(108, 165, 222, 60)),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+              BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+        ),
+        labelText: Constants.PASSWORD,
+        labelStyle: const TextStyle(letterSpacing: 1.8),
+        hintText: Constants.ENTER_SECURE_PASS,
+        hintStyle: const TextStyle(fontSize: 12));
   }
 
-  InputDecoration buildInputFieldLoginDecoration() {
+  InputDecoration buildInputUsernameLoginDecoration() {
     return InputDecoration(
-                                              prefixIcon: const Icon(
-                                                Icons.person,
-                                                color: Colors.blueAccent,
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.white,
-                                              enabledBorder:
-                                                  OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    width: 0.5,
-                                                    color: Color.fromRGBO(108,
-                                                        165, 222, 60)),
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        16),//
-                                              ),
-                                              focusedBorder:
-                                                  OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                borderSide: BorderSide(
-                                                    color: Color.fromRGBO(
-                                                        108, 165, 222, 60),
-                                                    width: 2.0),
-                                              ),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(19),
-                                                borderSide: const BorderSide(
-                                                    color: Colors.black12,
-                                                    width: 0.5),
-                                              ),
-                                              labelText: Constants.USER, labelStyle: const TextStyle(letterSpacing: 1.8),
-                                              hintText:
-                                                  Constants.ENTER_VALID_USER,
-                                              hintStyle: const TextStyle(
-                                                  fontSize: 12));
+        prefixIcon: const Icon(
+          Icons.person,
+          color: Colors.blueAccent,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+              width: 0.5, color: Color.fromRGBO(108, 165, 222, 60)),
+          borderRadius: BorderRadius.circular(16), //
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+              BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(19),
+          borderSide: const BorderSide(color: Colors.black12, width: 0.5),
+        ),
+        labelText: Constants.USER,
+        labelStyle: const TextStyle(letterSpacing: 1.8),
+        hintText: Constants.ENTER_VALID_USER,
+        hintStyle: const TextStyle(fontSize: 12));
   }
 
   BoxDecoration buildLoginBoxDecoration() {
     return const BoxDecoration(
-                                    //color: Colors.,
-                                    color: Color.fromRGBO(24, 125, 255, 0.10),
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Color.fromRGBO(
-                                                0, 87, 153, 0.2),
-                                            width: 0.5),
-                                        top: BorderSide(
-                                            color: Color.fromRGBO(
-                                                0, 87, 153, 0.2),
-                                            width: 0.5),
-                                        left: BorderSide(
-                                            color: Color.fromRGBO(
-                                                0, 87, 153, 0.2),
-                                            width: 0.5),
-                                        right: BorderSide(
-                                            color: Color.fromRGBO(
-                                                0, 87, 153, 0.2),
-                                            width: 0.5)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurStyle: BlurStyle.outer,
-                                        spreadRadius: 2,
-                                        blurRadius: 4,
-                                        // offset: Offset(
-                                        //   2, 2), // changes position of shadow
-                                      ),
-                                    ],
-                                  );
+      //color: Colors.,
+      color: Color.fromRGBO(24, 125, 255, 0.10),
+      border: Border(
+          bottom:
+              BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5),
+          top: BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5),
+          left: BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5),
+          right:
+              BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          blurStyle: BlurStyle.outer,
+          spreadRadius: 2,
+          blurRadius: 4,
+          // offset: Offset(
+          //   2, 2), // changes position of shadow
+        ),
+      ],
+    );
   }
 }
