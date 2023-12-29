@@ -26,6 +26,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormValidationState extends State<LoginForm> {
   InternetStatus? _connectionStatus;
+  String ? connectionStatusText;
   late StreamSubscription<InternetStatus> _subscription;
 
   bool loginError = false;
@@ -45,6 +46,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     _subscription = InternetConnection().onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
+        connectionStatusText = status == InternetStatus.connected ? "" : "No internet connection";
       });
     });
     print("-- loginform initstate");
@@ -197,10 +199,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                       padding: const EdgeInsets.only(
                                           top: 25.0, bottom: 0),
                                       child: Text(
-                                    InternetStatus.disconnected ==
-                                            _connectionStatus
-                                        ? "No internet connection"
-                                        : "",
+                                        connectionStatusText!= null ? connectionStatusText! : "",
                                     style:
                                         Theme.of(context).textTheme.labelLarge,
                                   )),
