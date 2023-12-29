@@ -114,6 +114,11 @@ class ApiService {
         value.remove("username");
       }
     });
+    SharedPreferences.getInstance().then((value) {
+      if (value.getString("email") != null) {
+        value.remove("email");
+      }
+    });
   }
   static UserTopic getUserTopic(Map topics) {
     List<TopicData> topicList = [];

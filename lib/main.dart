@@ -137,9 +137,6 @@ void onStart(ServiceInstance service) async {
   // For flutter prior to version 3.0.0
   // We have to register the plugin manually
 
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.setString("hello", "world");
-
   /// OPTIONAL when use custom notification
   //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   //  FlutterLocalNotificationsPlugin();

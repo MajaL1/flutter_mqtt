@@ -52,9 +52,9 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //color: Colors.white12,
+        color: Colors.white60,
         width: MediaQuery.of(context).size.width * 0.50,
-        height: 750,
+        height: 850,
         child: Drawer(
           backgroundColor: Colors.grey.shade400,
             child: ConstrainedBox(
@@ -64,7 +64,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 child: ListView(
                   children: [
                     Container(
-                        decoration: buildBoxDecoration(),
+                        decoration: buildBoxDecorationMainTile(),
                         child: ListTile(
                             hoverColor: Colors.blue,
                             tileColor: Colors.indigo,
@@ -74,16 +74,16 @@ class _NavDrawerState extends State<NavDrawer> {
                               color: Colors.white,
                             ),
                             contentPadding: const EdgeInsets.only(
-                                top: 25, bottom: 35, left: 20, right: 10),
+                                top: 15, bottom: 25, left: 20, right: 10),
                             visualDensity: VisualDensity(vertical: -4),
                             enabled: false,
                             title: ListTile(
                                 //'User1',
                                 // getUserName(),
                                 title: Text(
-                              username,
+                              "$username",
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.white, wordSpacing: 1
                               ),
                             )))),
                     const Divider(height: 60),
@@ -95,7 +95,7 @@ class _NavDrawerState extends State<NavDrawer> {
                           selectedColor: Colors.blueAccent,
                           //style: ,
                           contentPadding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 16.0),
+                              vertical: 5, horizontal: 16.0),
                           dense: false,
                           visualDensity: const VisualDensity(vertical: -4),
                           leading: const Icon(
@@ -112,7 +112,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               MaterialPageRoute(
                                   builder: (context) => const AlarmHistory())),
                         )),
-                    const Divider(height: 35),
+                    const Divider(height: 25),
                     Container(
                         decoration: buildBoxDecoration(),
                         child: ListTile(
@@ -120,7 +120,7 @@ class _NavDrawerState extends State<NavDrawer> {
                           tileColor: Colors.blue,
                           dense: false,
                           contentPadding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 16.0),
+                              vertical: 5, horizontal: 16.0),
                           visualDensity: const VisualDensity(vertical: -4),
                           leading: const Icon(
                             Icons.settings,
@@ -137,7 +137,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   builder: (context) =>
                                       const UserSettings.base())),
                         )),
-                    const Divider(height: 35),
+                    const Divider(height: 25),
                     Container(
                         decoration: buildBoxDecoration(),
                         child: ListTile(
@@ -145,7 +145,7 @@ class _NavDrawerState extends State<NavDrawer> {
                             tileColor: Colors.blue,
                             dense: false,
                             contentPadding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 16.0),
+                                vertical: 5, horizontal: 16.0),
                             visualDensity: const VisualDensity(vertical: -4),
                             leading: const Icon(
                               Icons.notifications,
@@ -215,10 +215,35 @@ class _NavDrawerState extends State<NavDrawer> {
         end: Alignment.bottomRight,
         colors: [
           Color.fromRGBO(0, 87, 153, 60),
-          Colors.indigoAccent,
+          //Colors.indigoAccent,
           Colors.blueAccent
         ],
       ),
+        border: Border(bottom: BorderSide(color: Colors.blueGrey,width: 4))
+
+    );
+  }
+  BoxDecoration buildBoxDecorationMainTile() {
+    return const BoxDecoration(
+      // Create a gradient background
+      gradient: RadialGradient(
+        center: Alignment(0, 0),
+        radius: 2,
+        colors: [
+         // Color.fromRGBO(0, 87, 153, 60),
+          //Colors.indigoAccent,
+          //Colors.blueAccent,
+          Color.fromRGBO(0, 87, 153, 60),
+          Color.fromRGBO(36, 61, 166,1),
+
+
+        ],
+      ),
+        border: Border(
+            bottom: BorderSide(color: Colors.blueGrey,width: 5),
+            top: BorderSide(color: Colors.blueGrey,width: 3)
+
+    )
     );
   }
 }

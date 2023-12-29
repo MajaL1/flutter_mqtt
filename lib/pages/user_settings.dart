@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/api_service.dart';
+import 'package:mqtt_test/components/custom_app_bar.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
@@ -156,21 +157,21 @@ class _UserSettingsState extends State<UserSettings> {
     return Scaffold(
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
-      appBar: AppBar(
-
+      /*appBar: AppBar(
           shadowColor: Colors.black,
           title: Container(
-        //decoration: buildBoxDecoration(),
-        child: const Text(
-          Constants.SETTINGS,
-          style: TextStyle(fontSize: 16),
-        ),
-      )),
+            //decoration: buildBoxDecoration(),
+            child: const Text(
+              Constants.SETTINGS,
+              style: TextStyle(fontSize: 16),
+            ),
+          )), */
+      appBar: CustomAppBar(Constants.SETTINGS),
       drawer: const NavDrawer.base(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         padding:
-            const EdgeInsets.only(left: 40, right: 40, top: 30, bottom: 20),
+            const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 20),
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45),
@@ -211,7 +212,6 @@ class _UserSettingsState extends State<UserSettings> {
         ),
       ],
     );
-
   }
 
   Widget _buildUserPersonalSettings() {

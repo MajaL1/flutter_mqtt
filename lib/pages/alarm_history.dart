@@ -29,6 +29,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
+           // backgroundColor: Colors.,
               appBar: AppBar(
                   shadowColor: Colors.black,
                   title: Container(
@@ -46,7 +47,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                 Container(
                   height: 30,
                   width: 100,
-                  decoration: Utils.buildButtonDecoration(),
+                  decoration: Utils.buildButtonDecoration1(),
                   child: TextButton(
                       onPressed: () {
                         clearHistory();
