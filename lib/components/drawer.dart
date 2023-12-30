@@ -52,11 +52,12 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white60,
+        color: Colors.black,
         width: MediaQuery.of(context).size.width * 0.50,
         height: 850,
         child: Drawer(
-            backgroundColor: Colors.grey.shade400,
+            backgroundColor: Colors.black,
+            //Color.fromRGBO(0, 87, 153, 60),
             child: ConstrainedBox(
                 //color: Colors.blue,
                 constraints: const BoxConstraints(
@@ -199,7 +200,7 @@ class _NavDrawerState extends State<NavDrawer> {
               color: Colors.white,
             ),
             contentPadding:
-                const EdgeInsets.only(top: 15, bottom: 25, left: 20, right: 10),
+                const EdgeInsets.only(top: 55, bottom: 35, left: 20, right: 10),
             visualDensity: VisualDensity(vertical: -4),
             enabled: false,
             title: Column(children: [
@@ -233,11 +234,11 @@ class _NavDrawerState extends State<NavDrawer> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.black,
+            Color.fromRGBO(16, 30, 66, 1),
             Color.fromRGBO(36, 61, 166, 1),
           ],
         ),
-        border: Border(bottom: BorderSide(color: Colors.blueGrey, width: 4)));
+        border: Border(bottom: BorderSide(color: Colors.black, width: 3)));
   }
 
   BoxDecoration buildBoxDecorationMainTile() {
@@ -249,12 +250,14 @@ class _NavDrawerState extends State<NavDrawer> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.black,
+            //Colors.black,
+            Color.fromRGBO(16, 30, 66, 1),
+
             Color.fromRGBO(36, 61, 166, 1),
           ],
         ),
         border: Border(
-            bottom: BorderSide(color: Colors.blueGrey, width: 5),
-            top: BorderSide(color: Colors.blueGrey, width: 3)));
+            bottom: BorderSide(color: Colors.black, width: 5),
+            top: BorderSide(color: Colors.black, width: 3)));
   }
 }

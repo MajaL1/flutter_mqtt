@@ -19,9 +19,21 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+        flexibleSpace: Container(
+          decoration: Utils.buildAppBarDecoration(),
+          //color: Colors.black,
+          /*child: Column(
+            children: [
+              Text('One'),
+              Text('Two'),
+              Text('Three'),
+              Text('Four'),
+            ],
+          ),*/
+        ),
         shadowColor: Colors.black,
         title: Container(
-            decoration: Utils.buildAppBarDecoration(),
+            //decoration: Utils.buildAppBarDecoration(),
             child: Text(
           widget.title,
           style: const TextStyle(fontSize: 16),
