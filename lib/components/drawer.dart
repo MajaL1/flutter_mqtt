@@ -14,6 +14,7 @@ class NavDrawer extends StatefulWidget {
 
 class _NavDrawerState extends State<NavDrawer> {
   String username = "";
+  String email = "";
 
   @override
   initState() {
@@ -22,8 +23,7 @@ class _NavDrawerState extends State<NavDrawer> {
     SharedPreferences.getInstance().then((prefValue) => {
           setState(() {
             username = prefValue.getString('username')!;
-            //  _name = prefValue.getString('name')?? "";
-            //Text text =  Text(username!);
+            email = prefValue.getString('email')!;
           })
         });
 
@@ -56,39 +56,17 @@ class _NavDrawerState extends State<NavDrawer> {
         width: MediaQuery.of(context).size.width * 0.50,
         height: 850,
         child: Drawer(
-          backgroundColor: Colors.grey.shade400,
+            backgroundColor: Colors.grey.shade400,
             child: ConstrainedBox(
                 //color: Colors.blue,
                 constraints: const BoxConstraints(
                     minHeight: 50, minWidth: 150, maxHeight: 100),
                 child: ListView(
                   children: [
+                    buildDrawerMainListTile(),
+                    const Divider(height: 20),
                     Container(
-                        decoration: buildBoxDecorationMainTile(),
-                        child: ListTile(
-                            hoverColor: Colors.blue,
-                            tileColor: Colors.indigo,
-                            dense: false,
-                            leading: const Icon(
-                              Icons.person_3_sharp, //person_2_outlined,
-                              color: Colors.white,
-                            ),
-                            contentPadding: const EdgeInsets.only(
-                                top: 15, bottom: 25, left: 20, right: 10),
-                            visualDensity: VisualDensity(vertical: -4),
-                            enabled: false,
-                            title: ListTile(
-                                //'User1',
-                                // getUserName(),
-                                title: Text(
-                              "$username",
-                              style: const TextStyle(
-                                color: Colors.white, wordSpacing: 1
-                              ),
-                            )))),
-                    const Divider(height: 60),
-                      Container(
-                        decoration: buildBoxDecoration(),
+                        decoration: buildDrawerDecorationListTile(),
                         child: ListTile(
                           hoverColor: Colors.blue,
                           tileColor: Colors.blue,
@@ -112,9 +90,9 @@ class _NavDrawerState extends State<NavDrawer> {
                               MaterialPageRoute(
                                   builder: (context) => const AlarmHistory())),
                         )),
-                    const Divider(height: 25),
+                    //const Divider(height: 15),
                     Container(
-                        decoration: buildBoxDecoration(),
+                        decoration: buildDrawerDecorationListTile(),
                         child: ListTile(
                           hoverColor: Colors.blue,
                           tileColor: Colors.blue,
@@ -137,9 +115,9 @@ class _NavDrawerState extends State<NavDrawer> {
                                   builder: (context) =>
                                       const UserSettings.base())),
                         )),
-                    const Divider(height: 25),
+                    //const Divider(height: 15),
                     Container(
-                        decoration: buildBoxDecoration(),
+                        decoration: buildDrawerDecorationListTile(),
                         child: ListTile(
                             hoverColor: Colors.blue,
                             tileColor: Colors.blue,
@@ -161,7 +139,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const DetailsPage.base())))),
-                    const Divider(height: 5),
+                    // const Divider(height: 5),
                     /*ListTile(
                       hoverColor: Colors.blue,
                       tileColor: Colors.blue,
@@ -207,43 +185,76 @@ class _NavDrawerState extends State<NavDrawer> {
                 ))));
   }
 
-  BoxDecoration buildBoxDecoration() {
-    return const BoxDecoration(
-      // Create a gradient background
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Color.fromRGBO(0, 87, 153, 60),
-          //Colors.indigoAccent,
-          Colors.blueAccent
-        ],
-      ),
-        border: Border(bottom: BorderSide(color: Colors.blueGrey,width: 4))
-
-    );
+  Container buildDrawerMainListTile() {
+    return Container(
+        decoration: buildBoxDecorationMainTile(),
+        child: ListTile(
+            hoverColor: Colors.blue,
+            tileColor: Colors.indigo,
+            dense: false,
+            leading: const Icon(
+              Icons.person_3_rounded,
+              size: 30,
+              //person_2_outlined,
+              color: Colors.white,
+            ),
+            contentPadding:
+                const EdgeInsets.only(top: 15, bottom: 25, left: 20, right: 10),
+            visualDensity: VisualDensity(vertical: -4),
+            enabled: false,
+            title: Column(children: [
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "$username",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        color: Colors.white, wordSpacing: 1, fontSize: 18),
+                  )),
+              /*Container(
+                  child: Text(
+               "\n"),
+              ), */
+              Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                "$email",
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                    color: Colors.white, wordSpacing: 1, fontSize: 12),
+              )),
+            ])));
   }
+
+  BoxDecoration buildDrawerDecorationListTile() {
+    return const BoxDecoration(
+        // Create a gradient background
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.black,
+            Color.fromRGBO(36, 61, 166, 1),
+          ],
+        ),
+        border: Border(bottom: BorderSide(color: Colors.blueGrey, width: 4)));
+  }
+
   BoxDecoration buildBoxDecorationMainTile() {
     return const BoxDecoration(
-      // Create a gradient background
-      gradient: RadialGradient(
-        center: Alignment(0, 0),
-        radius: 2,
-        colors: [
-         // Color.fromRGBO(0, 87, 153, 60),
-          //Colors.indigoAccent,
-          //Colors.blueAccent,
-          Color.fromRGBO(0, 87, 153, 60),
-          Color.fromRGBO(36, 61, 166,1),
-
-
-        ],
-      ),
+        // Create a gradient background
+        gradient: LinearGradient(
+          //center: Alignment(0, 0),
+          //radius: 2,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.black,
+            Color.fromRGBO(36, 61, 166, 1),
+          ],
+        ),
         border: Border(
-            bottom: BorderSide(color: Colors.blueGrey,width: 5),
-            top: BorderSide(color: Colors.blueGrey,width: 3)
-
-    )
-    );
+            bottom: BorderSide(color: Colors.blueGrey, width: 5),
+            top: BorderSide(color: Colors.blueGrey, width: 3)));
   }
 }

@@ -122,6 +122,29 @@ class Utils {
     );
   }
 
+  static BoxDecoration buildAppBarDecoration() {
+    return BoxDecoration(
+      color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+      borderRadius: BorderRadius.circular(18),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.15),
+          spreadRadius: 4,
+          blurRadius: 8,
+          offset: Offset(0, 1), // changes position of shadow
+        ),
+      ],
+      gradient: const RadialGradient(
+        center: Alignment(0, 0),
+        radius: 4,
+        colors: [
+          Color.fromRGBO(0, 0, 190, 1),
+          Color.fromRGBO(0, 87, 153, 60)
+        ],
+      ),
+    );
+  }
+
   static BoxDecoration buildLoginButtonBoxDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),

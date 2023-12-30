@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../util/utils.dart';
+
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   String title;
 
@@ -18,9 +20,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
         shadowColor: Colors.black,
-        title: Text(
+        title: Container(
+            decoration: Utils.buildAppBarDecoration(),
+            child: Text(
           widget.title,
           style: const TextStyle(fontSize: 16),
-        ));
+        )));
   }
 }
