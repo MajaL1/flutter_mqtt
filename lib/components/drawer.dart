@@ -52,96 +52,104 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.black,
+       // color: Colors.black,
         width: MediaQuery.of(context).size.width * 0.50,
-        height: 850,
+        height: 650,
+        decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(18),
+    ),
         child: Drawer(
             backgroundColor: Colors.black,
+            shadowColor: Colors.black,shape: ShapeBorder.,
             //Color.fromRGBO(0, 87, 153, 60),
             child: ConstrainedBox(
                 //color: Colors.blue,
                 constraints: const BoxConstraints(
                     minHeight: 50, minWidth: 150, maxHeight: 100),
-                child: ListView(
-                  children: [
-                    buildDrawerMainListTile(),
-                    const Divider(height: 20),
-                    Container(
-                        decoration: buildDrawerDecorationListTile(),
-                        child: ListTile(
-                          hoverColor: Colors.blue,
-                          tileColor: Colors.blue,
-                          selectedColor: Colors.blueAccent,
-                          //style: ,
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 16.0),
-                          dense: false,
-                          visualDensity: const VisualDensity(vertical: -4),
-                          leading: const Icon(
-                            Icons.history,
-                            color: Colors.white,
-                          ),
-                          title: const Text(
-                            'History',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => const AlarmHistory())),
-                        )),
-                    //const Divider(height: 15),
-                    Container(
-                        decoration: buildDrawerDecorationListTile(),
-                        child: ListTile(
-                          hoverColor: Colors.blue,
-                          tileColor: Colors.blue,
-                          dense: false,
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 16.0),
-                          visualDensity: const VisualDensity(vertical: -4),
-                          leading: const Icon(
-                            Icons.settings,
-                            color: Colors.white,
-                          ),
-                          title: const Text(
-                            'Settings',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const UserSettings.base())),
-                        )),
-                    //const Divider(height: 15),
-                    Container(
-                        decoration: buildDrawerDecorationListTile(),
-                        child: ListTile(
-                            hoverColor: Colors.blue,
-                            tileColor: Colors.blue,
-                            dense: false,
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 16.0),
-                            visualDensity: const VisualDensity(vertical: -4),
-                            leading: const Icon(
-                              Icons.notifications,
-                              color: Colors.white,
-                            ),
-                            title: const Text(
-                              'Data',
-                              style: TextStyle(
+                child: Container(
+
+                    child: ListView(
+                      children: [
+                        buildDrawerMainListTile(),
+                        const Divider(height: 20),
+                        Container(
+                            decoration: buildDrawerDecorationListTile(),
+                            child: ListTile(
+                              hoverColor: Colors.blue,
+                              tileColor: Colors.blue,
+                              selectedColor: Colors.blueAccent,
+                              //style: ,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 16.0),
+                              dense: false,
+                              visualDensity: const VisualDensity(vertical: -4),
+                              leading: const Icon(
+                                Icons.history,
                                 color: Colors.white,
                               ),
-                            ),
-                            onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const DetailsPage.base())))),
-                    // const Divider(height: 5),
-                    /*ListTile(
+                              title: const Text(
+                                'History',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AlarmHistory())),
+                            )),
+                        //const Divider(height: 15),
+                        Container(
+                            decoration: buildDrawerDecorationListTile(),
+                            child: ListTile(
+                              hoverColor: Colors.blue,
+                              tileColor: Colors.blue,
+                              dense: false,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 16.0),
+                              visualDensity: const VisualDensity(vertical: -4),
+                              leading: const Icon(
+                                Icons.settings,
+                                color: Colors.white,
+                              ),
+                              title: const Text(
+                                'Settings',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UserSettings.base())),
+                            )),
+                        //const Divider(height: 15),
+                        Container(
+                            decoration: buildDrawerDecorationListTile(),
+                            child: ListTile(
+                                hoverColor: Colors.blue,
+                                tileColor: Colors.blue,
+                                dense: false,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 16.0),
+                                visualDensity:
+                                    const VisualDensity(vertical: -4),
+                                leading: const Icon(
+                                  Icons.notifications,
+                                  color: Colors.white,
+                                ),
+                                title: const Text(
+                                  'Data',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DetailsPage.base())))),
+                        // const Divider(height: 5),
+                        /*ListTile(
                       hoverColor: Colors.blue,
                       tileColor: Colors.blue,
                       dense: false,
@@ -162,9 +170,9 @@ class _NavDrawerState extends State<NavDrawer> {
                           MaterialPageRoute(
                               builder: (context) => const AlarmsPage.base())),
                     ),*/
-                    //const Divider(height: 10),
-                    //const Divider(height: 40),
-                    /* ListTile(
+                        //const Divider(height: 10),
+                        //const Divider(height: 40),
+                        /* ListTile(
                                 hoverColor: Colors.blue,
                                 tileColor: Colors.grey,
                                 dense: false,
@@ -182,8 +190,8 @@ class _NavDrawerState extends State<NavDrawer> {
                                 ),
                                 onTap: () {},
                               ),*/
-                  ],
-                ))));
+                      ],
+                    )))));
   }
 
   Container buildDrawerMainListTile() {
@@ -219,18 +227,18 @@ class _NavDrawerState extends State<NavDrawer> {
               Container(
                   alignment: Alignment.topLeft,
                   child: Text(
-                "$email",
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                    color: Colors.white, wordSpacing: 1, fontSize: 12),
-              )),
+                    "$email",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        color: Colors.white, wordSpacing: 1, fontSize: 12),
+                  )),
             ])));
   }
 
   BoxDecoration buildDrawerDecorationListTile() {
-    return const BoxDecoration(
+    return BoxDecoration(
         // Create a gradient background
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
@@ -238,6 +246,7 @@ class _NavDrawerState extends State<NavDrawer> {
             Color.fromRGBO(36, 61, 166, 1),
           ],
         ),
+        borderRadius: BorderRadius.circular(18),
         border: Border(bottom: BorderSide(color: Colors.black, width: 3)));
   }
 

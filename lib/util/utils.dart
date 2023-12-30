@@ -48,8 +48,8 @@ class Utils {
     return userTopicList;
   }
 
-  static Future<String> getImageFilePathFromAssets(String asset,
-      String filename) async {
+  static Future<String> getImageFilePathFromAssets(
+      String asset, String filename) async {
     final byteData = await rootBundle.load(asset);
     final temp_direactory = await getTemporaryDirectory();
     final file = File('${temp_direactory.path}/$filename');
@@ -59,7 +59,7 @@ class Utils {
     return file.path;
   }
 
- /* static BoxDecoration buildBoxDecoration() {
+  /* static BoxDecoration buildBoxDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
@@ -75,7 +75,7 @@ class Utils {
   }
 */
 
- static BoxDecoration buildButtonDecoration() {
+  static BoxDecoration buildButtonDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
@@ -101,7 +101,7 @@ class Utils {
 
   static BoxDecoration buildBoxDecoration() {
     return BoxDecoration(
-      color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+     // color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
       boxShadow: [
         BoxShadow(
@@ -114,17 +114,14 @@ class Utils {
       gradient: const RadialGradient(
         center: Alignment(0, 0),
         radius: 4,
-        colors: [
-          Colors.blue,
-          Color.fromRGBO(0, 87, 153, 60)
-        ],
+        colors: [Colors.blue, Color.fromRGBO(0, 87, 153, 60)],
       ),
     );
   }
 
   static BoxDecoration buildAppBarDecoration() {
     return BoxDecoration(
-      color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+     // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
@@ -134,12 +131,13 @@ class Utils {
           offset: Offset(0, 1), // changes position of shadow
         ),
       ],
-      gradient: const RadialGradient(
-        center: Alignment(0, 0),
-        radius: 4,
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
         colors: [
+          Colors.black,
           Color.fromRGBO(0, 0, 190, 1),
-          Color.fromRGBO(0, 87, 153, 60)
+          //Color.fromRGBO(0, 87, 153, 60)
         ],
       ),
     );
@@ -160,10 +158,7 @@ class Utils {
       gradient: const RadialGradient(
         center: Alignment(0, 0),
         radius: 4,
-        colors: [
-          Color.fromRGBO(0, 0, 190, 1),
-          Color.fromRGBO(0, 87, 153, 60)
-        ],
+        colors: [Color.fromRGBO(0, 0, 190, 1), Color.fromRGBO(0, 87, 153, 60)],
       ),
     );
   }
