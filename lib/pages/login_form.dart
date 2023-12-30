@@ -173,9 +173,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           onWillPop: () async => false,
           child: Scaffold(
               backgroundColor: Colors.white,
-              //appBar: AppBar(
-              // title: const Text(Constants.LOGIN_PAGE),
-              //),
+
               body: FutureBuilder(
                   // Todo: v Future preveri, ali povezava deluje, refactor, vrni exception, ce ni povezan
                   // future: _initCurrentAppState(),
@@ -195,10 +193,12 @@ class _LoginFormValidationState extends State<LoginForm> {
                             key: formkey,
                             child: Container(
                                 color: Colors.white54,
+                                alignment: Alignment.center,
+                               // width: MediaQuery. of(context). size. width - 30,
                                 child: Column(children: <Widget>[
                                   Container(
                                       padding: const EdgeInsets.only(
-                                          top: 25.0, bottom: 0),
+                                          top: 0, bottom: 0),
                                       child: Text(
                                         connectionStatusText != null
                                             ? connectionStatusText!
@@ -218,6 +218,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         ),
                                       )),
                                   Container(
+                                    padding: const EdgeInsets.only(
+                                        top: 30.0, bottom: 0) ,
                                     width: 350,
                                     // color: Color.fromRGBO(24, 125, 255, 0.05),
                                     decoration: buildLoginBoxDecoration(),
@@ -230,18 +232,18 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           style: TextStyle(
                                               color:
                                                   Color.fromRGBO(0, 0, 102, 1),
-                                              wordSpacing: 2.9,
+                                              wordSpacing: 3.9,
                                               fontWeight: FontWeight.w900,
                                               fontStyle: FontStyle.normal,
-                                              fontFamily: 'Ariel',
-                                              fontSize: 16),
+                                              fontFamily: 'San Frencisco',
+                                              fontSize: 20),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               left: 65.0,
                                               right: 65.0,
-                                              top: 35,
-                                              bottom: 30),
+                                              top: 60,
+                                              bottom: 45),
                                           child: TextFormField(
                                             style: const TextStyle(
                                                 fontFamily: 'Roboto',
