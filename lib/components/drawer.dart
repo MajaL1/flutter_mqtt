@@ -94,6 +94,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 'History',
                                 style: TextStyle(
                                   color: Colors.white60,
+                                  letterSpacing: 1.8,
                                 ),
                               ),
                               onTap: () => Navigator.of(context).push(
@@ -119,6 +120,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 'Settings',
                                 style: TextStyle(
                                   color: Colors.white60,
+                                  letterSpacing: 1.8,
                                 ),
                               ),
                               onTap: () => Navigator.of(context).push(
@@ -145,6 +147,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   'Data',
                                   style: TextStyle(
                                     color: Colors.white60,
+                                    letterSpacing: 1.8
                                   ),
                                 ),
                                 onTap: () => Navigator.of(context).push(
