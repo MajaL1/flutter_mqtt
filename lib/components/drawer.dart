@@ -52,23 +52,26 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-       // color: Colors.black,
+        // color: Colors.black,
         width: MediaQuery.of(context).size.width * 0.50,
         height: 650,
         decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(18),
-    ),
-        child: Drawer(
-            backgroundColor: Colors.black,
-            shadowColor: Colors.black,shape: ShapeBorder.,
-            //Color.fromRGBO(0, 87, 153, 60),
-            child: ConstrainedBox(
-                //color: Colors.blue,
-                constraints: const BoxConstraints(
-                    minHeight: 50, minWidth: 150, maxHeight: 100),
-                child: Container(
-
-                    child: ListView(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Container(
+            child: Drawer(
+                backgroundColor: Colors.black,
+                shadowColor: Colors.black,
+                //Color.fromRGBO(0, 87, 153, 60),
+                child: ConstrainedBox(
+                    //color: Colors.blue,
+                    constraints: const BoxConstraints(
+                        minHeight: 50, minWidth: 150, maxHeight: 100),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: ListView(
                       children: [
                         buildDrawerMainListTile(),
                         const Divider(height: 20),
@@ -85,12 +88,12 @@ class _NavDrawerState extends State<NavDrawer> {
                               visualDensity: const VisualDensity(vertical: -4),
                               leading: const Icon(
                                 Icons.history,
-                                color: Colors.white,
+                                color: Colors.white60,
                               ),
                               title: const Text(
                                 'History',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.white60,
                                 ),
                               ),
                               onTap: () => Navigator.of(context).push(
@@ -110,12 +113,12 @@ class _NavDrawerState extends State<NavDrawer> {
                               visualDensity: const VisualDensity(vertical: -4),
                               leading: const Icon(
                                 Icons.settings,
-                                color: Colors.white,
+                                color: Colors.white60,
                               ),
                               title: const Text(
                                 'Settings',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.white60,
                                 ),
                               ),
                               onTap: () => Navigator.of(context).push(
@@ -136,12 +139,12 @@ class _NavDrawerState extends State<NavDrawer> {
                                     const VisualDensity(vertical: -4),
                                 leading: const Icon(
                                   Icons.notifications,
-                                  color: Colors.white,
+                                  color: Colors.white60,
                                 ),
                                 title: const Text(
                                   'Data',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.white60,
                                   ),
                                 ),
                                 onTap: () => Navigator.of(context).push(
@@ -191,7 +194,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onTap: () {},
                               ),*/
                       ],
-                    )))));
+                    ))))));
   }
 
   Container buildDrawerMainListTile() {
@@ -205,7 +208,7 @@ class _NavDrawerState extends State<NavDrawer> {
               Icons.person_3_rounded,
               size: 30,
               //person_2_outlined,
-              color: Colors.white,
+              color: Colors.white70,
             ),
             contentPadding:
                 const EdgeInsets.only(top: 55, bottom: 35, left: 20, right: 10),
@@ -218,7 +221,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     "$username",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
-                        color: Colors.white, wordSpacing: 1, fontSize: 18),
+                        color: Colors.white70, wordSpacing: 1.2, fontSize: 18),
                   )),
               /*Container(
                   child: Text(
@@ -230,13 +233,13 @@ class _NavDrawerState extends State<NavDrawer> {
                     "$email",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
-                        color: Colors.white, wordSpacing: 1, fontSize: 12),
+                        color: Colors.white70, wordSpacing: 1, fontSize: 12),
                   )),
             ])));
   }
 
   BoxDecoration buildDrawerDecorationListTile() {
-    return BoxDecoration(
+    return const BoxDecoration(
         // Create a gradient background
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -246,7 +249,7 @@ class _NavDrawerState extends State<NavDrawer> {
             Color.fromRGBO(36, 61, 166, 1),
           ],
         ),
-        borderRadius: BorderRadius.circular(18),
+        //borderRadius: BorderRadius.circular(18),
         border: Border(bottom: BorderSide(color: Colors.black, width: 3)));
   }
 

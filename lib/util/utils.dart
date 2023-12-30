@@ -163,7 +163,7 @@ class Utils {
     );
   }
 
-  static buildButtonDecoration1() {
+  static buildHistoryButtonDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
@@ -179,10 +179,9 @@ class Utils {
         center: Alignment(0, 0),
         radius: 3,
         colors: [
-          Colors.blueAccent,
-          Colors.blue,
-          Color.fromRGBO(0, 87, 153, 60)
-        ],
+          Color.fromRGBO(0, 87, 153, 60),
+        Color.fromRGBO(0, 0, 190, 1)],
+
       ),
     );
   }

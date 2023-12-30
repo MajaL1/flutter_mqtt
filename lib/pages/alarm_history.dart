@@ -42,13 +42,12 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                 Container(
                   height: 30,
                   width: 100,
-                  decoration: Utils.buildButtonDecoration1(),
+                  decoration: Utils.buildLoginButtonBoxDecoration(),
                   child: TextButton(
                       onPressed: () {
                         clearHistory();
                       },
                       child: Container(
-                          //decoration: Utils.buildButtonDecoration(),
                           child: const Text(
                             'Clear history',
                             style: TextStyle(color: Colors.white, fontSize: 12),
