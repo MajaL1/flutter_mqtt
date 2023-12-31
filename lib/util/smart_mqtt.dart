@@ -140,6 +140,21 @@ class SmartMqtt extends ChangeNotifier {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
+    // todo: testni alarm - izbrisi
+    Alarm alarm = Alarm(
+        sensorAddress: "test1233",
+        typ: 2,
+        v: 1,
+        hiAlarm: 10,
+        loAlarm: 2,
+        ts: DateTime.timestamp(),
+        lb: 1,
+        bv: 3,
+        r: 1,
+        l: 3,
+        b: 2,
+        t: 3);
+    NotificationHelper.sendMessage(alarm);
     /* preferences.remove("settings_mqtt");
     preferences.remove("alarm_mqtt");
     preferences.clear(); */
@@ -157,7 +172,7 @@ class SmartMqtt extends ChangeNotifier {
       if ((decodeMessage.contains("v") ||
           decodeMessage.contains("typ") ||
           decodeMessage.contains("u"))) {
-       // debugPrint("got new settings");
+        // debugPrint("got new settings");
         // ali novi settingi niso enaki prejsnim
         // ali ce so v zacetku prazni
         if (newUserSettings.compareTo(decodeMessage) != 0) {
@@ -202,28 +217,25 @@ class SmartMqtt extends ChangeNotifier {
           }
         });
 
-
-        int ? lastSentHiAlarmValue =
-        await SharedPreferences.getInstance().then((value) {
+        int? lastSentHiAlarmValue =
+            await SharedPreferences.getInstance().then((value) {
           if (value.getString("last_sent_hi_alarm_value") != null) {
             int? lastSentHiAlarmValue =
-            value.getInt("last_sent_hi_alarm_value");
+                value.getInt("last_sent_hi_alarm_value");
             //debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
             return lastSentHiAlarmValue;
           }
         });
 
-        int ? lastSentLoAlarmValue =
-        await SharedPreferences.getInstance().then((value) {
+        int? lastSentLoAlarmValue =
+            await SharedPreferences.getInstance().then((value) {
           if (value.getString("last_sent_lo_alarm_value") != null) {
             int? lastSentLoAlarmValue =
-            value.getInt("last_sent_lo_alarm_value");
+                value.getInt("last_sent_lo_alarm_value");
             debugPrint("last_sent_lo_alarm_value $lastSentLoAlarmValue");
             return lastSentLoAlarmValue;
           }
         });
-
-
 
         int minutes = 6;
         if (lastAlarmDate != null) {
@@ -315,11 +327,11 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<String> getNewUserSettingsList() async {
     // if(newUserSettings != null) {
-        return newUserSettings;
-     //}
+    return newUserSettings;
+    //}
   }
 
-  Future<void> setNewUserSettings(String newUserSettings) async{
+  Future<void> setNewUserSettings(String newUserSettings) async {
     this.newUserSettings = newUserSettings;
 
     this.isSaved = true;
