@@ -214,7 +214,7 @@ class _NavDrawerState extends State<NavDrawer> {
               color: Colors.white70,
             ),
             contentPadding:
-                const EdgeInsets.only(top: 55, bottom: 35, left: 20, right: 10),
+                const EdgeInsets.only(top: 55, bottom: 35, left: 10, right: 50),
             visualDensity: VisualDensity(vertical: -4),
             enabled: false,
             title: Column(children: [
@@ -224,7 +224,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     "$username",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
-                        color: Colors.white70, wordSpacing: 1.2, fontSize: 18),
+                        color: Colors.white70, letterSpacing: 2, fontSize: 18),
                   )),
               /*Container(
                   child: Text(
@@ -236,7 +236,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     "$email",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
-                        color: Colors.white70, wordSpacing: 1, fontSize: 12),
+                        color: Colors.white70, letterSpacing: 0.8, fontSize: 12),
                   )),
             ])));
   }
@@ -248,8 +248,12 @@ class _NavDrawerState extends State<NavDrawer> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color.fromRGBO(16, 30, 66, 1),
+            Colors.black,
+           // Color.fromRGBO(0, 0, 190, 1),
             Color.fromRGBO(36, 61, 166, 1),
+
+            //Color.fromRGBO(0, 0, 190, 1),
+            //Color.fromRGBO(0, 87, 153, 60)
           ],
         ),
         //borderRadius: BorderRadius.circular(18),
