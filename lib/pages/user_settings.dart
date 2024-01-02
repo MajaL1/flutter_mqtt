@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/api_service.dart';
@@ -124,12 +123,11 @@ class _UserSettingsState extends State<UserSettings> {
     SmartMqtt.instance.isSaved = false;
 
     debugPrint("user_settings initState");
-    debugPrint("WidgetsBinding");
+
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    // widget.manager.disconnect();
+    // print("SchedulerBinding");
     //});
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      // widget.manager.disconnect();
-      // print("SchedulerBinding");
-    });
   }
 
   /* Widget _connectToTopic() {
@@ -357,73 +355,103 @@ class _UserSettingsState extends State<UserSettings> {
                 } else if (item.editableSetting == Constants.LO_ALARM_JSON) {
                   value = item.loAlarm.toString();
                 }
+
+                String unitText = UnitsConstants.getUnits(u);
+
                 bool savePressed = false;
                 TextEditingController controller = TextEditingController();
                 return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
-                        top: 40.0, bottom: 1.0, left: 10.0, right: 40.0),
+                        top: 30.0, bottom: 1.0, left: 10.0, right: 40.0),
                     child: Column(children: [
                       Container(
+                          //color: Colors.tealAccent,
+                          alignment: Alignment.center,
+                          decoration: index == 0
+                              ? Utils.buildBoxDecorationSettings()
+                              : null,
+                          padding: EdgeInsets.only(bottom: 5),
                           //padding: EdgeInsets.all(5),
-                          child: Row(children: [
-                        index == 0
-                            ? Container(
-                                //padding: EdgeInsets.all(5),
-
-                                child: Row(children: [
-                                Container(
-                                    padding: EdgeInsets.all(5),
-                                    child: Column(children: [
-                                      Text(
-                                        "Device: ",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          letterSpacing: 0.1,
+                          child: Wrap(children: [
+                            index == 0
+                                ? Container(
+                                    // color: Colors.red,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.all(15),
+                                    child: Wrap(children: [
+                                      SizedBox(
+                                          // padding: EdgeInsets.all(5),
+                                          child: Wrap(children: [
+                                        const Text(
+                                          "Device: ",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            letterSpacing: 1,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        "$deviceName",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 18,
-                                          letterSpacing: 1,
+                                        Text(
+                                          "$deviceName",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 18,
+                                            letterSpacing: 1.1,
+                                          ),
                                         ),
-                                      ),
-                                      Text("\n"),
-                                      Column(
-                                          // padding: EdgeInsets.only(bottom: 15),
-
-                                          children: [
-                                            Text(
-                                                "sensor address: $sensorAddress, units: $u"),
-                                            Text("\n"),
-                                          ])
+                                        Row(children: [Text("\n")]),
+                                        SizedBox(
+                                            child: Text("Sensor address:  ",
+                                                style: const TextStyle(
+                                                  letterSpacing: 0.8,
+                                                ))),
+                                        SizedBox(
+                                            child: Text("$sensorAddress",
+                                                style: const TextStyle(
+                                                  letterSpacing: 0.8,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w800,
+                                                ))),
+                                        Row(children: [Text("\n")]),
+                                        const SizedBox(
+                                            child: Text(
+                                          "units:  ",
+                                          style: TextStyle(),
+                                        )),
+                                        SizedBox(
+                                            child: Text(
+                                          "$unitText",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 14,
+                                            letterSpacing: 0.8,
+                                          ),
+                                        ))
+                                      ]))
                                     ]))
-                              ]))
-                            : const Text(""),
-                      ])),
+                                : const Text(""),
+                          ])),
+                      Container(height: 40),
                       Container(
-                          color: Color.fromRGBO(104, 205, 255, 0.1),
+                          // color: Color.fromRGBO(104, 205, 255, 0.1),
                           child: Column(children: [
-                            /* const Padding(
+                        /* const Padding(
                               padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
                             ), */
-                            // Column(children: [Text("a1"), Text("a2")]),
-                            settingToChange != Constants.U_JSON
-                                ? _buildEditableSettingsItem1(
-                                    sensorAddress,
-                                    index,
-                                    u,
-                                    settingToChange,
-                                    value,
-                                    controller,
-                                    item,
-                                    savePressed,
-                                    textControllerList[index])
-                                : Container(height: 0)
-                            //ListTile(enabled: false)
-                          ]))
+                        // Column(children: [Text("a1"), Text("a2")]),
+                        settingToChange != Constants.U_JSON
+                            ? _buildEditableSettingsTest2(
+                                sensorAddress,
+                                index,
+                                u,
+                                settingToChange,
+                                value,
+                                controller,
+                                item,
+                                savePressed,
+                                textControllerList[index])
+                            : Container(height: 0)
+                        //ListTile(enabled: false)
+                      ]))
                     ]));
               });
         }
@@ -449,7 +477,9 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  ListTile _buildEditableSettingsItem(
+
+
+  Widget _buildEditableSettingsTest2(
       String sensorAddress,
       int index,
       int? u,
@@ -461,41 +491,38 @@ class _UserSettingsState extends State<UserSettings> {
       TextEditingController textController) {
     String settingText = "";
 
-    String unitText = UnitsConstants.getUnits(u);
-
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
-      settingText = "High alarm:  ";
+      settingText = " High alarm:  ";
     }
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
-      settingText = "Low alarm:  ";
+      settingText = " Low alarm:  ";
     }
-    return ListTile(
-      title: index == 0
-          ? Text(
-              "Sensor address: $sensorAddress, units: $unitText \n",
-              maxLines: 2,
-            )
-          : Container(), //Text("", maxLines: 1),
-      contentPadding:
-          const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
-      /*leading: Text(
-        "Sensor address: $sensorAddress",
-      ),*/
-
-      subtitle: Row(
-        children: <Widget>[
-          Text(
-            settingText,
-          ),
-          const Padding(
-            padding: EdgeInsets.only(right: 10.0),
-          ),
+    return Container(
+        //width: 400,
+        child: Wrap(
+      children: [
+        Wrap(children: [
           Container(
+               padding: const EdgeInsets.only(
+                 top: 15, bottom: 0, left: 0, right: 0),
+              //  height: 40,
+            alignment: Alignment.center,
+              width: 100,
+              child: Text(settingText,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: const TextStyle(
+                      color: Colors.indigo,
+                      // letterSpacing: 4,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold))),
+          Container(width: 4),
+          SizedBox(
               height: 50,
-              width: 90,
+              width: 80,
+              //padding: EdgeInsets.only(
+              //  top: 0, bottom: 0, left: 25, right: 25),
               child: TextFormField(
-                  style: TextStyle(
-                      backgroundColor: Colors.white, color: Colors.white),
                   decoration: _setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -508,14 +535,12 @@ class _UserSettingsState extends State<UserSettings> {
                     RequiredValidator(errorText: "Required value"),
                     MaxLengthValidator(6, errorText: "Value too long")
                   ]))),
-          const Padding(
-            padding: EdgeInsets.only(right: 10.0),
-          ),
+          Container(width: 4),
           Container(
               height: 50,
-              width: 70,
-              // margin: const EdgeInsets.only(top: 20),
-              decoration: Utils.buildBoxDecoration(),
+              width: 80,
+              margin: const EdgeInsets.only(right: 40),
+              decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
               child: //SmartMqtt.instance.isSaved != true
                   //  ?
                   TextButton(
@@ -525,148 +550,15 @@ class _UserSettingsState extends State<UserSettings> {
                   setState(() {
                     savePressed = !savePressed;
                   });
-                  //saveMqttSettingsTest();
                 },
                 child: const Text(
                   Constants.SAVE_DEVICE_SETTINGS,
                   style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
-              )
-              /* : IconButton(
-                    icon: const Icon(Icons.access_alarm_outlined),
-                    onPressed: () {},
-
-                  ),*/
-              ),
-          /*SmartMqtt.instance.isSaved == true
-              ? Text("=saved")
-              : Text("=not saved"), */
-          //Text("aa")
-          /*
-          ChangeNotifierProvider.value(
-              value: SmartMqtt.instance,
-              child: Consumer<SmartMqtt>(builder: (context, singleton, child) {
-                return Text(singleton.isSaved.toString());
-              })),
-              */
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEditableSettingsItem1(
-      String sensorAddress,
-      int index,
-      int? u,
-      String settingToChange,
-      String value,
-      TextEditingController controller,
-      UserDataSettings item,
-      bool savePressed,
-      TextEditingController textController) {
-    String settingText = "";
-
-    String unitText = UnitsConstants.getUnits(u);
-
-    if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
-      settingText = " High alarm:  ";
-    }
-    if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
-      settingText = " Low alarm:  ";
-    }
-    return Container(
-        width: 400,
-        child: Table(
-          /*  title: index == 0
-          ? Text(
-        "Sensor address: $sensorAddress, units: $unitText \n",
-        maxLines: 2,
-      )
-          : Container(), //Text("", maxLines: 1),
-      contentPadding:
-      const EdgeInsets.only(left: 20, right: 10, top: 0, bottom: 0),
-      */
-          children: [
-            index == 0
-                ? TableRow(children: [
-                    /* Container(
-                        width: 300,
-                        child: Column(children: [
-                          Text("sensor address: $sensorAddress , units: $u")
-                        ])), */
-                    Container(width: 0),
-                    Container(width: 0),
-                    Container(
-                      width: 0,
-                    )
-                  ])
-                : TableRow(children: [
-                    Container(width: 0),
-                    Container(width: 0),
-                    Container(width: 0)
-                  ]),
-            TableRow(
-                /* decoration: const BoxDecoration(
-                    border: Border(
-                  top: BorderSide(color: Colors.black),
-                  left: BorderSide(color: Colors.black),
-                  right: BorderSide(color: Colors.black),
-                  bottom: BorderSide(color: Colors.black),
-                )), */
-                children: [
-                  Container(
-                      padding: EdgeInsets.only(
-                          top: 15, bottom: 0, left: 5, right: 5),
-                      width: 300,
-                      child: Text(settingText,
-                          maxLines: 1,
-                          softWrap: false,
-                          style: const TextStyle(
-                              color: Colors.indigo,
-                              // letterSpacing: 4,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold))),
-                  Container(
-                      height: 50,
-                      width: 70,
-                      padding: EdgeInsets.only(
-                          top: 0, bottom: 0, left: 25, right: 25),
-                      child: TextFormField(
-                          decoration: _setInputDecoration(value),
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          enableInteractiveSelection: false,
-                          // showCursor: false,
-                          controller: textController,
-                          onChanged: (val) {},
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: "Required value"),
-                            MaxLengthValidator(6, errorText: "Value too long")
-                          ]))),
-                  Container(
-                      height: 50,
-                      width: 20,
-                      margin: const EdgeInsets.only(right: 40),
-                      decoration: Utils.buildBoxDecoration(),
-                      child: //SmartMqtt.instance.isSaved != true
-                          //  ?
-                          TextButton(
-                        onPressed: () {
-                          saveMqttSettings(sensorAddress, item, textController,
-                              settingToChange);
-                          setState(() {
-                            savePressed = !savePressed;
-                          });
-                        },
-                        child: const Text(
-                          Constants.SAVE_DEVICE_SETTINGS,
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                      )),
-                ]),
-          ],
-        ));
+              )),
+        ]),
+      ],
+    ));
   }
 
 // test method with dummy parameters

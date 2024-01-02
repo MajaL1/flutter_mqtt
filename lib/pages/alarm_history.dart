@@ -42,7 +42,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                 Container(
                   height: 30,
                   width: 100,
-                  decoration: Utils.buildLoginButtonBoxDecoration(),
+                  decoration: Utils.buildHistoryButtonDecoration(),
                   child: TextButton(
                       onPressed: () {
                         clearHistory();
@@ -88,7 +88,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                             border: TableBorder.all(
                                 color: Colors.lightBlue.shade50),
                             columnWidths: const {
-                              0: FixedColumnWidth(15.0),
+                              0: FixedColumnWidth(5.0),
                               1: FixedColumnWidth(70.0),
                               2: FixedColumnWidth(80.0),
                               3: FixedColumnWidth(80.0),

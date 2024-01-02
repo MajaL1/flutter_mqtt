@@ -59,9 +59,9 @@ class Utils {
     return file.path;
   }
 
-  /* static BoxDecoration buildBoxDecoration() {
+   static BoxDecoration buildBoxDecorationSettings() {
     return BoxDecoration(
-      color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+      color: Colors.white60, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
       boxShadow: [
         BoxShadow(
@@ -73,7 +73,7 @@ class Utils {
       ],
     );
   }
-*/
+
 
   static BoxDecoration buildButtonDecoration() {
     return BoxDecoration(
@@ -166,7 +166,7 @@ class Utils {
   static buildHistoryButtonDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
-      borderRadius: BorderRadius.circular(9),
+      borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.15),
@@ -177,11 +177,28 @@ class Utils {
       ],
       gradient: const RadialGradient(
         center: Alignment(0, 0),
-        radius: 3,
-        colors: [
-          Color.fromRGBO(0, 87, 153, 60),
-        Color.fromRGBO(0, 0, 190, 1)],
+        radius: 4,
+        colors: [Color.fromRGBO(0, 0, 190, 1), Color.fromRGBO(0, 87, 153, 60)],
+      ),
+    );
+  }
 
+  static buildSaveMqttSettingsButtonDecoration() {
+    return BoxDecoration(
+      color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.15),
+          spreadRadius: 4,
+          blurRadius: 8,
+          offset: Offset(0, 1), // changes position of shadow
+        ),
+      ],
+      gradient: const RadialGradient(
+        center: Alignment(0, 0),
+        radius: 4,
+        colors: [Color.fromRGBO(0, 0, 190, 1), Color.fromRGBO(0, 87, 153, 60)],
       ),
     );
   }

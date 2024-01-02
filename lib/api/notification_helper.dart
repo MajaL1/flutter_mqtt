@@ -53,7 +53,7 @@ class NotificationHelper extends StatelessWidget {
       await flutterLocalNotificationsPlugin.initialize(
         const InitializationSettings(
           iOS: DarwinInitializationSettings(),
-          android: AndroidInitializationSettings('bell2'),
+          android: AndroidInitializationSettings('ic_launcher'),
         ),
       );
     }
