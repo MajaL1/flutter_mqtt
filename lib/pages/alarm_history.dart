@@ -30,7 +30,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-           // backgroundColor: Colors.,
+            backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
               appBar: CustomAppBar(Constants.HISTORY),
               //drawer: NavDrawer(),
               body: SingleChildScrollView(

@@ -155,6 +155,7 @@ class SmartMqtt extends ChangeNotifier {
         b: 2,
         t: 3);
     NotificationHelper.sendMessage(alarm);
+
     /* preferences.remove("settings_mqtt");
     preferences.remove("alarm_mqtt");
     preferences.clear(); */

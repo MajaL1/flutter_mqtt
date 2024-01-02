@@ -153,6 +153,7 @@ class _UserSettingsState extends State<UserSettings> {
     }); */
 
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
       /*appBar: AppBar(
@@ -363,7 +364,7 @@ class _UserSettingsState extends State<UserSettings> {
                 return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.only(
-                        top: 30.0, bottom: 1.0, left: 10.0, right: 40.0),
+                        top: 30.0, bottom: 1.0, left: 0.0, right: 30.0),
                     child: Column(children: [
                       Container(
                           //color: Colors.tealAccent,
@@ -477,8 +478,6 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-
-
   Widget _buildEditableSettingsTest2(
       String sensorAddress,
       int index,
@@ -497,29 +496,27 @@ class _UserSettingsState extends State<UserSettings> {
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
       settingText = " Low alarm:  ";
     }
-    return Container(
-        //width: 400,
-        child: Wrap(
+    return Wrap(
       children: [
         Wrap(children: [
           Container(
-               padding: const EdgeInsets.only(
-                 top: 15, bottom: 0, left: 0, right: 0),
+              padding:
+                  const EdgeInsets.only(top: 15, bottom: 0, left: 0, right: 0),
               //  height: 40,
-            alignment: Alignment.center,
-              width: 100,
+              alignment: Alignment.center,
+              width: 90,
               child: Text(settingText,
                   maxLines: 1,
                   softWrap: false,
                   style: const TextStyle(
                       color: Colors.indigo,
                       // letterSpacing: 4,
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold))),
-          Container(width: 4),
+          Container(width: 14),
           SizedBox(
               height: 50,
-              width: 80,
+              width: 90,
               //padding: EdgeInsets.only(
               //  top: 0, bottom: 0, left: 25, right: 25),
               child: TextFormField(
@@ -535,10 +532,10 @@ class _UserSettingsState extends State<UserSettings> {
                     RequiredValidator(errorText: "Required value"),
                     MaxLengthValidator(6, errorText: "Value too long")
                   ]))),
-          Container(width: 4),
+          Container(width: 14),
           Container(
               height: 50,
-              width: 80,
+              width: 70,
               margin: const EdgeInsets.only(right: 40),
               decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
               child: //SmartMqtt.instance.isSaved != true
@@ -558,7 +555,7 @@ class _UserSettingsState extends State<UserSettings> {
               )),
         ]),
       ],
-    ));
+    );
   }
 
 // test method with dummy parameters
@@ -610,8 +607,12 @@ class _UserSettingsState extends State<UserSettings> {
   _setInputDecoration(val) {
     return InputDecoration(
         labelText: val,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1), borderRadius: BorderRadius.circular(14)),
         focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 3.0),
+          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
         ),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),

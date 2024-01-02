@@ -191,6 +191,7 @@ void onStart(ServiceInstance service) async {
     if (MQTTAppConnectionState.disconnected ==
         SmartMqtt.instance.currentState) {
       print("SmartMqtt.instance.initializeMQTTClient()");
+      /** Todo: if logged in _reconnect*/
 
       /*** ce je povezava prekinjena, reconnect **/
       await _reconnectToMqtt(currState);
