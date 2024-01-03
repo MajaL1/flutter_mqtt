@@ -74,13 +74,13 @@ class _NavDrawerState extends State<NavDrawer> {
                         child: ListView(
                       children: [
                         buildDrawerMainListTile(),
-                        const Divider(height: 20),
+                        //const Divider(height: 20),
                         Container(
                             decoration: buildDrawerDecorationListTile(),
                             child: ListTile(
                               hoverColor: Colors.blue,
-                              tileColor: Colors.blue,
-                              selectedColor: Colors.blueAccent,
+                              //tileColor: Colors.blue,
+                              //selectedColor: Colors.blueAccent,
                               //style: ,
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 16.0),
@@ -107,7 +107,7 @@ class _NavDrawerState extends State<NavDrawer> {
                             decoration: buildDrawerDecorationListTile(),
                             child: ListTile(
                               hoverColor: Colors.blue,
-                              tileColor: Colors.blue,
+                              //tileColor: Colors.blue,
                               dense: false,
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 16.0),
@@ -133,7 +133,7 @@ class _NavDrawerState extends State<NavDrawer> {
                             decoration: buildDrawerDecorationListTile(),
                             child: ListTile(
                                 hoverColor: Colors.blue,
-                                tileColor: Colors.blue,
+                                //tileColor: Colors.blue,
                                 dense: false,
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 5, horizontal: 16.0),
@@ -204,8 +204,8 @@ class _NavDrawerState extends State<NavDrawer> {
     return Container(
         decoration: buildBoxDecorationMainTile(),
         child: ListTile(
-            hoverColor: Colors.blue,
-            tileColor: Colors.indigo,
+            //hoverColor: Colors.blue,
+            //tileColor: Colors.indigo,
             dense: false,
             leading: const Icon(
               Icons.person_3_rounded,

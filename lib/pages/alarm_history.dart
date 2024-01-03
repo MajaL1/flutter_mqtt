@@ -81,7 +81,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                           .format(snapshot.data![index].ts!);
                       //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
                       return Container(
+                        //color: Colors.white,
                         decoration: const BoxDecoration(
+
+                          color: Colors.white,
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
                         child: Table(
