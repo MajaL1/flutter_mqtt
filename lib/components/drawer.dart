@@ -83,7 +83,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               //selectedColor: Colors.blueAccent,
                               //style: ,
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 16.0),
+                                  vertical: 3, horizontal: 16.0),
                               dense: false,
                               visualDensity: const VisualDensity(vertical: -4),
                               leading: const Icon(
@@ -110,7 +110,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               //tileColor: Colors.blue,
                               dense: false,
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 16.0),
+                                  vertical: 3, horizontal: 16.0),
                               visualDensity: const VisualDensity(vertical: -4),
                               leading: const Icon(
                                 Icons.settings,
@@ -136,7 +136,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 //tileColor: Colors.blue,
                                 dense: false,
                                 contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 16.0),
+                                    vertical: 3, horizontal: 16.0),
                                 visualDensity:
                                     const VisualDensity(vertical: -4),
                                 leading: const Icon(
@@ -214,7 +214,7 @@ class _NavDrawerState extends State<NavDrawer> {
               color: Colors.white70,
             ),
             contentPadding:
-                const EdgeInsets.only(top: 55, bottom: 35, left: 10, right: 50),
+                const EdgeInsets.only(top: 55, bottom: 35, left: 10, right: 10),
             visualDensity: VisualDensity(vertical: -4),
             enabled: false,
             title: Column(children: [
@@ -224,7 +224,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     "$username",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
-                        color: Colors.white70, letterSpacing: 2, fontSize: 18),
+                        color: Colors.white70, letterSpacing: 2, fontSize: 15),
                   )),
               /*Container(
                   child: Text(
@@ -236,7 +236,7 @@ class _NavDrawerState extends State<NavDrawer> {
                     "$email",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
-                        color: Colors.white70, letterSpacing: 0.8, fontSize: 12),
+                        color: Colors.white70, letterSpacing: 0.8, fontSize: 10),
                   )),
             ])));
   }
@@ -270,6 +270,8 @@ class _NavDrawerState extends State<NavDrawer> {
           end: Alignment.bottomRight,
           colors: [
             //Colors.black,
+            Colors.black,
+
             Color.fromRGBO(16, 30, 66, 1),
 
             Color.fromRGBO(36, 61, 166, 1),
