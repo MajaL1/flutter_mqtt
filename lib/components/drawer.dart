@@ -54,7 +54,7 @@ class _NavDrawerState extends State<NavDrawer> {
     return Container(
         // color: Colors.black,
         width: MediaQuery.of(context).size.width * 0.50,
-        height: 650,
+        height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
         ),
@@ -83,7 +83,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               //selectedColor: Colors.blueAccent,
                               //style: ,
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 3, horizontal: 16.0),
+                                  vertical: 2, horizontal: 16.0),
                               dense: false,
                               visualDensity: const VisualDensity(vertical: -4),
                               leading: const Icon(
@@ -110,7 +110,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               //tileColor: Colors.blue,
                               dense: false,
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 3, horizontal: 16.0),
+                                  vertical: 2, horizontal: 16.0),
                               visualDensity: const VisualDensity(vertical: -4),
                               leading: const Icon(
                                 Icons.settings,
@@ -136,7 +136,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 //tileColor: Colors.blue,
                                 dense: false,
                                 contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 3, horizontal: 16.0),
+                                    vertical: 2, horizontal: 16.0),
                                 visualDensity:
                                     const VisualDensity(vertical: -4),
                                 leading: const Icon(
@@ -244,9 +244,15 @@ class _NavDrawerState extends State<NavDrawer> {
   BoxDecoration buildDrawerDecorationListTile() {
     return const BoxDecoration(
         // Create a gradient background
-        gradient: const LinearGradient(
+        gradient:  LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
+         /* colors: [
+            Colors.black,
+            Color.fromRGBO(0, 0, 190, 1),
+            //Color.fromRGBO(0, 87, 153, 60)
+          ], */
+
           colors: [
             Colors.black,
            // Color.fromRGBO(0, 0, 190, 1),
