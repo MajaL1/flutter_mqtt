@@ -32,11 +32,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),*/
         ),
         shadowColor: Colors.black,
+        foregroundColor: Colors.lightBlue,
         title: Container(
             //decoration: Utils.buildAppBarDecoration(),
             child: Text(
           widget.title,
-          style: const TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16, color: Colors.white, letterSpacing: 1),
         )));
   }
 }

@@ -96,7 +96,10 @@ class SmartMqtt extends ChangeNotifier {
     client.unsubscribe(topic);
   }
 
-  /// The unsolicited disconnect callback
+  void onAutoReconnect() {
+    print("onAutoReconnect");
+  }
+    /// The unsolicited disconnect callback
   void onDisconnected() {
     print('EXAMPLE::OnDisconnected client callback - Client disconnection');
     if (client.connectionStatus!.returnCode ==
@@ -293,6 +296,7 @@ class SmartMqtt extends ChangeNotifier {
     client.autoReconnect = true;
     client.setProtocolV311();
     client.onDisconnected = onDisconnected;
+    client.onAutoReconnect = onAutoReconnect;
     client.logging(on: true);
     client.onConnected = onConnected;
     client.onSubscribed = onSubscribed;

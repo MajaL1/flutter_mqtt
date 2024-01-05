@@ -49,9 +49,9 @@ class Constants {
 
 
   // screen titles
-  static const SETTINGS = "Settings";
-  static const HISTORY = "History";
-  static const ALARMS = "Alarms";
+  static const SETTINGS = "SETTINGS";
+  static const HISTORY = "HISTORY";
+  static const ALARMS = "ALARMS";
   static const LOGIN_PAGE = "Login page";
 
   // device settings

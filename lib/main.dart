@@ -36,9 +36,7 @@ const String isolateName = 'isolate';
 SharedPreferences? prefs;
 
 Future<void> main() async {
-  //tzl.initializeTimeZones();
   tzl.initializeTimeZones();
-  //tz.initializeTimeZone();
   WidgetsFlutterBinding.ensureInitialized();
   //await initializeService();
 
@@ -108,6 +106,8 @@ Future<void> initializeService() async {
       onBackground: onIosBackground,
     ),
   );
+  debugPrint("main.dart end initializing background service");
+
 }
 
 // to ensure this is executed
@@ -347,23 +347,24 @@ class _NotificationsAppState extends State<NotificationsApp> {
     });
 
     debugPrint("--handleTransition $name");
-    if (name == "pause") {
-      initializeService();
+    if (name == "detach") {
       debugPrint("--handleTransition $name detaching from app");
-      //if (MQTTAppConnectionState.disconnected ==
-      //   SmartMqtt.instance.currentState) {
 
-      Future.delayed(const Duration(milliseconds: 500), () {
-        print("SmartMqtt.instance.initializeMQTTClient()");
-        /** Todo: if logged in _reconnect*/
-        String currState = SmartMqtt.instance.currentState.toString();
-        /*** ce je povezava prekinjena, reconnect **/
-        _reconnectToMqtt(currState);
+      initializeService().then((value) =>
+      {
+        //if (MQTTAppConnectionState.disconnected ==
+        //   SmartMqtt.instance.currentState) {
 
-        setState(() {});
+        Future.delayed(const Duration(milliseconds: 500), () {
+          print("SmartMqtt.instance.initializeMQTTClient()");
+          /** Todo: if logged in _reconnect*/
+          String currState = SmartMqtt.instance.currentState.toString();
+          /*** ce je povezava prekinjena, reconnect **/
+          _reconnectToMqtt(currState);
+        })
+
+        // }
       });
-
-      // }
     }
 
     /*_scrollController.animateTo(
@@ -378,6 +379,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
       _state = state;
     });
   }
+
 
   Future<void> initAlarmHistoryList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
