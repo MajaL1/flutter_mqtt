@@ -7,6 +7,7 @@ import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -17,7 +18,6 @@ import 'package:timezone/data/latest.dart' as tzl;
 
 import 'model/alarm.dart';
 import 'model/constants.dart';
-import 'mqtt/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -40,7 +40,7 @@ Future<void> main() async {
   tzl.initializeTimeZones();
   //tz.initializeTimeZone();
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeService();
+  //await initializeService();
 
   SharedPreferences.getInstance().then((value) {
     if (value.getBool("isLoggedIn") != null) {
@@ -57,6 +57,7 @@ Future<void> main() async {
 
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
+  debugPrint("main.dart initializing background service");
 
   /// OPTIONAL, using custom notification channel id
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -88,7 +89,6 @@ Future<void> initializeService() async {
     androidConfiguration: AndroidConfiguration(
       // this will be executed when app is in foreground or background in separated isolate
       onStart: onStart,
-
       // auto start service
       autoStart: true,
       isForegroundMode: true,
@@ -163,30 +163,9 @@ void onStart(ServiceInstance service) async {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
         /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-        /* flutterLocalNotificationsPlugin.show(
-          888,
-          'COOL SERVICE',
-          'Awesome ${DateTime.now()}',
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'my_foreground',
-              'MY FOREGROUND SERVICE',
-              icon: 'ic_bg_service_small',
-              ongoing: true,
-            ),
-          ),
-        ); */
-
-        // if you don't using custom notification, uncomment this
-        /* service.setForegroundNotificationInfo(
-          title: "My App Service",
-          content: "Updated at ${DateTime.now()}",
-        );
-
-        */
       }
     }
-    String currState = SmartMqtt.instance.currentState.toString();
+    /*String currState = SmartMqtt.instance.currentState.toString();
 
     if (MQTTAppConnectionState.disconnected ==
         SmartMqtt.instance.currentState) {
@@ -196,6 +175,7 @@ void onStart(ServiceInstance service) async {
       /*** ce je povezava prekinjena, reconnect **/
       await _reconnectToMqtt(currState);
     }
+*/
 
     /// you can see this log in logcat
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
@@ -284,6 +264,9 @@ class NotificationsApp extends StatefulWidget {
 
 class _NotificationsAppState extends State<NotificationsApp> {
   var prefs = 1;
+  late final AppLifecycleListener _listener;
+  final List<String> _states = <String>[];
+  late AppLifecycleState? _state;
 
   //static SendPort? uiSendPort;
 
@@ -303,8 +286,97 @@ class _NotificationsAppState extends State<NotificationsApp> {
     debugPrint("main init state: ");
     initAlarmHistoryList();
     //NotificationHelper.initializeService();
-
+    //WidgetsBinding.instance.addObserver();
     super.initState();
+    _state = SchedulerBinding.instance.lifecycleState;
+    _listener = AppLifecycleListener(
+      onShow: () => _handleTransition('show'),
+      onResume: () => _handleTransition('resume'),
+      onHide: () => _handleTransition('hide'),
+      onInactive: () => _handleTransition('inactive'),
+      onPause: () => _handleTransition('pause'),
+      onDetach: () => _handleTransition('detach'),
+      onRestart: () => _handleTransition('restart'),
+      onExitRequested: () => _onExitRequested(),
+      // This fires for each state change. Callbacks above fire only for
+      // specific state transitions.
+      onStateChange: _handleStateChange,
+    );
+    if (_state != null) {
+      _states.add(_state!.name);
+    }
+  }
+
+    Future<AppExitResponse> _onExitRequested() async {
+    final response = await showDialog<AppExitResponse>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Are you sure you want to quit this app?'),
+        content: const Text('All unsaved progress will be lost.'),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(AppExitResponse.cancel);
+            },
+          ),
+          TextButton(
+            child: const Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop(AppExitResponse.exit);
+            },
+          ),
+        ],
+      ),
+    );
+
+    return response ?? AppExitResponse.exit;
+  }
+
+  @override
+  void dispose() {
+    debugPrint("main.dart - dispose");
+    _listener.dispose();
+    super.dispose();
+  }
+
+  void _handleTransition(String name) {
+    setState(() {
+      _states.add(name);
+    });
+
+    debugPrint("--handleTransition $name");
+    if (name == "pause") {
+      initializeService();
+      debugPrint("--handleTransition $name detaching from app");
+      //if (MQTTAppConnectionState.disconnected ==
+      //   SmartMqtt.instance.currentState) {
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        print("SmartMqtt.instance.initializeMQTTClient()");
+        /** Todo: if logged in _reconnect*/
+        String currState = SmartMqtt.instance.currentState.toString();
+        /*** ce je povezava prekinjena, reconnect **/
+        _reconnectToMqtt(currState);
+
+        setState(() {});
+      });
+
+      // }
+    }
+
+    /*_scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    ); */
+  }
+
+  void _handleStateChange(AppLifecycleState state) {
+    setState(() {
+      _state = state;
+    });
   }
 
   Future<void> initAlarmHistoryList() async {
@@ -335,26 +407,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         builder: (context, child) => Builder(builder: (context) {
               //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
               debugPrint("build main.dart");
-              //setCurrentAppState(appState);
-              return MaterialApp(home: FutureBuilder(
-                  //future: initializeConnection(appState),
-                  builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  /*if (snapshot.hasError) {
-                            return ErrorWidget(Exception(
-                                'Error occured when fetching data from database'));
-                          } else if (!snapshot.hasData) {
-                            debugPrint("snapshot:: $snapshot");
-                            return const Center(child: Text('Data is empty!'));
-                          */
-                  return FirstScreen.base();
-                }
-                // }
-              }));
+              return MaterialApp(home: FirstScreen.base());
             }));
   }
 }
