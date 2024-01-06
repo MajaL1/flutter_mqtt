@@ -18,6 +18,7 @@ import 'package:timezone/data/latest.dart' as tzl;
 
 import 'model/alarm.dart';
 import 'model/constants.dart';
+import 'mqtt/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -38,7 +39,7 @@ SharedPreferences? prefs;
 Future<void> main() async {
   tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
-  //await initializeService();
+  await initializeService();
 
   SharedPreferences.getInstance().then((value) {
     if (value.getBool("isLoggedIn") != null) {
@@ -107,7 +108,6 @@ Future<void> initializeService() async {
     ),
   );
   debugPrint("main.dart end initializing background service");
-
 }
 
 // to ensure this is executed
@@ -165,17 +165,16 @@ void onStart(ServiceInstance service) async {
         /// the notification id must be equals with AndroidConfiguration when you call configure() method.
       }
     }
-    /*String currState = SmartMqtt.instance.currentState.toString();
+    String currState = SmartMqtt.instance.client.connectionStatus.toString();
 
-    if (MQTTAppConnectionState.disconnected ==
-        SmartMqtt.instance.currentState) {
+    if (SmartMqtt.instance.client.connectionStatus.toString() ==
+        MQTTAppConnectionState.disconnected) {
       print("SmartMqtt.instance.initializeMQTTClient()");
       /** Todo: if logged in _reconnect*/
 
       /*** ce je povezava prekinjena, reconnect **/
       await _reconnectToMqtt(currState);
     }
-*/
 
     /// you can see this log in logcat
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
@@ -307,7 +306,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     }
   }
 
-    Future<AppExitResponse> _onExitRequested() async {
+  Future<AppExitResponse> _onExitRequested() async {
     final response = await showDialog<AppExitResponse>(
       context: context,
       barrierDismissible: false,
@@ -350,21 +349,19 @@ class _NotificationsAppState extends State<NotificationsApp> {
     if (name == "detach") {
       debugPrint("--handleTransition $name detaching from app");
 
-      initializeService().then((value) =>
-      {
-        //if (MQTTAppConnectionState.disconnected ==
-        //   SmartMqtt.instance.currentState) {
+      initializeService().then((value) => {
+            // if(SmartMqtt.instance.client.connectionStatus == MQTTAppConnectionState.disconnected)
 
-        Future.delayed(const Duration(milliseconds: 500), () {
-          print("SmartMqtt.instance.initializeMQTTClient()");
-          /** Todo: if logged in _reconnect*/
-          String currState = SmartMqtt.instance.currentState.toString();
-          /*** ce je povezava prekinjena, reconnect **/
-          _reconnectToMqtt(currState);
-        })
+            Future.delayed(const Duration(milliseconds: 500), () {
+              print("SmartMqtt.instance.initializeMQTTClient()");
+              /** Todo: if logged in _reconnect*/
+              String currState = SmartMqtt.instance.currentState.toString();
+              /*** ce je povezava prekinjena, reconnect **/
+              _reconnectToMqtt(currState);
+            })
 
-        // }
-      });
+            // }
+          });
     }
 
     /*_scrollController.animateTo(
@@ -379,7 +376,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
       _state = state;
     });
   }
-
 
   Future<void> initAlarmHistoryList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

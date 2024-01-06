@@ -26,7 +26,7 @@ class SmartMqtt extends ChangeNotifier {
 
   MQTTAppConnectionState currentState = MQTTAppConnectionState.disconnected;
 
-  late MqttServerClient client;
+  late MqttServerClient  client;
   late MqttConnectionState connectionState;
 
   late bool isConnected = false;
