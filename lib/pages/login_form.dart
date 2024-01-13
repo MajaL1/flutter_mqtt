@@ -109,7 +109,7 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setString("user_topic_list", userTopicListPref);
           });
 
-          await mqtt.initializeMQTTClient();
+          //await mqtt.initializeMQTTClient();
           // inicializiraj servis za posiljanje sporocil
           await NotificationHelper.initializeService();
           await SharedPreferences.getInstance().then((value) {

@@ -11,6 +11,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -165,16 +166,18 @@ void onStart(ServiceInstance service) async {
         /// the notification id must be equals with AndroidConfiguration when you call configure() method.
       }
     }
-    String currState = SmartMqtt.instance.client.connectionStatus.toString();
+    if(SmartMqtt.instance.currentState == MQTTAppConnectionState.disconnected) {
+      debugPrint("main.dart - disconnected:");
 
-    if (SmartMqtt.instance.client.connectionStatus.toString() ==
-        MQTTAppConnectionState.disconnected) {
+
       print("SmartMqtt.instance.initializeMQTTClient()");
       /** Todo: if logged in _reconnect*/
 
       /*** ce je povezava prekinjena, reconnect **/
-      await _reconnectToMqtt(currState);
+      await _reconnectToMqtt();
     }
+
+
 
     /// you can see this log in logcat
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
@@ -202,7 +205,11 @@ void onStart(ServiceInstance service) async {
   });
 }
 
-Future<void> _reconnectToMqtt(String currState) async {
+Future<void> _reconnectToMqtt() async {
+
+  /**
+   * Todo: detect if app is turned off
+   * ***/
   String username;
   String mqttPassword;
 
@@ -243,12 +250,12 @@ Future<void> _reconnectToMqtt(String currState) async {
         username: username,
         mqttPass: mqttPassword,
         topicList: userTopicList);
-    await mqtt.initializeMQTTClient();
+    //await mqtt.initializeMQTTClient();
     await SmartMqtt.instance.client.connect();
     print("================== connecting to client =========================");
     print("===========================================");
 
-    print("current smartmqtt state: $currState");
+    print("current smartmqtt state: $SmartMqtt.instance.client");
   }
 }
 
@@ -357,18 +364,12 @@ class _NotificationsAppState extends State<NotificationsApp> {
               /** Todo: if logged in _reconnect*/
               String currState = SmartMqtt.instance.currentState.toString();
               /*** ce je povezava prekinjena, reconnect **/
-              _reconnectToMqtt(currState);
+              _reconnectToMqtt();
             })
 
             // }
           });
     }
-
-    /*_scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
-    ); */
   }
 
   void _handleStateChange(AppLifecycleState state) {

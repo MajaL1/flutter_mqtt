@@ -49,8 +49,10 @@ class SmartMqtt extends ChangeNotifier {
     _instance.username = username;
     _instance.mqttPass = mqttPass;
     _instance.topicList = topicList;
+    _instance.initializeMQTTClient();
     return _instance;
   }
+
 
   bool debug = true;
   late bool isSaved = false;
@@ -101,10 +103,11 @@ class SmartMqtt extends ChangeNotifier {
   }
     /// The unsolicited disconnect callback
   void onDisconnected() {
-    print('EXAMPLE::OnDisconnected client callback - Client disconnection');
+    SmartMqtt.instance.currentState = MQTTAppConnectionState.disconnected;
+    print(':OnDisconnected client callback - Client disconnection');
     if (client.connectionStatus!.returnCode ==
         MqttConnectReturnCode.noneSpecified) {
-      print('EXAMPLE::OnDisconnected callback is solicited, this is correct');
+      print(":OnDisconnected callback is solicited, this is correct");
     }
     currentState = MQTTAppConnectionState.disconnected;
   }
