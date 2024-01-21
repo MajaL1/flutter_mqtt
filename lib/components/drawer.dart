@@ -3,7 +3,7 @@ import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pages/data_page.dart';
+//import '../pages/data_page.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer.base({Key? key}) : super(key: key);
@@ -129,7 +129,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                           const UserSettings.base())),
                             )),
                         //const Divider(height: 15),
-                        Container(
+                       /* Container(
                             decoration: buildDrawerDecorationListTile(),
                             child: ListTile(
                                 hoverColor: Colors.blue,
@@ -153,49 +153,9 @@ class _NavDrawerState extends State<NavDrawer> {
                                 onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const DetailsPage.base())))),
-                        // const Divider(height: 5),
-                        /*ListTile(
-                      hoverColor: Colors.blue,
-                      tileColor: Colors.blue,
-                      dense: false,
-                      visualDensity: const VisualDensity(vertical: -4),
-                      leading: const Icon(
-                        Icons.alarm,
-                        color: Colors.white,
-                      ),
-                      title: const Text(
-                        'Alarms',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () => Navigator.of(context).push(
-                          // MaterialPageRoute(
-                          //     builder: (context) => const MQTTView.base())),
-                          MaterialPageRoute(
-                              builder: (context) => const AlarmsPage.base())),
-                    ),*/
-                        //const Divider(height: 10),
-                        //const Divider(height: 40),
-                        /* ListTile(
-                                hoverColor: Colors.blue,
-                                tileColor: Colors.grey,
-                                dense: false,
-                                visualDensity:
-                                    const VisualDensity(vertical: -4),
-                                leading: const Icon(
-                                  Icons.logout,
-                                  color: Colors.white,
-                                ),
-                                title: const Text(
-                                  'Logout',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                onTap: () {},
-                              ),*/
+                                            const DetailsPage.base())))
+
+                        ),*/
                       ],
                     ))))));
   }
@@ -215,13 +175,13 @@ class _NavDrawerState extends State<NavDrawer> {
             ),
             contentPadding:
                 const EdgeInsets.only(top: 55, bottom: 35, left: 10, right: 10),
-            visualDensity: VisualDensity(vertical: -4),
+            visualDensity: const VisualDensity(vertical: -4),
             enabled: false,
             title: Column(children: [
               Container(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    "$username",
+                    username,
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                         color: Colors.white70, letterSpacing: 2, fontSize: 15),
@@ -233,7 +193,7 @@ class _NavDrawerState extends State<NavDrawer> {
               Container(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    "$email",
+                    email,
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                         color: Colors.white70, letterSpacing: 0.8, fontSize: 10),

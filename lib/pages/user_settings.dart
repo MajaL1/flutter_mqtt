@@ -504,39 +504,41 @@ class _UserSettingsState extends State<UserSettings> {
                   const EdgeInsets.only(top: 15, bottom: 0, left: 0, right: 0),
               //  height: 40,
               alignment: Alignment.center,
-              width: 90,
+              width: MediaQuery.of(context).size.width/4,
               child: Text(settingText,
                   maxLines: 1,
                   softWrap: false,
                   style: const TextStyle(
                       color: Colors.indigo,
                       // letterSpacing: 4,
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold))),
-          Container(width: 14),
+          //Container(width: 5),
           SizedBox(
               height: 50,
-              width: 90,
-              //padding: EdgeInsets.only(
+              width: MediaQuery.of(context).size.width/5,
+
+    //padding: EdgeInsets.only(
               //  top: 0, bottom: 0, left: 25, right: 25),
               child: TextFormField(
                   decoration: _setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
-                  enableInteractiveSelection: false,
-                  // showCursor: false,
+                  //enableInteractiveSelection: false,
+                   showCursor: false,
                   controller: textController,
                   onChanged: (val) {},
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
                     MaxLengthValidator(6, errorText: "Value too long")
                   ]))),
-          Container(width: 14),
+          Container(width: 10),
           Container(
               height: 50,
-              width: 70,
-              margin: const EdgeInsets.only(right: 40),
+              width:  MediaQuery.of(context).size.width/6,
+
+    margin: const EdgeInsets.only(right: 10),
               decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
               child: //SmartMqtt.instance.isSaved != true
                   //  ?

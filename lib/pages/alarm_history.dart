@@ -60,13 +60,17 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, int index) {
+                      bool isHeader = index == 0;
+                      /*if(index>=1){
+                        index--;
+                      } */
                       String sensorAddress =
                           snapshot.data![index].sensorAddress.toString();
                       String hiAlarm = snapshot.data![index].hiAlarm.toString();
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
                       String alarmValue = "";
-                      bool isHeader = index == 0;
+
                       //     DateTime ts = snapshot.data![index].ts!;
 
                       if (snapshot.data![index].hiAlarm != 0 &&
@@ -77,8 +81,13 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                           snapshot.data![index].loAlarm != null) {
                         alarmValue += " Lo alarm: $loAlarm";
                       }
-                      String formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
-                          .format(snapshot.data![index].ts!);
+                      String formattedDate = "";
+
+                      if(snapshot.data![index].ts != null){
+                        formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
+                            .format(snapshot.data![index].ts!);
+
+                      }
                       //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
                       return Container(
                         //color: Colors.white,
@@ -91,7 +100,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                             border: TableBorder.all(
                                 color: Colors.lightBlue.shade50),
                             columnWidths: const {
-                              0: FixedColumnWidth(5.0),
+                              0: FixedColumnWidth(2.0),
                               1: FixedColumnWidth(70.0),
                               2: FixedColumnWidth(80.0),
                               3: FixedColumnWidth(80.0),
@@ -100,7 +109,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               isHeader
                                   ? TableRow(children: [
                                       Container(
-                                        padding: const EdgeInsets.all(5.0),
+                                        padding: const EdgeInsets.all(2.0),
                                         child: const Text("#",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -130,8 +139,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                     ])
                                   : TableRow(children: [
                                       Container(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Text("${index + 1}",
+                                          padding: const EdgeInsets.only(top:10.0, left: 3, right: 3, bottom: 10.0),
+                                          child: Text("${index}",
                                               textAlign: TextAlign.center)),
                                       Container(
                                           padding: const EdgeInsets.all(10.0),
@@ -148,28 +157,6 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                       )
                                     ])
                             ]),
-
-                        /* ListTile(
-                          //style: const ListTileStyle(),
-                          contentPadding: const EdgeInsets.all(5.0),
-                          leading: const Icon(Icons.notifications,
-                              color: Colors.blue, size: 30, grade: 5),
-                          title: RichText(
-                              text: TextSpan(
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: sensorAddress,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          )),
-                          subtitle: Text('$formattedDate\nv: $v \n$alarmValue'),
-                          isThreeLine: true,
-                        ),*/
                       );
                     })
               ])));

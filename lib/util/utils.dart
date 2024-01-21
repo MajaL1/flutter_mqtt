@@ -21,11 +21,6 @@ class Utils {
     return filepath;
   }
 
-  /*static int compareDatesInMinutes(List<Alarm> currentAlarmList, List<dynamic> oldAlarmList) {
-    Duration? duration =  currentAlarmList.first.ts?.difference(oldAlarmList.last.ts);
-    int differenceInMinutes = duration!.inMinutes;
-    return differenceInMinutes;
-  } */
 
   static int compareDatesInMinutes(DateTime lastSentAlarm) {
     Duration? duration = DateTime.now().difference(lastSentAlarm);

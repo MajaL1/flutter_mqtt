@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -24,7 +25,7 @@ class SmartMqtt extends ChangeNotifier {
 
   int messageCount = 0;
 
-  MQTTAppConnectionState currentState = MQTTAppConnectionState.disconnected;
+  MQTTAppConnectionState ? currentState;//= MQTTAppConnectionState.disconnected;
 
   late MqttServerClient  client;
   late MqttConnectionState connectionState;
@@ -60,6 +61,7 @@ class SmartMqtt extends ChangeNotifier {
   late String newUserSettings = "";
 
   void disconnect() {
+    currentState= MQTTAppConnectionState.disconnected;
     print('Disconnected');
     client.disconnect();
   }
@@ -89,22 +91,29 @@ class SmartMqtt extends ChangeNotifier {
 
   /// The subscribed callback
   void onSubscribed(String topic) {
-    print('EXAMPLE::Subscription confirmed for topic $topic');
+    print('onSubscribed::Subscription confirmed for topic $topic');
   }
 
   /// The subscribed callback
   void unsubscribe(String topic) {
-    print('EXAMPLE::UNSubscription confirmed for topic $topic');
+    print('onunSubscribed::UNSubscription confirmed for topic $topic');
     client.unsubscribe(topic);
   }
 
   void onAutoReconnect() {
-    print("onAutoReconnect");
+    String clientID = client.clientIdentifier;
+    currentState = MQTTAppConnectionState.connected;
+
+    print("///////////////////////////// onAutoReconnect  $clientID, $currentState ///////////////////////////////////");
   }
     /// The unsolicited disconnect callback
   void onDisconnected() {
-    SmartMqtt.instance.currentState = MQTTAppConnectionState.disconnected;
-    print(':OnDisconnected client callback - Client disconnection');
+    currentState= MQTTAppConnectionState.disconnected;
+
+    String clientID = client.clientIdentifier;
+    print("///////////////////////////// onDisconnected  $clientID, $currentState ///////////////////////////////////");
+    MqttConnectReturnCode ? returnCode = client.connectionStatus!.returnCode;
+    print(':OnDisconnected client callback - Client disconnection, return code: $returnCode');
     if (client.connectionStatus!.returnCode ==
         MqttConnectReturnCode.noneSpecified) {
       print(":OnDisconnected callback is solicited, this is correct");
@@ -114,7 +123,10 @@ class SmartMqtt extends ChangeNotifier {
 
   /// The successful connect callback
   void onConnected() {
+    String clientID = client.clientIdentifier;
     currentState = MQTTAppConnectionState.connected;
+
+    print("///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
 
     print('on Connected: EXAMPLE::Mosquitto client connected....');
     for (String topicName in topicList) {
@@ -244,13 +256,15 @@ class SmartMqtt extends ChangeNotifier {
           }
         });
 
-        int minutes = 6;
+        int minutes = 5;
+
         if (lastAlarmDate != null) {
+          // todo: preveri, ali jevec kot 5 minut in manj kot x minut
           minutes = Utils.compareDatesInMinutes(lastAlarmDate!);
         }
 
         //ali je vec kot 5 minut od alarma
-        if (minutes > 5) {
+        if (minutes >= 5) {
           debugPrint(
               "from topic-alarm $topicName, $decodeMessage, message count: $messageCount, comparedDatesInMinutes:: $minutes ");
 
@@ -272,6 +286,11 @@ class SmartMqtt extends ChangeNotifier {
                 "last_sent_alarm_date", currentAlarmList.first.ts.toString());
           });
         }
+        else{
+          debugPrint("minutes<5, not showing alarm");
+          debugPrint(
+              "from topic-alarm $topicName, $decodeMessage, message count: $messageCount, comparedDatesInMinutes:: $minutes ");
+        }
         // debugPrint("message is not retain, message count: $firstRetainMessage");
       } else {
         debugPrint("first-retain message ignored $messageCount");
@@ -286,18 +305,28 @@ class SmartMqtt extends ChangeNotifier {
     //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
     //print('');
   }
+  String generateRandomString(int len) {
+    var r = Random();
+    return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
+  }
 
   Future<MqttServerClient> initializeMQTTClient() async {
+    debugPrint(" calling smart_mqtt.dart - initializeMQTTClient");
     String osPrefix = 'Flutter_iOS';
     // if (Platform.isAndroid()) {
     osPrefix = 'Flutter_Android';
-    String identifier = "_12apxeeejjjewg";
+
+    String l = generateRandomString(10);
+    //String identifier = "_12apxeeejjjewg";
+    String identifier = l.toString();
+
     _identifier = identifier;
-    client = MqttServerClient(host, identifier, maxConnectionAttempts: 10);
+    client = MqttServerClient(host, identifier, maxConnectionAttempts: 5);
     client.port = 1883;
     client.keepAlivePeriod = 200000;
+    //client.autoReconnect = true;
     client.autoReconnect = true;
-    client.setProtocolV311();
+   // client.setProtocolV311();
     client.onDisconnected = onDisconnected;
     client.onAutoReconnect = onAutoReconnect;
     client.logging(on: true);
@@ -306,7 +335,7 @@ class SmartMqtt extends ChangeNotifier {
     client.onSubscribeFail = onSubscribeFail;
     client.pongCallback = pong;
     client.secure = false;
-    client.resubscribeOnAutoReconnect = true;
+   // client.resubscribeOnAutoReconnect = true;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
         .authenticateAs(username, mqttPass)
@@ -316,15 +345,16 @@ class SmartMqtt extends ChangeNotifier {
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
 
-    print('EXAMPLE:: client connecting....');
+    debugPrint(':: client connecting....');
     client.connectionMessage = connMess;
 
     try {
       print('::Navis app client connecting....');
       currentState = MQTTAppConnectionState.connecting;
       client.keepAlivePeriod = 20;
+      String clientID = client.clientIdentifier;
       print(
-          "*********************** Connecting to broker *******************************");
+          "*********************** Connecting to broker, client id $clientID, $currentState *******************************");
       await client.connect(username, mqttPass);
     } on Exception catch (e) {
       print('Navis app::client exception - $e');

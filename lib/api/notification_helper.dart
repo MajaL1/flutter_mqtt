@@ -118,6 +118,7 @@ class NotificationHelper extends StatelessWidget {
   static Future<void> sendMessage(Alarm? alarmMessage) async {
     //tzl.initializeTimeZones();
      tzl.initializeTimeZones();
+     debugPrint("Sending alarm: NotificationHElper.sendMessage");
     // tz.setLocalLocation(tz.getLocation('Europe/London'));
     final slovenia = await tz.getLocation('Europe/London');
 

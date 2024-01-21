@@ -40,6 +40,7 @@ SharedPreferences? prefs;
 Future<void> main() async {
   tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
+  //DartPluginRegistrant.ensureInitialized();
   await initializeService();
 
   SharedPreferences.getInstance().then((value) {
@@ -158,6 +159,10 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
+  MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
+  debugPrint("////////////////1 main.dart - $appState");
+
+
   // bring to foreground
   Timer.periodic(const Duration(seconds: 180), (timer) async {
     if (service is AndroidServiceInstance) {
@@ -166,16 +171,30 @@ void onStart(ServiceInstance service) async {
         /// the notification id must be equals with AndroidConfiguration when you call configure() method.
       }
     }
-    if(SmartMqtt.instance.currentState == MQTTAppConnectionState.disconnected) {
-      debugPrint("main.dart - disconnected:");
+
+    // TODO: PReveri, kako deluje z MqttClient autoReconnected = false
+    // ali se ob delovanju v ozadju ugasne!
+
+    MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
+    debugPrint("////////////////2 main.dart - $appState");
+
+    if(SmartMqtt.instance.currentState == MQTTAppConnectionState.connected) {
+      debugPrint("////////////////main.dart - connected:");
+    }
+      if(SmartMqtt.instance.currentState == null || SmartMqtt.instance.currentState == MQTTAppConnectionState.disconnected) {
+      debugPrint("////////////////main.dart - disconnected:");
 
 
-      print("SmartMqtt.instance.initializeMQTTClient()");
+      print("////////////////main.dart will call _reconnectToMqtt");
       /** Todo: if logged in _reconnect*/
 
       /*** ce je povezava prekinjena, reconnect **/
       await _reconnectToMqtt();
     }
+    else {
+      debugPrint("///main.dart - connected ??? x:");
+    }
+
 
 
 
@@ -207,9 +226,8 @@ void onStart(ServiceInstance service) async {
 
 Future<void> _reconnectToMqtt() async {
 
-  /**
-   * Todo: detect if app is turned off
-   * ***/
+  print("////////////////calling _reconnectToMqtt");
+
   String username;
   String mqttPassword;
 
@@ -244,6 +262,8 @@ Future<void> _reconnectToMqtt() async {
   if (username.isNotEmpty &&
       mqttPassword.isNotEmpty &&
       userTopicList!.isNotEmpty) {
+    print("////////////////main.dart _reconnectToMqtt username != null && pass != null && userTopicList != null");
+
     SmartMqtt mqtt = SmartMqtt(
         host: Constants.BROKER_IP,
         port: Constants.BROKER_PORT,
@@ -256,6 +276,10 @@ Future<void> _reconnectToMqtt() async {
     print("===========================================");
 
     print("current smartmqtt state: $SmartMqtt.instance.client");
+  }
+  else {
+    print("////////////////main.dart _reconnectToMqtt error -> null: username,pass,userTopicList == null, $username, $mqttPassword, $userTopicList");
+
   }
 }
 
