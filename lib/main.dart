@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
+import 'dart:math';
 
 //import 'dart:isolate';
 import 'dart:ui';
@@ -164,7 +165,7 @@ void onStart(ServiceInstance service) async {
 
 
   // bring to foreground
-  Timer.periodic(const Duration(seconds: 180), (timer) async {
+  Timer.periodic(const Duration(seconds: 20), (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         /// OPTIONAL for use custom notification
@@ -223,6 +224,10 @@ void onStart(ServiceInstance service) async {
     );
   });
 }
+String generateRandomString(int len) {
+  var r = Random();
+  return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
+}
 
 Future<void> _reconnectToMqtt() async {
 
@@ -264,14 +269,21 @@ Future<void> _reconnectToMqtt() async {
       userTopicList!.isNotEmpty) {
     print("////////////////main.dart _reconnectToMqtt username != null && pass != null && userTopicList != null");
 
-    SmartMqtt mqtt = SmartMqtt(
+    /*SmartMqtt mqtt = SmartMqtt(
         host: Constants.BROKER_IP,
         port: Constants.BROKER_PORT,
         username: username,
         mqttPass: mqttPassword,
-        topicList: userTopicList);
+        topicList: userTopicList); */
     //await mqtt.initializeMQTTClient();
-    await SmartMqtt.instance.client.connect();
+    String l = generateRandomString(10);
+    //String identifier = "_12apxeeejjjewg";
+    String identifier = l.toString();
+
+    SmartMqtt.instance.client = MqttServerClient(Constants.BROKER_IP, identifier, maxConnectionAttempts: 1);
+    SmartMqtt.instance.initializeMQTTClient(username, mqttPassword, identifier, userTopicList);
+    //SmartMqtt.instance.client.
+    //await SmartMqtt.instance.client.connect();
     print("================== connecting to client =========================");
     print("===========================================");
 

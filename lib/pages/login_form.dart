@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
@@ -32,15 +34,16 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
-  /* final emailController = TextEditingController(
+  final emailController = TextEditingController(
     text: "test",
   );
   final passwordController = TextEditingController(text: "Test1234");
-*/
+
+/*
   final emailController = TextEditingController(text: "test3");
   final passwordController =
       TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
-
+*/
   @override
   initState() {
     super.initState();
@@ -84,13 +87,15 @@ class _LoginFormValidationState extends State<LoginForm> {
               "loginForm, user: $user.username, $user.password, $user.topic");
 
           List<String> userTopicList = Utils.createTopicListFromApi(user);
+          String l = generateRandomString(10);
+          //String identifier = "_12apxeeejjjewg";
+          String identifier = l.toString();
 
-          SmartMqtt mqtt = SmartMqtt(
-              host: Constants.BROKER_IP,
-              port: Constants.BROKER_PORT,
-              username: user.username,
-              mqttPass: user.mqtt_pass,
-              topicList: userTopicList);
+          SmartMqtt.instance.client = MqttServerClient(
+              Constants.BROKER_IP, Constants.BROKER_IP,
+              maxConnectionAttempts: 1);
+          SmartMqtt.instance.initializeMQTTClient(
+              user.username, user.mqtt_pass, identifier, userTopicList);
 
           /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
@@ -132,6 +137,12 @@ class _LoginFormValidationState extends State<LoginForm> {
         });
       }
     }
+  }
+
+  String generateRandomString(int len) {
+    var r = Random();
+    return String.fromCharCodes(
+        List.generate(len, (index) => r.nextInt(33) + 89));
   }
 
   List<String> createTopicListFromApi(User user) {

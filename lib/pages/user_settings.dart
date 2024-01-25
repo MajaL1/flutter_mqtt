@@ -170,7 +170,7 @@ class _UserSettingsState extends State<UserSettings> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         padding:
-            const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 20),
+            const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 020),
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 45),

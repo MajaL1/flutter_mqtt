@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/notification_helper.dart';
 import '../model/alarm.dart';
+import '../model/constants.dart';
 import '../mqtt/MQTTAppState.dart';
 
 class SmartMqtt extends ChangeNotifier {
@@ -18,7 +19,7 @@ class SmartMqtt extends ChangeNotifier {
   late String mqttPass;
   late String username;
 
-  late List<String> topicList;
+  late List topicList;
   late String _identifier;
 
   late String currentTopic;
@@ -50,7 +51,8 @@ class SmartMqtt extends ChangeNotifier {
     _instance.username = username;
     _instance.mqttPass = mqttPass;
     _instance.topicList = topicList;
-    _instance.initializeMQTTClient();
+    //_instance.initializeMQTTClient();
+    debugPrint("SMARTMQTT");
     return _instance;
   }
 
@@ -310,18 +312,19 @@ class SmartMqtt extends ChangeNotifier {
     return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
   }
 
-  Future<MqttServerClient> initializeMQTTClient() async {
+  Future<MqttServerClient> initializeMQTTClient(String username, String password1, String identifier, List topicList1) async {
     debugPrint(" calling smart_mqtt.dart - initializeMQTTClient");
     String osPrefix = 'Flutter_iOS';
     // if (Platform.isAndroid()) {
     osPrefix = 'Flutter_Android';
+    topicList = topicList1;
 
     String l = generateRandomString(10);
     //String identifier = "_12apxeeejjjewg";
     String identifier = l.toString();
 
     _identifier = identifier;
-    client = MqttServerClient(host, identifier, maxConnectionAttempts: 5);
+    client = MqttServerClient(Constants.BROKER_IP, identifier, maxConnectionAttempts: 1);
     client.port = 1883;
     client.keepAlivePeriod = 200000;
     //client.autoReconnect = true;
@@ -335,10 +338,11 @@ class SmartMqtt extends ChangeNotifier {
     client.onSubscribeFail = onSubscribeFail;
     client.pongCallback = pong;
     client.secure = false;
+    //client.maxConnectionAttempts = 1;
    // client.resubscribeOnAutoReconnect = true;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
-        .authenticateAs(username, mqttPass)
+        .authenticateAs(username, password1)
         .withClientIdentifier(_identifier)
         .withWillTopic('willtopic')
         .withWillMessage('My Will message')
@@ -351,11 +355,11 @@ class SmartMqtt extends ChangeNotifier {
     try {
       print('::Navis app client connecting....');
       currentState = MQTTAppConnectionState.connecting;
-      client.keepAlivePeriod = 20;
+      //client.keepAlivePeriod = 20;
       String clientID = client.clientIdentifier;
       print(
           "*********************** Connecting to broker, client id $clientID, $currentState *******************************");
-      await client.connect(username, mqttPass);
+      await client.connect(username, password1);
     } on Exception catch (e) {
       print('Navis app::client exception - $e');
       disconnect();
