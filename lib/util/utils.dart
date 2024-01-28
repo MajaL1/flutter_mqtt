@@ -54,6 +54,29 @@ class Utils {
     return file.path;
   }
 
+ static InputDecoration buildAlarmIntervalDecoration() {
+    return InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.black12, width: 8.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+              width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+          BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+        ),
+
+        labelStyle: const TextStyle(letterSpacing: 1.8),
+        hintStyle: const TextStyle(fontSize: 12));
+  }
+
    static BoxDecoration buildBoxDecorationSettings() {
     return BoxDecoration(
       color: Colors.white60, //Color.fromRGBO(0, 87, 153, 60),

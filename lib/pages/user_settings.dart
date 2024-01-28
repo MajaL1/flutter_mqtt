@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/api_service.dart';
 import 'package:mqtt_test/components/custom_app_bar.dart';
@@ -28,6 +29,8 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
 
   String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+
+  // Todo, preveri, ali decode message ni null in beri zadnje settinge
   //debugPrint("****************** user settings data $data");
   List<UserDataSettings> userDataSettings = [];
   //debugPrint("user_settings decodeMessage $decodeMessage");
@@ -221,6 +224,29 @@ class _UserSettingsState extends State<UserSettings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            //leading: const Icon(Icons.exit_to_app, color: Colors.black87),
+            children: [
+              const Text("Alarm interval",
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14)),
+              Container(
+                  width: 10),
+              Container(
+                  width: 150,
+                  child: SpinBox(
+                    value: 10,
+                    max: 60,
+                    min: 5,
+                    readOnly: true,
+                    decoration: Utils.buildAlarmIntervalDecoration(),
+                  ))
+            ],
+          ),
+          Container(
+              height: 30),
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
@@ -246,6 +272,17 @@ class _UserSettingsState extends State<UserSettings> {
                       fontSize: 14)),
               onTap: () {
                 ApiService.logout();
+              }),
+          const Divider(height: 40, color: Colors.black12, thickness: 2),
+          ListTile(
+              leading: const Icon(Icons.stop_circle, color: Colors.black87),
+              title: const Text("Stop service",
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14)),
+              onTap: () {
+                ApiService.stopService();
               }),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           /*Row(
@@ -325,7 +362,7 @@ class _UserSettingsState extends State<UserSettings> {
       // _getUserDataSettingsTEST(testNew).then((dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),
       builder: (context, snapshot) {
         //debugPrint(
-          //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
+        //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
         if (snapshot.hasData) {
           List<UserDataSettings>? editableSettingsList = snapshot.data;
           List<TextEditingController> textControllerList =
@@ -337,7 +374,8 @@ class _UserSettingsState extends State<UserSettings> {
           }
           debugPrint("END print editableSettingsList ");
           */
-          return ListView.builder(
+          return Container( child:
+            ListView.builder(
               shrinkWrap: true,
               itemCount: snapshot.data!.length,
               scrollDirection: Axis.vertical,
@@ -454,7 +492,8 @@ class _UserSettingsState extends State<UserSettings> {
                         //ListTile(enabled: false)
                       ]))
                     ]));
-              });
+              })
+          );
         }
         /* else if (!SmartMqtt.instance.isNewSettings){// && SmartMqtt.instance.isNewSettings) {
           debugPrint("00001 !$SmartMqtt.instance.isNewSettings");
@@ -504,7 +543,7 @@ class _UserSettingsState extends State<UserSettings> {
                   const EdgeInsets.only(top: 15, bottom: 0, left: 0, right: 0),
               //  height: 40,
               alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width/4,
+              width: MediaQuery.of(context).size.width / 4,
               child: Text(settingText,
                   maxLines: 1,
                   softWrap: false,
@@ -516,9 +555,9 @@ class _UserSettingsState extends State<UserSettings> {
           //Container(width: 5),
           SizedBox(
               height: 50,
-              width: MediaQuery.of(context).size.width/5,
+              width: MediaQuery.of(context).size.width / 5,
 
-    //padding: EdgeInsets.only(
+              //padding: EdgeInsets.only(
               //  top: 0, bottom: 0, left: 25, right: 25),
               child: TextFormField(
                   decoration: _setInputDecoration(value),
@@ -526,7 +565,7 @@ class _UserSettingsState extends State<UserSettings> {
                     FilteringTextInputFormatter.digitsOnly
                   ],
                   //enableInteractiveSelection: false,
-                   showCursor: false,
+                  showCursor: false,
                   controller: textController,
                   onChanged: (val) {},
                   validator: MultiValidator([
@@ -536,9 +575,8 @@ class _UserSettingsState extends State<UserSettings> {
           Container(width: 10),
           Container(
               height: 50,
-              width:  MediaQuery.of(context).size.width/6,
-
-    margin: const EdgeInsets.only(right: 10),
+              width: MediaQuery.of(context).size.width / 6,
+              margin: const EdgeInsets.only(right: 10),
               decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
               child: //SmartMqtt.instance.isSaved != true
                   //  ?
@@ -612,7 +650,8 @@ class _UserSettingsState extends State<UserSettings> {
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey, width: 1), borderRadius: BorderRadius.circular(14)),
+            borderSide: BorderSide(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.circular(14)),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
         ),

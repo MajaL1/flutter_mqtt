@@ -12,30 +12,36 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  bool? isLoggedIn; //SmartMqtt.instance.userIsLoggedIn;
+  late bool isLoggedIn;
+
+  @override
+  initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((value) {
+      if (value.getBool("isLoggedIn") != null) {
+        return value.getBool("isLoggedIn")!;
+      }
+    });
+    debugPrint("-- firstScreen initstate");
+  }
 
   Future<bool?> getLoggedInState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //prefs.setBool("isLoggedIn", false);
-    var isLoggedIn;
     if (prefs.getBool("isLoggedIn") == null) {
-      return false;
+      isLoggedIn = false;
+    } else {
+      isLoggedIn = true;
     }
-    return prefs.getBool("isLoggedIn");
+    return true;// prefs.getBool("isLoggedIn");
 
     return isLoggedIn;
   }
 
   @override
-  initState() {
-    super.initState();
-    debugPrint("-- firstScreen initstate");
-  }
-
-  @override
   Widget build(BuildContext context) {
     //debugPrint("token: $SharedPrefs().token, ${SharedPrefs().token}");
-    debugPrint("isLoggedIn: $isLoggedIn");
+    //debugPrint("isLoggedIn: $isLoggedIn");
     return Scaffold(
         body: FutureBuilder(
             future: getLoggedInState(),
@@ -45,11 +51,11 @@ class _FirstScreenState extends State<FirstScreen> {
                   child: CircularProgressIndicator(),
                 );
               } else {
-                return const Scaffold(
-                    body: //(snapshot.data == false
-                    //    ?
-                    LoginForm.base());
-                      //  : UserSettings.base()));
+                return Scaffold(
+                    body: !isLoggedIn
+                        ? const LoginForm.base()
+                        : const UserSettings.base());
+                //  : UserSettings.base()));
                 //body: LoginForm.base());
               }
             }));

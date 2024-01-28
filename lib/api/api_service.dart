@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:http/http.dart' show Client, Response, post;
 import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/notification_message.dart';
@@ -65,7 +66,6 @@ class ApiService {
   } */
 
   static Future<User?> login(String email, password) async {
-
     try {
       Response response = await post(
           Uri.parse('http://test.navis-livedata.com:1002/api/auth.php'),
@@ -81,7 +81,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = await jsonDecode(response.body.toString());
-       // debugPrint(data['token']);
+        // debugPrint(data['token']);
         debugPrint('=====Login successfully');
         UserTopic userTopic;
         if (data["topics"] != null) {
@@ -121,6 +121,19 @@ class ApiService {
       }
     });
   }
+
+  static Future<void> stopService() async {
+    final service = FlutterBackgroundService();
+    var isRunning = await service.isRunning();
+    if (isRunning) {
+      service.invoke("stopService");
+    }
+    else {
+      service.startService();
+    }
+    debugPrint("stopping service");
+  }
+
   static UserTopic getUserTopic(Map topics) {
     List<TopicData> topicList = [];
     UserTopic topic = UserTopic(sensorName: '1', topicList: []);
