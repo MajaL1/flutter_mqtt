@@ -87,6 +87,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/bell.png
+    - assets/images/NAVIS_LOGO_PNG.png
     - assets/images/
     - assets/alarms.json
     - assets/user.json

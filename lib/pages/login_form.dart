@@ -207,12 +207,17 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   )),
                               const Padding(
                                   padding:
-                                      EdgeInsets.only(top: 100.0, bottom: 40),
+                                      EdgeInsets.only(top: 40.0, bottom: 40),
                                   child: Center(
                                     child: SizedBox(
-                                      width: 120,
-                                      height: 50,
-                                      child: FlutterLogo(size: 200),
+                                      width: 100,
+                                      height: 100,
+                                      child:  const ImageIcon(
+                                        AssetImage("assets/images/NAVIS_LOGO_PNG.png"),
+                                        size: 3.0,
+                                        color: Color(0xFF3A5A98),
+                                      )
+                                      //FlutterLogo(size: 200),
                                     ),
                                   )),
                               Container(
@@ -224,12 +229,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 child: Column(
                                   children: [
                                     Text(""),
-                                    Text(""),
                                     const Text(
                                       Constants.LOGIN_TO_NAVIS,
                                       style: TextStyle(
                                           color: Color.fromRGBO(0, 0, 102, 1),
-                                          wordSpacing: 3.9,
+                                          wordSpacing: 5.9,
                                           fontWeight: FontWeight.w900,
                                           fontStyle: FontStyle.normal,
                                           fontFamily: 'San Frencisco',
@@ -239,7 +243,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                       padding: const EdgeInsets.only(
                                           left: 65.0,
                                           right: 65.0,
-                                          top: 60,
+                                          top: 40,
                                           bottom: 45),
                                       child: TextFormField(
                                         style: const TextStyle(

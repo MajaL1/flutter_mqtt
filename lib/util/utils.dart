@@ -59,16 +59,16 @@ class Utils {
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(4),
           borderSide: const BorderSide(color: Colors.black12, width: 8.5),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
               width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(4),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(4),
           borderSide:
           BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),

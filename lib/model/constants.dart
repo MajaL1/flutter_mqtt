@@ -64,7 +64,7 @@ class Constants {
   static const SAVE_DEVICE_SETTINGS = "Save";
   static const ENTER_USERNAME_AND_PASS = "Enter username and password";
 
-  static const LOGIN_TO_NAVIS = "Login to Navis";
+  static const LOGIN_TO_NAVIS = "Login";
 
 
 
