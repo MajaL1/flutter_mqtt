@@ -221,4 +221,11 @@ class Utils {
       ),
     );
   }
+  static buildSaveMqttSettingsButtonDecoration1() {
+    return ButtonStyle(
+      backgroundColor: MaterialStateColor.resolveWith((states) =>    Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
+      //borderRadius: BorderRadius.circular(12),
+
+    );
+  }
 }

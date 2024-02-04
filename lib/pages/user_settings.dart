@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/api_service.dart';
@@ -17,6 +20,7 @@ import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
+import 'login_form.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings.base({Key? key}) : super(key: key);
@@ -28,20 +32,39 @@ class UserSettings extends StatefulWidget {
 Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
 
-  String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+  String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
 
   // Todo, preveri, ali decode message ni null in beri zadnje settinge
-  //debugPrint("****************** user settings data $data");
-  List<UserDataSettings> userDataSettings = [];
-  //debugPrint("user_settings decodeMessage $decodeMessage");
-  if (decodeMessage.isNotEmpty) {
-    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
-    userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
-    String? deviceName = preferences.getString("settings_mqtt_device_name");
-    userDataSettings[0].deviceName = deviceName;
+  if (preferences.getBool("isLoggedIn") != null) {
+    if (preferences.getBool("isLoggedIn") == true) {
+      // ali app tece v ozadju
+      // if (preferences.getBool("appRunInBackground") != null) {
+      // if (preferences.getBool("appRunInBackground") == true) {
+      if (decodeMessage.isEmpty) {
+        debugPrint("get data from current_mqtt_settings");
 
-    return userDataSettings;
+        decodeMessage = preferences.getString("current_mqtt_settings");
+
+        //}
+        // }
+      } else {
+        decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+      }
+      //debugPrint("****************** user settings data $data");
+      List<UserDataSettings> userDataSettings = [];
+      //debugPrint("user_settings decodeMessage $decodeMessage");
+      if (decodeMessage != null) {
+        Map<String, dynamic> jsonMap = json.decode(decodeMessage!);
+        debugPrint("get data from json decode message");
+
+        userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
+        String? deviceName = preferences.getString("settings_mqtt_device_name");
+        userDataSettings[0].deviceName = deviceName;
+
+        return userDataSettings;
+      }
+    }
   }
   return null;
 }
@@ -106,7 +129,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
 class _UserSettingsState extends State<UserSettings> {
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
-
+  final debouncer = Debouncer();
   int countTest = 0;
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
@@ -298,17 +321,20 @@ class _UserSettingsState extends State<UserSettings> {
           ), */
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           ListTile(
-              leading: const Icon(Icons.exit_to_app, color: Colors.black87),
-              title: const Text("Log out",
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14)),
+            leading: const Icon(Icons.exit_to_app, color: Colors.black87),
+            title: const Text("Log out",
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14)),
             onTap: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
                 title: const Text('Logout'),
-                content: const Text('Are you sure you want to log out?', style: const TextStyle(fontSize: 14),),
+                content: const Text(
+                  'Are you sure you want to log out?',
+                  style: const TextStyle(fontSize: 14),
+                ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -316,8 +342,12 @@ class _UserSettingsState extends State<UserSettings> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context, 'OK');
+                      // Navigator.pop(context, 'OK');
                       ApiService.logout();
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const LoginForm.base()),
+                          (route) => false);
                     },
                     child: const Text('OK'),
                   ),
@@ -327,17 +357,20 @@ class _UserSettingsState extends State<UserSettings> {
           ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           ListTile(
-              leading: const Icon(Icons.stop_circle, color: Colors.black87),
-              title: const Text("Stop service",
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14)),
+            leading: const Icon(Icons.stop_circle, color: Colors.black87),
+            title: const Text("Stop service",
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14)),
             onTap: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
                 title: const Text('Stop service'),
-                content: const Text('Are you sure you want to stop service? \n\n No alarms will be displayed.', style: const TextStyle(fontSize: 14),),
+                content: const Text(
+                  'Are you sure you want to stop service? \n\n No alarms will be displayed.',
+                  style: const TextStyle(fontSize: 14),
+                ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -347,7 +380,7 @@ class _UserSettingsState extends State<UserSettings> {
                     onPressed: () {
                       Navigator.pop(context, 'OK');
                       ApiService.stopService();
-                      },
+                    },
                     child: const Text('OK'),
                   ),
                 ],
@@ -355,59 +388,6 @@ class _UserSettingsState extends State<UserSettings> {
             ),
           ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
-          /*Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text("Security", style: headingStyle),
-            ],
-          ),
-          ListTile(
-            leading: const Icon(Icons.phonelink_lock_outlined),
-            title: const Text("Lock app in background"),
-            trailing: Switch(
-                value: lockAppSwitchVal,
-                activeColor: Colors.redAccent,
-                onChanged: (val) {
-                  setState(() {
-                    lockAppSwitchVal = val;
-                  });
-                }),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.fingerprint),
-            title: const Text("Use fingerprint"),
-            trailing: Switch(
-                value: fingerprintSwitchVal,
-                activeColor: Colors.redAccent,
-                onChanged: (val) {
-                  setState(() {
-                    fingerprintSwitchVal = val;
-                  });
-                }),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.lock),
-            title: const Text("Change Password"),
-            trailing: Switch(
-                value: changePassSwitchVal,
-                activeColor: Colors.redAccent,
-                onChanged: (val) {
-                  setState(() {
-                    changePassSwitchVal = val;
-                  });
-                }),
-          ),
-          const ListTile(
-            leading: Icon(Icons.file_open_outlined),
-            title: Text("Terms of Service"),
-          ),
-          const Divider(),
-          const ListTile(
-            leading: Icon(Icons.file_copy_outlined),
-            title: Text("Open Source and Licences"),
-          ), */
         ],
       ),
     );
@@ -599,6 +579,7 @@ class _UserSettingsState extends State<UserSettings> {
       bool savePressed,
       TextEditingController textController) {
     String settingText = "";
+    bool isEnabledSave = true;
 
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
       settingText = " High alarm:  ";
@@ -645,27 +626,42 @@ class _UserSettingsState extends State<UserSettings> {
                   ]))),
           Container(width: 10),
           Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width / 6,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
-              child: //SmartMqtt.instance.isSaved != true
-                  //  ?
-                  TextButton(
-                onPressed: () {
-                  // Todo: same value - don't call save
-                  // Todo: debouncing
+            height: 50,
+            width: 80,
+            //  margin: const EdgeInsets.only(right: 2),
+            decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
+            child: //ElevatedButton(
+                //style: Utils.buildSaveMqttSettingsButtonDecoration1(),
+                ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromRGBO(0, 0, 190, 1),
+                foregroundColor: const Color.fromRGBO(255, 255, 255, 1),
+                shadowColor: Colors.grey,
+              ),
+              onPressed: () {
+                // Todo: same value - don't call save
+                // Todo: debouncing
+                if (!isEnabledSave) {
+                  return null;
+                }
+                EasyDebounce.debounce(
+                    'debouncer1', const Duration(milliseconds: 5000), () {
                   saveMqttSettings(
                       sensorAddress, item, textController, settingToChange);
-                  setState(() {
-                    savePressed = !savePressed;
-                  });
-                },
-                child: const Text(
-                  Constants.SAVE_DEVICE_SETTINGS,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              )),
+                  debugPrint("executing saveMqttSettings debouncer");
+                  isEnabledSave = false;
+                });
+
+                setState(() {
+                  savePressed = !savePressed;
+                });
+              },
+              child: const Text(
+                Constants.SAVE_DEVICE_SETTINGS,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ),
+          ) //  ?
         ]),
       ],
     );

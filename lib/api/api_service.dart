@@ -110,7 +110,13 @@ class ApiService {
 
   static void logout() {
     debugPrint("logging out");
-    SharedPreferences.getInstance().then((value) {
+    stopService();
+    _removeUserPreferences();
+
+  }
+
+  static void _removeUserPreferences() {
+     SharedPreferences.getInstance().then((value) {
       if (value.getString("username") != null) {
         value.remove("username");
       }
@@ -120,6 +126,26 @@ class ApiService {
         value.remove("email");
       }
     });
+    SharedPreferences.getInstance().then((value) {
+      if (value.getBool("isLoggedIn") != null) {
+        value.setBool("isLoggedIn", false);
+      }
+    });
+    SharedPreferences.getInstance().then((value) {
+      if (value.getString("settings_mqtt_device_name") != null) {
+        value.remove("settings_mqtt_device_name");
+      }
+    });
+    SharedPreferences.getInstance().then((value) {
+      if (value.getString("current_mqtt_settings") != null) {
+        value.remove("current_mqtt_settings");
+      }
+    });
+     SharedPreferences.getInstance().then((value) {
+       if (value.getString("appRunInBackground") != null) {
+         value.remove("appRunInBackground");
+       }
+     });
   }
 
   static Future<void> stopService() async {

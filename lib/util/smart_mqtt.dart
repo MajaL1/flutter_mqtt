@@ -198,7 +198,7 @@ class SmartMqtt extends ChangeNotifier {
         // ali ce so v zacetku prazni
         if (newUserSettings.compareTo(decodeMessage) != 0) {
           debugPrint("new user settings");
-
+          preferences.setString("current_mqtt_settings", decodeMessage);
           newUserSettings = decodeMessage;
           await setNewUserSettings(newUserSettings);
         }
@@ -375,7 +375,6 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<void> setNewUserSettings(String newUserSettings) async {
     this.newUserSettings = newUserSettings;
-
     this.isSaved = true;
     notifyListeners();
     debugPrint("notifying listeners..");
