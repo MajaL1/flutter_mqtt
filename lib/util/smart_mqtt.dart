@@ -161,7 +161,7 @@ class SmartMqtt extends ChangeNotifier {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     // todo: testni alarm - izbrisi
-    /*Alarm alarm = Alarm(
+    Alarm alarm = Alarm(
         sensorAddress: "test1233",
         typ: 2,
         v: 1,
@@ -174,7 +174,7 @@ class SmartMqtt extends ChangeNotifier {
         l: 3,
         b: 2,
         t: 3);
-    NotificationHelper.sendMessage(alarm); */
+    NotificationHelper.sendMessage(alarm);
 
     /* preferences.remove("settings_mqtt");
     preferences.remove("alarm_mqtt");
@@ -258,17 +258,13 @@ class SmartMqtt extends ChangeNotifier {
           }
         });
 
-        int minutes = 5;
 
-        if (lastAlarmDate != null) {
-          // todo: preveri, ali jevec kot 5 minut in manj kot x minut
-          minutes = Utils.compareDatesInMinutes(lastAlarmDate!);
-        }
+
 
         //ali je vec kot 5 minut od alarma
-        if (minutes >= 5) {
+        if (Utils.compareDatesInMinutes(lastAlarmDate!,DateTime.now())) {
           debugPrint(
-              "from topic-alarm $topicName, $decodeMessage, message count: $messageCount, comparedDatesInMinutes:: $minutes ");
+              "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
 
           // 2. dobi trenuten alarm
           currentAlarmList.first.sensorAddress =
@@ -291,10 +287,10 @@ class SmartMqtt extends ChangeNotifier {
         else{
           debugPrint("minutes<5, not showing alarm");
           debugPrint(
-              "from topic-alarm $topicName, $decodeMessage, message count: $messageCount, comparedDatesInMinutes:: $minutes ");
+              "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
         }
         // debugPrint("message is not retain, message count: $firstRetainMessage");
-      } else {
+      //}else {
         debugPrint("first-retain message ignored $messageCount");
         messageCount++;
       }

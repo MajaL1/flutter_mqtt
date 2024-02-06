@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,11 +22,20 @@ class Utils {
     return filepath;
   }
 
-
-  static int compareDatesInMinutes(DateTime lastSentAlarm) {
+  /*static int compareDatesInMinutes(DateTime lastSentAlarm) {
     Duration? duration = DateTime.now().difference(lastSentAlarm);
     int differenceInMinutes = duration!.inMinutes;
     return differenceInMinutes;
+  } */
+
+  static bool compareDatesInMinutes(DateTime oldDate, DateTime newDate) {
+    var diff = oldDate
+        .difference(newDate)
+        .inMinutes;
+    if (diff >= 5) {
+      return true;
+    }
+    return false;
   }
 
   static List<String> createTopicListFromApi(User user) {
@@ -43,8 +53,8 @@ class Utils {
     return userTopicList;
   }
 
-  static Future<String> getImageFilePathFromAssets(
-      String asset, String filename) async {
+  static Future<String> getImageFilePathFromAssets(String asset,
+      String filename) async {
     final byteData = await rootBundle.load(asset);
     final temp_direactory = await getTemporaryDirectory();
     final file = File('${temp_direactory.path}/$filename');
@@ -54,7 +64,13 @@ class Utils {
     return file.path;
   }
 
- static InputDecoration buildAlarmIntervalDecoration() {
+  static String generateRandomString(int len) {
+    var r = Random();
+    return String.fromCharCodes(
+        List.generate(len, (index) => r.nextInt(33) + 89));
+  }
+
+  static InputDecoration buildAlarmIntervalDecoration() {
     return InputDecoration(
         filled: true,
         fillColor: Colors.white,
@@ -72,12 +88,11 @@ class Utils {
           borderSide:
           BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
-
         labelStyle: const TextStyle(letterSpacing: 1.8),
         hintStyle: const TextStyle(fontSize: 12));
   }
 
-   static BoxDecoration buildBoxDecorationSettings() {
+  static BoxDecoration buildBoxDecorationSettings() {
     return BoxDecoration(
       color: Colors.white60, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
@@ -91,7 +106,6 @@ class Utils {
       ],
     );
   }
-
 
   static BoxDecoration buildButtonDecoration() {
     return BoxDecoration(
@@ -119,7 +133,7 @@ class Utils {
 
   static BoxDecoration buildBoxDecoration() {
     return BoxDecoration(
-     // color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+      // color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
       boxShadow: [
         BoxShadow(
@@ -139,8 +153,8 @@ class Utils {
 
   static BoxDecoration buildAppBarDecoration() {
     return BoxDecoration(
-     // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
-     // color: Colors.red,
+      // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
+      // color: Colors.red,
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
@@ -221,11 +235,65 @@ class Utils {
       ),
     );
   }
+
   static buildSaveMqttSettingsButtonDecoration1() {
     return ButtonStyle(
-      backgroundColor: MaterialStateColor.resolveWith((states) =>    Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
+      backgroundColor: MaterialStateColor.resolveWith((states) =>
+          Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
       //borderRadius: BorderRadius.circular(12),
-
     );
   }
+
+  static MaterialStateProperty<Color> getColor(Color color,
+      Color colorPressed) {
+    final getColor = (Set<MaterialState> states) {
+      if (states.contains(MaterialState.pressed)) {
+        return colorPressed;
+      } else {
+        return color;
+      }
+    };
+    return MaterialStateProperty.resolveWith(getColor);
+  }
+
+  /*static MaterialStateProperty<OutlinedBorder> getBorder(BorderSide borderSide, BorderSide borderSide1) {
+    final getBorder = (Set<MaterialState> states) {
+      if (states.contains(MaterialState.pressed)) {
+        return borderSide1;
+      } else {
+        return borderSide;
+      }
+    };
+    return MaterialStateProperty.resolveWith(getBorder);
+  } */
+
+  static ButtonStyle buildElevatedButtonSettings() {
+    return ButtonStyle(
+      //side: MaterialStateProperty.BorderSide(color: Colors.red),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+                side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))),
+        backgroundColor:
+        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        foregroundColor:
+        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        overlayColor: getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+  }
+
+
+  static ButtonStyle buildElevatedButtonLogin() {
+    return ButtonStyle(
+//side: MaterialStateProperty.BorderSide(color: Colors.red),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+                side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))),
+        backgroundColor:
+        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        foregroundColor:
+        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        overlayColor: getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+  }
 }
+

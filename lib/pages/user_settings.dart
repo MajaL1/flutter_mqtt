@@ -263,11 +263,12 @@ class _UserSettingsState extends State<UserSettings> {
           ),
           Container(
               height: 50,
-              width: MediaQuery.of(context).size.width / 6,
+              width: MediaQuery.of(context).size.width / 5,
               margin: const EdgeInsets.only(right: 10),
-              decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
+               //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
               child: //SmartMqtt.instance.isSaved != true
-                  TextButton(
+                  ElevatedButton(
+                    style: Utils.buildElevatedButtonSettings(),
                 onPressed: () {
                   saveInterval();
                 },
@@ -627,18 +628,13 @@ class _UserSettingsState extends State<UserSettings> {
           Container(width: 10),
           Container(
             height: 50,
-            width: 80,
+            width: 100,
             //  margin: const EdgeInsets.only(right: 2),
-            decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
+            //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
             child: //ElevatedButton(
                 //style: Utils.buildSaveMqttSettingsButtonDecoration1(),
                 ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromRGBO(0, 0, 190, 1),
-                foregroundColor: const Color.fromRGBO(255, 255, 255, 1),
-                shadowColor: Colors.grey,
-              ),
-              onPressed: () {
+                  style: Utils.buildElevatedButtonSettings(),    onPressed: () {
                 // Todo: same value - don't call save
                 // Todo: debouncing
                 if (!isEnabledSave) {
@@ -666,6 +662,10 @@ class _UserSettingsState extends State<UserSettings> {
       ],
     );
   }
+
+
+
+
 
 // test method with dummy parameters
 /*  void saveMqttSettingsTest() {

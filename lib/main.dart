@@ -14,6 +14,7 @@ import 'package:flutter_background_service_android/flutter_background_service_an
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:mqtt_test/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
@@ -223,11 +224,7 @@ void onStart(ServiceInstance service) async {
   });
 }
 
-String generateRandomString(int len) {
-  var r = Random();
-  return String.fromCharCodes(
-      List.generate(len, (index) => r.nextInt(33) + 89));
-}
+
 
 Future<void> _reconnectToMqtt() async {
   print("////////////////calling _reconnectToMqtt");
@@ -278,7 +275,7 @@ Future<void> _reconnectToMqtt() async {
         mqttPass: mqttPassword,
         topicList: userTopicList); */
     //await mqtt.initializeMQTTClient();
-    String l = generateRandomString(10);
+    String l = Utils.generateRandomString(10);
     //String identifier = "_12apxeeejjjewg";
     String identifier = l.toString();
 
