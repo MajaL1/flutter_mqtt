@@ -10,11 +10,11 @@ import '../model/topic_data.dart';
 import '../model/user.dart';
 
 class Utils {
-  static Future<String> downloadFile(String URL, String filename) async {
+  static Future<String> downloadFile(String url, String filename) async {
     final direactory = await getApplicationSupportDirectory();
     final filepath = '${direactory.path}/$filename';
-    final response = await http.get(Uri.parse(URL));
-    print(response);
+    final response = await http.get(Uri.parse(url));
+    debugPrint(response as String?);
 
     final file = File(filepath);
 
@@ -28,14 +28,10 @@ class Utils {
     return differenceInMinutes;
   } */
 
-  static bool compareDatesInMinutes(DateTime oldDate, DateTime newDate) {
-    var diff = oldDate
-        .difference(newDate)
-        .inMinutes;
-    if (diff >= 5) {
-      return true;
-    }
-    return false;
+  static int compareDatesInMinutes(DateTime oldDate, DateTime newDate) {
+    var diff = newDate.difference(oldDate).inMinutes;
+    debugPrint("diff: $diff");
+    return diff;
   }
 
   static List<String> createTopicListFromApi(User user) {
@@ -53,11 +49,11 @@ class Utils {
     return userTopicList;
   }
 
-  static Future<String> getImageFilePathFromAssets(String asset,
-      String filename) async {
+  static Future<String> getImageFilePathFromAssets(
+      String asset, String filename) async {
     final byteData = await rootBundle.load(asset);
-    final temp_direactory = await getTemporaryDirectory();
-    final file = File('${temp_direactory.path}/$filename');
+    final tempDirectory = await getTemporaryDirectory();
+    final file = File('${tempDirectory.path}/$filename');
     await file.writeAsBytes(byteData.buffer
         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
@@ -85,8 +81,8 @@ class Utils {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
-          borderSide:
-          BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+          borderSide: const BorderSide(
+              color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
         labelStyle: const TextStyle(letterSpacing: 1.8),
         hintStyle: const TextStyle(fontSize: 12));
@@ -140,7 +136,7 @@ class Utils {
           color: Colors.grey.withOpacity(0.15),
           spreadRadius: 4,
           blurRadius: 8,
-          offset: Offset(0, 1), // changes position of shadow
+          offset: const Offset(0, 1), // changes position of shadow
         ),
       ],
       gradient: const RadialGradient(
@@ -155,13 +151,13 @@ class Utils {
     return BoxDecoration(
       // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
       // color: Colors.red,
-      borderRadius: BorderRadius.circular(18),
+      // borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.15),
           spreadRadius: 4,
           blurRadius: 8,
-          offset: Offset(0, 1), // changes position of shadow
+          offset: const Offset(0, 1), // changes position of shadow
         ),
       ],
       gradient: const LinearGradient(
@@ -185,7 +181,7 @@ class Utils {
           color: Colors.grey.withOpacity(0.15),
           spreadRadius: 4,
           blurRadius: 8,
-          offset: Offset(0, 1), // changes position of shadow
+          offset: const Offset(0, 1), // changes position of shadow
         ),
       ],
       gradient: const RadialGradient(
@@ -205,7 +201,7 @@ class Utils {
           color: Colors.grey.withOpacity(0.15),
           spreadRadius: 4,
           blurRadius: 8,
-          offset: Offset(0, 1), // changes position of shadow
+          offset: const Offset(0, 1), // changes position of shadow
         ),
       ],
       gradient: const RadialGradient(
@@ -225,7 +221,7 @@ class Utils {
           color: Colors.grey.withOpacity(0.15),
           spreadRadius: 4,
           blurRadius: 8,
-          offset: Offset(0, 1), // changes position of shadow
+          offset: const Offset(0, 1), // changes position of shadow
         ),
       ],
       gradient: const RadialGradient(
@@ -239,20 +235,21 @@ class Utils {
   static buildSaveMqttSettingsButtonDecoration1() {
     return ButtonStyle(
       backgroundColor: MaterialStateColor.resolveWith((states) =>
-          Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
+          const Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
       //borderRadius: BorderRadius.circular(12),
     );
   }
 
-  static MaterialStateProperty<Color> getColor(Color color,
-      Color colorPressed) {
-    final getColor = (Set<MaterialState> states) {
+  static MaterialStateProperty<Color> getColor(
+      Color color, Color colorPressed) {
+    getColor(Set<MaterialState> states) {
       if (states.contains(MaterialState.pressed)) {
         return colorPressed;
       } else {
         return color;
       }
-    };
+    }
+
     return MaterialStateProperty.resolveWith(getColor);
   }
 
@@ -269,31 +266,33 @@ class Utils {
 
   static ButtonStyle buildElevatedButtonSettings() {
     return ButtonStyle(
-      //side: MaterialStateProperty.BorderSide(color: Colors.red),
+        //side: MaterialStateProperty.BorderSide(color: Colors.red),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-                side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))),
+          borderRadius: BorderRadius.circular(16.0),
+          //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
+        )),
         backgroundColor:
-        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
         foregroundColor:
-        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        overlayColor: getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        overlayColor:
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
   }
-
 
   static ButtonStyle buildElevatedButtonLogin() {
     return ButtonStyle(
 //side: MaterialStateProperty.BorderSide(color: Colors.red),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-                side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))),
+          borderRadius: BorderRadius.circular(16.0),
+          //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
+        )),
         backgroundColor:
-        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
         foregroundColor:
-        getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        overlayColor: getColor(Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        overlayColor:
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
   }
 }
-

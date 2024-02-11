@@ -196,7 +196,7 @@ class _UserSettingsState extends State<UserSettings> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         padding:
-            const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 10),
+            const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -209,9 +209,9 @@ class _UserSettingsState extends State<UserSettings> {
           const Divider(height: 4, color: Colors.black12, thickness: 5),
           _buildMqttSettingsView(),
           /* const Padding(
-            padding: EdgeInsets.symmetric(vertical: 5),
+           padding: EdgeInsets.symmetric(vertical: 5),
           ), */
-          _buildIntervalSpinBox(context),
+          //_buildIntervalSpinBox(context),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
           ),

@@ -11,11 +11,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
-import 'package:timezone/data/latest_10y.dart' as tz;
 
 import '../main.dart';
 import '../model/alarm.dart';
-import '../model/user_data_settings.dart';
 import '../util/utils.dart';
 
 class NotificationHelper extends StatelessWidget {
@@ -118,11 +116,11 @@ class NotificationHelper extends StatelessWidget {
   static Future<void> sendMessage(Alarm? alarmMessage) async {
     //tzl.initializeTimeZones();
      tzl.initializeTimeZones();
-     debugPrint("Sending alarm: NotificationHElper.sendMessage");
+     debugPrint("Sending alarm: NotificationHelper.sendMessage");
     // tz.setLocalLocation(tz.getLocation('Europe/London'));
     final slovenia = await tz.getLocation('Europe/London');
 
-    final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
+    //final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
     String? sensorAddress = alarmMessage?.sensorAddress.toString();
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
@@ -145,8 +143,6 @@ class NotificationHelper extends StatelessWidget {
 
     final bigPicture = await Utils.getImageFilePathFromAssets(
         'assets/images/bell1.png', 'bigpicture');
-    final smallpicture = await Utils.getImageFilePathFromAssets(
-        'assets/images/bell1.png', 'smallpicture');
 
     /* final styleinformationDesign = BigPictureStyleInformation(
       FilePathAndroidBitmap(smallpicture),
@@ -165,7 +161,10 @@ class NotificationHelper extends StatelessWidget {
       setAsGroupSummary: false,
       colorized: true,
       enableLights: true,
-
+      /*styleInformation: const BigTextStyleInformation(
+          '<b>Your</b> notification',
+          htmlFormatBigText: true,
+        ), */
       category: AndroidNotificationCategory.alarm,
     );
 
@@ -174,10 +173,19 @@ class NotificationHelper extends StatelessWidget {
 
     String eventID = "as432445GFCLbd2in1en21093";
     int notificationId = eventID.hashCode;
+    //Text text1 = Text("Alarm value: $v", style: TextStyle(fontWeight: FontWeight.bold));
+   // Text text2 = Text("$alarmValue", style: TextStyle(fontWeight: FontWeight.bold));
+    //Text text3 = Text("$sensorAddress", style: TextStyle(fontWeight: FontWeight.bold));
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
+
+    //String ?t1 = text1.data;
+     //String ?t2 = text2.data;
+     //String ?t3 = text3.data;
+
+     await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
-        "Alarm from sensor: $sensorAddress",
+        "Alarm from: $sensorAddress",
+        //"$t1 \n $t2 \n$t3",
         "v: $v, $alarmValue \n$formattedDate",
         tz.TZDateTime.now(slovenia).add(const Duration(seconds: 5)),
         notificationDetails,
@@ -199,7 +207,6 @@ class NotificationHelper extends StatelessWidget {
     String? data = preferences.get("settings_mqtt").toString();
     String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** preferences settings_mqtt $data");
-    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
 
     /// OPTIONAL when use custom notification
     // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

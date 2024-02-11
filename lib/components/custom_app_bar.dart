@@ -6,7 +6,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   String title;
 
   CustomAppBar(this.title)
-      : preferredSize = const Size.fromHeight(kToolbarHeight);
+      : preferredSize = const Size.fromHeight(kToolbarHeight + 22);
 
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
@@ -18,11 +18,20 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-        flexibleSpace: Container(
-          decoration: Utils.buildAppBarDecoration(),
-          //color: Colors.black,
-          /*child: Column(
+    return Container(
+        //padding: EdgeInsets.only(bottom:20),
+        margin: EdgeInsets.only(top: 22),
+
+        //preferredSize: preferredSize,
+        child: AppBar(
+            //toolbarHeight: 50,
+            flexibleSpace: Container(
+              //height: 180,
+              //padding: EdgeInsets.only(top:40),
+
+              decoration: Utils.buildAppBarDecoration(),
+              //color: Colors.black,
+              /*child: Column(
             children: [
               Text('One'),
               Text('Two'),
@@ -30,14 +39,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
               Text('Four'),
             ],
           ),*/
-        ),
-        shadowColor: Colors.black,
-        foregroundColor: Colors.lightBlue,
-        title: Container(
-            //decoration: Utils.buildAppBarDecoration(),
-            child: Text(
-          widget.title,
-          style: const TextStyle(fontSize: 16, color: Colors.white, letterSpacing: 1),
-        )));
+            ),
+            shadowColor: Colors.black,
+            foregroundColor: Colors.lightBlue,
+            title: Container(
+                //decoration: Utils.buildAppBarDecoration(),
+                child: Text(
+              widget.title,
+              style: const TextStyle(
+                  fontSize: 16, color: Colors.white, letterSpacing: 1),
+            ))));
   }
 }

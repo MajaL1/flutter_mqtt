@@ -26,9 +26,9 @@ class SmartMqtt extends ChangeNotifier {
 
   int messageCount = 0;
 
-  MQTTAppConnectionState ? currentState;//= MQTTAppConnectionState.disconnected;
+  MQTTAppConnectionState? currentState; //= MQTTAppConnectionState.disconnected;
 
-  late MqttServerClient  client;
+  late MqttServerClient client;
   late MqttConnectionState connectionState;
 
   late bool isConnected = false;
@@ -56,14 +56,13 @@ class SmartMqtt extends ChangeNotifier {
     return _instance;
   }
 
-
   bool debug = true;
   late bool isSaved = false;
   late bool newSettingsMessageLoaded = false;
   late String newUserSettings = "";
 
   void disconnect() {
-    currentState= MQTTAppConnectionState.disconnected;
+    currentState = MQTTAppConnectionState.disconnected;
     print('Disconnected');
     client.disconnect();
   }
@@ -106,16 +105,20 @@ class SmartMqtt extends ChangeNotifier {
     String clientID = client.clientIdentifier;
     currentState = MQTTAppConnectionState.connected;
 
-    print("///////////////////////////// onAutoReconnect  $clientID, $currentState ///////////////////////////////////");
+    print(
+        "///////////////////////////// onAutoReconnect  $clientID, $currentState ///////////////////////////////////");
   }
-    /// The unsolicited disconnect callback
+
+  /// The unsolicited disconnect callback
   void onDisconnected() {
-    currentState= MQTTAppConnectionState.disconnected;
+    currentState = MQTTAppConnectionState.disconnected;
 
     String clientID = client.clientIdentifier;
-    print("///////////////////////////// onDisconnected  $clientID, $currentState ///////////////////////////////////");
-    MqttConnectReturnCode ? returnCode = client.connectionStatus!.returnCode;
-    print(':OnDisconnected client callback - Client disconnection, return code: $returnCode');
+    print(
+        "///////////////////////////// onDisconnected  $clientID, $currentState ///////////////////////////////////");
+    MqttConnectReturnCode? returnCode = client.connectionStatus!.returnCode;
+    print(
+        ':OnDisconnected client callback - Client disconnection, return code: $returnCode');
     if (client.connectionStatus!.returnCode ==
         MqttConnectReturnCode.noneSpecified) {
       print(":OnDisconnected callback is solicited, this is correct");
@@ -128,7 +131,8 @@ class SmartMqtt extends ChangeNotifier {
     String clientID = client.clientIdentifier;
     currentState = MQTTAppConnectionState.connected;
 
-    print("///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
+    print(
+        "///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
 
     print('on Connected: EXAMPLE::Mosquitto client connected....');
     for (String topicName in topicList) {
@@ -161,7 +165,7 @@ class SmartMqtt extends ChangeNotifier {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     // todo: testni alarm - izbrisi
-    Alarm alarm = Alarm(
+    /* Alarm alarm = Alarm(
         sensorAddress: "test1233",
         typ: 2,
         v: 1,
@@ -174,7 +178,7 @@ class SmartMqtt extends ChangeNotifier {
         l: 3,
         b: 2,
         t: 3);
-    NotificationHelper.sendMessage(alarm);
+    NotificationHelper.sendMessage(alarm); */
 
     /* preferences.remove("settings_mqtt");
     preferences.remove("alarm_mqtt");
@@ -214,6 +218,7 @@ class SmartMqtt extends ChangeNotifier {
       //preferences.setString("data_mqtt", decodeMessage);
     }
     if (topicName.contains("alarm")) {
+      debugPrint("alarm!!!!!");
       if (messageCount > 0) {
         Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
@@ -257,12 +262,12 @@ class SmartMqtt extends ChangeNotifier {
             return lastSentLoAlarmValue;
           }
         });
-
-
-
-
+        int minutes = 6;
+        if(lastAlarmDate != null) {
+          minutes = Utils.compareDatesInMinutes(lastAlarmDate!, DateTime.now());
+        }
         //ali je vec kot 5 minut od alarma
-        if (Utils.compareDatesInMinutes(lastAlarmDate!,DateTime.now())) {
+        if (lastAlarmDate == null || minutes >= 3) {
           debugPrint(
               "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
 
@@ -283,14 +288,13 @@ class SmartMqtt extends ChangeNotifier {
             value.setString(
                 "last_sent_alarm_date", currentAlarmList.first.ts.toString());
           });
-        }
-        else{
+        } else {
           debugPrint("minutes<5, not showing alarm");
           debugPrint(
               "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
         }
         // debugPrint("message is not retain, message count: $firstRetainMessage");
-      //}else {
+      } else {
         debugPrint("first-retain message ignored $messageCount");
         messageCount++;
       }
@@ -303,12 +307,15 @@ class SmartMqtt extends ChangeNotifier {
     //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
     //print('');
   }
+
   String generateRandomString(int len) {
     var r = Random();
-    return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
+    return String.fromCharCodes(
+        List.generate(len, (index) => r.nextInt(33) + 89));
   }
 
-  Future<MqttServerClient> initializeMQTTClient(String username, String password1, String identifier, List topicList1) async {
+  Future<MqttServerClient> initializeMQTTClient(String username,
+      String password1, String identifier, List topicList1) async {
     debugPrint(" calling smart_mqtt.dart - initializeMQTTClient");
     String osPrefix = 'Flutter_iOS';
     // if (Platform.isAndroid()) {
@@ -320,12 +327,13 @@ class SmartMqtt extends ChangeNotifier {
     String identifier = l.toString();
 
     _identifier = identifier;
-    client = MqttServerClient(Constants.BROKER_IP, identifier, maxConnectionAttempts: 1);
+    client = MqttServerClient(Constants.BROKER_IP, identifier,
+        maxConnectionAttempts: 1);
     client.port = 1883;
     client.keepAlivePeriod = 200000;
     //client.autoReconnect = true;
     client.autoReconnect = true;
-   // client.setProtocolV311();
+    // client.setProtocolV311();
     client.onDisconnected = onDisconnected;
     client.onAutoReconnect = onAutoReconnect;
     client.logging(on: true);
@@ -335,7 +343,7 @@ class SmartMqtt extends ChangeNotifier {
     client.pongCallback = pong;
     client.secure = false;
     //client.maxConnectionAttempts = 1;
-   // client.resubscribeOnAutoReconnect = true;
+    // client.resubscribeOnAutoReconnect = true;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
         .authenticateAs(username, password1)

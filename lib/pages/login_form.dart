@@ -34,16 +34,16 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController(
+  /*final emailController = TextEditingController(
     text: "test",
   );
   final passwordController = TextEditingController(text: "Test1234");
 
-/*
+*/
   final emailController = TextEditingController(text: "test3");
   final passwordController =
       TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
-*/
+
   @override
   initState() {
     super.initState();
@@ -206,9 +206,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         connectionStatusText != null
                                             ? connectionStatusText!
                                             : "",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge,
+                                        style: const TextStyle(color: Colors.redAccent, fontSize: 14),
                                       )),
                                   const Padding(
                                       padding: EdgeInsets.only(
@@ -247,11 +245,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               fontSize: 20),
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.only(
+                                          margin: const EdgeInsets.only(
                                               left: 65.0,
                                               right: 65.0,
                                               top: 40,
-                                              bottom: 45),
+                                              bottom: 15),
                                           child: TextFormField(
                                               style: const TextStyle(
                                                   fontFamily: 'Roboto',
@@ -268,8 +266,12 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               ])),
                                         ),
                                         Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 65.0,
+                                              right: 65.0,
+                                              ),
                                           //height: 60,
-                                          width: 220,
+                                          //width: 220,
                                           child: TextFormField(
                                               obscureText: true,
                                               enableSuggestions: false,

@@ -54,7 +54,8 @@ class _NavDrawerState extends State<NavDrawer> {
     return Container(
         // color: Colors.black,
         width: MediaQuery.of(context).size.width * 0.50,
-        height: MediaQuery.of(context).size.height,
+        //height: MediaQuery.of(context).size.height,
+        margin: EdgeInsets.only(top: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
         ),
