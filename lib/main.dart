@@ -94,7 +94,7 @@ Future<void> initializeService() async {
       onStart: onStart,
       // auto start service
       autoStart: true,
-      isForegroundMode: false,
+      isForegroundMode: true,
       notificationChannelId: 'my_foreground',
      // initialNotificationTitle: 'Alarm app',
      // initialNotificationContent: 'Initializing',

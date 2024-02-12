@@ -109,7 +109,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               isHeader
                                   ? TableRow(children: [
                                       Container(
-                                        padding: const EdgeInsets.only(top:10.0, left: 3, right: 3, bottom: 10.0),
+                                        padding: const EdgeInsets.only(top:5.0, left: 3, right: 3, bottom: 10.0),
                                         child: const Text("#",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -139,19 +139,19 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                     ])
                                   : TableRow(children: [
                                       Container(
-                                          padding: const EdgeInsets.only(top:10.0, left: 3, right: 3, bottom: 10.0),
+                                          padding: const EdgeInsets.only(top:5.0, left: 3, right: 3, bottom: 10.0),
                                           child: Text("${index}",
                                               textAlign: TextAlign.center)),
                                       Container(
-                                          padding: const EdgeInsets.all(10.0),
+                                          padding: const EdgeInsets.all(5.0),
                                           child: Text("$sensorAddress",
                                               textAlign: TextAlign.center)),
                                       Container(
-                                          padding: const EdgeInsets.all(10.0),
+                                          padding: const EdgeInsets.all(5.0),
                                           child: Text("Value: $v \n$alarmValue",
                                               textAlign: TextAlign.center)),
                                       Container(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.all(5.0),
                                         child: Text("$formattedDate ",
                                             textAlign: TextAlign.center),
                                       )

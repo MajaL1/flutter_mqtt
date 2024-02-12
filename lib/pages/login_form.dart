@@ -199,7 +199,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 color: Colors.white38,
                                 child: Column(children: <Widget>[
                                   Container(
-                                      color: Colors.amber,
+                                      //color: Colors.amber,
                                       padding: const EdgeInsets.only(
                                           top: 0, bottom: 0),
                                       child: Text(

@@ -245,7 +245,7 @@ class SmartMqtt extends ChangeNotifier {
 
         int? lastSentHiAlarmValue =
             await SharedPreferences.getInstance().then((value) {
-          if (value.getString("last_sent_hi_alarm_value") != null) {
+          if (value.getInt("last_sent_hi_alarm_value") != null) {
             int? lastSentHiAlarmValue =
                 value.getInt("last_sent_hi_alarm_value");
             //debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
@@ -255,7 +255,7 @@ class SmartMqtt extends ChangeNotifier {
 
         int? lastSentLoAlarmValue =
             await SharedPreferences.getInstance().then((value) {
-          if (value.getString("last_sent_lo_alarm_value") != null) {
+          if (value.getInt("last_sent_lo_alarm_value") != null) {
             int? lastSentLoAlarmValue =
                 value.getInt("last_sent_lo_alarm_value");
             debugPrint("last_sent_lo_alarm_value $lastSentLoAlarmValue");
@@ -263,11 +263,20 @@ class SmartMqtt extends ChangeNotifier {
           }
         });
         int minutes = 6;
-        if(lastAlarmDate != null) {
+        if (lastAlarmDate != null) {
           minutes = Utils.compareDatesInMinutes(lastAlarmDate!, DateTime.now());
         }
+        int? currentHiAlarm;
+        currentHiAlarm = currentAlarmList.first.hiAlarm;
+        int? currentLoAlarm;
+        currentLoAlarm = currentAlarmList.first.loAlarm;
+
         //ali je vec kot 5 minut od alarma
-        if (lastAlarmDate == null || minutes >= 3) {
+        /**** ToDo ali je prejsnja vrednost poslanega alarma vecja od druge in je minilo manj kot 5 min*****/
+        if ((lastAlarmDate == null || minutes >= 3))
+        // || (minutes<3 && lastSentHiAlarmValue! < currentHiAlarm! )) {
+
+        {
           debugPrint(
               "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
 
@@ -287,6 +296,15 @@ class SmartMqtt extends ChangeNotifier {
           await SharedPreferences.getInstance().then((value) {
             value.setString(
                 "last_sent_alarm_date", currentAlarmList.first.ts.toString());
+            /*********************/
+            if (currentAlarmList.first.hiAlarm != null) {
+              value.setInt("last_sent_hi_alarm_value",
+                  currentAlarmList.first.hiAlarm!);
+            } else if (currentAlarmList.first.loAlarm != null) {
+              value.setInt("last_sent_lo_alarm_value",
+                  currentAlarmList.first.loAlarm!);
+            }
+            /*********************/
           });
         } else {
           debugPrint("minutes<5, not showing alarm");

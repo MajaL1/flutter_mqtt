@@ -142,7 +142,7 @@ class ApiService {
       }
     });
      SharedPreferences.getInstance().then((value) {
-       if (value.getString("appRunInBackground") != null) {
+       if (value.getBool("appRunInBackground") != null) {
          value.remove("appRunInBackground");
        }
      });
