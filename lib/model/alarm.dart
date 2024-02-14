@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-
 class Alarm {
+  String? deviceName;
   String? sensorAddress;
   int? typ;
   int? v;
@@ -15,8 +13,10 @@ class Alarm {
   int? b;
   int? t;
 
+
   Alarm(
       {this.sensorAddress,
+      this.deviceName,
       this.typ,
       this.v,
       this.hiAlarm,
@@ -49,6 +49,7 @@ class Alarm {
   } */
   Map<String, dynamic> toJson() {
     return {
+      "deviceName" : deviceName,
       "sensor_address": sensorAddress,
       "typ": typ,
       "v": v,
@@ -150,6 +151,7 @@ class Alarm {
   static List<Alarm> getAlarmListFromPreferences(List json) {
     List<Alarm> alarmList = [];
     for (var alarm in json) {
+      String deviceName = "";
       String sensorAddress = "";
       int typ = 0;
       int hiAlarm = 0;
@@ -189,6 +191,9 @@ class Alarm {
           if (key == "sensor_address") {
             sensorAddress = value;
           }
+          if (key == "deviceName") {
+            deviceName = value;
+          }
           if (key == "v") {
             v = valueInt;
           }
@@ -201,7 +206,7 @@ class Alarm {
           if (key == "ts") {
             DateTime parse = DateTime.parse(value);
             ts = parse;
-           // ts = value;//DateTime.fromMillisecondsSinceEpoch(int.parse(value) * 1000);
+            // ts = value;//DateTime.fromMillisecondsSinceEpoch(int.parse(value) * 1000);
             //debugPrint("ts");
           }
           if (key == "lb") {
@@ -228,6 +233,7 @@ class Alarm {
       //print("Creating alarm: $sensorAddress, $typ, $t, $hiAlarm, $loAlarm");
       Alarm newAlarm = Alarm(
           sensorAddress: sensorAddress,
+          deviceName: deviceName,
           typ: typ,
           v: v,
           hiAlarm: hiAlarm,
@@ -251,8 +257,10 @@ class Alarm {
 //print("key:  $key");
       if (key.isNotEmpty) {
         Map value = json[key];
+
 //print("value:  $value");
         if (key.isNotEmpty) {
+          String sensorName = key;
           int typ = 0;
           int hiAlarm = 0;
           int loAlarm = 0;
@@ -294,7 +302,7 @@ class Alarm {
                 }
                 if (key1 == "ts") {
                   ts = DateTime.fromMillisecondsSinceEpoch(valueInt * 1000);
-                    //  DateTime.fromMicrosecondsSinceEpoch(valueInt);
+                  //  DateTime.fromMicrosecondsSinceEpoch(valueInt);
                 }
                 if (key1 == "lb") {
                   lb = valueInt;
@@ -320,6 +328,7 @@ class Alarm {
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
               sensorAddress: key,
+              deviceName: sensorName,
               typ: typ,
               v: v,
               hiAlarm: hiAlarm,

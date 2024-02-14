@@ -60,13 +60,20 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
 
         userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
         String? deviceName = preferences.getString("settings_mqtt_device_name");
-        userDataSettings[0].deviceName = deviceName;
-
+        //userDataSettings[0].deviceName = deviceName;
+        _setUserDataSettings(userDataSettings, deviceName);
         return userDataSettings;
       }
     }
   }
   return null;
+}
+
+void _setUserDataSettings(userDataSettings, deviceName){
+  for(UserDataSettings userDataSetting in userDataSettings){
+    userDataSetting.deviceName = deviceName;
+  }
+
 }
 
 List<TextEditingController> _createControllerForEditSettings(
@@ -459,13 +466,13 @@ class _UserSettingsState extends State<UserSettings> {
                           Container(
                               //color: Colors.tealAccent,
                               alignment: Alignment.center,
-                              decoration: index == 0
+                              decoration: index %2 == 0
                                   ? Utils.buildBoxDecorationSettings()
                                   : null,
-                              padding: EdgeInsets.only(bottom: 5),
+                              padding: EdgeInsets.only(bottom: 0),
                               //padding: EdgeInsets.all(5),
                               child: Wrap(children: [
-                                index == 0
+                                index %2 == 0
                                     ? Container(
                                         // color: Colors.red,
                                         alignment: Alignment.center,
@@ -489,32 +496,33 @@ class _UserSettingsState extends State<UserSettings> {
                                                 letterSpacing: 1.1,
                                               ),
                                             ),
-                                            Row(children: [Text("\n")]),
-                                            SizedBox(
+                                            const Row(children: [Text("\n")]),
+                                            const SizedBox(
                                                 child: Text("Sensor address:  ",
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                       letterSpacing: 0.8,
+                                                      fontSize: 18
                                                     ))),
                                             SizedBox(
-                                                child: Text("$sensorAddress",
+                                                child: Text(sensorAddress,
                                                     style: const TextStyle(
                                                       letterSpacing: 0.8,
-                                                      fontSize: 14,
+                                                      fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.w800,
                                                     ))),
-                                            Row(children: [Text("\n")]),
+                                            const Row(children: [Text("\n")]),
                                             const SizedBox(
                                                 child: Text(
                                               "units:  ",
-                                              style: TextStyle(),
+                                              style: TextStyle(fontSize: 18),
                                             )),
                                             SizedBox(
                                                 child: Text(
                                               "$unitText",
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w800,
-                                                fontSize: 14,
+                                                fontSize: 18,
                                                 letterSpacing: 0.8,
                                               ),
                                             ))
@@ -522,7 +530,7 @@ class _UserSettingsState extends State<UserSettings> {
                                         ]))
                                     : const Text(""),
                               ])),
-                          Container(height: 40),
+                          Container(height: 10),
                           Container(
                               // color: Color.fromRGBO(104, 205, 255, 0.1),
                               child: Column(children: [
@@ -603,7 +611,7 @@ class _UserSettingsState extends State<UserSettings> {
                   style: const TextStyle(
                       color: Colors.indigo,
                       // letterSpacing: 4,
-                      fontSize: 15,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold))),
           //Container(width: 5),
           SizedBox(
@@ -654,7 +662,7 @@ class _UserSettingsState extends State<UserSettings> {
               },
               child: const Text(
                 Constants.SAVE_DEVICE_SETTINGS,
-                style: TextStyle(color: Colors.white, fontSize: 14),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
           ) //  ?

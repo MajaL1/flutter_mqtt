@@ -122,10 +122,11 @@ class NotificationHelper extends StatelessWidget {
 
     //final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
-    String? sensorAddress = alarmMessage?.sensorAddress.toString();
+    String? deviceName = alarmMessage?.deviceName.toString();
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();
     String? v = alarmMessage?.v.toString();
+    String? sensorAddress = alarmMessage?.sensorAddress;
 
     String alarmValue = "";
 
@@ -151,7 +152,7 @@ class NotificationHelper extends StatelessWidget {
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      "sensor: $sensorAddress",
+      "deviceName: $deviceName, sensor: $sensorAddress",
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
       largeIcon: FilePathAndroidBitmap(bigPicture),
@@ -184,7 +185,7 @@ class NotificationHelper extends StatelessWidget {
 
      await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
-        "Alarm from: $sensorAddress",
+        "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
         "v: $v, $alarmValue \n$formattedDate",
         tz.TZDateTime.now(slovenia).add(const Duration(seconds: 5)),

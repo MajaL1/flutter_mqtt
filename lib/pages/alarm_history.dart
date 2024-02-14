@@ -30,7 +30,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-            backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
+              backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
               appBar: CustomAppBar(Constants.HISTORY),
               //drawer: NavDrawer(),
               body: SingleChildScrollView(
@@ -39,20 +39,37 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                   padding: EdgeInsets.only(
                       left: 15.0, right: 15.0, top: 7, bottom: 15.0),
                 ),
-                Container(
-                  height: 30,
-                  width: 100,
-                  decoration: Utils.buildHistoryButtonDecoration(),
-                  child: TextButton(
-                      onPressed: () {
-                        clearHistory();
-                      },
-                      child: Container(
-                          child: const Text(
-                            'Clear history',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ))),
-                ),
+                Row(children: [
+                  Container(
+                    height: 30,
+                    width: 150,
+                    decoration: Utils.buildHistoryButtonDecoration(),
+                    child: ElevatedButton.icon(
+                        style: Utils.buildElevatedButtonSettings(),
+                        onPressed: () {
+                          _clearHistory();
+                        },
+                        label: const Text(
+                          'Clear history',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ), icon: const Icon(Icons.clear, color: Colors.white, size: 18)),
+                  ),
+                  Container(width: 40),
+                  Container(
+                    height: 30,
+                    width: 130,
+                    decoration: Utils.buildHistoryButtonDecoration(),
+                    child: ElevatedButton.icon(
+                        style: Utils.buildElevatedButtonSettings(),
+                        onPressed: () {
+                          _refreshHistoryList();
+                        },
+                        label: const Text(
+                          'Refresh',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ), icon: const Icon(Icons.refresh,color: Colors.white, size: 18)),
+                  )
+                ]),
                 const Divider(height: 40, color: Colors.black12, thickness: 3),
                 ListView.builder(
                     shrinkWrap: true,
@@ -64,11 +81,13 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       /*if(index>=1){
                         index--;
                       } */
-                      String sensorAddress =
-                          snapshot.data![index].sensorAddress.toString();
+                      String deviceName =
+                          snapshot.data![index].deviceName.toString();
                       String hiAlarm = snapshot.data![index].hiAlarm.toString();
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
+                      String sensorAddress =
+                          snapshot.data![index].sensorAddress.toString();
                       String alarmValue = "";
 
                       //     DateTime ts = snapshot.data![index].ts!;
@@ -83,24 +102,22 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       }
                       String formattedDate = "";
 
-                      if(snapshot.data![index].ts != null){
+                      if (snapshot.data![index].ts != null) {
                         formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
                             .format(snapshot.data![index].ts!);
-
                       }
                       //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
                       return Container(
                         //color: Colors.white,
                         decoration: const BoxDecoration(
-
-                          color: Colors.white,
+                            color: Colors.white,
                             border: Border(
                                 bottom: BorderSide(color: Colors.blueGrey))),
                         child: Table(
                             border: TableBorder.all(
                                 color: Colors.lightBlue.shade50),
                             columnWidths: const {
-                              0: FixedColumnWidth(2.0),
+                              0: FixedColumnWidth(0.5),
                               1: FixedColumnWidth(70.0),
                               2: FixedColumnWidth(80.0),
                               3: FixedColumnWidth(80.0),
@@ -109,49 +126,60 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               isHeader
                                   ? TableRow(children: [
                                       Container(
-                                        padding: const EdgeInsets.only(top:5.0, left: 3, right: 3, bottom: 10.0),
+                                        padding: const EdgeInsets.only(
+                                            top: 1.0,
+                                            left: 1,
+                                            right: 1,
+                                            bottom: 1.0),
                                         child: const Text("#",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.w800, fontSize: 12)),
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 16)),
                                       ),
                                       Container(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: const Text("Sensor address",
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: const Text("device - sensor",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.w800, fontSize: 12))),
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 16))),
                                       Container(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: const Text("Values",
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: const Text("value",
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.w800, fontSize: 12))),
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 16))),
                                       Container(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: const Text("Date ",
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: const Text("date ",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.w800, fontSize: 12)),
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 16)),
                                       )
                                     ])
                                   : TableRow(children: [
                                       Container(
-                                          padding: const EdgeInsets.only(top:5.0, left: 3, right: 3, bottom: 10.0),
+                                          padding: const EdgeInsets.only(
+                                              top: 1.0,
+                                              left: 1,
+                                              right: 1,
+                                              bottom: 1.0),
                                           child: Text("${index}",
                                               textAlign: TextAlign.center)),
                                       Container(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Text("$sensorAddress",
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Text(
+                                              "$deviceName-$sensorAddress",
                                               textAlign: TextAlign.center)),
                                       Container(
-                                          padding: const EdgeInsets.all(5.0),
+                                          padding: const EdgeInsets.all(1.0),
                                           child: Text("Value: $v \n$alarmValue",
                                               textAlign: TextAlign.center)),
                                       Container(
-                                        padding: const EdgeInsets.all(5.0),
+                                        padding: const EdgeInsets.all(1.0),
                                         child: Text("$formattedDate ",
                                             textAlign: TextAlign.center),
                                       )
@@ -161,7 +189,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                     })
               ])));
         } else if (snapshot.hasError) {
-          return Text("No alarm history.");
+          return const Text("No alarm history.");
 
           // return Text(snapshot.error.toString());
         }
@@ -171,14 +199,18 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     );
   }
 
-  Future<void> clearHistory() async {
+  Future<void> _clearHistory() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     preferences.remove("alarm_list_mqtt");
     setState(() {
       //snapshot.data![index].on = value;
     });
-
     // debugPrint("clear history");
+  }
+  Future<void> _refreshHistoryList() async {
+    setState(() {
+      //
+    });
   }
 }

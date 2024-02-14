@@ -156,6 +156,9 @@ class _LoginFormValidationState extends State<LoginForm> {
       if (topicData.name.contains("alarm")) {
         userTopicList.add(deviceName + "/alarm");
       }
+      if (topicData.name.contains("data")) {
+        userTopicList.add(deviceName + "/data");
+      }
     }
     return userTopicList;
   }

@@ -87,6 +87,16 @@ class ApiService {
         if (data["topics"] != null) {
           userTopic = getUserTopic(data["topics"]);
 
+          // ***** test user devices and sensors
+          TopicData topicData1 = TopicData(name: "topicTest1/settings", rw: 1);
+          TopicData topicData2 = TopicData(name: "topicTest1/alarm", rw: 1);
+          TopicData topicData3 = TopicData(name: "topicTest1/data", rw: 1);
+
+          userTopic.topicList.add(topicData1);
+          userTopic.topicList.add(topicData2);
+          userTopic.topicList.add(topicData3);
+          // *****
+
           User user = User(
               id: 1,
               username: data["username"],
@@ -131,11 +141,11 @@ class ApiService {
         value.setBool("isLoggedIn", false);
       }
     });
-    SharedPreferences.getInstance().then((value) {
+    /*SharedPreferences.getInstance().then((value) {
       if (value.getString("settings_mqtt_device_name") != null) {
         value.remove("settings_mqtt_device_name");
       }
-    });
+    });*/
     SharedPreferences.getInstance().then((value) {
       if (value.getString("current_mqtt_settings") != null) {
         value.remove("current_mqtt_settings");

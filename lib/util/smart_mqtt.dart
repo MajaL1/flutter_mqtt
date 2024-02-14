@@ -184,7 +184,14 @@ class SmartMqtt extends ChangeNotifier {
     preferences.remove("alarm_mqtt");
     preferences.clear(); */
 
-    /***  polnjenje objekta - data ***/
+
+    if (topicName!.contains("data")) {
+      debugPrint("___________________________________________________");
+      debugPrint("from topic data $topicName");
+      debugPrint("__________ $decodeMessage");
+      debugPrint("___________________________________________________");
+    }
+      /***  polnjenje objekta - settings ***/
     if (topicName!.contains("settings")) {
       debugPrint("___________________________________________________");
       debugPrint("from topic $topicName");
@@ -273,7 +280,7 @@ class SmartMqtt extends ChangeNotifier {
 
         //ali je vec kot 5 minut od alarma
         /**** ToDo ali je prejsnja vrednost poslanega alarma vecja od druge in je minilo manj kot 5 min*****/
-        if ((lastAlarmDate == null || minutes >= 3))
+        if ((lastAlarmDate == null || minutes >= 5))
         // || (minutes<3 && lastSentHiAlarmValue! < currentHiAlarm! )) {
 
         {
@@ -348,7 +355,7 @@ class SmartMqtt extends ChangeNotifier {
     client = MqttServerClient(Constants.BROKER_IP, identifier,
         maxConnectionAttempts: 1);
     client.port = 1883;
-    client.keepAlivePeriod = 200000;
+    client.keepAlivePeriod = 50;
     //client.autoReconnect = true;
     client.autoReconnect = true;
     // client.setProtocolV311();

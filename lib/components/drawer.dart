@@ -3,6 +3,9 @@ import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api/api_service.dart';
+import '../pages/login_form.dart';
+
 //import '../pages/data_page.dart';
 
 class NavDrawer extends StatefulWidget {
@@ -55,110 +58,138 @@ class _NavDrawerState extends State<NavDrawer> {
         // color: Colors.black,
         width: MediaQuery.of(context).size.width * 0.50,
         //height: MediaQuery.of(context).size.height,
-        margin: EdgeInsets.only(top: 30),
+        margin: const EdgeInsets.only(top: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
         ),
-        child: Container(
-            child: Drawer(
-                backgroundColor: Colors.black,
-                shadowColor: Colors.black,
-                //Color.fromRGBO(0, 87, 153, 60),
-                child: ConstrainedBox(
-                    //color: Colors.blue,
-                    constraints: const BoxConstraints(
-                        minHeight: 50, minWidth: 150, maxHeight: 100),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: ListView(
-                      children: [
-                        buildDrawerMainListTile(),
-                        //const Divider(height: 20),
-                        Container(
-                            decoration: buildDrawerDecorationListTile(),
-                            child: ListTile(
-                              hoverColor: Colors.blue,
-                              //tileColor: Colors.blue,
-                              //selectedColor: Colors.blueAccent,
-                              //style: ,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 2, horizontal: 16.0),
-                              dense: false,
-                              visualDensity: const VisualDensity(vertical: -4),
-                              leading: const Icon(
-                                Icons.history,
+        child: Drawer(
+            backgroundColor: Colors.black,
+            shadowColor: Colors.black,
+            //Color.fromRGBO(0, 87, 153, 60),
+            child: ConstrainedBox(
+                //color: Colors.blue,
+                constraints: const BoxConstraints(
+                    minHeight: 50, minWidth: 150, maxHeight: 100),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: ListView(
+                  children: [
+                    buildDrawerMainListTile(),
+                    //const Divider(height: 20),
+                    Container(
+                        decoration: buildDrawerDecorationListTile(),
+                        child: ListTile(
+                          hoverColor: Colors.blue,
+                          //tileColor: Colors.blue,
+                          //selectedColor: Colors.blueAccent,
+                          //style: ,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 16.0),
+                          dense: false,
+                          visualDensity: const VisualDensity(vertical: -4),
+                          leading: const Icon(
+                            Icons.history,
+                            color: Colors.white60,
+                          ),
+                          title: const Text(
+                            'History',
+                            style: TextStyle(
+                              color: Colors.white60,
+                              letterSpacing: 1.8,
+                            ),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AlarmHistory())),
+                        )),
+                    //const Divider(height: 15),
+                    Container(
+                        decoration: buildDrawerDecorationListTile(),
+                        child: ListTile(
+                          hoverColor: Colors.blue,
+                          //tileColor: Colors.blue,
+                          dense: false,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 16.0),
+                          visualDensity: const VisualDensity(vertical: -4),
+                          leading: const Icon(
+                            Icons.settings,
+                            color: Colors.white60,
+                          ),
+                          title: const Text(
+                            'Settings',
+                            style: TextStyle(
+                              color: Colors.white60,
+                              letterSpacing: 1.8,
+                            ),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const UserSettings.base())),
+                        )),
+                    //const Divider(height: 15),
+                    Container(
+                        decoration: buildDrawerDecorationListTile(),
+                        margin: const EdgeInsets.only(top: 4),
+                        child: ListTile(
+                          hoverColor: Colors.blue,
+                          //tileColor: Colors.blue,
+                          dense: false,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 16.0),
+                          visualDensity: const VisualDensity(vertical: -4),
+                          leading: const Icon(
+                            Icons.logout,
+                            color: Colors.white60,
+                          ),
+                          title: const Text(
+                            'Log out',
+                            style: TextStyle(
+                              color: Colors.white60,
+                              letterSpacing: 1.8,
+                            ),
+                          ),
+                          onTap: () {
+                            ApiService.logout();
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const LoginForm.base()),
+                                    (route) => false);
+                          })),
+                   /* Container(
+                        decoration: buildDrawerDecorationListTile(),
+                        child: ListTile(
+                            hoverColor: Colors.blue,
+                            //tileColor: Colors.blue,
+                            dense: false,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 16.0),
+                            visualDensity:
+                                const VisualDensity(vertical: -4),
+                            leading: const Icon(
+                              Icons.notifications,
+                              color: Colors.white60,
+                            ),
+                            title: const Text(
+                              'Data',
+                              style: TextStyle(
                                 color: Colors.white60,
+                                letterSpacing: 1.8
                               ),
-                              title: const Text(
-                                'History',
-                                style: TextStyle(
-                                  color: Colors.white60,
-                                  letterSpacing: 1.8,
-                                ),
-                              ),
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AlarmHistory())),
-                            )),
-                        //const Divider(height: 15),
-                        Container(
-                            decoration: buildDrawerDecorationListTile(),
-                            child: ListTile(
-                              hoverColor: Colors.blue,
-                              //tileColor: Colors.blue,
-                              dense: false,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 2, horizontal: 16.0),
-                              visualDensity: const VisualDensity(vertical: -4),
-                              leading: const Icon(
-                                Icons.settings,
-                                color: Colors.white60,
-                              ),
-                              title: const Text(
-                                'Settings',
-                                style: TextStyle(
-                                  color: Colors.white60,
-                                  letterSpacing: 1.8,
-                                ),
-                              ),
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UserSettings.base())),
-                            )),
-                        //const Divider(height: 15),
-                       /* Container(
-                            decoration: buildDrawerDecorationListTile(),
-                            child: ListTile(
-                                hoverColor: Colors.blue,
-                                //tileColor: Colors.blue,
-                                dense: false,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 16.0),
-                                visualDensity:
-                                    const VisualDensity(vertical: -4),
-                                leading: const Icon(
-                                  Icons.notifications,
-                                  color: Colors.white60,
-                                ),
-                                title: const Text(
-                                  'Data',
-                                  style: TextStyle(
-                                    color: Colors.white60,
-                                    letterSpacing: 1.8
-                                  ),
-                                ),
-                                onTap: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const DetailsPage.base())))
+                            ),
+                            onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DetailsPage.base())))
 
-                        ),*/
-                      ],
-                    ))))));
+                    ),*/
+                  ],
+                )))));
   }
 
   Container buildDrawerMainListTile() {
