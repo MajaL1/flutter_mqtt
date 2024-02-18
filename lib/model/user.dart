@@ -9,7 +9,7 @@ class User {
   String mqtt_pass;
   DateTime date_register;
   DateTime? date_login;
-  UserTopic topic;
+  List<UserTopic> userTopicList;
 
   User(
       {required this.id,
@@ -18,7 +18,7 @@ class User {
       required this.mqtt_pass,
       required this.date_register,
       this.date_login,
-      required this.topic});
+      required this.userTopicList});
 
   factory User.fromJson(Map<String, dynamic> map) {
     Map topicsJson;
@@ -46,8 +46,9 @@ class User {
         date_register: DateTime.parse(map["date_register"]),
         date_login: map["date_login"] == null
             ? null
-            : DateTime.tryParse(map["date_login"]),
-        topic: userTopic);
+            : DateTime.tryParse(map["date_login"]), userTopicList: [],
+    //    userTopicList: userTopicList
+    );
   }
 
   List<TopicData> getTopicDataList(topicData) {
@@ -66,7 +67,7 @@ class User {
       "mqtt_pass": mqtt_pass,
       "date_register": date_register,
       "date_login": date_login,
-      "topic": topic
+      "userTopicList": userTopicList
     };
   }
   @override

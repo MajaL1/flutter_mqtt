@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:mqtt_test/model/user_topic.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../model/topic_data.dart';
@@ -35,19 +36,26 @@ class Utils {
   }
 
   static List<String> createTopicListFromApi(User user) {
-    List<TopicData> userTopicDataList = user.topic.topicList;
+    // List<TopicData> userTopicDataList = user.topic.topicList;
     List<String> userTopicList = [];
-    String deviceName = user.topic.sensorName;
-    for (TopicData topicData in userTopicDataList) {
-      if (topicData.name.contains("settings")) {
-        userTopicList.add(deviceName + "/settings");
-      }
-      if (topicData.name.contains("alarm")) {
-        userTopicList.add(deviceName + "/alarm");
-      }
-      /*if (topicData.name.contains("data")) {
+    /* String deviceName = user.topic.sensorName;
+
+    */
+
+    for (UserTopic userTopic in user.userTopicList) {
+      String deviceName = userTopic.sensorName;
+
+      for (TopicData topicData in userTopic.topicList) {
+        if (topicData.name.contains("settings")) {
+          userTopicList.add(deviceName + "/settings");
+        }
+        if (topicData.name.contains("alarm")) {
+          userTopicList.add(deviceName + "/alarm");
+        }
+        /*if (topicData.name.contains("data")) {
         userTopicList.add(deviceName + "/data");
       } */
+      }
     }
     return userTopicList;
   }

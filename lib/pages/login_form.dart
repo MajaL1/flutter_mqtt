@@ -146,7 +146,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
   List<String> createTopicListFromApi(User user) {
-    List<TopicData> userTopicDataList = user.topic.topicList;
+    /*List<TopicData> userTopicDataList = user.topic.topicList;
     List<String> userTopicList = [];
     String deviceName = user.topic.sensorName;
     for (TopicData topicData in userTopicDataList) {
@@ -160,7 +160,9 @@ class _LoginFormValidationState extends State<LoginForm> {
         userTopicList.add(deviceName + "/data");
       }
     }
-    return userTopicList;
+    return userTopicList; */
+    List<String> userTopicList = [];
+    return userTopicList ;
   }
 
   String? validatePassword(String value) {

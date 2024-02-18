@@ -39,37 +39,46 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                   padding: EdgeInsets.only(
                       left: 15.0, right: 15.0, top: 7, bottom: 15.0),
                 ),
-                Row(children: [
-                  Container(
-                    height: 30,
-                    width: 150,
-                    decoration: Utils.buildHistoryButtonDecoration(),
-                    child: ElevatedButton.icon(
-                        style: Utils.buildElevatedButtonSettings(),
-                        onPressed: () {
-                          _clearHistory();
-                        },
-                        label: const Text(
-                          'Clear history',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ), icon: const Icon(Icons.clear, color: Colors.white, size: 18)),
-                  ),
-                  Container(width: 40),
-                  Container(
-                    height: 30,
-                    width: 130,
-                    decoration: Utils.buildHistoryButtonDecoration(),
-                    child: ElevatedButton.icon(
-                        style: Utils.buildElevatedButtonSettings(),
-                        onPressed: () {
-                          _refreshHistoryList();
-                        },
-                        label: const Text(
-                          'Refresh',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ), icon: const Icon(Icons.refresh,color: Colors.white, size: 18)),
-                  )
-                ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 150,
+                        decoration: Utils.buildHistoryButtonDecoration(),
+                        child: ElevatedButton.icon(
+                            style: Utils.buildElevatedButtonSettings(),
+                            onPressed: () {
+                              _clearHistory();
+                            },
+                            label: const Text(
+                              'Clear history',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                            icon: const Icon(Icons.clear,
+                                color: Colors.white, size: 18)),
+                      ),
+                      Container(width: 40),
+                      Container(
+                        height: 30,
+                        width: 130,
+                        decoration: Utils.buildHistoryButtonDecoration(),
+                        child: ElevatedButton.icon(
+                            style: Utils.buildElevatedButtonSettings(),
+                            onPressed: () {
+                              _refreshHistoryList();
+                            },
+                            label: const Text(
+                              'Refresh',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                            icon: const Icon(Icons.refresh,
+                                color: Colors.white, size: 18)),
+                      )
+                    ]),
                 const Divider(height: 40, color: Colors.black12, thickness: 3),
                 ListView.builder(
                     shrinkWrap: true,
@@ -208,6 +217,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     });
     // debugPrint("clear history");
   }
+
   Future<void> _refreshHistoryList() async {
     setState(() {
       //

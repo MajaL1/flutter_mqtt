@@ -241,34 +241,13 @@ class SmartMqtt extends ChangeNotifier {
         }
 
         DateTime? lastAlarmDate =
-            await SharedPreferences.getInstance().then((value) {
-          if (value.getString("last_sent_alarm_date") != null) {
-            String? lastAlarmDateString =
-                value.getString("last_sent_alarm_date");
-            //debugPrint("last_sent_alarm_date $lastAlarmDateString");
-            return DateTime.parse(lastAlarmDateString!);
-          }
-        });
+            await _getLastAlarmDate();
 
         int? lastSentHiAlarmValue =
-            await SharedPreferences.getInstance().then((value) {
-          if (value.getInt("last_sent_hi_alarm_value") != null) {
-            int? lastSentHiAlarmValue =
-                value.getInt("last_sent_hi_alarm_value");
-            //debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
-            return lastSentHiAlarmValue;
-          }
-        });
+            await _getLastSentHiAlarm();
 
         int? lastSentLoAlarmValue =
-            await SharedPreferences.getInstance().then((value) {
-          if (value.getInt("last_sent_lo_alarm_value") != null) {
-            int? lastSentLoAlarmValue =
-                value.getInt("last_sent_lo_alarm_value");
-            debugPrint("last_sent_lo_alarm_value $lastSentLoAlarmValue");
-            return lastSentLoAlarmValue;
-          }
-        });
+            await _getLastSentLoAlarm();
         int minutes = 6;
         if (lastAlarmDate != null) {
           minutes = Utils.compareDatesInMinutes(lastAlarmDate!, DateTime.now());
@@ -333,11 +312,39 @@ class SmartMqtt extends ChangeNotifier {
     //print('');
   }
 
-  String generateRandomString(int len) {
-    var r = Random();
-    return String.fromCharCodes(
-        List.generate(len, (index) => r.nextInt(33) + 89));
+  Future<DateTime?> _getLastAlarmDate() async {
+    return await SharedPreferences.getInstance().then((value) {
+        if (value.getString("last_sent_alarm_date") != null) {
+          String? lastAlarmDateString =
+              value.getString("last_sent_alarm_date");
+          //debugPrint("last_sent_alarm_date $lastAlarmDateString");
+          return DateTime.parse(lastAlarmDateString!);
+        }
+      });
   }
+
+  Future<int?> _getLastSentLoAlarm() async {
+    return await SharedPreferences.getInstance().then((value) {
+        if (value.getInt("last_sent_lo_alarm_value") != null) {
+          int? lastSentLoAlarmValue =
+              value.getInt("last_sent_lo_alarm_value");
+          debugPrint("last_sent_lo_alarm_value $lastSentLoAlarmValue");
+          return lastSentLoAlarmValue;
+        }
+      });
+  }
+
+  Future<int?> _getLastSentHiAlarm() async {
+    return await SharedPreferences.getInstance().then((value) {
+        if (value.getInt("last_sent_hi_alarm_value") != null) {
+          int? lastSentHiAlarmValue =
+              value.getInt("last_sent_hi_alarm_value");
+          //debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
+          return lastSentHiAlarmValue;
+        }
+      });
+  }
+
 
   Future<MqttServerClient> initializeMQTTClient(String username,
       String password1, String identifier, List topicList1) async {
@@ -347,7 +354,7 @@ class SmartMqtt extends ChangeNotifier {
     osPrefix = 'Flutter_Android';
     topicList = topicList1;
 
-    String l = generateRandomString(10);
+    String l = Utils.generateRandomString(10);
     //String identifier = "_12apxeeejjjewg";
     String identifier = l.toString();
 

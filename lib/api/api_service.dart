@@ -83,19 +83,11 @@ class ApiService {
         var data = await jsonDecode(response.body.toString());
         // debugPrint(data['token']);
         debugPrint('=====Login successfully');
-        UserTopic userTopic;
+        List<UserTopic> userTopicList;
+        //UserTopic userTopic;
         if (data["topics"] != null) {
-          userTopic = getUserTopic(data["topics"]);
-
-          // ***** test user devices and sensors
-          TopicData topicData1 = TopicData(name: "topicTest1/settings", rw: 1);
-          TopicData topicData2 = TopicData(name: "topicTest1/alarm", rw: 1);
-          TopicData topicData3 = TopicData(name: "topicTest1/data", rw: 1);
-
-          userTopic.topicList.add(topicData1);
-          userTopic.topicList.add(topicData2);
-          userTopic.topicList.add(topicData3);
-          // *****
+         // userTopic = getUserTopic(data["topics"]);
+          userTopicList = getUserTopicList(data["topics"]);
 
           User user = User(
               id: 1,
@@ -104,7 +96,7 @@ class ApiService {
               date_register: DateTime.now(),
               email: 'test@test.com',
               mqtt_pass: data["mqtt_pass"],
-              topic: userTopic);
+              userTopicList: userTopicList);
           return user;
         }
       } else {
@@ -168,6 +160,38 @@ class ApiService {
       service.startService();
     }
     debugPrint("stopping service");
+  }
+
+  static List<UserTopic> getUserTopicList(Map topics) {
+    List<TopicData> topicList = [];
+    List <UserTopic> userTopicList = [];
+
+    for (var devices in topics.keys) {
+      var deviceName = devices;
+
+      String topicName = "";
+      int rw = 0;
+      UserTopic topic = UserTopic(sensorName: '1', topicList: []);
+      topic.sensorName = deviceName;
+      for (var topicVal in topics.values) {
+        for (var topicVal1 in topicVal) {
+          //debugPrint("topicVal1: $topicVal1");
+
+          topicName = topicVal1["topic"];
+          rw = topicVal1["rw"];
+
+          //debugPrint("topic: $topicName");
+          //debugPrint("topic: $rw");
+
+          //debugPrint("rw: $rw");
+          TopicData topicData = TopicData(name: topicName, rw: rw);
+          topicList.add(topicData);
+        }
+        userTopicList.add(UserTopic(sensorName: deviceName, topicList: topicList));
+      }
+    }
+   // topic.topicList = topicList;
+    return userTopicList;
   }
 
   static UserTopic getUserTopic(Map topics) {
