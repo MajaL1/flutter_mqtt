@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -6,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/alarm.dart';
 import '../model/topic_data.dart';
 import '../model/user.dart';
 
@@ -58,6 +61,78 @@ class Utils {
       }
     }
     return userTopicList;
+  }
+
+  static void saveLastSentAlarmForDevice(Alarm newAlarm) {}
+
+  static void setLastAlarmHistoryFromPreferencesTEST() {
+
+    /** test **/
+    Alarm alarm1 = Alarm(
+        deviceName: "aa1",
+        sensorAddress: "aa1bb2",
+        hiAlarm: 10,
+        loAlarm: 1,
+        ts: DateTime.now());
+    Alarm alarm2 = Alarm(
+        deviceName: "aa1",
+        sensorAddress: "bb1cc2",
+        hiAlarm: 20,
+        loAlarm: 2,
+        ts: DateTime.now());
+    Alarm alarm3 = Alarm(
+        deviceName: "bb1",
+        sensorAddress: "dd1ee1",
+        hiAlarm: 40,
+        loAlarm: 4,
+        ts: DateTime.now());
+    Alarm alarm4 = Alarm(
+        deviceName: "bb1",
+        sensorAddress: "bb1cc2",
+        hiAlarm: 60,
+        loAlarm: 6,
+        ts: DateTime.now());
+
+    Map<String, List<Alarm>> alarmHistoryList = {
+      "aa1": [alarm1, alarm2],
+      "bb1": [alarm3, alarm4],
+    };
+    String alarmListData = json.encode(alarmHistoryList);
+    //json.decode(alarmListData);
+    SharedPreferences.getInstance().then((value) {
+      value.setString("last_alarm_history_list", alarmListData);
+
+    });
+  }
+
+  static Future<Map<String, List<Alarm>>>
+      getLastAlarmHistoryListFromPreferencesTEST() async {
+    Map<String, List<Alarm>> alarmHistoryList = Map();
+    alarmHistoryList = await SharedPreferences.getInstance().then((value) {
+      if (value.getString("last_alarm_history_list") != null) {
+        // username = value.getString("mqtt_username")!;
+        String? str = value.getString("last_alarm_history_list");
+        if (str != null) {
+          alarmHistoryList =  Map.castFrom(json.decode(str!));
+        }
+      }
+      return alarmHistoryList;
+    });
+
+    return alarmHistoryList;
+  }
+
+ // Map<String, List<Alarm>> decodeAlarmHistoryList(String str){
+    //List<String> usrList =
+    //str.map((item) => jsonEncode(item.toMap())).toList();
+   // json
+ // }
+
+  Alarm findLastSentAlarm(String deviceName, String sensorName) {
+    Map<String, List<Alarm>> alarmHistoryList = Map();
+    Alarm alarm = Alarm();
+
+    return alarm;
   }
 
   static Future<String> getImageFilePathFromAssets(

@@ -282,7 +282,7 @@ Future<void> _reconnectToMqtt() async {
     SmartMqtt.instance.client = MqttServerClient(
         Constants.BROKER_IP, identifier,
         maxConnectionAttempts: 1);
-    SmartMqtt.instance.initializeMQTTClient(
+    SmartMqtt. instance.initializeMQTTClient(
         username, mqttPassword, identifier, userTopicList);
     //SmartMqtt.instance.client.
     //await SmartMqtt.instance.client.connect();

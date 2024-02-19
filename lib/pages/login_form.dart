@@ -121,6 +121,10 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance().then((value) {
             value.setBool("isLoggedIn", true);
           });
+          //*** Test
+          Utils.setLastAlarmHistoryFromPreferencesTEST();
+          Utils.getLastAlarmHistoryListFromPreferencesTEST();
+          //*** End test
           //*********************************************/
           await Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (_) => UserSettings.base()));
