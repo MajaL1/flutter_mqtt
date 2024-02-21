@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../components/custom_app_bar.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
-import '../util/utils.dart';
+import '../util/gui_utils.dart';
 
 class AlarmHistory extends StatefulWidget {
   //var sharedPreferences;
@@ -46,9 +46,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       Container(
                         height: 30,
                         width: 150,
-                        decoration: Utils.buildHistoryButtonDecoration(),
+                        decoration: GuiUtils.buildHistoryButtonDecoration(),
                         child: ElevatedButton.icon(
-                            style: Utils.buildElevatedButtonSettings(),
+                            style: GuiUtils.buildElevatedButtonSettings(),
                             onPressed: () {
                               _clearHistory();
                             },
@@ -64,9 +64,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       Container(
                         height: 30,
                         width: 130,
-                        decoration: Utils.buildHistoryButtonDecoration(),
+                        decoration: GuiUtils.buildHistoryButtonDecoration(),
                         child: ElevatedButton.icon(
-                            style: Utils.buildElevatedButtonSettings(),
+                            style: GuiUtils.buildElevatedButtonSettings(),
                             onPressed: () {
                               _refreshHistoryList();
                             },
@@ -176,7 +176,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                               left: 1,
                                               right: 1,
                                               bottom: 1.0),
-                                          child: Text("${index}",
+                                          child: Text(index as String,
                                               textAlign: TextAlign.center)),
                                       Container(
                                           padding: const EdgeInsets.all(1.0),

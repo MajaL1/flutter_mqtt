@@ -7,7 +7,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
-import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../api/api_service.dart';
 import '../model/constants.dart';
 import '../model/user.dart';
+import '../util/gui_utils.dart';
 import '../util/utils.dart';
 
 //**  ToDo: implementiraj onLoginSuccess **/
@@ -55,7 +55,7 @@ class _LoginFormValidationState extends State<LoginForm> {
             status == InternetStatus.connected ? "" : "No internet connection";
       });
     });
-    print("-- loginform initstate");
+    debugPrint("-- loginform initstate");
   }
 
   @override
@@ -127,7 +127,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           //*** End test
           //*********************************************/
           await Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => UserSettings.base()));
+              context, MaterialPageRoute(builder: (_) => const UserSettings.base()));
 
           debugPrint("Validated");
         } else {
@@ -181,13 +181,9 @@ class _LoginFormValidationState extends State<LoginForm> {
     }
   }
 
-  bool _returnHasNetwork(bool val) {
-    return val;
-  }
-
   @override
   Widget build(BuildContext context) {
-    bool network = true;
+    //bool network = true;
     return DefaultTabController(
         length: 3,
         // child: SingleChildScrollView(
@@ -224,7 +220,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         child: SizedBox(
                                             width: 100,
                                             height: 100,
-                                            child: const ImageIcon(
+                                            child: ImageIcon(
                                               AssetImage(
                                                   "assets/images/NAVIS_LOGO_PNG.png"),
                                               size: 3.0,
@@ -241,7 +237,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     decoration: buildLoginBoxDecoration(),
                                     child: Column(
                                       children: [
-                                        Text(""),
+                                        const Text(""),
                                         const Text(
                                           Constants.LOGIN_TO_NAVIS,
                                           style: TextStyle(
@@ -310,13 +306,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               top: 15,
                                               bottom: 10),
                                         ),
-                                        Container(
+                                        SizedBox(
                                           // height: 50,
                                           width: 120,
                                          // decoration: Utils
                                            //   .buildLoginButtonBoxDecoration(),
                                           child: ElevatedButton(
-                                            style: Utils.buildElevatedButtonLogin(),
+                                            style: GuiUtils.buildElevatedButtonLogin(),
                                             onPressed: () {
                                               login();
                                             },
@@ -404,7 +400,7 @@ class _LoginFormValidationState extends State<LoginForm> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide:
-              BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+              const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -432,7 +428,7 @@ class _LoginFormValidationState extends State<LoginForm> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide:
-              BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
+              const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),

@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
 import '../model/constants.dart';
+import '../util/gui_utils.dart';
 import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 import 'login_form.dart';
@@ -258,7 +259,7 @@ class _UserSettingsState extends State<UserSettings> {
                 max: 60,
                 min: 5,
                 readOnly: true,
-                decoration: Utils.buildAlarmIntervalDecoration(),
+                decoration: GuiUtils.buildAlarmIntervalDecoration(),
                 onChanged: (val) {
                   value = val as int;
                   debugPrint(val as String?);
@@ -275,7 +276,7 @@ class _UserSettingsState extends State<UserSettings> {
                //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
               child: //SmartMqtt.instance.isSaved != true
                   ElevatedButton(
-                    style: Utils.buildElevatedButtonSettings(),
+                    style: GuiUtils.buildElevatedButtonSettings(),
                 onPressed: () {
                   saveInterval();
                 },
@@ -467,7 +468,7 @@ class _UserSettingsState extends State<UserSettings> {
                               //color: Colors.tealAccent,
                               alignment: Alignment.center,
                               decoration: index %2 == 0
-                                  ? Utils.buildBoxDecorationSettings()
+                                  ? GuiUtils.buildBoxDecorationSettings()
                                   : null,
                               padding: EdgeInsets.only(bottom: 0),
                               //padding: EdgeInsets.all(5),
@@ -642,7 +643,7 @@ class _UserSettingsState extends State<UserSettings> {
             child: //ElevatedButton(
                 //style: Utils.buildSaveMqttSettingsButtonDecoration1(),
                 ElevatedButton(
-                  style: Utils.buildElevatedButtonSettings(),    onPressed: () {
+                  style: GuiUtils.buildElevatedButtonSettings(),    onPressed: () {
                 // Todo: same value - don't call save
                 // Todo: debouncing
                 if (!isEnabledSave) {

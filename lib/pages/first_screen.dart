@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'login_form.dart';
 
 class FirstScreen extends StatefulWidget {
-  FirstScreen.base({Key? key}) : super(key: key);
+  const FirstScreen.base({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FirstScreenState();
@@ -33,9 +33,9 @@ class _FirstScreenState extends State<FirstScreen> {
     } else {
       isLoggedIn = true;
     }
-    return true;// prefs.getBool("isLoggedIn");
+    return true; // prefs.getBool("isLoggedIn");
 
-    return isLoggedIn;
+    //return isLoggedIn;
   }
 
   @override
