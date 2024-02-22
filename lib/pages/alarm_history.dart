@@ -176,7 +176,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                               left: 1,
                                               right: 1,
                                               bottom: 1.0),
-                                          child: Text(index as String,
+                                          child: Text(index.toString(),
                                               textAlign: TextAlign.center)),
                                       Container(
                                           padding: const EdgeInsets.all(1.0),
