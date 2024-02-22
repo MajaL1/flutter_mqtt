@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/model/alarm_interval_setting.dart';
+import 'package:mqtt_test/util/utils.dart';
 import 'package:mqtt_test/widgets/show_alarm_time_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -133,7 +135,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                       ElevatedButton(
                     style: GuiUtils.buildElevatedButtonSettings(),
                     onPressed: () {
-                      saveInterval();
+                      saveInterval(dropdownValue);
                     },
                     child: const Text(
                       "Save",
@@ -154,5 +156,21 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     preferences = await SharedPreferences.getInstance();
   }
 
-  void saveInterval() {}
+  void saveInterval(String interval) {
+
+    /*Utils.getAlarmIntervalSettingsList().then((list){
+      if(list != null){
+        for (AlarmIntervalSetting setting in list){
+
+        }
+      }
+    }); */
+    Utils.getAlarmIntervalSettingsList().then((list){
+      if(list != null){
+        list.first.value = interval;
+      }
+    });
+    debugPrint("interval saved...");
+
+  }
 }
