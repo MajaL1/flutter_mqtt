@@ -3,11 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/api/api_service.dart';
-import 'package:mqtt_test/components/custom_app_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../components/drawer.dart';
-import '../model/constants.dart';
 import 'login_form.dart';
 
 class UserPersonalSettings extends StatefulWidget {
@@ -47,34 +44,27 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
-      //padding: const EdgeInsets.all(12),
-      //alignment: Alignment.center,
-      /*appBar: AppBar(
-          shadowColor: Colors.black,
-          title: Container(
-            //decoration: buildBoxDecoration(),
-            child: const Text(
-              Constants.SETTINGS,
-              style: TextStyle(fontSize: 16),
-            ),
-          )), */
-      appBar: CustomAppBar(Constants.SETTINGS),
-      drawer: const NavDrawer.base(),
-      body: SingleChildScrollView(
-        child: Column(children: <Widget>[
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-          ),
-          const Divider(height: 1, color: Colors.black12, thickness: 5),
-          Container(height: 30),
-          const Text("Personal settings ",
-              style: TextStyle(color: Colors.black, fontSize: 18)),
-          const Divider(height: 40, color: Colors.black12, thickness: 2),
-          _buildUserPersonalSettings(),
-        ]),
-      ),
+    return buildUserPersonalSettings();
+  }
+
+  SingleChildScrollView buildUserPersonalSettings() {
+    return SingleChildScrollView(
+      //backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+
+      //body: SingleChildScrollView(
+      child: Column(children: <Widget>[
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+        ),
+        Container(height: 30),
+        const Text("Personal settings ",
+            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+        Container(height: 20),
+
+        const Divider(height: 1, color: Colors.black12, thickness: 5),
+        _buildUserPersonalSettings(),
+      ]),
+      // ),
     );
   }
 

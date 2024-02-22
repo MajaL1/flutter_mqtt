@@ -184,8 +184,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       preferences?.setString("settings_mqtt", newUserSettings);
     }); */
 
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+    return SingleChildScrollView(
+     // backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
       /*appBar: AppBar(
@@ -197,12 +197,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               style: TextStyle(fontSize: 16),
             ),
           )), */
-      appBar: CustomAppBar(Constants.SETTINGS),
-      drawer: const NavDrawer.base(),
-      body: SingleChildScrollView(
+     // appBar: CustomAppBar(Constants.SETTINGS),
+      child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        padding:
-            const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
+       // padding:
+        //    const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -211,8 +210,10 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               style: TextStyle(
                   color: Colors.black,
                   decorationColor: Colors.blueAccent,
-                  fontSize: 18)),
+                  fontSize: 20, fontWeight: FontWeight.bold)),
+          const Divider(height: 10, color: Colors.transparent, thickness: 5),
           const Divider(height: 4, color: Colors.black12, thickness: 5),
+
           _buildMqttSettingsView(),
           /* const Padding(
            padding: EdgeInsets.symmetric(vertical: 5),
@@ -264,7 +265,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             height: 5,
           ),
           Container(
-              height: 50,
+              height: 20,
               width: MediaQuery.of(context).size.width / 5,
               margin: const EdgeInsets.only(right: 10),
                //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
@@ -394,8 +395,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                 letterSpacing: 1.1,
                                               ),
                                             ),
-                                            const Row(children: [Text("\n")]),
-                                            const SizedBox(
+                                                Container(height: 10,),
+                                                const SizedBox(
                                                 child: Text("Sensor address:  ",
                                                     style: TextStyle(
                                                       letterSpacing: 0.8,
@@ -409,7 +410,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       fontWeight:
                                                           FontWeight.w800,
                                                     ))),
-                                            const Row(children: [Text("\n")]),
+                                            Container(height: 10,),
                                             const SizedBox(
                                                 child: Text(
                                               "units:  ",
@@ -428,7 +429,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                         ]))
                                     : const Text(""),
                               ])),
-                          Container(height: 10),
+                          Container(height: 25),
                           Column(children: [
                                                       /* const Padding(
                           padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
