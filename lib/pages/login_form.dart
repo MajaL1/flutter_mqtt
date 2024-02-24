@@ -262,7 +262,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                       00, 20, 20, 80),
                                                   fontSize: 16),
                                               decoration:
-                                                  buildInputUsernameLoginDecoration(),
+                                                  GuiUtils.buildInputUsernameLoginDecoration(),
                                               controller: emailController,
                                               validator: MultiValidator([
                                                 RequiredValidator(
@@ -412,33 +412,6 @@ class _LoginFormValidationState extends State<LoginForm> {
         hintStyle: const TextStyle(fontSize: 12));
   }
 
-  InputDecoration buildInputUsernameLoginDecoration() {
-    return InputDecoration(
-        prefixIcon: const Icon(
-          Icons.person,
-          color: Colors.blueAccent,
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-              width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
-          borderRadius: BorderRadius.circular(16), //
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide:
-              const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Colors.black12, width: 0.5),
-        ),
-        //labelText: Constants.ENTER_VALID_USER,
-        labelStyle: const TextStyle(letterSpacing: 1.8),
-        hintText: Constants.ENTER_VALID_USER,
-        hintStyle: const TextStyle(fontSize: 12));
-  }
 
   BoxDecoration buildLoginBoxDecoration() {
     return const BoxDecoration(

@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/constants.dart';
+import '../model/data.dart';
 import '../util/gui_utils.dart';
 import '../widgets/sensor_type.dart';
 
@@ -23,6 +24,43 @@ class UserMqttSettings extends StatefulWidget {
 
   @override
   State<UserMqttSettings> createState() => _UserMqttSettingsState();
+}
+
+Future<List<Data>> _getMqttData(String data) async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+
+  String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+  List<Data> dataMqtt = [];
+
+  // Todo, preveri, ali decode message ni null in beri zadnje settinge
+
+  if (preferences.getBool("isLoggedIn") != null) {
+    if (preferences.getBool("isLoggedIn") == true) {
+      // ali app tece v ozadju
+      // if (preferences.getBool("appRunInBackground") != null) {
+      // if (preferences.getBool("appRunInBackground") == true) {
+      if (decodeMessage.isEmpty) {
+        debugPrint("get data from data");
+
+        decodeMessage = preferences.getString("data_mqtt_list");
+
+        //}
+        // }
+      } else {
+        decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+      }
+      //debugPrint("****************** user settings data $data");
+      //debugPrint("user_settings decodeMessage $decodeMessage");
+      if (decodeMessage != null) {
+        Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+        debugPrint("get mqtt data from json decode message");
+
+        dataMqtt = Data.fromJsonList(jsonMap as List);
+        return dataMqtt;
+      }
+    }
+  }
+  return dataMqtt;
 }
 
 Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
@@ -156,7 +194,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       debugPrint("goy mqtt data: ${value.getString("data_mqtt_list")}");
     });
 
-   // debugPrint("got Mqtt Data: $dataMqtt");
+    // debugPrint("got Mqtt Data: $dataMqtt");
   }
 
   /* Widget _connectToTopic() {
@@ -213,6 +251,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           const Divider(height: 4, color: Colors.black12, thickness: 5),
 
           _buildMqttSettingsView(),
+          _buildDataView(),
           /* const Padding(
            padding: EdgeInsets.symmetric(vertical: 5),
           ), */
@@ -298,9 +337,34 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
+  Future<String> _getNewDataList() async {
+    return await Provider.of<SmartMqtt>(context, listen: true).getNewDataList();
+  }
+
   Future<String> _getNewUserSettingsList() async {
     return await Provider.of<SmartMqtt>(context, listen: true)
         .getNewUserSettingsList();
+  }
+
+  Widget _buildDataView() {
+    String $settingsData = "Data: ";
+
+    return FutureBuilder<List<Data>>(
+        future: //Provider.of<SmartMqtt>(context, listen: true)
+            //.getNewUserSettingsList()
+            _getNewDataList().then((dataList) => _getMqttData(dataList)),
+        builder: (context, snapshot) {
+          //debugPrint(
+          //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
+          // if (snapshot.hasData) {
+          return Container(
+            child: Text($settingsData,
+                style: const TextStyle(color: Colors.indigo)),
+          );
+          // } else {
+          //   return Container();
+          // }
+        });
   }
 
   Widget _buildMqttSettingsView() {
@@ -392,6 +456,32 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                 fontSize: 18,
                                                 letterSpacing: 1.1,
                                               ),
+                                            ),
+                                            const Text(
+                                              "Friendly name: ",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                            Container(
+                                                width: 120,
+                                                height: 40,
+                                                child: (TextFormField(
+                                                  style: const TextStyle(
+                                                      fontFamily: 'Roboto',
+                                                      color: Color.fromRGBO(
+                                                          00, 20, 20, 80),
+                                                      fontSize: 16),
+                                                  decoration: GuiUtils
+                                                      .buildFriendlyNameDecoration(),
+                                                ))),
+                                            ElevatedButton(
+                                              style: GuiUtils
+                                                  .buildElevatedButtonSettings(),
+                                              onPressed: () {
+                                                saveFriendlyName();
+                                              },
+                                              child: Text("Save", style: TextStyle(color: Colors.white),),
                                             ),
                                             Container(
                                               height: 10,
@@ -519,7 +609,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               //padding: EdgeInsets.only(
               //  top: 0, bottom: 0, left: 25, right: 25),
               child: TextFormField(
-                  decoration: _setInputDecoration(value),
+                  decoration: GuiUtils.setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
@@ -616,23 +706,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         "after publish:: saveMqttSettings: $controller.text, $sensorName, $settingToChange");
   }
 
-  _setInputDecoration(val) {
-    return InputDecoration(
-        labelText: val,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-            borderRadius: BorderRadius.circular(14)),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
-        ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1.0),
-        ));
-  }
-
   void saveInterval() {
     debugPrint("save interval...");
   }
+
+  void saveFriendlyName() {}
 }

@@ -61,6 +61,7 @@ class SmartMqtt extends ChangeNotifier {
   late bool isSaved = false;
   late bool newSettingsMessageLoaded = false;
   late String newUserSettings = "";
+  late String newMqttData = "";
 
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
@@ -196,6 +197,7 @@ class SmartMqtt extends ChangeNotifier {
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         dataSet = true;
+        newMqttData = decodeMessage;
       }
     }
     /***  polnjenje objekta - settings ***/
@@ -409,6 +411,10 @@ class SmartMqtt extends ChangeNotifier {
     //}
   }
 
+  Future<String> getNewDataList() async {
+    return newMqttData;
+  }
+
   Future<void> setNewUserSettings(String newUserSettings) async {
     this.newUserSettings = newUserSettings;
     this.isSaved = true;
@@ -422,7 +428,7 @@ class SmartMqtt extends ChangeNotifier {
 
     Data? data = Data().getData(dataStr);
     // Data data = json.decode(dataStr);
-    data?.deviceName = deviceName;
+    data?.deviceName = deviceName.split("/data").first;
 
     debugPrint(
         "converting data object...${data?.deviceName}, ${data?.sensorAddress}, ${data?.typ}, ${data?.t}");
