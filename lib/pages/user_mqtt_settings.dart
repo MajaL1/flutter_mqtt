@@ -8,17 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:mqtt_test/components/custom_app_bar.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../util/gui_utils.dart';
-import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
 class UserMqttSettings extends StatefulWidget {
@@ -68,11 +65,10 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   return null;
 }
 
-void _setUserDataSettings(userDataSettings, deviceName){
-  for(UserDataSettings userDataSetting in userDataSettings){
+void _setUserDataSettings(userDataSettings, deviceName) {
+  for (UserDataSettings userDataSetting in userDataSettings) {
     userDataSetting.deviceName = deviceName;
   }
-
 }
 
 List<TextEditingController> _createControllerForEditSettings(
@@ -153,13 +149,14 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     super.initState();
     // SmartMqtt.instance.isSaved = false;
     SmartMqtt.instance.isSaved = false;
-
     debugPrint("user_settings initState");
 
-    // SchedulerBinding.instance.addPostFrameCallback((_) {
-    // widget.manager.disconnect();
-    // print("SchedulerBinding");
-    //});
+    SharedPreferences.getInstance().then((value) {
+      //value.getString("data_mqtt_list");
+      debugPrint("goy mqtt data: ${value.getString("data_mqtt_list")}");
+    });
+
+   // debugPrint("got Mqtt Data: $dataMqtt");
   }
 
   /* Widget _connectToTopic() {
@@ -185,7 +182,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }); */
 
     return SingleChildScrollView(
-     // backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+      // backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       //padding: const EdgeInsets.all(12),
       //alignment: Alignment.center,
       /*appBar: AppBar(
@@ -197,10 +194,10 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               style: TextStyle(fontSize: 16),
             ),
           )), */
-     // appBar: CustomAppBar(Constants.SETTINGS),
+      // appBar: CustomAppBar(Constants.SETTINGS),
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-       // padding:
+        // padding:
         //    const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
         child: Column(children: <Widget>[
           const Padding(
@@ -210,7 +207,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               style: TextStyle(
                   color: Colors.black,
                   decorationColor: Colors.blueAccent,
-                  fontSize: 20, fontWeight: FontWeight.bold)),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold)),
           const Divider(height: 10, color: Colors.transparent, thickness: 5),
           const Divider(height: 4, color: Colors.black12, thickness: 5),
 
@@ -268,10 +266,10 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               height: 20,
               width: MediaQuery.of(context).size.width / 5,
               margin: const EdgeInsets.only(right: 10),
-               //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
+              //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
               child: //SmartMqtt.instance.isSaved != true
                   ElevatedButton(
-                    style: GuiUtils.buildElevatedButtonSettings(),
+                style: GuiUtils.buildElevatedButtonSettings(),
                 onPressed: () {
                   saveInterval();
                 },
@@ -365,13 +363,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                           Container(
                               //color: Colors.tealAccent,
                               alignment: Alignment.center,
-                              decoration: index %2 == 0
+                              decoration: index % 2 == 0
                                   ? GuiUtils.buildBoxDecorationSettings()
                                   : null,
                               padding: const EdgeInsets.only(bottom: 0),
                               //padding: EdgeInsets.all(5),
                               child: Wrap(children: [
-                                index %2 == 0
+                                index % 2 == 0
                                     ? Container(
                                         // color: Colors.red,
                                         alignment: Alignment.center,
@@ -395,13 +393,14 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                 letterSpacing: 1.1,
                                               ),
                                             ),
-                                                Container(height: 10,),
-                                                const SizedBox(
+                                            Container(
+                                              height: 10,
+                                            ),
+                                            const SizedBox(
                                                 child: Text("Sensor address:  ",
                                                     style: TextStyle(
-                                                      letterSpacing: 0.8,
-                                                      fontSize: 18
-                                                    ))),
+                                                        letterSpacing: 0.8,
+                                                        fontSize: 18))),
                                             SizedBox(
                                                 child: Text(sensorAddress,
                                                     style: const TextStyle(
@@ -410,7 +409,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       fontWeight:
                                                           FontWeight.w800,
                                                     ))),
-                                            Container(height: 10,),
+                                            Container(
+                                              height: 10,
+                                            ),
                                             const SizedBox(
                                                 child: Text(
                                               "units:  ",
@@ -431,24 +432,24 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                               ])),
                           Container(height: 25),
                           Column(children: [
-                                                      /* const Padding(
+                            /* const Padding(
                           padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
                                                       ), */
-                                                      // Column(children: [Text("a1"), Text("a2")]),
-                                                      settingToChange != Constants.U_JSON
-                            ? _buildEditableSettingsTest2(
-                                sensorAddress,
-                                index,
-                                u,
-                                settingToChange,
-                                value,
-                                controller,
-                                item,
-                                savePressed,
-                                textControllerList[index])
-                            : Container(height: 0)
-                                                      //ListTile(enabled: false)
-                                                    ])
+                            // Column(children: [Text("a1"), Text("a2")]),
+                            settingToChange != Constants.U_JSON
+                                ? _buildEditableSettingsTest2(
+                                    sensorAddress,
+                                    index,
+                                    u,
+                                    settingToChange,
+                                    value,
+                                    controller,
+                                    item,
+                                    savePressed,
+                                    textControllerList[index])
+                                : Container(height: 0)
+                            //ListTile(enabled: false)
+                          ])
                         ]));
                   }));
         }
@@ -539,7 +540,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             child: //ElevatedButton(
                 //style: Utils.buildSaveMqttSettingsButtonDecoration1(),
                 ElevatedButton(
-                  style: GuiUtils.buildElevatedButtonSettings(),    onPressed: () {
+              style: GuiUtils.buildElevatedButtonSettings(),
+              onPressed: () {
                 // Todo: same value - don't call save
                 // Todo: debouncing
                 if (!isEnabledSave) {
@@ -567,10 +569,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       ],
     );
   }
-
-
-
-
 
 // test method with dummy parameters
 /*  void saveMqttSettingsTest() {

@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api/notification_helper.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
+import '../model/data.dart';
 import '../mqtt/MQTTAppState.dart';
 
 class SmartMqtt extends ChangeNotifier {
@@ -24,6 +25,7 @@ class SmartMqtt extends ChangeNotifier {
   late String currentTopic;
 
   int messageCount = 0;
+  bool dataSet = false;
 
   MQTTAppConnectionState? currentState; //= MQTTAppConnectionState.disconnected;
 
@@ -183,14 +185,20 @@ class SmartMqtt extends ChangeNotifier {
     preferences.remove("alarm_mqtt");
     preferences.clear(); */
 
-
     if (topicName!.contains("data")) {
-      debugPrint("___________________________________________________");
-      debugPrint("from topic data $topicName");
-      debugPrint("__________ $decodeMessage");
-      debugPrint("___________________________________________________");
+      if(!dataSet) {
+        Data? data = convertMessageToData(decodeMessage, topicName);
+        setDataListToPreferences(data!, preferences);
+        //preferences.setString("data_mqtt", decodeMessage);
+
+        debugPrint("___________________________________________________");
+        debugPrint("from topic data $topicName");
+        debugPrint("__________ $decodeMessage");
+        debugPrint("___________________________________________________");
+        dataSet = true;
+      }
     }
-      /***  polnjenje objekta - settings ***/
+    /***  polnjenje objekta - settings ***/
     if (topicName!.contains("settings")) {
       debugPrint("___________________________________________________");
       debugPrint("from topic $topicName");
@@ -239,14 +247,11 @@ class SmartMqtt extends ChangeNotifier {
           oldAlarmList = json.decode(alarmListOldData);
         }
 
-        DateTime? lastAlarmDate =
-            await _getLastAlarmDate();
+        DateTime? lastAlarmDate = await _getLastAlarmDate();
 
-        int? lastSentHiAlarmValue =
-            await _getLastSentHiAlarm();
+        int? lastSentHiAlarmValue = await _getLastSentHiAlarm();
 
-        int? lastSentLoAlarmValue =
-            await _getLastSentLoAlarm();
+        int? lastSentLoAlarmValue = await _getLastSentLoAlarm();
         int minutes = 6;
         if (lastAlarmDate != null) {
           minutes = Utils.compareDatesInMinutes(lastAlarmDate!, DateTime.now());
@@ -283,11 +288,11 @@ class SmartMqtt extends ChangeNotifier {
                 "last_sent_alarm_date", currentAlarmList.first.ts.toString());
             /*********************/
             if (currentAlarmList.first.hiAlarm != null) {
-              value.setInt("last_sent_hi_alarm_value",
-                  currentAlarmList.first.hiAlarm!);
+              value.setInt(
+                  "last_sent_hi_alarm_value", currentAlarmList.first.hiAlarm!);
             } else if (currentAlarmList.first.loAlarm != null) {
-              value.setInt("last_sent_lo_alarm_value",
-                  currentAlarmList.first.loAlarm!);
+              value.setInt(
+                  "last_sent_lo_alarm_value", currentAlarmList.first.loAlarm!);
             }
             /*********************/
           });
@@ -313,37 +318,33 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<DateTime?> _getLastAlarmDate() async {
     return await SharedPreferences.getInstance().then((value) {
-        if (value.getString("last_sent_alarm_date") != null) {
-          String? lastAlarmDateString =
-              value.getString("last_sent_alarm_date");
-          //debugPrint("last_sent_alarm_date $lastAlarmDateString");
-          return DateTime.parse(lastAlarmDateString!);
-        }
-      });
+      if (value.getString("last_sent_alarm_date") != null) {
+        String? lastAlarmDateString = value.getString("last_sent_alarm_date");
+        //debugPrint("last_sent_alarm_date $lastAlarmDateString");
+        return DateTime.parse(lastAlarmDateString!);
+      }
+    });
   }
 
   Future<int?> _getLastSentLoAlarm() async {
     return await SharedPreferences.getInstance().then((value) {
-        if (value.getInt("last_sent_lo_alarm_value") != null) {
-          int? lastSentLoAlarmValue =
-              value.getInt("last_sent_lo_alarm_value");
-          debugPrint("last_sent_lo_alarm_value $lastSentLoAlarmValue");
-          return lastSentLoAlarmValue;
-        }
-      });
+      if (value.getInt("last_sent_lo_alarm_value") != null) {
+        int? lastSentLoAlarmValue = value.getInt("last_sent_lo_alarm_value");
+        debugPrint("last_sent_lo_alarm_value $lastSentLoAlarmValue");
+        return lastSentLoAlarmValue;
+      }
+    });
   }
 
   Future<int?> _getLastSentHiAlarm() async {
     return await SharedPreferences.getInstance().then((value) {
-        if (value.getInt("last_sent_hi_alarm_value") != null) {
-          int? lastSentHiAlarmValue =
-              value.getInt("last_sent_hi_alarm_value");
-          //debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
-          return lastSentHiAlarmValue;
-        }
-      });
+      if (value.getInt("last_sent_hi_alarm_value") != null) {
+        int? lastSentHiAlarmValue = value.getInt("last_sent_hi_alarm_value");
+        //debugPrint("last_sent_hi_alarm_value $lastSentHiAlarmValue");
+        return lastSentHiAlarmValue;
+      }
+    });
   }
-
 
   Future<MqttServerClient> initializeMQTTClient(String username,
       String password1, String identifier, List topicList1) async {
@@ -413,6 +414,36 @@ class SmartMqtt extends ChangeNotifier {
     this.isSaved = true;
     notifyListeners();
     debugPrint("notifying listeners..");
+  }
+
+  Data? convertMessageToData(String message, String deviceName) {
+    String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
+    Map<String, dynamic> dataStr = json.decode(decodeMessage);
+
+    Data? data = Data().getData(dataStr);
+    // Data data = json.decode(dataStr);
+    data?.deviceName = deviceName;
+
+    debugPrint(
+        "converting data object...${data?.deviceName}, ${data?.sensorAddress}, ${data?.typ}, ${data?.t}");
+
+    return data;
+  }
+
+  void setDataListToPreferences(Data newData, SharedPreferences preferences) {
+    String? dataListStr = preferences.getString("data_mqtt_list");
+    List ?dataList;
+    if (dataListStr != null) {
+      final jsonResult = jsonDecode(dataListStr!);
+      dataList = Data.fromJsonList(jsonResult);
+      dataList.add(newData);
+    } else {
+      dataList = [];
+      dataList.add(newData);
+    }
+    String encodedData = json.encode(dataList);
+    preferences.setString("data_mqtt_list", encodedData);
+    debugPrint("setting data_mqtt_list $encodedData");
   }
 }
 

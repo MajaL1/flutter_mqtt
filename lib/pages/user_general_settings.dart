@@ -18,7 +18,7 @@ class UserGeneralSettings extends StatefulWidget {
 
 class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   List<String> alarmIntervalsList = _buildAlarmIntervalsList();
-  String dropdownValue = ""; //alarmIntervalsList.first.toString();
+  String ? dropdownValue = "";
 
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
@@ -33,6 +33,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   @override
   void initState() {
     super.initState();
+
   }
 
   static List<String> _buildAlarmIntervalsList() {
@@ -51,7 +52,12 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   @override
   Widget build(BuildContext context) {
+    Utils.getAlarmGeneralIntervalSettings().then((str){
+      debugPrint("getting interval initstate ....$str");
+      dropdownValue = str;
+    });
     return buildUserGeneralSettings();
+
   }
 
   SingleChildScrollView buildUserGeneralSettings() {
@@ -93,6 +99,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   }
 
   Widget _buildUserGeneralSettings() {
+    debugPrint("-- 0 dropdown value: $dropdownValue");
     return Container(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 15),
       alignment: Alignment.center,
@@ -110,9 +117,11 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
               Container(
                   child: DropdownMenu<String>(
                 menuStyle: MenuStyle(),
-                initialSelection: alarmIntervalsList.first,
+                initialSelection: dropdownValue,
                 onSelected: (String? value) {
                   // This is called when the user selects an item.
+                  debugPrint("-- 1 dropdown value: $dropdownValue");
+
                   setState(() {
                     dropdownValue = value!;
                   });
@@ -135,7 +144,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                       ElevatedButton(
                     style: GuiUtils.buildElevatedButtonSettings(),
                     onPressed: () {
-                      saveInterval(dropdownValue);
+                      saveInterval(dropdownValue!);
                     },
                     child: const Text(
                       "Save",
@@ -165,10 +174,18 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         }
       }
     }); */
-    Utils.getAlarmIntervalSettingsList().then((list){
-      if(list != null){
-        list.first.value = interval;
-      }
+
+    debugPrint("setting interval....");
+    Utils.setAlarmGeneralIntervalSettings(interval);
+
+    SharedPreferences.getInstance().then((value){
+      String ? v = value.getString("alarm_interval_setting");
+      debugPrint("v: $v");
+      dropdownValue = v;
+    });
+
+    Utils.getAlarmGeneralIntervalSettings().then((str){
+      debugPrint("getting interval....$str");
     });
     debugPrint("interval saved...");
 

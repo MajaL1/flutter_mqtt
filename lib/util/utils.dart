@@ -56,14 +56,37 @@ class Utils {
         if (topicData.name.contains("alarm")) {
           userTopicList.add(deviceName + "/alarm");
         }
-        /*if (topicData.name.contains("data")) {
+        if (topicData.name.contains("data")) {
         userTopicList.add(deviceName + "/data");
-      } */
+      }
       }
     }
     return userTopicList;
   }
 
+  static Future<String?> getAlarmGeneralIntervalSettings() async {
+    String? setting = await SharedPreferences.getInstance().then((value) {
+      if (value.getString("alarm_interval_setting") != null) {
+        String? str = value.getString("alarm_interval_setting");
+        if (str != null) {
+          return str;
+        }
+      }
+    });
+    return setting;
+  }
+  static void setAlarmGeneralIntervalSettings(String setting) async {
+    await SharedPreferences.getInstance().then((value) {
+      /*if (value.getString("alarm_interval_setting") != null) {
+        String? str = value.getString("alarm_interval_settings_list");
+        if (str != null) {
+          return str;
+        }
+      } */ value.setString("alarm_interval_setting", setting);
+    });
+  }
+
+  /** Pride v postev za nastavitve za vsak alarm posebej **/
   static Future<List<AlarmIntervalSetting>>
       getAlarmIntervalSettingsList() async {
     List<AlarmIntervalSetting> alarmIntervalSettingList = [];
@@ -78,7 +101,6 @@ class Utils {
       }
       return alarmIntervalSettingList;
     });
-
     return alarmIntervalSettingList;
   }
 
@@ -97,23 +119,27 @@ class Utils {
     return null;
   }
 
-  static Future<void> setAlarmIntervalSettingForDevice(String sensorName, String deviceName, String alarmSetting, String value) async {
+  static Future<void> setAlarmIntervalSettingForDevice(String sensorName,
+      String deviceName, String alarmSetting, String value) async {
     List<AlarmIntervalSetting> alarmIntervalSettingList =
         await getAlarmIntervalSettingsList();
 
     bool found = false;
     for (AlarmIntervalSetting setting in alarmIntervalSettingList) {
       if (setting.sensorAddress == sensorName &&
-          setting.deviceName == deviceName
-          ) {
+          setting.deviceName == deviceName) {
         found = true;
         setting.setting = alarmSetting;
         break;
       }
     }
 
-    if(!found) {
-      AlarmIntervalSetting setting = AlarmIntervalSetting(deviceName: deviceName, sensorAddress: sensorName, setting: alarmSetting, value: value);
+    if (!found) {
+      AlarmIntervalSetting setting = AlarmIntervalSetting(
+          deviceName: deviceName,
+          sensorAddress: sensorName,
+          setting: alarmSetting,
+          value: value);
 
       alarmIntervalSettingList.add(setting);
 
