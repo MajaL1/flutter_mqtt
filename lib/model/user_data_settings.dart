@@ -1,6 +1,8 @@
 class UserDataSettings {
   String? deviceName;
   String? sensorAddress;
+  String? friendlyName;
+
   int? t;
   int? typ;
   int? hiAlarm;
@@ -8,7 +10,7 @@ class UserDataSettings {
   int? u;
   String ? editableSetting;
 
-  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.typ, this.hiAlarm, this.loAlarm, this.u, this.editableSetting});
+  UserDataSettings({this.deviceName, this.sensorAddress, this.t, this.typ, this.hiAlarm, this.loAlarm, this.u, this.editableSetting, this.friendlyName});
 
   /*String ? _editableSetting;
   String ? get editableSetting => _editableSetting;
@@ -22,6 +24,7 @@ class UserDataSettings {
   Map<String, dynamic> toJson() {
     return {
       "device_name": deviceName,
+      "friendlyName": friendlyName,
       "sensor_address": sensorAddress,
       "t": t,
       "u": u,
@@ -44,6 +47,8 @@ class UserDataSettings {
           int hiAlarm = 0;
           int loAlarm = 0;
           int u = 0;
+          String friendlyName = "";
+
           for (String key1 in value.keys) {
             if(key1 != null) {
               value[key1];
@@ -51,6 +56,9 @@ class UserDataSettings {
               //print("key1: $key1, value1: $value1");
               if (key1 == "t") {
                 t = value1;
+              }
+              if (key1 == "friendlyName") {
+                friendlyName = value1.toString();
               }
               if (key1 == "hi_alarm") {
                 hiAlarm = value1;
@@ -67,7 +75,7 @@ class UserDataSettings {
             }
           }
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
-          UserDataSettings userSettings = UserDataSettings(
+          UserDataSettings userSettings = UserDataSettings(friendlyName: friendlyName,
               sensorAddress: key, t: t, typ: typ, hiAlarm: hiAlarm, loAlarm: loAlarm, u: u);
           userSettingsList.add(userSettings);
         }

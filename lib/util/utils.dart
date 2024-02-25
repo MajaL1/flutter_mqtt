@@ -13,6 +13,7 @@ import '../model/alarm.dart';
 import '../model/alarm_interval_setting.dart';
 import '../model/topic_data.dart';
 import '../model/user.dart';
+import '../widgets/show_alarm_time_settings.dart';
 
 class Utils {
   static Future<String> downloadFile(String url, String filename) async {
@@ -56,12 +57,26 @@ class Utils {
         if (topicData.name.contains("alarm")) {
           userTopicList.add(deviceName + "/alarm");
         }
-        if (topicData.name.contains("data")) {
+        /* if (topicData.name.contains("data")) {
         userTopicList.add(deviceName + "/data");
-      }
+      } */
       }
     }
     return userTopicList;
+  }
+
+  static List<String> buildAlarmIntervalsList() {
+    List<String> alarmIntervalList = [];
+
+    alarmIntervalList.add(ShowAlarmTimeSettings().minutes10);
+    alarmIntervalList.add(ShowAlarmTimeSettings().minutes30);
+    alarmIntervalList.add(ShowAlarmTimeSettings().hour);
+    alarmIntervalList.add(ShowAlarmTimeSettings().hour6);
+    alarmIntervalList.add(ShowAlarmTimeSettings().hour12);
+    alarmIntervalList.add(ShowAlarmTimeSettings().all);
+    alarmIntervalList.add(ShowAlarmTimeSettings().changeOnly);
+
+    return alarmIntervalList;
   }
 
   static Future<String?> getAlarmGeneralIntervalSettings() async {
@@ -75,6 +90,7 @@ class Utils {
     });
     return setting;
   }
+
   static void setAlarmGeneralIntervalSettings(String setting) async {
     await SharedPreferences.getInstance().then((value) {
       /*if (value.getString("alarm_interval_setting") != null) {
@@ -82,7 +98,8 @@ class Utils {
         if (str != null) {
           return str;
         }
-      } */ value.setString("alarm_interval_setting", setting);
+      } */
+      value.setString("alarm_interval_setting", setting);
     });
   }
 

@@ -140,6 +140,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
     // Hi alarm prikazi za vse senzorje
     dataSettingsListNew.add(UserDataSettings(
         deviceName: setting.deviceName,
+        friendlyName : setting.friendlyName,
         sensorAddress: setting.sensorAddress,
         hiAlarm: setting.hiAlarm,
         u: setting.u,
@@ -191,7 +192,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
     SharedPreferences.getInstance().then((value) {
       //value.getString("data_mqtt_list");
-      debugPrint("goy mqtt data: ${value.getString("data_mqtt_list")}");
+      debugPrint("000got mqtt data: ${value.getString("data_mqtt_list")}");
     });
 
     // debugPrint("got Mqtt Data: $dataMqtt");
@@ -220,20 +221,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }); */
 
     return SingleChildScrollView(
-      // backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
-      //padding: const EdgeInsets.all(12),
-      //alignment: Alignment.center,
-      /*appBar: AppBar(
-          shadowColor: Colors.black,
-          title: Container(
-            //decoration: buildBoxDecoration(),
-            child: const Text(
-              Constants.SETTINGS,
-              style: TextStyle(fontSize: 16),
-            ),
-          )), */
-      // appBar: CustomAppBar(Constants.SETTINGS),
-      child: SingleChildScrollView(
+        child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         // padding:
         //    const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
@@ -310,7 +298,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   ElevatedButton(
                 style: GuiUtils.buildElevatedButtonSettings(),
                 onPressed: () {
-                  saveInterval();
+                 // saveInterval(value);
                 },
                 child: const Text(
                   "Save",
@@ -419,6 +407,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
                     bool savePressed = false;
                     TextEditingController controller = TextEditingController();
+                    TextEditingController controllerFriendlyName = TextEditingController();
+
                     return SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         padding: const EdgeInsets.only(
@@ -474,12 +464,14 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       fontSize: 16),
                                                   decoration: GuiUtils
                                                       .buildFriendlyNameDecoration(),
+                                                  controller: controllerFriendlyName,
+
                                                 ))),
                                             ElevatedButton(
                                               style: GuiUtils
                                                   .buildElevatedButtonSettings(),
                                               onPressed: () {
-                                                saveFriendlyName();
+                                                saveFriendlyName(controllerFriendlyName.text);
                                               },
                                               child: Text("Save", style: TextStyle(color: Colors.white),),
                                             ),
@@ -706,9 +698,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         "after publish:: saveMqttSettings: $controller.text, $sensorName, $settingToChange");
   }
 
-  void saveInterval() {
+  void saveInterval(String interval) {
     debugPrint("save interval...");
   }
 
-  void saveFriendlyName() {}
+  void saveFriendlyName(String friendlyName) {
+    debugPrint("saving friendly name...$friendlyName");
+
+  }
 }
