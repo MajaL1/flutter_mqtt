@@ -264,7 +264,7 @@ Future<void> _reconnectToMqtt() async {
     print(
         "////////////////main.dart _reconnectToMqtt username != null && pass != null && userTopicList != null");
 
-     prefs?.setBool("appRunInBackground", true);
+    prefs?.setBool("appRunInBackground", true);
 
     /*SmartMqtt mqtt = SmartMqtt(
         host: Constants.BROKER_IP,

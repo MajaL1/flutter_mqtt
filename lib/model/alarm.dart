@@ -1,6 +1,7 @@
 class Alarm {
   String? deviceName;
   String? sensorAddress;
+  String? friendlyName;
   int? typ;
   int? v;
   int? hiAlarm;
@@ -17,6 +18,7 @@ class Alarm {
   Alarm(
       {this.sensorAddress,
       this.deviceName,
+      this.friendlyName,
       this.typ,
       this.v,
       this.hiAlarm,
@@ -28,6 +30,7 @@ class Alarm {
       this.b,
       this.l,
       this.t});
+
 
   /*factory Alarm.fromJson(Map<String, dynamic> addjson){
     return Alarm(
@@ -51,6 +54,7 @@ class Alarm {
     return {
       "deviceName" : deviceName,
       "sensor_address": sensorAddress,
+      "friendlyName": friendlyName,
       "typ": typ,
       "v": v,
       "l": l,

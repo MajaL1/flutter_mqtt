@@ -92,6 +92,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       } */
                       String deviceName =
                           snapshot.data![index].deviceName.toString();
+                      String friendlyName =
+                      snapshot.data![index].friendlyName.toString();
                       String hiAlarm = snapshot.data![index].hiAlarm.toString();
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
