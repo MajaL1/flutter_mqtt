@@ -132,7 +132,7 @@ Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
     parsedMqttSettingsList = oldMqttSettingsList;
   } else {
     parsedMqttSettingsList =
-        UserDataSettings.getUserDataSettingsList(parsedMqttSettings, true);
+        UserDataSettings.getUserDataSettingsList(parsedMqttSettings, false);
   }
 
   // copy friendly name
@@ -820,7 +820,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     if (mqttSettings?.compareTo("[]") != 0) {
       mqttSettings = preferences?.getString("parsed_current_mqtt_settings");
       userDataSettingsList =
-          UserDataSettings.getUserDataSettingsList(mqttSettings, false);
+          UserDataSettings.getUserDataSettingsList(mqttSettings, true);
     } else {
       mqttSettings = preferences?.getString("current_mqtt_settings");
       Map<String, dynamic> jsonMap = json.decode(mqttSettings!);

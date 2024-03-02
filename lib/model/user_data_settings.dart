@@ -42,6 +42,7 @@ class UserDataSettings {
       "friendlyName": friendlyName,
       "sensor_address": sensorAddress,
       "t": t,
+      "typ": typ,
       "u": u,
       "hi_alarm": hiAlarm,
       "lo_alarm": loAlarm,
