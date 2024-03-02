@@ -219,11 +219,11 @@ List<UserDataSettings> _parseUserDataSettingsToList(
       debugPrint("SensorType = WS");
     }
 
-    dataSettingsListNew.add(UserDataSettings(
+    /*dataSettingsListNew.add(UserDataSettings(
         deviceName: setting.deviceName,
         sensorAddress: setting.sensorAddress,
         u: setting.u,
-        editableSetting: Constants.U_JSON));
+        editableSetting: Constants.U_JSON)); */
   }
   return dataSettingsListNew;
 }
@@ -540,13 +540,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                   : null,
                               padding: const EdgeInsets.only(bottom: 0),
                               //padding: EdgeInsets.all(5),
-                              child: Wrap(children: [
+                              child: settingToChange != "u" ? Wrap(children: [
                                 index % 2 == 0
                                     ? Container(
                                   // color: Colors.red,
                                     alignment: Alignment.center,
                                     padding: const EdgeInsets.all(15),
-                                    child: Wrap(children: [
+                                    child:  Wrap(children: [
                                       SizedBox(
                                         // padding: EdgeInsets.all(5),
                                           child: Wrap(children: [
@@ -611,7 +611,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                           ]))
                                     ]))
                                     : const Text(""),
-                              ])),
+                              ]): Container()),
                           Container(height: 25),
                           Column(children: [
                             /* const Padding(
