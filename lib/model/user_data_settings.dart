@@ -119,7 +119,7 @@ class UserDataSettings {
   static List<UserDataSettings> getUserDataSettingsList(
       String? mqttSettings, bool isDecode) {
     List<UserDataSettings> userDataSettingsList = [];
-    debugPrint("### $mqttSettings");
+    debugPrint("777777777 parse $mqttSettings");
     Iterable jsonMap;
     if (isDecode) {
       jsonMap = jsonDecode(mqttSettings.toString()!);
