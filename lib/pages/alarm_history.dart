@@ -210,6 +210,12 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     );
   }
 
+  List<Alarm> pairAlarmListWithSettings(){
+    List<Alarm> alarmList = [];
+
+    return alarmList;
+  }
+
   Future<void> _clearHistory() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 

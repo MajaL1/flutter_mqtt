@@ -37,6 +37,7 @@ class UserDataSettings {
   } */
 
   Map<String, dynamic> toJson() {
+    debugPrint("ToJson:: ");
     return {
       "device_name": deviceName,
       "friendlyName": friendlyName,
@@ -115,16 +116,15 @@ class UserDataSettings {
     }
     return userSettingsList;
   }
-
-  static List<UserDataSettings> getUserDataSettingsList(
+  static List<UserDataSettings> getUserDataSettingsList1(
       String? mqttSettings, bool isDecode) {
     List<UserDataSettings> userDataSettingsList = [];
-    debugPrint("777777777 parse $mqttSettings");
+    debugPrint("getUserDataSettingsList1 parse $mqttSettings");
     Iterable jsonMap;
     if (isDecode) {
       jsonMap = jsonDecode(mqttSettings.toString()!);
     } else {
-      debugPrint("8888888888 parse: $mqttSettings");
+      debugPrint("getUserDataSettingsList1 parse: $mqttSettings");
       var str = json.decode(mqttSettings!);
       //jsonMap = str.runes.toList();
       //jsonMap = jsonDecode(mqttSettings.toString()!);
@@ -155,6 +155,89 @@ class UserDataSettings {
         data: data,
       );
       userDataSettingsList.add(userDataSet);
+    }
+    debugPrint("### $userDataSettingsList");
+    return userDataSettingsList;
+  }
+
+  static List<UserDataSettings> getUserDataSettingsList(
+      String? mqttSettings, bool isDecode) {
+    List<UserDataSettings> userDataSettingsList = [];
+    debugPrint("777777777 parse $mqttSettings");
+    Map jsonMap;
+    if (isDecode) {
+      // Todo: tole daj v novo metodo
+      //jsonDecode(mqttSettings!);
+      // end Todo
+      Map jsonMap1 = json.decode(mqttSettings!);
+      jsonMap = jsonMap1;
+      // jsonMap = jsonDecode(mqttSettings.toString()!);
+    } else {
+      debugPrint("8888888888 parse: $mqttSettings");
+      var str = json.decode(mqttSettings!);
+      //jsonMap = str.runes.toList();
+      //jsonMap = jsonDecode(mqttSettings.toString()!);
+      jsonMap = json.decode(str);
+    }
+
+    for (var key in jsonMap.keys) {
+      String deviceName = "";
+      String sensorAddress = "";
+      String friendlyName = "";
+      String data= "";
+      String editableSetting = "";
+      int t =0;
+      int u=0;
+      int typ=0;
+      int hiAlarm=0;
+      int loAlarm=0;
+
+      sensorAddress = key.toString();
+
+      Map map = jsonMap[key];
+      List<UserDataSettings> topicDataList = [];
+      for (var key1 in map.keys) {
+        if (key1 != null) {
+          map[key1];
+          int value1 = map[key1];
+          //print("key1: $key1, value1: $value1");
+          if (key1 == "t") {
+            t = value1;
+          }
+          if (key1 == "friendlyName") {
+            friendlyName = value1.toString();
+          }
+          if (key1 == "hi_alarm") {
+            hiAlarm = value1;
+          }
+          if (key1 == "lo_alarm") {
+            loAlarm = value1;
+          }
+          if (key1 == "typ") {
+            typ = value1;
+          }
+          if (key1 == "u") {
+            u = value1;
+          }
+          if (key1 == "data") {
+            data = value1.toString();
+          }
+        }
+
+        UserDataSettings userDataSet = UserDataSettings(
+          deviceName: "",
+          sensorAddress: sensorAddress,
+          friendlyName: friendlyName,
+          editableSetting: editableSetting,
+          hiAlarm: hiAlarm,
+          loAlarm: loAlarm,
+          typ: typ,
+          t: t,
+          u: u,
+          data: data,
+        );
+        userDataSettingsList.add(userDataSet);
+      }
     }
     debugPrint("### $userDataSettingsList");
     return userDataSettingsList;

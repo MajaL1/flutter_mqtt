@@ -66,21 +66,23 @@ Future<List<Data>> _getMqttData(String data) async {
 // ustvari novo listo UserDataSettings iz Shared Preferecncea
 Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  debugPrint("################ _getUserDataSettings");
+  // debugPrint("################ _getUserDataSettings");
   String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
 
   // Todo, preveri, ali decode message ni null in beri zadnje settinge
-
+  bool isDecode = false;
   if (preferences.getBool("isLoggedIn") != null) {
     if (preferences.getBool("isLoggedIn") == true) {
       // ali app tece v ozadju
       // if (preferences.getBool("appRunInBackground") != null) {
       // if (preferences.getBool("appRunInBackground") == true) {
+
+      bool isDecode = false;
       if (decodeMessage.isEmpty) {
         debugPrint("get data from current_mqtt_settings");
 
-        decodeMessage = preferences.getString("current_mqtt_settings");
-
+        decodeMessage = preferences.getString("parsed_current_mqtt_settings");
+        isDecode = true;
         //}
         // }
       } else {
@@ -90,20 +92,27 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
       List<UserDataSettings> userDataSettings = [];
       //debugPrint("user_settings decodeMessage $decodeMessage");
       if (decodeMessage != null) {
-        Map<String, dynamic> jsonMap = json.decode(decodeMessage);
+        if (!isDecode) {
+          // var s = json.decode(decodeMessage);
+          //String s1 = s.toString();
+          userDataSettings =
+              UserDataSettings.getUserDataSettingsList(decodeMessage, true);
+        }
 
+        var jsonMap0 = json.decode(decodeMessage);
+
+        // Map<String, dynamic> jsonMap = json.decode(decodeMessage);
         debugPrint("get user data from json decode message");
-        debugPrint("################ decodeMessage $decodeMessage");
-
-        userDataSettings = UserDataSettings.getUserDataSettings(jsonMap);
-        debugPrint("################ userDataSettings $decodeMessage");
+// Todo: tukaj bo za popravit (ne dela, ko ugasnes aplikacijo)
+        userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
+        //debugPrint("################ userDataSettings $decodeMessage");
 
         String? deviceName = preferences.getString("settings_mqtt_device_name");
         //userDataSettings[0].deviceName = deviceName;
         _setUserDataSettings(userDataSettings, deviceName, preferences);
         String userDataSettingsStr = json.encode(userDataSettings);
         preferences.setString("current_mqtt_settings", userDataSettingsStr);
-        debugPrint("################ userDataSettingsStr $userDataSettingsStr");
+        //debugPrint("################ userDataSettingsStr $userDataSettingsStr");
 
         return await pairOldMqttSettingsWithNew(preferences);
 
@@ -125,7 +134,7 @@ Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
 
   bool isDecode = true;
   oldMqttSettingsList =
-      UserDataSettings.getUserDataSettingsList(oldMqttSettings, true);
+      UserDataSettings.getUserDataSettingsList1(oldMqttSettings, true);
   if (parsedMqttSettings == null || parsedMqttSettings?.compareTo("[]") == 0) {
     //List<UserDataSettings> userDataSettings = [];
     String userDataSettingsStr = json.encode(oldMqttSettings);
@@ -134,7 +143,7 @@ Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
     isDecode = false;
   } else {
     parsedMqttSettingsList =
-        UserDataSettings.getUserDataSettingsList(parsedMqttSettings, isDecode);
+        UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, isDecode);
   }
 
   // copy friendly name
@@ -148,7 +157,7 @@ Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
     }
   }
 
-  debugPrint("################ parsedMqttSettingsList $parsedMqttSettingsList");
+  // debugPrint("################ parsedMqttSettingsList $parsedMqttSettingsList");
 
   // ---
   return parsedMqttSettingsList;
@@ -189,8 +198,8 @@ List<TextEditingController> _createControllerForEditSettings(
 // parse userDataSettings v navadno listo, izloci tiste, ki jih ne prikazujemo za dolocen tip naprave
 List<UserDataSettings> _parseUserDataSettingsToList(
     List<UserDataSettings> dataSettingsList) {
-  debugPrint(
-      "###################### _parseUserDataSettingsToList $dataSettingsList");
+  // debugPrint(
+  //   "###################### _parseUserDataSettingsToList $dataSettingsList");
   List<UserDataSettings> dataSettingsListNew = [];
   for (UserDataSettings setting in dataSettingsList) {
     // tipa WS in WSD imata samo hi_alarm
@@ -256,8 +265,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     initializePreference();
     SharedPreferences.getInstance().then((value) {
       //value.getString("data_mqtt_list");
-      debugPrint(
-          "###################: ${value.getString("parsed_current_mqtt_settings")}");
+      //  debugPrint(
+      //    "###################: ${value.getString("parsed_current_mqtt_settings")}");
     });
 
     // debugPrint("got Mqtt Data: $dataMqtt");
@@ -394,7 +403,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   }
 
   Future<String> _getNewUserSettingsList() async {
-    debugPrint("################### getNewSettingsList");
+    //  debugPrint("################### getNewSettingsList");
 
     return await Provider.of<SmartMqtt>(context, listen: true)
         .getNewUserSettingsList();
@@ -820,7 +829,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         isDecode = false;
       }
       userDataSettingsList =
-          UserDataSettings.getUserDataSettingsList(mqttSettings, isDecode);
+          UserDataSettings.getUserDataSettingsList1(mqttSettings, isDecode);
     } else {
       mqttSettings = preferences?.getString("current_mqtt_settings");
       Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
@@ -840,8 +849,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     //preferences?.setString(str, "parsed_current_mqtt_settings");
     preferences?.remove("parsed_current_mqtt_settings");
     preferences?.setString("parsed_current_mqtt_settings", str);
-    SharedPreferences.getInstance()
-        .then((value) => value.setString(str, "parsed_current_mqtt_settings"));
   }
 
   // vrne trenutni device objekt, ki ga spreminjamo
