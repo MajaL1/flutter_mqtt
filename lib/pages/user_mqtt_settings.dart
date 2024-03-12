@@ -32,8 +32,6 @@ Future<List<Data>> _getMqttData(String data) async {
   String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
   List<Data> dataMqtt = [];
 
-  // Todo, preveri, ali decode message ni null in beri zadnje settinge
-
   if (preferences.getBool("isLoggedIn") != null) {
     if (preferences.getBool("isLoggedIn") == true) {
       // ali app tece v ozadju
@@ -69,7 +67,6 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   // debugPrint("################ _getUserDataSettings");
   String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
 
-  // Todo, preveri, ali decode message ni null in beri zadnje settinge
   bool isDecode = false;
   if (preferences.getBool("isLoggedIn") != null) {
     if (preferences.getBool("isLoggedIn") == true) {
@@ -103,7 +100,7 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
 
         // Map<String, dynamic> jsonMap = json.decode(decodeMessage);
         debugPrint("get user data from json decode message");
-// Todo: tukaj bo za popravit (ne dela, ko ugasnes aplikacijo)
+
         userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
         //debugPrint("################ userDataSettings $decodeMessage");
 
@@ -181,7 +178,7 @@ List<TextEditingController> _createControllerForEditSettings(
     List<UserDataSettings> editableSettingsList) {
   List<TextEditingController> editableSettingsControllerList = [];
   for (UserDataSettings editableSetting in editableSettingsList) {
-    //todo: preverjanje, katere tocne editable vrednosti moramo dodati
+    //preverjanje, katere editable vrednosti moramo dodati
     if (editableSetting.editableSetting == "hi_alarm") {
       editableSettingsControllerList
           .add(TextEditingController(text: editableSetting.hiAlarm.toString()));
@@ -815,8 +812,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   void saveFriendlyName(
       String friendlyName, String deviceName, String sensorAddress) async {
     debugPrint("saving friendly name...$friendlyName");
-    // Todo: najdi v shared preferences objekt
-    // String? mqttSettings;
 
     String? mqttSettings =
         preferences?.getString("parsed_current_mqtt_settings");
@@ -854,7 +849,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   // vrne trenutni device objekt, ki ga spreminjamo
   UserDataSettings getSensorChange(List<UserDataSettings> userDataSettingsList,
       String sensorName, String deviceName) {
-    UserDataSettings settings = UserDataSettings(); // todo: spremeni
+    UserDataSettings settings = UserDataSettings();
     for (UserDataSettings set in userDataSettingsList) {
       if (set.sensorAddress == deviceName && set.deviceName == sensorName)
         return set;

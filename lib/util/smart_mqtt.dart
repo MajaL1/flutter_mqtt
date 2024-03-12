@@ -283,6 +283,7 @@ class SmartMqtt extends ChangeNotifier {
           //debugPrint("alarmList---: $alarmListMqtt");
           messageCount++;
 
+          Utils.setFriendlyName(currentAlarmList.first);
           // prikaze sporocilo z alarmom
           await NotificationHelper.sendMessage(currentAlarmList.first);
           await SharedPreferences.getInstance().then((value) {

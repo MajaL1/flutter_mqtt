@@ -174,9 +174,6 @@ void onStart(ServiceInstance service) async {
     }
     prefs?.setBool("appRunInBackground", true);
 
-    // TODO: PReveri, kako deluje z MqttClient autoReconnected = false
-    // ali se ob delovanju v ozadju ugasne!
-
     MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
     debugPrint("////////////////2 main.dart - $appState");
 
@@ -188,7 +185,6 @@ void onStart(ServiceInstance service) async {
             MQTTAppConnectionState.disconnected) {
       debugPrint("////////////////main.dart - disconnected:");
       print("////////////////main.dart will call _reconnectToMqtt");
-      /** Todo: if logged in _reconnect*/
 
       /*** ce je povezava prekinjena, reconnect **/
       await _reconnectToMqtt();
@@ -398,7 +394,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
 
             Future.delayed(const Duration(milliseconds: 500), () {
               print("SmartMqtt.instance.initializeMQTTClient()");
-              /** Todo: if logged in _reconnect*/
               String currState = SmartMqtt.instance.currentState.toString();
               /*** ce je povezava prekinjena, reconnect **/
               _reconnectToMqtt();

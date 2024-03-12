@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../components/custom_app_bar.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
+import '../model/user_data_settings.dart';
 import '../util/gui_utils.dart';
 
 class AlarmHistory extends StatefulWidget {
@@ -26,7 +27,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarmsHistory()
-          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)),
+          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList))
+          .then((alarmHistoryList) =>
+              _pairAlarmListWithSettings(alarmHistoryList)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -93,7 +96,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       String deviceName =
                           snapshot.data![index].deviceName.toString();
                       String friendlyName =
-                      snapshot.data![index].friendlyName.toString();
+                          snapshot.data![index].friendlyName.toString();
                       String hiAlarm = snapshot.data![index].hiAlarm.toString();
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
@@ -210,9 +213,35 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     );
   }
 
-  List<Alarm> pairAlarmListWithSettings(){
+  // nastavi friendly name v listi history alarmov
+  Future<List<Alarm>> _pairAlarmListWithSettings(List<Alarm> alarmList) async {
     List<Alarm> alarmList = [];
+    await SharedPreferences.getInstance().then((value) {
+      if (value.getString("parsed_current_mqtt_settings") != null) {
+        List<UserDataSettings> parsedMqttSettingsList = [];
 
+        String? parsedMqttSettings =
+            value.getString("parsed_current_mqtt_settings");
+        parsedMqttSettingsList =
+            UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, true);
+
+        for (UserDataSettings setting in parsedMqttSettingsList) {
+          String? deviceName = setting.deviceName;
+          String? sensorAddress = setting.sensorAddress;
+          String? friendlyName = setting.friendlyName;
+
+          debugPrint("alarm_history _pairAlarmListWithSettings");
+          for (Alarm alarm in alarmList) {
+            if (alarm.sensorAddress == sensorAddress &&
+                alarm.deviceName == deviceName) {
+              alarm.friendlyName = friendlyName;
+            }
+          }
+        }
+        debugPrint(
+            "alarm_history parsedMqttSettings ${parsedMqttSettingsList.toString()}");
+      }
+    });
     return alarmList;
   }
 

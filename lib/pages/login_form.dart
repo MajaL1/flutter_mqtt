@@ -18,7 +18,6 @@ import '../model/user.dart';
 import '../util/gui_utils.dart';
 import '../util/utils.dart';
 
-//**  ToDo: implementiraj onLoginSuccess **/
 class LoginForm extends StatefulWidget {
   const LoginForm.base({Key? key}) : super(key: key);
 
@@ -72,10 +71,6 @@ class _LoginFormValidationState extends State<LoginForm> {
 
     //check email and password
     if (formkey.currentState!.validate()) {
-      /** todo: dodaj v secure storage username, password
-          in usertopiclist. potem ne bomo potrebovali spodnjih vrstic
-          ampak samo tole: await NotificationHelper.initializeService(); **/
-
       // test - odkomentiraj, ce ni connectiona
       // await Navigator.pushReplacement(
       //   context, MaterialPageRoute(builder: (_) => UserSettings.base()));

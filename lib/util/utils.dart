@@ -13,6 +13,7 @@ import '../model/alarm.dart';
 import '../model/alarm_interval_setting.dart';
 import '../model/topic_data.dart';
 import '../model/user.dart';
+import '../model/user_data_settings.dart';
 import '../widgets/show_alarm_time_settings.dart';
 
 class Utils {
@@ -249,5 +250,33 @@ class Utils {
     var r = Random();
     return String.fromCharCodes(
         List.generate(len, (index) => r.nextInt(33) + 89));
+  }
+
+  static void setFriendlyName(Alarm alarm) {
+    SharedPreferences.getInstance().then((value) {
+      if (value.getString("parsed_current_mqtt_settings") != null) {
+        List<UserDataSettings> parsedMqttSettingsList = [];
+
+        String? parsedMqttSettings =
+            value.getString("parsed_current_mqtt_settings");
+        parsedMqttSettingsList =
+            UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, true);
+
+        for (UserDataSettings setting in parsedMqttSettingsList) {
+          String? deviceName = setting.deviceName;
+          String? sensorAddress = setting.sensorAddress;
+          String? friendlyName = setting.friendlyName;
+
+          debugPrint("utils - before sendMessage setFriendlyName");
+          if (alarm.sensorAddress == sensorAddress &&
+              alarm.deviceName == deviceName) {
+            alarm.friendlyName = friendlyName;
+          }
+        }
+        debugPrint("utils - before sendMessage ${alarm.friendlyName}");
+      }
+    });
+
+    //   return alarm;
   }
 }
