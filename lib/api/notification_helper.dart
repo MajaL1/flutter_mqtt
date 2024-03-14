@@ -8,6 +8,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:mqtt_test/widgets/show_alarm_time_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
@@ -70,7 +71,6 @@ class NotificationHelper extends StatelessWidget {
           autoStart: true,
           isForegroundMode: false,
           notificationChannelId: 'alarms',
-
           initialNotificationTitle: 'ALARM',
           initialNotificationContent: 'Initializing',
           foregroundServiceNotificationId: notificationId,
@@ -115,8 +115,8 @@ class NotificationHelper extends StatelessWidget {
 
   static Future<void> sendMessage(Alarm? alarmMessage) async {
     //tzl.initializeTimeZones();
-     tzl.initializeTimeZones();
-     debugPrint("Sending alarm: NotificationHelper.sendMessage");
+    tzl.initializeTimeZones();
+    debugPrint("Sending alarm: NotificationHelper.sendMessage");
     // tz.setLocalLocation(tz.getLocation('Europe/London'));
     final slovenia = await tz.getLocation('Europe/London');
 
@@ -137,8 +137,8 @@ class NotificationHelper extends StatelessWidget {
       alarmValue += " Lo alarm: $loAlarm";
     }
 
- //   debugPrint(
- //       "**************************alarm sending message  message: $alarmMessage");
+    //   debugPrint(
+    //       "**************************alarm sending message  message: $alarmMessage");
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
 
@@ -175,20 +175,51 @@ class NotificationHelper extends StatelessWidget {
     String eventID = "as432445GFCLbd2in1en21093";
     int notificationId = eventID.hashCode;
     //Text text1 = Text("Alarm value: $v", style: TextStyle(fontWeight: FontWeight.bold));
-   // Text text2 = Text("$alarmValue", style: TextStyle(fontWeight: FontWeight.bold));
+    // Text text2 = Text("$alarmValue", style: TextStyle(fontWeight: FontWeight.bold));
     //Text text3 = Text("$sensorAddress", style: TextStyle(fontWeight: FontWeight.bold));
 
-
     //String ?t1 = text1.data;
-     //String ?t2 = text2.data;
-     //String ?t3 = text3.data;
+    //String ?t2 = text2.data;
+    //String ?t3 = text3.data;
 
-     await flutterLocalNotificationsPlugin.zonedSchedule(
+    String? showInterval = await SharedPreferences.getInstance().then((value) {
+      if (value.getString("alarm_interval") != null) {
+        return value.getString("alarm_interval");
+      }
+    });
+    debugPrint("sending message... interval $showInterval");
+
+    int timeIntervalMinutes = 1;
+    const int seconds = 5;
+    switch (showInterval) {
+      case ShowAlarmTimeSettings.minutes10:
+        timeIntervalMinutes = 10;
+        break;
+      case ShowAlarmTimeSettings.minutes30:
+        timeIntervalMinutes = 30;
+        break;
+      case ShowAlarmTimeSettings.hour:
+        timeIntervalMinutes = 60;
+        break;
+      case ShowAlarmTimeSettings.hour6:
+        timeIntervalMinutes = 360;
+        break;
+      case ShowAlarmTimeSettings.hour12:
+        timeIntervalMinutes = 720;
+        break;
+      case ShowAlarmTimeSettings.day:
+        timeIntervalMinutes = 1440;
+        break;
+      default:
+        timeIntervalMinutes = 10;
+    }
+    final int minutes = timeIntervalMinutes;
+    await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
         "v: $v, $alarmValue \n$formattedDate",
-        tz.TZDateTime.now(slovenia).add(const Duration(seconds: 5)),
+        tz.TZDateTime.now(slovenia).add(Duration(minutes: minutes)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
@@ -214,13 +245,13 @@ class NotificationHelper extends StatelessWidget {
     //     FlutterLocalNotificationsPlugin();
 
     if (service is AndroidServiceInstance) {
-     // debugPrint("setAsForeground message : ");
+      // debugPrint("setAsForeground message : ");
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
       });
 
       service.on('setAsBackground').listen((event) {
-      //  debugPrint("setAsBackground : ");
+        //  debugPrint("setAsBackground : ");
         service.setAsBackgroundService();
       });
     }

@@ -53,10 +53,14 @@ class Utils {
 
       for (TopicData topicData in userTopic.topicList) {
         if (topicData.name.contains("settings")) {
-          userTopicList.add(deviceName + "/settings");
+          if (!userTopicList.contains(deviceName + "/settings")) {
+            userTopicList.add(deviceName + "/settings");
+          }
         }
         if (topicData.name.contains("alarm")) {
-          userTopicList.add(deviceName + "/alarm");
+          if (!userTopicList.contains(deviceName + "/alarm")) {
+            userTopicList.add(deviceName + "/alarm");
+          }
         }
         /* if (topicData.name.contains("data")) {
         userTopicList.add(deviceName + "/data");
@@ -69,13 +73,13 @@ class Utils {
   static List<String> buildAlarmIntervalsList() {
     List<String> alarmIntervalList = [];
 
-    alarmIntervalList.add(ShowAlarmTimeSettings().minutes10);
-    alarmIntervalList.add(ShowAlarmTimeSettings().minutes30);
-    alarmIntervalList.add(ShowAlarmTimeSettings().hour);
-    alarmIntervalList.add(ShowAlarmTimeSettings().hour6);
-    alarmIntervalList.add(ShowAlarmTimeSettings().hour12);
-    alarmIntervalList.add(ShowAlarmTimeSettings().all);
-    alarmIntervalList.add(ShowAlarmTimeSettings().changeOnly);
+    alarmIntervalList.add(ShowAlarmTimeSettings.minutes10);
+    alarmIntervalList.add(ShowAlarmTimeSettings.minutes30);
+    alarmIntervalList.add(ShowAlarmTimeSettings.hour);
+    alarmIntervalList.add(ShowAlarmTimeSettings.hour6);
+    alarmIntervalList.add(ShowAlarmTimeSettings.hour12);
+    alarmIntervalList.add(ShowAlarmTimeSettings.all);
+    alarmIntervalList.add(ShowAlarmTimeSettings.changeOnly);
 
     return alarmIntervalList;
   }
@@ -276,7 +280,7 @@ class Utils {
         debugPrint("utils - before sendMessage ${alarm.friendlyName}");
       }
     });
-
-    //   return alarm;
   }
+
+/**  Todo: razvrsca alarme ***/
 }

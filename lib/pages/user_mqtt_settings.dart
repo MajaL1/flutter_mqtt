@@ -102,7 +102,7 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
         debugPrint("get user data from json decode message");
 
         userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
-        //debugPrint("################ userDataSettings $decodeMessage");
+        debugPrint("################ userDataSettings $decodeMessage");
 
         String? deviceName = preferences.getString("settings_mqtt_device_name");
         //userDataSettings[0].deviceName = deviceName;

@@ -371,7 +371,7 @@ class SmartMqtt extends ChangeNotifier {
     // client.setProtocolV311();
     client.onDisconnected = onDisconnected;
     client.onAutoReconnect = onAutoReconnect;
-    client.logging(on: true);
+    //client.logging(on: true);
     client.onConnected = onConnected;
     client.onSubscribed = onSubscribed;
     client.onSubscribeFail = onSubscribeFail;
