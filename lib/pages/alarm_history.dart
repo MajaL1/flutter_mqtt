@@ -203,7 +203,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                     })
               ])));
         } else if (snapshot.hasError) {
-          return const Text("No alarm history.");
+          debugPrint(snapshot.error.toString());
+          return Text("No alarm history. ${snapshot.error}");
 
           // return Text(snapshot.error.toString());
         }
@@ -223,7 +224,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
         parsedMqttSettingsList =
-            UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, true);
+            UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, false);
 
         for (UserDataSettings setting in parsedMqttSettingsList) {
           String? deviceName = setting.deviceName;

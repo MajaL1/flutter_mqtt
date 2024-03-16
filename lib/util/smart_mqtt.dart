@@ -216,11 +216,17 @@ class SmartMqtt extends ChangeNotifier {
         // debugPrint("got new settings");
         // ali novi settingi niso enaki prejsnim
         // ali ce so v zacetku prazni
-        if (newUserSettings.compareTo(decodeMessage) != 0) {
+        if (newUserSettings.compareTo(decodeMessage) != 0 && decodeMessage.isNotEmpty) {
           debugPrint("new user settings");
           preferences.setString("current_mqtt_settings", decodeMessage);
-          newUserSettings = decodeMessage;
-          await setNewUserSettings(newUserSettings);
+
+          String oldUserSettings = newUserSettings;
+
+          if(newUserSettings.isEmpty) {
+            oldUserSettings = decodeMessage;
+          }
+          // newUserSettings = decodeMessage;
+           await setNewUserSettings(oldUserSettings, decodeMessage);
         }
 
         // debugPrint("----- newUserSettings: $newUserSettings");
@@ -408,6 +414,7 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<String> getNewUserSettingsList() async {
     // if(newUserSettings != null) {
+    debugPrint("1111111111111 new User settings - smart mqtt: $newUserSettings");
     return newUserSettings;
     //}
   }
@@ -416,8 +423,24 @@ class SmartMqtt extends ChangeNotifier {
     return newMqttData;
   }
 
-  Future<void> setNewUserSettings(String newUserSettings) async {
-    this.newUserSettings = newUserSettings;
+  Future<void> setNewUserSettings(String oldUserSettings, String newUserSettings) async {
+
+    //{\"57\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455},\"84\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455}}
+
+    if (!oldUserSettings.contains(newUserSettings)) {
+      Map newSettings = json.decode(newUserSettings);
+      Map oldSettings = json.decode(oldUserSettings);
+
+      final concatenatedSettings = {
+        ...newSettings,
+        ...oldSettings,
+      };
+      this.newUserSettings = json.encode(concatenatedSettings);
+      print("map: ${concatenatedSettings}");
+    }
+    else {
+      this.newUserSettings = newUserSettings;
+    }
     this.isSaved = true;
     notifyListeners();
     debugPrint("notifying listeners..");

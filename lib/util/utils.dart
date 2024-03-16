@@ -70,6 +70,58 @@ class Utils {
     return userTopicList;
   }
 
+  static bool currentSettingsContainNewSettings(
+      String decodeMessage, SharedPreferences preferences) {
+    String? parsedMqttSettings =
+        preferences.getString("parsed_current_mqtt_settings");
+    debugPrint(
+        "call method currentSettingsContainNewSettings: $parsedMqttSettings");
+    // ali vsebuje enake nastavitve ali ce je shranjena lista nastavitev prazna
+    if (parsedMqttSettings == null) {
+      return false;
+    }
+    if (parsedMqttSettings!.contains(decodeMessage) ||
+        (parsedMqttSettings == null || parsedMqttSettings.isEmpty)) {
+      return true;
+    } else {
+      // Todo: popravi kodiranje mqtt settingsov
+      // Todo: tole UserDataSettings.getUserDataSettingsList(parsedMqttSettings, true);
+
+      List<UserDataSettings> parsedMqttSettingsList =
+          UserDataSettings.getUserDataSettingsList(parsedMqttSettings, true);
+
+      List<UserDataSettings> parsedMqttSettingsListNew =
+          UserDataSettings.getUserDataSettingsList(decodeMessage, true);
+
+      // preveri, ali stara lista vsebuje listo z istimi senzorji in z novimi nastavitvami
+      for (UserDataSettings oldSettings in parsedMqttSettingsList) {
+        String? deviceName = oldSettings.deviceName;
+        String? sensorAddress = oldSettings.sensorAddress;
+
+        bool overwriteOldSettings = false;
+        for (UserDataSettings newSetting in parsedMqttSettingsListNew) {
+          if (newSetting.deviceName == deviceName &&
+              newSetting.sensorAddress == sensorAddress) {
+            overwriteOldSettings = true;
+            break;
+          }
+        }
+        // ali prepisemo stare settingse
+        if (overwriteOldSettings) {
+          preferences.setString("current_mqtt_settings_list", decodeMessage);
+        }
+        // ce jih ne prepisemo, jih samo dodamo na obstojeco listo current_mqtt_settings_list
+        else {
+          parsedMqttSettingsList.addAll(parsedMqttSettingsListNew);
+          String decodeStr = json.encode(parsedMqttSettingsList);
+          preferences.setString("current_mqtt_settings_list", decodeStr);
+        }
+      }
+    }
+
+    return true;
+  }
+
   static List<String> buildAlarmIntervalsList() {
     List<String> alarmIntervalList = [];
 

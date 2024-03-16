@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/constants.dart';
 import '../model/data.dart';
 import '../util/gui_utils.dart';
+import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
 class UserMqttSettings extends StatefulWidget {
@@ -67,6 +68,12 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   // debugPrint("################ _getUserDataSettings");
   String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
 
+  /*** get new user settings list, ce je iz vecih naprav
+   *  ***/
+
+  if (decodeMessage.isNotEmpty) {
+    Utils.currentSettingsContainNewSettings(decodeMessage, preferences);
+  }
   bool isDecode = false;
   if (preferences.getBool("isLoggedIn") != null) {
     if (preferences.getBool("isLoggedIn") == true) {
@@ -400,7 +407,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   }
 
   Future<String> _getNewUserSettingsList() async {
-    //  debugPrint("################### getNewSettingsList");
+    debugPrint("################### getNewSettingsList");
 
     return await Provider.of<SmartMqtt>(context, listen: true)
         .getNewUserSettingsList();
@@ -468,7 +475,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
       future: //Provider.of<SmartMqtt>(context, listen: true)
-          //.getNewUserSettingsList()
+          //  .getNewUserSettingsList()
           _getNewUserSettingsList()
               .then(
                   (dataSettingsList) => _getUserDataSettings(dataSettingsList))
