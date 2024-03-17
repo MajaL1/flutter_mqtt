@@ -67,13 +67,11 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   // debugPrint("################ _getUserDataSettings");
   String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+  debugPrint("################ decodeMessage $decodeMessage");
 
   /*** get new user settings list, ce je iz vecih naprav
    *  ***/
 
-  /*if (decodeMessage.isNotEmpty) {
-    Utils.currentSettingsContainNewSettings(decodeMessage, preferences);
-  } */
   bool isDecode = false;
   if (preferences.getBool("isLoggedIn") != null) {
     if (preferences.getBool("isLoggedIn") == true) {
@@ -120,53 +118,13 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
         preferences.setString("current_mqtt_settings", userDataSettingsStr);
         //debugPrint("################ userDataSettingsStr $userDataSettingsStr");
 
-        return await pairOldMqttSettingsWithNew(preferences);
+        //return await pairOldMqttSettingsWithNew(preferences);
 
-        //return userDataSettings;
+        return userDataSettings;
       }
     }
   }
   return null;
-}
-
-Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
-    SharedPreferences preferences) async {
-  String? oldMqttSettings = preferences.getString("current_mqtt_settings");
-  String? parsedMqttSettings =
-      preferences.getString("parsed_current_mqtt_settings");
-
-  List<UserDataSettings> oldMqttSettingsList = [];
-  List<UserDataSettings> parsedMqttSettingsList = [];
-
-  bool isDecode = true;
-  oldMqttSettingsList =
-      UserDataSettings.getUserDataSettingsList1(oldMqttSettings, true);
-  if (parsedMqttSettings == null || parsedMqttSettings?.compareTo("[]") == 0) {
-    //List<UserDataSettings> userDataSettings = [];
-    String userDataSettingsStr = json.encode(oldMqttSettings);
-    preferences.setString("parsed_current_mqtt_settings", userDataSettingsStr);
-    parsedMqttSettingsList = oldMqttSettingsList;
-    isDecode = false;
-  } else {
-    parsedMqttSettingsList =
-        UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, false);
-  }
-
-  // copy friendly name
-
-  for (UserDataSettings oldSetting in oldMqttSettingsList) {
-    String? friendlyNameOld = oldSetting.friendlyName;
-    for (UserDataSettings newSetting in parsedMqttSettingsList) {
-      if (friendlyNameOld != null && friendlyNameOld.isNotEmpty) {
-        newSetting.friendlyName = friendlyNameOld;
-      }
-    }
-  }
-
-  // debugPrint("################ parsedMqttSettingsList $parsedMqttSettingsList");
-
-  // ---
-  return parsedMqttSettingsList;
 }
 
 void _setUserDataSettings(
@@ -535,7 +493,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     TextEditingController controller = TextEditingController();
                     TextEditingController controllerFriendlyName =
                         TextEditingController(text: friendlyName);
-                    debugPrint("000000000000000 build SingleChildScroollView: sensorAddress: $sensorAddress deviceName: $deviceName ");
+                    ///debugPrint("000000000000000 build SingleChildScroollView: sensorAddress: $sensorAddress deviceName: $deviceName ");
                     //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
 
                     return SingleChildScrollView(
@@ -696,14 +654,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     String settingText = "";
     bool isEnabledSave = true;
 //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
-    debugPrint("00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange, u: $u");
+    //debugPrint("00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange, u: $u");
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
       settingText = " High alarm:  ";
     }
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
       settingText = " Low alarm:  ";
     }
-    debugPrint("buildEditable...");
     return Stack(
       children: [
         Wrap(children: [

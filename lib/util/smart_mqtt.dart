@@ -215,46 +215,12 @@ class SmartMqtt extends ChangeNotifier {
         // ali ce so v zacetku prazni
         if (newUserSettings.compareTo(decodeMessage) != 0 &&
             decodeMessage.isNotEmpty) {
-          debugPrint("new user settings");
-          preferences.setString("current_mqtt_settings", decodeMessage);
 
-          String oldUserSettings = newUserSettings;
-          Map oldSettings = <String, String>{};
-          if (newUserSettings.isEmpty) {
-            oldUserSettings = decodeMessage;
-            oldSettings = json.decode(oldUserSettings);
-            await setDeviceNameToSettings(
-                oldSettings, topicName.split("/settings").first);
-          }
+          await _parseMqttSettingsForTopic(preferences, decodeMessage, topicName);
           //{\"57\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455},\"84\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455}}
-
-          // newUserSettings = decodeMessage;
-          //{\"57\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455},\"84\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455}}
-
-          if (!oldUserSettings.contains(newUserSettings)) {
-            Map newSettings = json.decode(newUserSettings);
-
-            await setDeviceNameToSettings(
-                newSettings, topicName.split("/settings").first);
-
-            await setNewUserSettings(newSettings);
-
-            final concatenatedSettings = {
-              ...newSettings,
-              ...oldSettings,
-            };
-            this.newUserSettings = json.encode(concatenatedSettings);
-            print("map: ${concatenatedSettings}");
-
-            this.newUserSettings = newUserSettings;
-          }
         }
 
-        // debugPrint("----- newUserSettings: $newUserSettings");
-        preferences.setString(
-            "settings_mqtt_device_name", topicName.split("/settings").first);
       }
-      preferences.setString("settings_mqtt", decodeMessage);
     }
     if (topicName.contains("data")) {
       //debugPrint("from topic -data $topicName");
@@ -344,6 +310,51 @@ class SmartMqtt extends ChangeNotifier {
     //print(
     //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
     //print('');
+  }
+
+  Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences, String decodeMessage, String topicName) async {
+    debugPrint("new user settings");
+    preferences.setString("current_mqtt_settings", decodeMessage);
+    // parse trenutno sporocilo
+    Map decodeMessageSettings = <String, String>{};
+    decodeMessageSettings = json.decode(decodeMessage);
+    debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
+    await setDeviceNameToSettings(
+        decodeMessageSettings, topicName.split("/settings").first);
+    //-----
+    //String oldUserSettings = newUserSettings;
+    Map newSettings = <String, String>{};
+    if (newUserSettings.isEmpty) {
+      debugPrint("1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
+      newUserSettings = decodeMessage;
+      newSettings = json.decode(newUserSettings);
+      debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
+
+      await setDeviceNameToSettings(
+          newSettings, topicName.split("/settings").first);
+      debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
+
+      await setNewUserSettings(newSettings);
+      notifyListeners();
+      debugPrint("notifying listeners..");
+    } else if (newUserSettings.isNotEmpty &&
+        !decodeMessage.contains(newUserSettings)) {
+      debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
+      debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
+      debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}");
+      newSettings = json.decode(newUserSettings);
+
+      final concatenatedSettings = {
+        ...decodeMessageSettings,
+        ...newSettings,
+      };
+      newUserSettings = json.encode(concatenatedSettings);
+      notifyListeners();
+      debugPrint("notifying listeners.. $newUserSettings");
+      print("map: ${concatenatedSettings}");
+      debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
+    }
+
   }
 
   Future<DateTime?> _getLastAlarmDate() async {
@@ -451,7 +462,7 @@ class SmartMqtt extends ChangeNotifier {
         Map val = settings[key];
 
         for (String key1 in val.keys) {
-          print("key1: $key1");
+          //print("key1: $key1");
         }
         final Map<String, String> deviceNameMap = {"device_name": deviceName};
         val.addAll(deviceNameMap);
@@ -462,9 +473,6 @@ class SmartMqtt extends ChangeNotifier {
   Future<void> setNewUserSettings(Map concatenatedSettings) async {
     newUserSettings = json.encode(concatenatedSettings);
     debugPrint("map: ${concatenatedSettings}");
-    notifyListeners();
-
-    debugPrint("notifying listeners..");
   }
 
   Data? convertMessageToData(String message, String deviceName) {

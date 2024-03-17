@@ -71,6 +71,7 @@ class UserDataSettings {
           int u = 0;
           String data = "";
           String friendlyName = "";
+          String deviceName = "";
 
           for (String key1 in value.keys) {
             if (key1 != null) {
@@ -79,6 +80,9 @@ class UserDataSettings {
               //print("key1: $key1, value1: $value1");
               if (key1 == "t") {
                 t = value1;
+              }
+              if (key1 == "device_name") {
+                deviceName = value1;
               }
               if (key1 == "friendlyName") {
                 friendlyName = value1.toString();
@@ -103,6 +107,7 @@ class UserDataSettings {
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
           UserDataSettings userSettings = UserDataSettings(
               friendlyName: friendlyName,
+              deviceName: deviceName,
               sensorAddress: key,
               t: t,
               typ: typ,
@@ -131,7 +136,10 @@ class UserDataSettings {
       jsonMap = json.decode(str);
     }
     for (var item in jsonMap) {
-      String deviceName = item["device_name"];
+      String deviceName = "";
+      if(item["device_name"]!= null){
+        deviceName = item["device_name"];
+      }
       String sensorAddress = item["sensor_address"];
       String friendlyName = item["friendlyName"] ?? "";
       String data = item["data"] ?? "";
