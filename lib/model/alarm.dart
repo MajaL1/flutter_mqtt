@@ -52,7 +52,7 @@ class Alarm {
   } */
   Map<String, dynamic> toJson() {
     return {
-      "deviceName" : deviceName,
+      "device_name" : deviceName,
       "sensor_address": sensorAddress,
       "friendlyName": friendlyName,
       "typ": typ,
@@ -195,7 +195,7 @@ class Alarm {
           if (key == "sensor_address") {
             sensorAddress = value;
           }
-          if (key == "deviceName") {
+          if (key == "device_name") {
             deviceName = value;
           }
           if (key == "v") {

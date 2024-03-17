@@ -82,6 +82,7 @@ class _LoginFormValidationState extends State<LoginForm> {
               "loginForm, user: $user.username, $user.password, $user.topic");
 
           List<String> userTopicList = Utils.createTopicListFromApi(user);
+
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
@@ -96,7 +97,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance().then((value) {
             //value.setString("username", username);
             //value.setString("pass", password);
-
+            value.setStringList("user_topics", userTopicList);
             value.setString("username", user.username);
 
             if (user.email != null) {

@@ -75,7 +75,7 @@ class UserDataSettings {
           for (String key1 in value.keys) {
             if (key1 != null) {
               value[key1];
-              int value1 = value[key1];
+              var value1 = value[key1];
               //print("key1: $key1, value1: $value1");
               if (key1 == "t") {
                 t = value1;
@@ -119,12 +119,12 @@ class UserDataSettings {
   static List<UserDataSettings> getUserDataSettingsList1(
       String? mqttSettings, bool isDecode) {
     List<UserDataSettings> userDataSettingsList = [];
-    debugPrint("getUserDataSettingsList1 parse $mqttSettings");
+    //debugPrint("getUserDataSettingsList1 parse $mqttSettings");
     Iterable jsonMap;
     if (isDecode) {
       jsonMap = jsonDecode(mqttSettings.toString()!);
     } else {
-      debugPrint("getUserDataSettingsList1 parse: $mqttSettings");
+      //debugPrint("getUserDataSettingsList1 parse: $mqttSettings");
       var str = json.decode(mqttSettings!);
       //jsonMap = str.runes.toList();
       //jsonMap = jsonDecode(mqttSettings.toString()!);
@@ -199,13 +199,16 @@ class UserDataSettings {
       for (var key1 in map.keys) {
         if (key1 != null) {
           map[key1];
-          int value1 = map[key1];
+          var value1 = map[key1];
           //print("key1: $key1, value1: $value1");
           if (key1 == "t") {
             t = value1;
           }
           if (key1 == "friendlyName") {
             friendlyName = value1.toString();
+          }
+          if (key1 == "device_name") {
+            deviceName = value1.toString();
           }
           if (key1 == "hi_alarm") {
             hiAlarm = value1;

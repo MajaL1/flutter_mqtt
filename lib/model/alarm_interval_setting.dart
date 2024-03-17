@@ -12,7 +12,7 @@ class AlarmIntervalSetting {
 
   Map<String, dynamic> toJson() {
     return {
-      "deviceName": deviceName,
+      "device_name": deviceName,
       "sensor_address": sensorAddress,
       "setting": setting,
       "value": value,

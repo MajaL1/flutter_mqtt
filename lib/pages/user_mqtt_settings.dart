@@ -71,9 +71,9 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   /*** get new user settings list, ce je iz vecih naprav
    *  ***/
 
-  if (decodeMessage.isNotEmpty) {
+  /*if (decodeMessage.isNotEmpty) {
     Utils.currentSettingsContainNewSettings(decodeMessage, preferences);
-  }
+  } */
   bool isDecode = false;
   if (preferences.getBool("isLoggedIn") != null) {
     if (preferences.getBool("isLoggedIn") == true) {
@@ -111,9 +111,11 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
         userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
         debugPrint("################ userDataSettings $decodeMessage");
 
-        String? deviceName = preferences.getString("settings_mqtt_device_name");
+       // String? deviceName = preferences.getString("settings_mqtt_device_name");
         //userDataSettings[0].deviceName = deviceName;
-        _setUserDataSettings(userDataSettings, deviceName, preferences);
+
+
+        _setUserDataSettings(userDataSettings, preferences);
         String userDataSettingsStr = json.encode(userDataSettings);
         preferences.setString("current_mqtt_settings", userDataSettingsStr);
         //debugPrint("################ userDataSettingsStr $userDataSettingsStr");
@@ -147,7 +149,7 @@ Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
     isDecode = false;
   } else {
     parsedMqttSettingsList =
-        UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, isDecode);
+        UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, false);
   }
 
   // copy friendly name
@@ -168,11 +170,15 @@ Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
 }
 
 void _setUserDataSettings(
-    userDataSettings, deviceName, SharedPreferences preferences) {
-  for (UserDataSettings userDataSetting in userDataSettings) {
+    userDataSettings, SharedPreferences preferences) {
+
+  List<String>? topicNameList = preferences.getStringList("user_topics");
+
+
+  /*for (UserDataSettings userDataSetting in userDataSettings) {
     userDataSetting.deviceName = deviceName;
     userDataSetting.data = _addDataToSettings(preferences);
-  }
+  } */
 }
 
 String? _addDataToSettings(SharedPreferences preferences) {
@@ -529,6 +535,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     TextEditingController controller = TextEditingController();
                     TextEditingController controllerFriendlyName =
                         TextEditingController(text: friendlyName);
+                    debugPrint("000000000000000 build SingleChildScroollView: sensorAddress: $sensorAddress deviceName: $deviceName ");
+                    //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
 
                     return SingleChildScrollView(
                         scrollDirection: Axis.vertical,
@@ -538,15 +546,17 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                           Container(
                               //color: Colors.tealAccent,
                               alignment: Alignment.center,
-                              decoration: index % 2 == 0
-                                  ? GuiUtils.buildBoxDecorationSettings()
-                                  : null,
+                              decoration: //index % 2 == 0
+                                  //?
+                              GuiUtils.buildBoxDecorationSettings(),
+                                  //: null,
                               padding: const EdgeInsets.only(bottom: 0),
                               //padding: EdgeInsets.all(5),
                               child: settingToChange != "u"
                                   ? Wrap(children: [
-                                      index % 2 == 0
-                                          ? Container(
+                                     // index % 2 == 0
+                                  //        ?
+                                  Container(
                                               // color: Colors.red,
                                               alignment: Alignment.center,
                                               padding: const EdgeInsets.all(15),
@@ -623,11 +633,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                   ))
                                                 ]))
                                               ]))
-                                          : const Text(""),
+                                          //: const Text(""),
                                     ])
                                   : Container()),
                           Container(height: 25),
-                          Column(children: [
+                          Wrap(children: [
                             /* const Padding(
                           padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
                                                       ), */
@@ -635,6 +645,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                             settingToChange != Constants.U_JSON
                                 ? _buildEditableSettingsTest2(
                                     sensorAddress,
+                                    deviceName,
                                     index,
                                     u,
                                     settingToChange,
@@ -673,6 +684,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Widget _buildEditableSettingsTest2(
       String sensorAddress,
+      String ? deviceName,
       int index,
       int? u,
       String settingToChange,
@@ -683,14 +695,16 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       TextEditingController textController) {
     String settingText = "";
     bool isEnabledSave = true;
-
+//if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
+    debugPrint("00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange, u: $u");
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
       settingText = " High alarm:  ";
     }
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
       settingText = " Low alarm:  ";
     }
-    return Wrap(
+    debugPrint("buildEditable...");
+    return Stack(
       children: [
         Wrap(children: [
           Container(
@@ -712,8 +726,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               height: 50,
               width: MediaQuery.of(context).size.width / 5,
 
-              //padding: EdgeInsets.only(
-              //  top: 0, bottom: 0, left: 25, right: 25),
               child: TextFormField(
                   decoration: GuiUtils.setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
@@ -729,7 +741,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   ]))),
           Container(width: 10),
           SizedBox(
-            height: 50,
+           // height: 50,
             width: 100,
             //  margin: const EdgeInsets.only(right: 2),
             //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
@@ -745,7 +757,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                 }
                 EasyDebounce.debounce(
                     'debouncer1', const Duration(milliseconds: 5000), () {
-                  saveMqttSettings(
+                  saveMqttSettings(deviceName!,
                       sensorAddress, item, textController, settingToChange);
                   debugPrint("executing saveMqttSettings debouncer");
                   isEnabledSave = false;
@@ -784,12 +796,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     preferences = await SharedPreferences.getInstance();
   }
 
-  void saveMqttSettings(String? sensorName, UserDataSettings settings,
+  void saveMqttSettings(String deviceAddress, String? sensorName, UserDataSettings settings,
       TextEditingController controller, String settingToChange) {
     String value = controller.text;
 
     debugPrint(
-        "saveMqttSettings: $controller.text, $sensorName, $settingToChange");
+        "saveMqttSettings: deviceName: ${deviceAddress}, sensorAddress: $sensorName, $controller.text, $sensorName, $settingToChange");
     debugPrint("::: sensorName, paramName, paramValue  $sensorName ");
     //var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
@@ -802,7 +814,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
     //}
 
-    SmartMqtt.instance.publish(publishText);
+    SmartMqtt.instance.publish(publishText, deviceAddress);
 
     Future.delayed(const Duration(milliseconds: 2000), () {
       setState(() {});
