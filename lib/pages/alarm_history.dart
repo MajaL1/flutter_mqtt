@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mqtt_test/api/api_service.dart';
@@ -223,8 +225,11 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
+        debugPrint("alarm_history.... parsedMqttSettings: $parsedMqttSettings");
+        var json1 = json.decode(parsedMqttSettings!);
+
         parsedMqttSettingsList =
-            UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, false);
+            UserDataSettings.getUserDataSettingsAlarm(json1);
 
         for (UserDataSettings setting in parsedMqttSettingsList) {
           String? deviceName = setting.deviceName;

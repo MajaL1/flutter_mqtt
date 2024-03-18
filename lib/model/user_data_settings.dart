@@ -56,6 +56,51 @@ class UserDataSettings {
     return 'deviceName: ${deviceName}, SensorAddress: ${sensorAddress}, friendlyName: ${friendlyName}, hiAlarm: ${hiAlarm}, loAlarm: ${loAlarm}.';
   }
 
+  static List<UserDataSettings> getUserDataSettingsAlarm(List json) {
+    List<UserDataSettings> userSettingsList = [];
+    for (Map key in json) {
+      debugPrint("a-- json key $key");
+      int t = 0;
+      int typ = 0;
+      int hiAlarm = 0;
+      int loAlarm = 0;
+      int u = 0;
+      String data = "";s
+      String friendlyName = "";
+      String deviceName = "";
+      String sensorAddress = "";
+      if (key.isNotEmpty) {
+        for (var item in key.keys) {
+          if (item != null) {
+            if (item == "sensor_address") {
+              sensorAddress = key[item];
+            }
+            if (item == "device_name") {
+              deviceName = key[item];
+            }
+          }
+
+          UserDataSettings userDataSet = UserDataSettings(
+            deviceName: deviceName,
+            sensorAddress: sensorAddress,
+            friendlyName: friendlyName,
+            //editableSetting: editableSetting,
+            hiAlarm: hiAlarm,
+            loAlarm: loAlarm,
+            typ: typ,
+            t: t,
+            u: u,
+            data: data,
+          );
+          userSettingsList.add(userDataSet);
+        }
+        debugPrint(
+            "t, deviceName, friendlyNAme, ... $deviceName, $friendlyName");
+      }
+    }
+    return userSettingsList;
+  }
+
   static List<UserDataSettings> getUserDataSettings(Map<String, dynamic> json) {
     List<UserDataSettings> userSettingsList = [];
     for (String key in json.keys) {
@@ -121,6 +166,7 @@ class UserDataSettings {
     }
     return userSettingsList;
   }
+
   static List<UserDataSettings> getUserDataSettingsList1(
       String? mqttSettings, bool isDecode) {
     List<UserDataSettings> userDataSettingsList = [];
@@ -137,7 +183,7 @@ class UserDataSettings {
     }
     for (var item in jsonMap) {
       String deviceName = "";
-      if(item["device_name"]!= null){
+      if (item["device_name"] != null) {
         deviceName = item["device_name"];
       }
       String sensorAddress = item["sensor_address"];
@@ -192,13 +238,13 @@ class UserDataSettings {
       String deviceName = "";
       String sensorAddress = "";
       String friendlyName = "";
-      String data= "";
+      String data = "";
       String editableSetting = "";
-      int t =0;
-      int u=0;
-      int typ=0;
-      int hiAlarm=0;
-      int loAlarm=0;
+      int t = 0;
+      int u = 0;
+      int typ = 0;
+      int hiAlarm = 0;
+      int loAlarm = 0;
 
       sensorAddress = key.toString();
 

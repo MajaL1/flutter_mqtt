@@ -116,6 +116,8 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
         _setUserDataSettings(userDataSettings, preferences);
         String userDataSettingsStr = json.encode(userDataSettings);
         preferences.setString("current_mqtt_settings", userDataSettingsStr);
+        preferences.setString("parsed_current_mqtt_settings", userDataSettingsStr);
+
         //debugPrint("################ userDataSettingsStr $userDataSettingsStr");
 
         //return await pairOldMqttSettingsWithNew(preferences);
