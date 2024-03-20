@@ -65,7 +65,7 @@ class UserDataSettings {
       int hiAlarm = 0;
       int loAlarm = 0;
       int u = 0;
-      String data = "";s
+      String data = "";
       String friendlyName = "";
       String deviceName = "";
       String sensorAddress = "";
@@ -77,6 +77,24 @@ class UserDataSettings {
             }
             if (item == "device_name") {
               deviceName = key[item];
+            }
+            if (item == "t") {
+              t = key[item];
+            }
+            if (item == "typ") {
+              t = key[item];
+            }
+            if (item == "hi_alarm") {
+              hiAlarm = key[item];
+            }
+            if (item == "lo_alarm") {
+              loAlarm = key[item];
+            }
+            if (item == "u") {
+              u = key[item];
+            }
+            if (item == "data") {
+              data = key[item];
             }
           }
 

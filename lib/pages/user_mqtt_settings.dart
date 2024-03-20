@@ -17,7 +17,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/constants.dart';
 import '../model/data.dart';
 import '../util/gui_utils.dart';
-import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
 class UserMqttSettings extends StatefulWidget {
@@ -62,6 +61,13 @@ Future<List<Data>> _getMqttData(String data) async {
   return dataMqtt;
 }
 
+Future<List<UserDataSettings>?> _checkUserDataSettingsEmpty(String data) async {
+  if (data == null || data.isEmpty) {
+    return [];
+  }
+  //return data;
+}
+
 // ustvari novo listo UserDataSettings iz Shared Preferecncea
 Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -81,7 +87,8 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
 
       bool isDecode = false;
       if (decodeMessage.isEmpty) {
-        debugPrint("get data from current_mqtt_settings");
+        debugPrint(
+            "decodeMessage.isEmpty, get data from current_mqtt_settings");
 
         decodeMessage = preferences.getString("parsed_current_mqtt_settings");
         isDecode = true;
@@ -109,14 +116,14 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
         userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
         debugPrint("################ userDataSettings $decodeMessage");
 
-       // String? deviceName = preferences.getString("settings_mqtt_device_name");
+        // String? deviceName = preferences.getString("settings_mqtt_device_name");
         //userDataSettings[0].deviceName = deviceName;
-
 
         _setUserDataSettings(userDataSettings, preferences);
         String userDataSettingsStr = json.encode(userDataSettings);
-        preferences.setString("current_mqtt_settings", userDataSettingsStr);
-        preferences.setString("parsed_current_mqtt_settings", userDataSettingsStr);
+        // preferences.setString("current_mqtt_settings", userDataSettingsStr);
+        preferences.setString(
+            "parsed_current_mqtt_settings", userDataSettingsStr);
 
         //debugPrint("################ userDataSettingsStr $userDataSettingsStr");
 
@@ -126,14 +133,50 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
       }
     }
   }
-  return null;
+  return [];
 }
 
-void _setUserDataSettings(
-    userDataSettings, SharedPreferences preferences) {
+Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
+    SharedPreferences preferences) async {
+  String? oldMqttSettings = preferences.getString("current_mqtt_settings");
+  String? parsedMqttSettings =
+      preferences.getString("parsed_current_mqtt_settings");
 
+  List<UserDataSettings> oldMqttSettingsList = [];
+  List<UserDataSettings> parsedMqttSettingsList = [];
+
+  bool isDecode = true;
+  var jsonOldMqttSettings = json.decode(oldMqttSettings!);
+  oldMqttSettingsList =
+      UserDataSettings.getUserDataSettingsList1(jsonOldMqttSettings, true);
+  if (parsedMqttSettings == null || parsedMqttSettings?.compareTo("[]") == 0) {
+    //List<UserDataSettings> userDataSettings = [];
+    String userDataSettingsStr = json.encode(oldMqttSettings);
+    preferences.setString("parsed_current_mqtt_settings", userDataSettingsStr);
+    parsedMqttSettingsList = oldMqttSettingsList;
+    isDecode = false;
+  } else {
+    parsedMqttSettingsList =
+        UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, isDecode);
+  }
+
+  // copy friendly name
+
+  for (UserDataSettings oldSetting in oldMqttSettingsList) {
+    String? friendlyNameOld = oldSetting.friendlyName;
+    for (UserDataSettings newSetting in parsedMqttSettingsList) {
+      if (friendlyNameOld != null && friendlyNameOld.isNotEmpty) {
+        newSetting.friendlyName = friendlyNameOld;
+      }
+    }
+  }
+
+  debugPrint("################ parsedMqttSettingsList $parsedMqttSettingsList");
+  return parsedMqttSettingsList;
+}
+
+void _setUserDataSettings(userDataSettings, SharedPreferences preferences) {
   List<String>? topicNameList = preferences.getStringList("user_topics");
-
 
   /*for (UserDataSettings userDataSetting in userDataSettings) {
     userDataSetting.deviceName = deviceName;
@@ -374,9 +417,42 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Future<String> _getNewUserSettingsList() async {
     debugPrint("################### getNewSettingsList");
+    String settings = "";
+    initializePreference();
+    String? oldSettings = await SharedPreferences.getInstance().then((val) {
+      return val.getString("current_mqtt_settings");
+    });
+    oldSettings ??= "";
+    String oldSettingsDec = "";
+    if (oldSettings != null) {
+      debugPrint("SSSSSSS $oldSettings");
+    }
 
-    return await Provider.of<SmartMqtt>(context, listen: true)
+    settings = await Provider.of<SmartMqtt>(context, listen: false)
         .getNewUserSettingsList();
+    debugPrint("SSSSSSS settings $settings");
+
+    if (oldSettings != null && oldSettings.isNotEmpty) {
+      debugPrint("SSSSSSS oldSettingsDec $oldSettingsDec ");
+      debugPrint("SSSSSSS settings $settings ");
+
+      if (oldSettings.compareTo(settings) == 0) {
+        String? oldSettingsStr =
+            await SharedPreferences.getInstance().then((val) {
+          return val.getString("current_mqtt_settings");
+        });
+        debugPrint(
+            "SSSSSS oldSettings.compareTo(settings) == 0) $oldSettingsStr");
+        //return oldSettingsStr;
+      }
+    }
+
+    debugPrint("SSSSSSSSSSSS settings: $settings");
+    if(settings == null){
+      return "";
+    }
+
+    return settings;
   }
 
   Widget _buildFriendlyNameView(friendlyName, deviceName, sensorAddress) {
@@ -440,17 +516,17 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: //Provider.of<SmartMqtt>(context, listen: true)
-          //  .getNewUserSettingsList()
-          _getNewUserSettingsList()
+      future: Provider.of<SmartMqtt>(context, listen: true)
+            .getNewUserSettingsList()
+          //_getNewUserSettingsList()
               .then(
                   (dataSettingsList) => _getUserDataSettings(dataSettingsList))
+              //.then((dataSettingList) =>
+              //_checkUserDataSettingsEmpty(dataSettingList))
               .then((dataSettingsList) =>
                   _parseUserDataSettingsToList(dataSettingsList!)),
 
-      // tole spodaj dela, stem da se najprej osvezi na staro vrednost, potem pa na novo
-      // _getUserDataSettingsTEST(testNew).then((dataSettingsList) => _parseUserDataSettingsToList(dataSettingsList)),
-      builder: (context, snapshot) {
+        builder: (context, snapshot) {
         //debugPrint(
         //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
         if (snapshot.hasData) {
@@ -495,6 +571,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     TextEditingController controller = TextEditingController();
                     TextEditingController controllerFriendlyName =
                         TextEditingController(text: friendlyName);
+
                     ///debugPrint("000000000000000 build SingleChildScroollView: sensorAddress: $sensorAddress deviceName: $deviceName ");
                     //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
 
@@ -508,92 +585,86 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                               alignment: Alignment.center,
                               decoration: //index % 2 == 0
                                   //?
-                              GuiUtils.buildBoxDecorationSettings(),
-                                  //: null,
+                                  GuiUtils.buildBoxDecorationSettings(),
+                              //: null,
                               padding: const EdgeInsets.only(bottom: 0),
                               //padding: EdgeInsets.all(5),
                               child: settingToChange != "u"
                                   ? Wrap(children: [
-                                     // index % 2 == 0
-                                  //        ?
-                                  Container(
-                                              // color: Colors.red,
-                                              alignment: Alignment.center,
-                                              padding: const EdgeInsets.all(15),
-                                              child: Wrap(children: [
-                                                SizedBox(
-                                                    // padding: EdgeInsets.all(5),
-                                                    child: Wrap(children: [
-                                                  const Text(
-                                                    "Device: ",
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      letterSpacing: 1,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "$deviceName",
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 18,
-                                                      letterSpacing: 1.1,
-                                                    ),
-                                                  ),
-                                                  _buildFriendlyNameView(
-                                                      friendlyName,
-                                                      deviceName,
-                                                      sensorAddress),
-                                                  Text(
-                                                    "Data: $data",
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 18,
-                                                      letterSpacing: 1.1,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    height: 10,
-                                                  ),
-                                                  const SizedBox(
-                                                      child: Text(
-                                                          "Sensor address:  ",
-                                                          style: TextStyle(
-                                                              letterSpacing:
-                                                                  0.8,
-                                                              fontSize: 18))),
-                                                  SizedBox(
-                                                      child: Text(sensorAddress,
-                                                          style:
-                                                              const TextStyle(
-                                                            letterSpacing: 0.8,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                          ))),
-                                                  Container(
-                                                    height: 10,
-                                                  ),
-                                                  const SizedBox(
-                                                      child: Text(
-                                                    "units:  ",
-                                                    style:
-                                                        TextStyle(fontSize: 18),
-                                                  )),
-                                                  SizedBox(
-                                                      child: Text(
-                                                    unitText,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 18,
-                                                      letterSpacing: 0.8,
-                                                    ),
-                                                  ))
-                                                ]))
-                                              ]))
-                                          //: const Text(""),
+                                      // index % 2 == 0
+                                      //        ?
+                                      Container(
+                                          // color: Colors.red,
+                                          alignment: Alignment.center,
+                                          padding: const EdgeInsets.all(15),
+                                          child: Wrap(children: [
+                                            SizedBox(
+                                                // padding: EdgeInsets.all(5),
+                                                child: Wrap(children: [
+                                              const Text(
+                                                "Device: ",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  letterSpacing: 1,
+                                                ),
+                                              ),
+                                              Text(
+                                                "$deviceName",
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 18,
+                                                  letterSpacing: 1.1,
+                                                ),
+                                              ),
+                                              _buildFriendlyNameView(
+                                                  friendlyName,
+                                                  deviceName,
+                                                  sensorAddress),
+                                              Text(
+                                                "Data: $data",
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 18,
+                                                  letterSpacing: 1.1,
+                                                ),
+                                              ),
+                                              Container(
+                                                height: 10,
+                                              ),
+                                              const SizedBox(
+                                                  child: Text(
+                                                      "Sensor address:  ",
+                                                      style: TextStyle(
+                                                          letterSpacing: 0.8,
+                                                          fontSize: 18))),
+                                              SizedBox(
+                                                  child: Text(sensorAddress,
+                                                      style: const TextStyle(
+                                                        letterSpacing: 0.8,
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ))),
+                                              Container(
+                                                height: 10,
+                                              ),
+                                              const SizedBox(
+                                                  child: Text(
+                                                "units:  ",
+                                                style: TextStyle(fontSize: 18),
+                                              )),
+                                              SizedBox(
+                                                  child: Text(
+                                                unitText,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 18,
+                                                  letterSpacing: 0.8,
+                                                ),
+                                              ))
+                                            ]))
+                                          ]))
+                                      //: const Text(""),
                                     ])
                                   : Container()),
                           Container(height: 25),
@@ -644,7 +715,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Widget _buildEditableSettingsTest2(
       String sensorAddress,
-      String ? deviceName,
+      String? deviceName,
       int index,
       int? u,
       String settingToChange,
@@ -684,7 +755,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           SizedBox(
               height: 50,
               width: MediaQuery.of(context).size.width / 5,
-
               child: TextFormField(
                   decoration: GuiUtils.setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
@@ -700,7 +770,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   ]))),
           Container(width: 10),
           SizedBox(
-           // height: 50,
+            // height: 50,
             width: 100,
             //  margin: const EdgeInsets.only(right: 2),
             //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
@@ -716,8 +786,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                 }
                 EasyDebounce.debounce(
                     'debouncer1', const Duration(milliseconds: 5000), () {
-                  saveMqttSettings(deviceName!,
-                      sensorAddress, item, textController, settingToChange);
+                  saveMqttSettings(deviceName!, sensorAddress, item,
+                      textController, settingToChange);
                   debugPrint("executing saveMqttSettings debouncer");
                   isEnabledSave = false;
                 });
@@ -751,12 +821,17 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   SharedPreferences? preferences;
 
-  Future<void> initializePreference() async {
+  Future<SharedPreferences?> initializePreference() async {
     preferences = await SharedPreferences.getInstance();
+    return preferences;
   }
 
-  void saveMqttSettings(String deviceAddress, String? sensorName, UserDataSettings settings,
-      TextEditingController controller, String settingToChange) {
+  void saveMqttSettings(
+      String deviceAddress,
+      String? sensorName,
+      UserDataSettings settings,
+      TextEditingController controller,
+      String settingToChange) {
     String value = controller.text;
 
     debugPrint(
@@ -797,7 +872,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     bool isDecode = true;
     if (mqttSettings?.compareTo("[]") != 0) {
       mqttSettings = preferences?.getString("parsed_current_mqtt_settings");
-      debugPrint("saving friendly name...mqttSettings $mqttSettings");
+      //debugPrint("saving friendly name...mqttSettings oldSettings: $mqttSettings");
       if (mqttSettings!.contains("\\")) {
         isDecode = false;
       }
@@ -806,12 +881,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     } else {
       mqttSettings = preferences?.getString("current_mqtt_settings");
       Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
-      debugPrint("get user data from json decode message");
+      // debugPrint("get user data from json decode message");
 
       userDataSettingsList =
           await UserDataSettings.getUserDataSettings(jsonMap);
     }
-    debugPrint("get json from preferences $userDataSettingsList");
+    //debugPrint("get json from preferences $userDataSettingsList");
 
     UserDataSettings currentSensor =
         getSensorChange(userDataSettingsList, deviceName, sensorAddress);
@@ -822,6 +897,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     //preferences?.setString(str, "parsed_current_mqtt_settings");
     preferences?.remove("parsed_current_mqtt_settings");
     preferences?.setString("parsed_current_mqtt_settings", str);
+    //preferences?.setString("current_mqtt_settings", str);
   }
 
   // vrne trenutni device objekt, ki ga spreminjamo

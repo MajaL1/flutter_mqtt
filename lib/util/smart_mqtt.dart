@@ -215,11 +215,10 @@ class SmartMqtt extends ChangeNotifier {
         // ali ce so v zacetku prazni
         if (newUserSettings.compareTo(decodeMessage) != 0 &&
             decodeMessage.isNotEmpty) {
-
-          await _parseMqttSettingsForTopic(preferences, decodeMessage, topicName);
+          await _parseMqttSettingsForTopic(
+              preferences, decodeMessage, topicName);
           //{\"57\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455},\"84\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455}}
         }
-
       }
     }
     if (topicName.contains("data")) {
@@ -312,7 +311,8 @@ class SmartMqtt extends ChangeNotifier {
     //print('');
   }
 
-  Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences, String decodeMessage, String topicName) async {
+  Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences,
+      String decodeMessage, String topicName) async {
     debugPrint("new user settings");
     preferences.setString("current_mqtt_settings", decodeMessage);
     // parse trenutno sporocilo
@@ -325,7 +325,8 @@ class SmartMqtt extends ChangeNotifier {
     //String oldUserSettings = newUserSettings;
     Map newSettings = <String, String>{};
     if (newUserSettings.isEmpty) {
-      debugPrint("1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
+      debugPrint(
+          "1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
       newUserSettings = decodeMessage;
       newSettings = json.decode(newUserSettings);
       debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
@@ -339,7 +340,8 @@ class SmartMqtt extends ChangeNotifier {
       debugPrint("notifying listeners..");
     } else if (newUserSettings.isNotEmpty &&
         !decodeMessage.contains(newUserSettings)) {
-      debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
+      debugPrint(
+          "2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
       debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
       debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}");
       newSettings = json.decode(newUserSettings);
@@ -351,10 +353,10 @@ class SmartMqtt extends ChangeNotifier {
       newUserSettings = json.encode(concatenatedSettings);
       notifyListeners();
       debugPrint("notifying listeners.. $newUserSettings");
+      preferences.setString("current_mqtt_settings", newUserSettings);
       print("map: ${concatenatedSettings}");
       debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
     }
-
   }
 
   Future<DateTime?> _getLastAlarmDate() async {
@@ -448,6 +450,7 @@ class SmartMqtt extends ChangeNotifier {
     // if(newUserSettings != null) {
     debugPrint(
         "1111111111111 new User settings - smart mqtt: $newUserSettings");
+
     return newUserSettings;
     //}
   }

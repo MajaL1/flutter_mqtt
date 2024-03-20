@@ -236,11 +236,11 @@ class _AlarmHistoryState extends State<AlarmHistory> {
           String? sensorAddress = setting.sensorAddress;
           String? friendlyName = setting.friendlyName;
 
-          debugPrint("alarm_history _pairAlarmListWithSettings");
           for (Alarm alarm in alarmList) {
             if (alarm.sensorAddress == sensorAddress &&
                 alarm.deviceName == deviceName) {
               alarm.friendlyName = friendlyName;
+              debugPrint("alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");
             }
           }
         }
