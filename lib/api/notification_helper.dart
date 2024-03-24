@@ -84,7 +84,7 @@ class NotificationHelper extends StatelessWidget {
 
         // you have to enable background fetch capability on xcode project
         onBackground: onIosBackground,
-      ),
+          ),
     );
     tzl.initializeTimeZones();
   }

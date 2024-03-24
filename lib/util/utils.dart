@@ -334,5 +334,19 @@ class Utils {
     });
   }
 
+  static String removeFriendlyNameFromMqttSettings(
+      String newUserSettings, List<UserDataSettings> userDataSettings) {
+    for (UserDataSettings set in userDataSettings) {
+      debugPrint("set: $set");
+      if(set.friendlyName!= null && set.friendlyName!.isNotEmpty){
+        userDataSettings.remove(set);
+      }
+    }
+debugPrint("removeFriendlyNameFromMqttSettings:  $userDataSettings");
+    String settingsStr = ""; //json.encode(userDataSettings);
+
+    return settingsStr;
+  }
+
 /**  Todo: razvrsca alarme ***/
 }

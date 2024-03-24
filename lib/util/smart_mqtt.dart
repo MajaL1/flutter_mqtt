@@ -451,9 +451,12 @@ class SmartMqtt extends ChangeNotifier {
     debugPrint(
         "1111111111111 new User settings - smart mqtt: $newUserSettings");
 
-    return newUserSettings;
+
+  return newUserSettings;
     //}
   }
+
+
 
   Future<String> getNewDataList() async {
     return newMqttData;

@@ -226,10 +226,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
         debugPrint("alarm_history.... parsedMqttSettings: $parsedMqttSettings");
-        var json1 = json.decode(parsedMqttSettings!);
-
+        List jsonMap1 = json.decode(parsedMqttSettings!);
         parsedMqttSettingsList =
-            UserDataSettings.getUserDataSettingsAlarm(json1);
+            jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
 
         for (UserDataSettings setting in parsedMqttSettingsList) {
           String? deviceName = setting.deviceName;
@@ -240,7 +239,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
             if (alarm.sensorAddress == sensorAddress &&
                 alarm.deviceName == deviceName) {
               alarm.friendlyName = friendlyName;
-              debugPrint("alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");
+              debugPrint(
+                  "alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");
             }
           }
         }

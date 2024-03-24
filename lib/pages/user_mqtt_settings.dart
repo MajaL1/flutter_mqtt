@@ -81,33 +81,23 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
   bool isDecode = false;
   if (preferences.getBool("isLoggedIn") != null) {
     if (preferences.getBool("isLoggedIn") == true) {
-      // ali app tece v ozadju
-      // if (preferences.getBool("appRunInBackground") != null) {
-      // if (preferences.getBool("appRunInBackground") == true) {
-
-      bool isDecode = false;
+      // decode message je empty, ce zapremo app
       if (decodeMessage.isEmpty) {
         debugPrint(
             "decodeMessage.isEmpty, get data from current_mqtt_settings");
 
         decodeMessage = preferences.getString("parsed_current_mqtt_settings");
-        isDecode = true;
-        //}
-        // }
       } else {
         decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+        debugPrint(
+            "decodeMessage.is NOT Empty, get data from current_mqtt_settings");
       }
       //debugPrint("****************** user settings data $data");
       List<UserDataSettings> userDataSettings = [];
       //debugPrint("user_settings decodeMessage $decodeMessage");
       if (decodeMessage != null) {
-        if (!isDecode) {
-          // var s = json.decode(decodeMessage);
-          //String s1 = s.toString();
-          userDataSettings =
-              UserDataSettings.getUserDataSettingsList(decodeMessage, true);
-        }
-
+        userDataSettings =
+            UserDataSettings.getUserDataSettingsList(decodeMessage, true);
         var jsonMap0 = json.decode(decodeMessage);
 
         // Map<String, dynamic> jsonMap = json.decode(decodeMessage);
@@ -116,10 +106,6 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
         userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
         debugPrint("################ userDataSettings $decodeMessage");
 
-        // String? deviceName = preferences.getString("settings_mqtt_device_name");
-        //userDataSettings[0].deviceName = deviceName;
-
-        _setUserDataSettings(userDataSettings, preferences);
         String userDataSettingsStr = json.encode(userDataSettings);
         // preferences.setString("current_mqtt_settings", userDataSettingsStr);
         preferences.setString(
@@ -173,15 +159,6 @@ Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
 
   debugPrint("################ parsedMqttSettingsList $parsedMqttSettingsList");
   return parsedMqttSettingsList;
-}
-
-void _setUserDataSettings(userDataSettings, SharedPreferences preferences) {
-  List<String>? topicNameList = preferences.getStringList("user_topics");
-
-  /*for (UserDataSettings userDataSetting in userDataSettings) {
-    userDataSetting.deviceName = deviceName;
-    userDataSetting.data = _addDataToSettings(preferences);
-  } */
 }
 
 String? _addDataToSettings(SharedPreferences preferences) {
@@ -415,80 +392,42 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     return await Provider.of<SmartMqtt>(context, listen: true).getNewDataList();
   }
 
-  Future<String> _getNewUserSettingsList() async {
-    debugPrint("################### getNewSettingsList");
-    String settings = "";
-    initializePreference();
-    String? oldSettings = await SharedPreferences.getInstance().then((val) {
-      return val.getString("current_mqtt_settings");
-    });
-    oldSettings ??= "";
-    String oldSettingsDec = "";
-    if (oldSettings != null) {
-      debugPrint("SSSSSSS $oldSettings");
-    }
-
-    settings = await Provider.of<SmartMqtt>(context, listen: false)
-        .getNewUserSettingsList();
-    debugPrint("SSSSSSS settings $settings");
-
-    if (oldSettings != null && oldSettings.isNotEmpty) {
-      debugPrint("SSSSSSS oldSettingsDec $oldSettingsDec ");
-      debugPrint("SSSSSSS settings $settings ");
-
-      if (oldSettings.compareTo(settings) == 0) {
-        String? oldSettingsStr =
-            await SharedPreferences.getInstance().then((val) {
-          return val.getString("current_mqtt_settings");
-        });
-        debugPrint(
-            "SSSSSS oldSettings.compareTo(settings) == 0) $oldSettingsStr");
-        //return oldSettingsStr;
-      }
-    }
-
-    debugPrint("SSSSSSSSSSSS settings: $settings");
-    if(settings == null){
-      return "";
-    }
-
-    return settings;
-  }
-
   Widget _buildFriendlyNameView(friendlyName, deviceName, sensorAddress) {
     // String $settingsData = ": ";
     TextEditingController controllerFriendlyName =
         TextEditingController(text: friendlyName);
-    return Column(children: [
-      const Text(
-        "Friendly name: ",
-        style: TextStyle(
-          fontSize: 18,
-        ),
-      ),
-      Container(
-          width: 120,
-          height: 40,
-          child: (TextFormField(
-            style: const TextStyle(
-                fontFamily: 'Roboto',
-                color: Color.fromRGBO(00, 20, 20, 80),
-                fontSize: 16),
-            decoration: GuiUtils.buildFriendlyNameDecoration(),
-            controller: controllerFriendlyName,
-          ))),
-      ElevatedButton(
-        style: GuiUtils.buildElevatedButtonSettings(),
-        onPressed: () {
-          saveFriendlyName(
-              controllerFriendlyName.text, deviceName!, sensorAddress);
-        },
-        child: Text(
-          "Save",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-    ]);
+    return Container(
+        width: 200,
+        child: Wrap(children: [
+          const Text(
+            "Friendly name:",
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          Container(
+              width: 100,
+              height: 40,
+              child: (TextFormField(
+                style: const TextStyle(
+                    fontFamily: 'Roboto',
+                    color: Color.fromRGBO(00, 20, 20, 80),
+                    fontSize: 14),
+                decoration: GuiUtils.buildFriendlyNameDecoration(),
+                controller: controllerFriendlyName,
+              ))),
+          ElevatedButton(
+            style: GuiUtils.buildElevatedButtonSettings(),
+            onPressed: () {
+              saveFriendlyName(
+                  controllerFriendlyName.text, deviceName!, sensorAddress);
+            },
+            child: Text(
+              "Save",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ]));
   }
 
   /*Widget _buildDataView() {
@@ -512,21 +451,131 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         });
   }*/
 
-  // returns settings for hin alarm, lo alarm, ...
+  Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(
+      String newUserSettings) async {
+    String? parsedCurrentMqttSettings =
+        await SharedPreferences.getInstance().then((val) {
+      return val.getString("parsed_current_mqtt_settings");
+    });
+    List<UserDataSettings> userDataSettings = [];
+
+    // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings"
+    // to se zgodi, ko drugic, tretjic odpremo aplikacijo
+    if (newUserSettings == null || newUserSettings.isEmpty) {
+      String? decodeMessage =
+          const Utf8Decoder().convert(newUserSettings.codeUnits);
+
+      //debugPrint("user_settings decodeMessage $decodeMessage");
+      if (decodeMessage != null && decodeMessage.isNotEmpty) {
+        List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
+         userDataSettings =
+        jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+
+        userDataSettings =
+            UserDataSettings.getUserDataSettingsList(decodeMessage, true);
+        return userDataSettings;
+      }
+    } else {
+      // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
+      // ce je vsebina enaka, vrni dekodirane parsedCurrentMqttSettings
+      if (parsedCurrentMqttSettings != null) {
+         var jsonMap = json.decode(parsedCurrentMqttSettings!); //jsonMap.runtimeType
+        List jsonMap1 = json.decode(jsonMap);
+        List<UserDataSettings> parsedUserDataSettingsList =
+            jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+        //UserDataSettings.fromJson(jsonMap1);
+        debugPrint(
+            "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
+        //List<UserDataSettings> parsedUserDataSettingsList =
+        //  UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings,true);
+        // UserDataSettings.getUserDataSettings(jsonMap);
+        // String currentMqttSettingsWithoutFriendlyName =
+        //    Utils.removeFriendlyNameFromMqttSettings(
+        //        newUserSettings, parsedUserDataSettingsList);
+
+        //if (newUserSettings
+        //        .compareTo(currentMqttSettingsWithoutFriendlyName!) ==
+        //    0) {
+        userDataSettings =
+            UserDataSettings.getUserDataSettingsList(newUserSettings, true);
+        SharedPreferences.getInstance().then((value) {
+          String str = json.encode(newUserSettings);
+          value.setString("parsed_current_mqtt_settings", str);
+        });
+        // }
+      } else {
+        // ce vsebina ni enaka, vzemi  newUserSettings,
+        // naredi objekt UserDataSettings in klici pairOldSettingsWithNew(zaradi friendly name)
+        // ne rabimo klicati pairOldSettingsWithNew, to naredimo v
+        userDataSettings =
+            UserDataSettings.getUserDataSettingsList(newUserSettings, true);
+        SharedPreferences.getInstance().then((value) {
+          String str = json.encode(userDataSettings);
+
+          value.setString("parsed_current_mqtt_settings", str);
+        });
+        //  pairOldMqttSettingsWithNew(preferences!);
+      }
+
+      return userDataSettings;
+    }
+    return userDataSettings;
+  }
+
+  Future<bool> _checkIfOldSettingsEqualsNew(String newUserSettings) async {
+    debugPrint("smartmqtt -> _checkIfOldSettingsEqualsNew");
+    debugPrint("smartmqtt newUserSettings: $newUserSettings");
+    String settings = "";
+    String? oldSettings = await SharedPreferences.getInstance().then((val) {
+      return val.getString("parsed_current_mqtt_settings");
+    });
+    debugPrint(
+        "smartmqtt -> oldSettings from parsed_current_mqtt_settings: $oldSettings");
+    oldSettings ??= "";
+    String oldSettingsDec = "";
+    if (oldSettings != null) {
+      debugPrint("SSSSSSS $oldSettings");
+    }
+
+    // Preveri, ali so newUSerSettings iz Mqtt enaki (brez, da upostevas friendlyName!)
+
+    settings = newUserSettings;
+    debugPrint("SSSSSSS settings $settings");
+
+    if (oldSettings != null && oldSettings.isNotEmpty) {
+      debugPrint("SSSSSSS oldSettingsDec $oldSettingsDec ");
+      debugPrint("SSSSSSS settings $settings ");
+
+      if (oldSettings.compareTo(settings) == 0) {
+        String? oldSettingsStr =
+            await SharedPreferences.getInstance().then((val) {
+          return val.getString("current_mqtt_settings");
+        });
+        debugPrint(
+            "SSSSSS oldSettings.compareTo(settings) == 0) $oldSettingsStr");
+        //return oldSettingsStr;
+      }
+    }
+
+    debugPrint("SSSSSSSSSSSS settings: $settings");
+    if (settings == null) {
+      //  return "";
+    }
+    return true;
+    // return settings;
+  }
 
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
       future: Provider.of<SmartMqtt>(context, listen: true)
-            .getNewUserSettingsList()
+          .getNewUserSettingsList()
           //_getNewUserSettingsList()
-              .then(
-                  (dataSettingsList) => _getUserDataSettings(dataSettingsList))
-              //.then((dataSettingList) =>
-              //_checkUserDataSettingsEmpty(dataSettingList))
-              .then((dataSettingsList) =>
-                  _parseUserDataSettingsToList(dataSettingsList!)),
-
-        builder: (context, snapshot) {
+          //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
+          .then((dataSettingsList) =>
+              _checkAndPairOldSettingsWithNew(dataSettingsList))
+          .then((dataSettingsList) =>
+              _parseUserDataSettingsToList(dataSettingsList!)),
+      builder: (context, snapshot) {
         //debugPrint(
         //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
         if (snapshot.hasData) {
@@ -604,7 +653,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                               const Text(
                                                 "Device: ",
                                                 style: TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 16,
                                                   letterSpacing: 1,
                                                 ),
                                               ),
@@ -616,27 +665,21 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                   letterSpacing: 1.1,
                                                 ),
                                               ),
-                                              _buildFriendlyNameView(
-                                                  friendlyName,
-                                                  deviceName,
-                                                  sensorAddress),
-                                              Text(
+                                              /* Text(
                                                 "Data: $data",
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 18,
                                                   letterSpacing: 1.1,
                                                 ),
-                                              ),
-                                              Container(
-                                                height: 10,
-                                              ),
+                                              ), */
+
                                               const SizedBox(
                                                   child: Text(
                                                       "Sensor address:  ",
                                                       style: TextStyle(
                                                           letterSpacing: 0.8,
-                                                          fontSize: 18))),
+                                                          fontSize: 16))),
                                               SizedBox(
                                                   child: Text(sensorAddress,
                                                       style: const TextStyle(
@@ -645,6 +688,17 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                         fontWeight:
                                                             FontWeight.w800,
                                                       ))),
+                                              Container(
+                                                width: 200,
+                                                height: 5,
+                                              ),
+                                              _buildFriendlyNameView(
+                                                  friendlyName,
+                                                  deviceName,
+                                                  sensorAddress),
+                                              Container(
+                                                height: 10,
+                                              ),
                                               Container(
                                                 height: 10,
                                               ),
@@ -876,8 +930,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       if (mqttSettings!.contains("\\")) {
         isDecode = false;
       }
+      //Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
+      //userDataSettingsList = UserDataSettings.getUserDataSettings(jsonMap);
+      List jsonMap1 = json.decode(mqttSettings!);
       userDataSettingsList =
-          UserDataSettings.getUserDataSettingsList1(mqttSettings, isDecode);
+          jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
     } else {
       mqttSettings = preferences?.getString("current_mqtt_settings");
       Map<String, dynamic> jsonMap = json.decode(mqttSettings!);

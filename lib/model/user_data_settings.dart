@@ -36,6 +36,21 @@ class UserDataSettings {
     }
   } */
 
+  factory UserDataSettings.fromJson(Map<String, dynamic> parsedJson) {
+    return UserDataSettings(
+      deviceName: parsedJson['device_name'].toString(),
+      sensorAddress: parsedJson['sensor_address'].toString(),
+      friendlyName: parsedJson['friendlyName'].toString(),
+      data: parsedJson['data'].toString(),
+      editableSetting: parsedJson['editableSetting'].toString(),
+      u: parsedJson['s'],
+      t: parsedJson['a'],
+      typ: parsedJson['typ'],
+      hiAlarm: parsedJson['hi_alarm'],
+      loAlarm: parsedJson['lo_alarm'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     debugPrint("ToJson:: ");
     return {
@@ -298,21 +313,20 @@ class UserDataSettings {
             data = value1.toString();
           }
         }
-
-        UserDataSettings userDataSet = UserDataSettings(
-          deviceName: "",
-          sensorAddress: sensorAddress,
-          friendlyName: friendlyName,
-          editableSetting: editableSetting,
-          hiAlarm: hiAlarm,
-          loAlarm: loAlarm,
-          typ: typ,
-          t: t,
-          u: u,
-          data: data,
-        );
-        userDataSettingsList.add(userDataSet);
       }
+      UserDataSettings userDataSet = UserDataSettings(
+        deviceName: deviceName,
+        sensorAddress: sensorAddress,
+        friendlyName: friendlyName,
+        editableSetting: editableSetting,
+        hiAlarm: hiAlarm,
+        loAlarm: loAlarm,
+        typ: typ,
+        t: t,
+        u: u,
+        data: data,
+      );
+      userDataSettingsList.add(userDataSet);
     }
     debugPrint("### $userDataSettingsList");
     return userDataSettingsList;
