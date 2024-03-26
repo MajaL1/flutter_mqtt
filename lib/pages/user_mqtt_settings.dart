@@ -106,10 +106,8 @@ Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
         userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
         debugPrint("################ userDataSettings $decodeMessage");
 
-
         var json0 = json.encode(
             List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
-
 
         preferences?.remove("parsed_current_mqtt_settings");
         preferences?.setString("parsed_current_mqtt_settings", json0);
@@ -466,26 +464,17 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings"
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {
-      String? decodeMessage =
-          const Utf8Decoder().convert(newUserSettings.codeUnits);
-
-      //debugPrint("user_settings decodeMessage $decodeMessage");
-      if (decodeMessage != null && decodeMessage.isNotEmpty) {
         List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
         userDataSettings =
             jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
-
-        //userDataSettings =
-        //   UserDataSettings.getUserDataSettingsList(decodeMessage, true);
         return userDataSettings;
-      }
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
       // ce je vsebina enaka, vrni dekodirane parsedCurrentMqttSettings
       if (parsedCurrentMqttSettings != null) {
         var jsonMap =
             json.decode(parsedCurrentMqttSettings!); //jsonMap.runtimeType
-        //List jsonMap1 = json.decode(jsonMap);
+
         List settings =
             jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
         List<UserDataSettings> parsedUserDataSettingsList =
@@ -493,9 +482,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
         debugPrint(
             "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
-        //List<UserDataSettings> parsedUserDataSettingsList =
-        //  UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings,true);
-        // UserDataSettings.getUserDataSettings(jsonMap);
+
         // String currentMqttSettingsWithoutFriendlyName =
         //    Utils.removeFriendlyNameFromMqttSettings(
         //        newUserSettings, parsedUserDataSettingsList);
@@ -966,7 +953,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     var json0 = json.encode(
         List<dynamic>.from(userDataSettingsList.map((x) => x.toJson())));
 
-     preferences?.remove("parsed_current_mqtt_settings");
+    preferences?.remove("parsed_current_mqtt_settings");
     preferences?.setString("parsed_current_mqtt_settings", json0);
   }
 

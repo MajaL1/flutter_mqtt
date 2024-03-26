@@ -84,8 +84,6 @@ class Utils {
         (parsedMqttSettings == null || parsedMqttSettings.isEmpty)) {
       return true;
     } else {
-      // Todo: popravi kodiranje mqtt settingsov
-      // Todo: tole UserDataSettings.getUserDataSettingsList(parsedMqttSettings, true);
 
       List<UserDataSettings> parsedMqttSettingsList =
           UserDataSettings.getUserDataSettingsList(parsedMqttSettings, true);
