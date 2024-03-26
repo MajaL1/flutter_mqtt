@@ -29,9 +29,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarmsHistory()
-          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList))
-          .then((alarmHistoryList) =>
-              _pairAlarmListWithSettings(alarmHistoryList)),
+          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)),
+          //.then((alarmHistoryList) =>
+            //  _pairAlarmListWithSettings(alarmHistoryList)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

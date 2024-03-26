@@ -219,7 +219,7 @@ class NotificationHelper extends StatelessWidget {
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
         "v: $v, $alarmValue \n$formattedDate",
-        tz.TZDateTime.now(slovenia).add(Duration(minutes: minutes)),
+        tz.TZDateTime.now(slovenia).add(Duration(minutes: 1)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
