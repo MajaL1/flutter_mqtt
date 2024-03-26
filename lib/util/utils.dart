@@ -84,7 +84,6 @@ class Utils {
         (parsedMqttSettings == null || parsedMqttSettings.isEmpty)) {
       return true;
     } else {
-
       List<UserDataSettings> parsedMqttSettingsList =
           UserDataSettings.getUserDataSettingsList(parsedMqttSettings, true);
 
@@ -332,19 +331,37 @@ class Utils {
     });
   }
 
-  static String removeFriendlyNameFromMqttSettings(
-      String newUserSettings, List<UserDataSettings> userDataSettings) {
-    for (UserDataSettings set in userDataSettings) {
-      debugPrint("set: $set");
-      if(set.friendlyName!= null && set.friendlyName!.isNotEmpty){
-        userDataSettings.remove(set);
+  static List<UserDataSettings> diffOldAndNewSettings(
+      List<UserDataSettings> newUserSettings,
+      List<UserDataSettings> currentUserSettings) {
+    /* RegExp regex = RegExp(
+        "\s*\"friendlyName\" *: *(\"(.*?)\"(,|\s|)|\s*\{(.*?)\}(,|\s|))");
+
+    debugPrint("removeFriendlyNameFromMqttSettings:  $userDataSettings");
+    debugPrint("will compare:  userDataSettings $userDataSettings");
+    debugPrint("will compare:  newUserSettings $newUserSettings");
+
+    if (regex.hasMatch(userDataSettings)) {
+      debugPrint("hasMatch");
+      final withoutFriendlyName =
+          userDataSettings.replaceAll(regex, ''); // abc
+      debugPrint("withoutFriendlyName: $withoutFriendlyName");
+    } */
+
+    // preveri vsebino userdatasettingsov
+    // preveri, ali so parametri v obeh listah enake, oz. novi listi pripni friendlyName
+
+    for (UserDataSettings setOld in currentUserSettings) {
+      for (UserDataSettings setNew in newUserSettings) {
+        if (setOld.deviceName == setNew.deviceName &&
+            setOld.sensorAddress == setNew.sensorAddress) {
+          setNew.friendlyName = setOld.friendlyName;
+        }
       }
     }
-debugPrint("removeFriendlyNameFromMqttSettings:  $userDataSettings");
-    String settingsStr = ""; //json.encode(userDataSettings);
 
-    return settingsStr;
+    debugPrint("diffOldAndNewSettings:  newUserSettings: $newUserSettings");
+
+    return newUserSettings;
   }
-
-/**  Todo: razvrsca alarme ***/
 }

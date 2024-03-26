@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/constants.dart';
 import '../model/data.dart';
 import '../util/gui_utils.dart';
+import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
 class UserMqttSettings extends StatefulWidget {
@@ -464,10 +465,10 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings"
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {
-        List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
-        userDataSettings =
-            jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
-        return userDataSettings;
+      List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
+      userDataSettings =
+          jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+      return userDataSettings;
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
       // ce je vsebina enaka, vrni dekodirane parsedCurrentMqttSettings
@@ -483,18 +484,19 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         debugPrint(
             "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
 
-        // String currentMqttSettingsWithoutFriendlyName =
-        //    Utils.removeFriendlyNameFromMqttSettings(
-        //        newUserSettings, parsedUserDataSettingsList);
+        // ce trenutni settingi niso prazni in ce novi settingi niso prazni
+        if (newUserSettings != null) {
+          List<UserDataSettings> newUserDataSettings =
+              UserDataSettings.getUserDataSettingsList(newUserSettings, true);
 
-        //if (newUserSettings
-        //        .compareTo(currentMqttSettingsWithoutFriendlyName!) ==
-        //    0) {
+          // primerjamo stare in nove settingse, dodamo friendly name na nove
+          List<UserDataSettings> diffSettings = Utils.diffOldAndNewSettings(
+              newUserDataSettings, parsedUserDataSettingsList);
+          return diffSettings;
+        }
         userDataSettings =
             UserDataSettings.getUserDataSettingsList(newUserSettings, true);
         SharedPreferences.getInstance().then((value) {
-          //String str = json.encode(newUserSettings);
-
           var json1 = json.encode(
               List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
 
