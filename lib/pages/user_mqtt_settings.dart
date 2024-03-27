@@ -69,101 +69,6 @@ Future<List<UserDataSettings>?> _checkUserDataSettingsEmpty(String data) async {
   //return data;
 }
 
-// ustvari novo listo UserDataSettings iz Shared Preferecncea
-Future<List<UserDataSettings>?> _getUserDataSettings(String data) async {
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  // debugPrint("################ _getUserDataSettings");
-  String? decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-  debugPrint("################ decodeMessage $decodeMessage");
-
-  /*** get new user settings list, ce je iz vecih naprav
-   *  ***/
-
-  bool isDecode = false;
-  if (preferences.getBool("isLoggedIn") != null) {
-    if (preferences.getBool("isLoggedIn") == true) {
-      // decode message je empty, ce zapremo app
-      if (decodeMessage.isEmpty) {
-        debugPrint(
-            "decodeMessage.isEmpty, get data from current_mqtt_settings");
-
-        decodeMessage = preferences.getString("parsed_current_mqtt_settings");
-      } else {
-        decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-        debugPrint(
-            "decodeMessage.is NOT Empty, get data from current_mqtt_settings");
-      }
-      //debugPrint("****************** user settings data $data");
-      List<UserDataSettings> userDataSettings = [];
-      //debugPrint("user_settings decodeMessage $decodeMessage");
-      if (decodeMessage != null) {
-        userDataSettings =
-            UserDataSettings.getUserDataSettingsList(decodeMessage, true);
-        var jsonMap0 = json.decode(decodeMessage);
-
-        // Map<String, dynamic> jsonMap = json.decode(decodeMessage);
-        debugPrint("get user data from json decode message");
-
-        userDataSettings = UserDataSettings.getUserDataSettings(jsonMap0);
-        debugPrint("################ userDataSettings $decodeMessage");
-
-        var json0 = json.encode(
-            List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
-
-        preferences?.remove("parsed_current_mqtt_settings");
-        preferences?.setString("parsed_current_mqtt_settings", json0);
-        preferences.setString("parsed_current_mqtt_settings", json0);
-
-        //debugPrint("################ userDataSettingsStr $userDataSettingsStr");
-
-        //return await pairOldMqttSettingsWithNew(preferences);
-
-        return userDataSettings;
-      }
-    }
-  }
-  return [];
-}
-
-Future<List<UserDataSettings>> pairOldMqttSettingsWithNew(
-    SharedPreferences preferences) async {
-  String? oldMqttSettings = preferences.getString("current_mqtt_settings");
-  String? parsedMqttSettings =
-      preferences.getString("parsed_current_mqtt_settings");
-
-  List<UserDataSettings> oldMqttSettingsList = [];
-  List<UserDataSettings> parsedMqttSettingsList = [];
-
-  bool isDecode = true;
-  var jsonOldMqttSettings = json.decode(oldMqttSettings!);
-  oldMqttSettingsList =
-      UserDataSettings.getUserDataSettingsList1(jsonOldMqttSettings, true);
-  if (parsedMqttSettings == null || parsedMqttSettings?.compareTo("[]") == 0) {
-    //List<UserDataSettings> userDataSettings = [];
-    String userDataSettingsStr = json.encode(oldMqttSettings);
-    preferences.setString("parsed_current_mqtt_settings", userDataSettingsStr);
-    parsedMqttSettingsList = oldMqttSettingsList;
-    isDecode = false;
-  } else {
-    parsedMqttSettingsList =
-        UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, isDecode);
-  }
-
-  // copy friendly name
-
-  for (UserDataSettings oldSetting in oldMqttSettingsList) {
-    String? friendlyNameOld = oldSetting.friendlyName;
-    for (UserDataSettings newSetting in parsedMqttSettingsList) {
-      if (friendlyNameOld != null && friendlyNameOld.isNotEmpty) {
-        newSetting.friendlyName = friendlyNameOld;
-      }
-    }
-  }
-
-  debugPrint("################ parsedMqttSettingsList $parsedMqttSettingsList");
-  return parsedMqttSettingsList;
-}
-
 String? _addDataToSettings(SharedPreferences preferences) {
   String dataString = "";
   String? data = preferences.getString("data_list_mqtt");
@@ -487,7 +392,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         // ce trenutni settingi niso prazni in ce novi settingi niso prazni
         if (newUserSettings != null) {
           List<UserDataSettings> newUserDataSettings =
-              UserDataSettings.getUserDataSettingsList(newUserSettings, true);
+              UserDataSettings.getUserDataSettingsList(newUserSettings);
 
           // primerjamo stare in nove settingse, dodamo friendly name na nove
           List<UserDataSettings> diffSettings = Utils.diffOldAndNewSettings(
@@ -495,7 +400,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           return diffSettings;
         }
         userDataSettings =
-            UserDataSettings.getUserDataSettingsList(newUserSettings, true);
+            UserDataSettings.getUserDataSettingsList(newUserSettings);
         SharedPreferences.getInstance().then((value) {
           var json1 = json.encode(
               List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
@@ -508,7 +413,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         // naredi objekt UserDataSettings in klici pairOldSettingsWithNew(zaradi friendly name)
         // ne rabimo klicati pairOldSettingsWithNew, to naredimo v
         userDataSettings =
-            UserDataSettings.getUserDataSettingsList(newUserSettings, true);
+            UserDataSettings.getUserDataSettingsList(newUserSettings);
         SharedPreferences.getInstance().then((value) {
           String str = json.encode(userDataSettings);
           var json0 = json.encode(
@@ -516,55 +421,10 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
           value.setString("parsed_current_mqtt_settings", json0);
         });
-        //  pairOldMqttSettingsWithNew(preferences!);
       }
 
       return userDataSettings;
     }
-    return userDataSettings;
-  }
-
-  Future<bool> _checkIfOldSettingsEqualsNew(String newUserSettings) async {
-    debugPrint("smartmqtt -> _checkIfOldSettingsEqualsNew");
-    debugPrint("smartmqtt newUserSettings: $newUserSettings");
-    String settings = "";
-    String? oldSettings = await SharedPreferences.getInstance().then((val) {
-      return val.getString("parsed_current_mqtt_settings");
-    });
-    debugPrint(
-        "smartmqtt -> oldSettings from parsed_current_mqtt_settings: $oldSettings");
-    oldSettings ??= "";
-    String oldSettingsDec = "";
-    if (oldSettings != null) {
-      debugPrint("SSSSSSS $oldSettings");
-    }
-
-    // Preveri, ali so newUSerSettings iz Mqtt enaki (brez, da upostevas friendlyName!)
-
-    settings = newUserSettings;
-    debugPrint("SSSSSSS settings $settings");
-
-    if (oldSettings != null && oldSettings.isNotEmpty) {
-      debugPrint("SSSSSSS oldSettingsDec $oldSettingsDec ");
-      debugPrint("SSSSSSS settings $settings ");
-
-      if (oldSettings.compareTo(settings) == 0) {
-        String? oldSettingsStr =
-            await SharedPreferences.getInstance().then((val) {
-          return val.getString("current_mqtt_settings");
-        });
-        debugPrint(
-            "SSSSSS oldSettings.compareTo(settings) == 0) $oldSettingsStr");
-        //return oldSettingsStr;
-      }
-    }
-
-    debugPrint("SSSSSSSSSSSS settings: $settings");
-    if (settings == null) {
-      //  return "";
-    }
-    return true;
-    // return settings;
   }
 
   Widget _buildMqttSettingsView() {
@@ -904,7 +764,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
     //}
 
-    SmartMqtt.instance.publish(publishText, deviceAddress);
+    SmartMqtt.instance.publish(publishText, "settings/$deviceAddress");
 
     Future.delayed(const Duration(milliseconds: 2000), () {
       setState(() {});

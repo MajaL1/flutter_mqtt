@@ -200,72 +200,18 @@ class UserDataSettings {
     return userSettingsList;
   }
 
-  static List<UserDataSettings> getUserDataSettingsList1(
-      String? mqttSettings, bool isDecode) {
-    List<UserDataSettings> userDataSettingsList = [];
-    //debugPrint("getUserDataSettingsList1 parse $mqttSettings");
-    Iterable jsonMap;
-    if (isDecode) {
-      jsonMap = jsonDecode(mqttSettings.toString()!);
-    } else {
-      //debugPrint("getUserDataSettingsList1 parse: $mqttSettings");
-      var str = json.decode(mqttSettings!);
-      //jsonMap = str.runes.toList();
-      //jsonMap = jsonDecode(mqttSettings.toString()!);
-      jsonMap = json.decode(str);
-    }
-    for (var item in jsonMap) {
-      String deviceName = "";
-      if (item["device_name"] != null) {
-        deviceName = item["device_name"];
-      }
-      String sensorAddress = item["sensor_address"];
-      String friendlyName = item["friendlyName"] ?? "";
-      String data = item["data"] ?? "";
-      String editableSetting = item["editableSetting"] ?? "";
-      int t = item["t"];
-      int u = item["u"];
-      int typ = item["typ"] ?? 0;
-      int hiAlarm = item["hi_alarm"] ?? 0;
-      int loAlarm = item["lo_alarm"] ?? 0;
-
-      UserDataSettings userDataSet = UserDataSettings(
-        deviceName: deviceName,
-        sensorAddress: sensorAddress,
-        friendlyName: friendlyName,
-        editableSetting: editableSetting,
-        hiAlarm: hiAlarm,
-        loAlarm: loAlarm,
-        typ: typ,
-        t: t,
-        u: u,
-        data: data,
-      );
-      userDataSettingsList.add(userDataSet);
-    }
-    debugPrint("### $userDataSettingsList");
-    return userDataSettingsList;
-  }
-
   static List<UserDataSettings> getUserDataSettingsList(
-      String? mqttSettings, bool isDecode) {
+      String? mqttSettings) {
     List<UserDataSettings> userDataSettingsList = [];
     debugPrint("777777777 parse $mqttSettings");
     Map jsonMap;
-    if (isDecode) {
       // Todo: tole daj v novo metodo
       //jsonDecode(mqttSettings!);
       // end Todo
       Map jsonMap1 = json.decode(mqttSettings!);
       jsonMap = jsonMap1;
       // jsonMap = jsonDecode(mqttSettings.toString()!);
-    } else {
-      debugPrint("8888888888 parse: $mqttSettings");
-      var str = json.decode(mqttSettings!);
-      //jsonMap = str.runes.toList();
-      //jsonMap = jsonDecode(mqttSettings.toString()!);
-      jsonMap = json.decode(str);
-    }
+
 
     for (var key in jsonMap.keys) {
       String deviceName = "";

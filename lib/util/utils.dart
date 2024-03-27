@@ -85,10 +85,10 @@ class Utils {
       return true;
     } else {
       List<UserDataSettings> parsedMqttSettingsList =
-          UserDataSettings.getUserDataSettingsList(parsedMqttSettings, true);
+          UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
 
       List<UserDataSettings> parsedMqttSettingsListNew =
-          UserDataSettings.getUserDataSettingsList(decodeMessage, true);
+          UserDataSettings.getUserDataSettingsList(decodeMessage);
 
       // preveri, ali stara lista vsebuje listo z istimi senzorji in z novimi nastavitvami
       for (UserDataSettings oldSettings in parsedMqttSettingsList) {
@@ -313,7 +313,7 @@ class Utils {
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
         parsedMqttSettingsList =
-            UserDataSettings.getUserDataSettingsList1(parsedMqttSettings, true);
+            UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
 
         for (UserDataSettings setting in parsedMqttSettingsList) {
           String? deviceName = setting.deviceName;
