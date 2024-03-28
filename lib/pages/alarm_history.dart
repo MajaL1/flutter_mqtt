@@ -22,6 +22,7 @@ class AlarmHistory extends StatefulWidget {
 
 class _AlarmHistoryState extends State<AlarmHistory> {
   List<Alarm> _returnAlarmList(List<Alarm> alarmList) {
+    debugPrint("alarm_history alarmList ${alarmList.toString()}");
     return alarmList;
   }
 
@@ -29,9 +30,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarmsHistory()
-          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)),
-          //.then((alarmHistoryList) =>
-            //  _pairAlarmListWithSettings(alarmHistoryList)),
+          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)) //),
+          .then((alarmHistoryList) =>
+              _pairAlarmListWithSettings(alarmHistoryList)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -188,7 +189,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                       Container(
                                           padding: const EdgeInsets.all(1.0),
                                           child: Text(
-                                              "$deviceName-$sensorAddress",
+                                              "$deviceName-$sensorAddress-$friendlyName",
                                               textAlign: TextAlign.center)),
                                       Container(
                                           padding: const EdgeInsets.all(1.0),
@@ -218,7 +219,6 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
   // nastavi friendly name v listi history alarmov
   Future<List<Alarm>> _pairAlarmListWithSettings(List<Alarm> alarmList) async {
-    List<Alarm> alarmList = [];
     await SharedPreferences.getInstance().then((value) {
       if (value.getString("parsed_current_mqtt_settings") != null) {
         List<UserDataSettings> parsedMqttSettingsList = [];
@@ -238,9 +238,11 @@ class _AlarmHistoryState extends State<AlarmHistory> {
           for (Alarm alarm in alarmList) {
             if (alarm.sensorAddress == sensorAddress &&
                 alarm.deviceName == deviceName) {
-              alarm.friendlyName = friendlyName;
-              debugPrint(
-                  "alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");
+              if (friendlyName != null && friendlyName!.isNotEmpty) {
+                alarm.friendlyName = friendlyName;
+                debugPrint(
+                    "alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");
+              }
             }
           }
         }

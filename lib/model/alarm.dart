@@ -157,6 +157,7 @@ class Alarm {
     for (var alarm in json) {
       String deviceName = "";
       String sensorAddress = "";
+      String friendlyName = "";
       int typ = 0;
       int hiAlarm = 0;
       int loAlarm = 0;
@@ -196,7 +197,10 @@ class Alarm {
             sensorAddress = value;
           }
           if (key == "device_name") {
-            deviceName = value;
+            deviceName = value ?? "";
+          }
+          if (key == "friendlyName") {
+            friendlyName = value ?? "";
           }
           if (key == "v") {
             v = valueInt;
@@ -238,6 +242,7 @@ class Alarm {
       Alarm newAlarm = Alarm(
           sensorAddress: sensorAddress,
           deviceName: deviceName,
+          friendlyName: friendlyName  ,
           typ: typ,
           v: v,
           hiAlarm: hiAlarm,
@@ -331,8 +336,8 @@ class Alarm {
           }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
-              sensorAddress: key,
-              deviceName: sensorName,
+              sensorAddress: sensorName,
+              deviceName: "",
               typ: typ,
               v: v,
               hiAlarm: hiAlarm,
@@ -349,5 +354,12 @@ class Alarm {
       }
     }
     return alarmList;
+  }
+
+  @override
+  String toString() {
+    return "Alarm{sensorAddress: $sensorAddress, deviceName: $deviceName,typ: $typ, "
+        " high_alarm: $hiAlarm, loAlarm: $loAlarm, ts: $ts, lb: $lb, bv: $bv, r: $r, b: $b, v:$v, t:$t"
+        '}';
   }
 }

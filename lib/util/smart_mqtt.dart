@@ -226,10 +226,13 @@ class SmartMqtt extends ChangeNotifier {
       //preferences.setString("data_mqtt", decodeMessage);
     }
     if (topicName.contains("alarm")) {
-      debugPrint("alarm!!!!!");
+      debugPrint("alarm!!!!!, messageCount: ${messageCount}");
       if (messageCount > 0) {
+        debugPrint("alarm!!!!!, showing alarm: ${messageCount}");
+
         Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+        currentAlarmList.first.deviceName = topicName.split("/alarm").first;
         //prebere listo alarmov iz preferenc in jim doda nov alarm
         SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -246,7 +249,7 @@ class SmartMqtt extends ChangeNotifier {
         int? lastSentHiAlarmValue = await _getLastSentHiAlarm();
 
         int? lastSentLoAlarmValue = await _getLastSentLoAlarm();
-        int minutes = 6;
+        int minutes = 1;
         if (lastAlarmDate != null) {
           minutes = Utils.compareDatesInMinutes(lastAlarmDate!, DateTime.now());
         }
@@ -257,7 +260,7 @@ class SmartMqtt extends ChangeNotifier {
 
         //ali je vec kot 5 minut od alarma
         /**** ToDo ali je prejsnja vrednost poslanega alarma vecja od druge in je minilo manj kot 5 min*****/
-        if ((lastAlarmDate == null || minutes >= 5))
+        if ((lastAlarmDate == null || minutes >= 1))
         // || (minutes<3 && lastSentHiAlarmValue! < currentHiAlarm! )) {
 
         {
@@ -265,8 +268,8 @@ class SmartMqtt extends ChangeNotifier {
               "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
 
           // 2. dobi trenuten alarm
-          currentAlarmList.first.sensorAddress =
-              topicName.split("/alarm").first;
+         // currentAlarmList.first.sensorAddress =
+          //    topicName.split("/alarm").first;
           // 3. doda alarm na listo starih alarmov
           // odkomentiraj, da bo dodajalo alarm
           oldAlarmList.addAll(currentAlarmList);
@@ -292,7 +295,7 @@ class SmartMqtt extends ChangeNotifier {
             /*********************/
           });
         } else {
-          debugPrint("minutes<5, not showing alarm");
+          debugPrint("minutes<1, not showing alarm");
           debugPrint(
               "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
         }
