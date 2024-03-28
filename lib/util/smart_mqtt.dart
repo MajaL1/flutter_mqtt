@@ -357,8 +357,8 @@ class SmartMqtt extends ChangeNotifier {
       notifyListeners();
       debugPrint("notifying listeners.. $newUserSettings");
       preferences.setString("current_mqtt_settings", newUserSettings);
-      print("map: ${concatenatedSettings}");
-      debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
+      //print("map: ${concatenatedSettings}");
+      //debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
     }
   }
 

@@ -27,14 +27,14 @@ class GuiUtils {
 
   static BoxDecoration buildBoxDecorationSettings() {
     return BoxDecoration(
-      color: Colors.white60, //Color.fromRGBO(0, 87, 153, 60),
+      color: Colors.white70, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.white10,
           spreadRadius: 4,
           blurRadius: 5,
-          offset: const Offset(0, 2), // changes position of shadow
+          offset: Offset(0, 2), // changes position of shadow
         ),
       ],
     );
@@ -211,7 +211,7 @@ class GuiUtils {
         //side: MaterialStateProperty.BorderSide(color: Colors.red),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
+          borderRadius: BorderRadius.circular(12.0),
           //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
         )),
         backgroundColor:
@@ -220,6 +220,22 @@ class GuiUtils {
             getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
         overlayColor:
             getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+  }
+
+  static ButtonStyle buildElevatedButtonFriendlyName() {
+    return ButtonStyle(
+      //side: MaterialStateProperty.BorderSide(color: Colors.red),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
+            )),
+        backgroundColor:
+        getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        foregroundColor:
+        getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        overlayColor:
+        getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
   }
 
   static ButtonStyle buildElevatedButtonLogin() {

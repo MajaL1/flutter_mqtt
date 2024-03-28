@@ -310,31 +310,39 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           const Text(
             "Friendly name:",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 16,
+              letterSpacing: 0.6,
+              //fontWeight: FontWeight.bold,
             ),
           ),
-          Container(
-              width: 100,
-              height: 40,
-              child: (TextFormField(
-                style: const TextStyle(
-                    fontFamily: 'Roboto',
-                    color: Color.fromRGBO(00, 20, 20, 80),
-                    fontSize: 14),
-                decoration: GuiUtils.buildFriendlyNameDecoration(),
-                controller: controllerFriendlyName,
-              ))),
-          ElevatedButton(
-            style: GuiUtils.buildElevatedButtonSettings(),
-            onPressed: () {
-              saveFriendlyName(
-                  controllerFriendlyName.text, deviceName!, sensorAddress);
-            },
-            child: Text(
-              "Save",
-              style: TextStyle(color: Colors.white),
+          Wrap(children: [
+            Container(
+                width: 100,
+                height: 40,
+                child: (TextFormField(
+                  style: const TextStyle(
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(00, 20, 20, 80),
+                      fontSize: 14),
+                  decoration: GuiUtils.buildFriendlyNameDecoration(),
+                  controller: controllerFriendlyName,
+                ))),
+            Container(
+              width: 10,
             ),
-          ),
+            ElevatedButton(
+              style: GuiUtils.buildElevatedButtonSettings(),
+              onPressed: () {
+                saveFriendlyName(
+                    controllerFriendlyName.text, deviceName!, sensorAddress);
+              },
+              child: Text(
+                "Save",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ])
         ]));
   }
 
@@ -490,44 +498,48 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                         scrollDirection: Axis.vertical,
                         padding: const EdgeInsets.only(
                             top: 30.0, bottom: 1.0, left: 0.0, right: 30.0),
-                        child: Column(children: [
-                          Container(
-                              //color: Colors.tealAccent,
-                              alignment: Alignment.center,
-                              decoration: //index % 2 == 0
+                        child: Container(
+                            //color: Colors.blueGrey,
+                            decoration: GuiUtils.buildBoxDecorationSettings(),
+                            child: Column(children: [
+                              Container(
+                                  //color: Colors.tealAccent,
+                                  alignment: Alignment.center,
+                                  //decoration: //index % 2 == 0
                                   //?
-                                  GuiUtils.buildBoxDecorationSettings(),
-                              //: null,
-                              padding: const EdgeInsets.only(bottom: 0),
-                              //padding: EdgeInsets.all(5),
-                              child: settingToChange != "u"
-                                  ? Wrap(children: [
-                                      // index % 2 == 0
-                                      //        ?
-                                      Container(
-                                          // color: Colors.red,
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.all(15),
-                                          child: Wrap(children: [
-                                            SizedBox(
-                                                // padding: EdgeInsets.all(5),
-                                                child: Wrap(children: [
-                                              const Text(
-                                                "Device: ",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  letterSpacing: 1,
-                                                ),
-                                              ),
-                                              Text(
-                                                "$deviceName",
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 18,
-                                                  letterSpacing: 1.1,
-                                                ),
-                                              ),
-                                              /* Text(
+                                  //GuiUtils.buildBoxDecorationSettings(),
+                                  //: null,
+                                  padding: const EdgeInsets.only(bottom: 0),
+                                  //padding: EdgeInsets.all(5),
+                                  child: settingToChange != "u"
+                                      ? Wrap(children: [
+                                          // index % 2 == 0
+                                          //        ?
+                                          Container(
+                                              // color: Colors.red,
+                                              alignment: Alignment.center,
+                                              padding: const EdgeInsets.all(15),
+                                              child: Wrap(children: [
+                                                SizedBox(
+                                                    // padding: EdgeInsets.all(5),
+                                                    child: Wrap(children: [
+                                                  const Text(
+                                                    "Device: ",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.8,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "$deviceName",
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 18,
+                                                      letterSpacing: 0.8,
+                                                    ),
+                                                  ),
+                                                  /* Text(
                                                 "Data: $data",
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.w800,
@@ -535,76 +547,82 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                   letterSpacing: 1.1,
                                                 ),
                                               ), */
-
-                                              const SizedBox(
-                                                  child: Text(
-                                                      "Sensor address:  ",
+                                                  Row(children: [
+                                                    const SizedBox(
+                                                        child: Text(
+                                                            "Sensor address:  ",
+                                                            style: TextStyle(
+                                                                letterSpacing:
+                                                                    0.6,
+                                                                fontSize: 16))),
+                                                    SizedBox(
+                                                        child: Text(
+                                                            sensorAddress,
+                                                            style:
+                                                                const TextStyle(
+                                                              letterSpacing:
+                                                                  0.6,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                            )))
+                                                  ]),
+                                                  Row(children: [
+                                                    const SizedBox(
+                                                        child: Text(
+                                                      "units:  ",
                                                       style: TextStyle(
-                                                          letterSpacing: 0.8,
-                                                          fontSize: 16))),
-                                              SizedBox(
-                                                  child: Text(sensorAddress,
+                                                          fontSize: 18),
+                                                    )),
+                                                    SizedBox(
+                                                        child: Text(
+                                                      unitText,
                                                       style: const TextStyle(
-                                                        letterSpacing: 0.8,
-                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w800,
-                                                      ))),
-                                              Container(
-                                                width: 200,
-                                                height: 5,
-                                              ),
-                                              _buildFriendlyNameView(
-                                                  friendlyName,
-                                                  deviceName,
-                                                  sensorAddress),
-                                              Container(
+                                                        fontSize: 16,
+                                                        letterSpacing: 0.6,
+                                                      ),
+                                                    ))
+                                                  ]),
+                                                  _buildFriendlyNameView(
+                                                      friendlyName,
+                                                      deviceName,
+                                                      sensorAddress),
+                                                  /*Container(
                                                 height: 10,
                                               ),
                                               Container(
                                                 height: 10,
-                                              ),
-                                              const SizedBox(
-                                                  child: Text(
-                                                "units:  ",
-                                                style: TextStyle(fontSize: 18),
-                                              )),
-                                              SizedBox(
-                                                  child: Text(
-                                                unitText,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 18,
-                                                  letterSpacing: 0.8,
-                                                ),
-                                              ))
-                                            ]))
-                                          ]))
-                                      //: const Text(""),
-                                    ])
-                                  : Container()),
-                          Container(height: 25),
-                          Wrap(children: [
-                            /* const Padding(
+                                              ),*/
+                                                ]))
+                                              ]))
+                                          //: const Text(""),
+                                        ])
+                                      : Container()),
+                              Container(height: 2),
+                              Wrap(children: [
+                                /* const Padding(
                           padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
                                                       ), */
-                            // Column(children: [Text("a1"), Text("a2")]),
-                            settingToChange != Constants.U_JSON
-                                ? _buildEditableSettingsTest2(
-                                    sensorAddress,
-                                    deviceName,
-                                    index,
-                                    u,
-                                    settingToChange,
-                                    value,
-                                    controller,
-                                    item,
-                                    savePressed,
-                                    textControllerList[index])
-                                : Container(height: 0)
-                            //ListTile(enabled: false)
-                          ])
-                        ]));
+                                // Column(children: [Text("a1"), Text("a2")]),
+                                settingToChange != Constants.U_JSON
+                                    ? _buildEditableSettingsTest2(
+                                        sensorAddress,
+                                        deviceName,
+                                        index,
+                                        u,
+                                        settingToChange,
+                                        value,
+                                        controller,
+                                        item,
+                                        savePressed,
+                                        textControllerList[index])
+                                    : Container(height: 0)
+                                //ListTile(enabled: false)
+                              ])
+                            ])));
                   }));
         }
         /* else if (!SmartMqtt.instance.isNewSettings){// && SmartMqtt.instance.isNewSettings) {
@@ -655,7 +673,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         Wrap(children: [
           Container(
               padding:
-                  const EdgeInsets.only(top: 15, bottom: 0, left: 0, right: 0),
+                  const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
               //  height: 40,
               alignment: Alignment.center,
               width: MediaQuery.of(context).size.width / 4,
@@ -663,13 +681,15 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   maxLines: 1,
                   softWrap: false,
                   style: const TextStyle(
-                      color: Colors.indigo,
+                      // color: Colors.indigo,
+                      color: Colors.black,
                       // letterSpacing: 4,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold))),
+                      fontSize: 16,
+                      //fontWeight: FontWeight.bold
+                  ))),
           //Container(width: 5),
           SizedBox(
-              height: 50,
+              //height: 50,
               width: MediaQuery.of(context).size.width / 5,
               child: TextFormField(
                   decoration: GuiUtils.setInputDecoration(value),

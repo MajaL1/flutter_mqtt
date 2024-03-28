@@ -189,7 +189,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                       Container(
                                           padding: const EdgeInsets.all(1.0),
                                           child: Text(
-                                              "$deviceName-$sensorAddress-$friendlyName",
+                                              "$deviceName-\n$sensorAddress-$friendlyName",
                                               textAlign: TextAlign.center)),
                                       Container(
                                           padding: const EdgeInsets.all(1.0),
@@ -240,8 +240,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                 alarm.deviceName == deviceName) {
               if (friendlyName != null && friendlyName!.isNotEmpty) {
                 alarm.friendlyName = friendlyName;
-                debugPrint(
-                    "alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");
+                //debugPrint(
+                  //  "alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");
               }
             }
           }
