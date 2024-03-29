@@ -6,6 +6,7 @@ import 'package:mqtt_test/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../util/gui_utils.dart';
+import '../widgets/show_alarm_time_settings.dart';
 
 class UserGeneralSettings extends StatefulWidget {
   const UserGeneralSettings.base({Key? key}) : super(key: key);
@@ -141,7 +142,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       ),
       //menuHeight: 30,
       textStyle: const TextStyle(color: Color.fromRGBO(20, 20, 120, 1)),
-      initialSelection: dropdownValue,
+      initialSelection: (dropdownValue!=null && dropdownValue!.isNotEmpty) ? dropdownValue : ShowAlarmTimeSettings.changeOnly,
       onSelected: (String? value) {
         // This is called when the user selects an item.
         debugPrint("-- 1 dropdown value: $dropdownValue");
