@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  charcode:
+    dependency: transitive
+    description:
+      name: charcode
+      sha256: fb98c0f6d12c920a02ee2d998da788bca066ca5f148492b7085ee23372b12306
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.1"
   checked_yaml:
     dependency: transitive
     description:
@@ -105,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -133,10 +149,10 @@ packages:
     dependency: "direct main"
     description:
       name: device_info_plus
-      sha256: "0042cb3b2a76413ea5f8a2b40cec2a33e01d0c937e91f0f7c211fde4f7739ba6"
+      sha256: "77f757b789ff68e4eaf9c56d1752309bd9f7ad557cb105b938a7f8eb89e59110"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.1"
+    version: "9.1.2"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -250,10 +266,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: "501ed9d54f1c8c0535b7991bade36f9e7e3b45a2346401f03775c1ec7a3c06ae"
+      sha256: "401643a6ea9d8451365f2ec11145335bf130560cfde367bdf8f0be6d60f89479"
       url: "https://pub.dev"
     source: hosted
-    version: "15.1.2"
+    version: "15.1.3"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -331,6 +347,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_timezone:
+    dependency: "direct main"
+    description:
+      name: flutter_timezone
+      sha256: "06b35132c98fa188db3c4b654b7e1af7ccd01dfe12a004d58be423357605fb24"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -340,10 +364,10 @@ packages:
     dependency: "direct main"
     description:
       name: font_awesome_flutter
-      sha256: "52671aea66da73b58d42ec6d0912b727a42248dd9a7c76d6c20f275783c48c08"
+      sha256: "275ff26905134bcb59417cf60ad979136f1f8257f2f449914b2c3e05bbb4cd6f"
       url: "https://pub.dev"
     source: hosted
-    version: "10.6.0"
+    version: "10.7.0"
   form_field_validator:
     dependency: "direct main"
     description:
@@ -360,14 +384,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      sha256: "3a7812d5bcd2894edf53dfaf8cd640876cf6cef50a8f238745c8b8120ea74d3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.4"
   http:
     dependency: "direct main"
     description:
       name: http
-      sha256: d4872660c46d929f6b8a9ef4e7a7eff7e49bbf0c4ec3f385ee32df5119175139
+      sha256: a2bbf9d017fcced29139daa8ed2bba4ece450ab222871df93ca9eec6f80c34ba
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.2.0"
   http_parser:
     dependency: transitive
     description:
@@ -380,10 +412,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "004a2e90ce080f8627b5a04aecb4cdfac87d2c3f3b520aa291260be5a32c033d"
+      sha256: "4c68bfd5ae83e700b5204c1e74451e7bf3cf750e6843c6e158289cf56bda018e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.4"
+    version: "4.1.7"
   internet_connection_checker_plus:
     dependency: "direct main"
     description:
@@ -452,10 +484,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt_client
-      sha256: "41f29969d26d3e8336bdc3b0efcf85c1aaf7a5ac448cc13ff4d5a81819ce08ed"
+      sha256: aa2bed04e239b9199ce95ae2553cb16a2c39110a5f56b21ce8c09be3261ea3d2
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.1"
+    version: "10.2.0"
   nested:
     dependency: transitive
     description:
@@ -556,10 +588,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: "7c1e5f0d23c9016c5bbd8b1473d0d3fb3fc851b876046039509e18e0c7485f2c"
+      sha256: "43ac87de6e10afabc85c445745a7b799e04de84cebaa4fd7bf55a5e1e9604d29"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.3"
+    version: "3.7.4"
   progressive_image:
     dependency: "direct main"
     description:
@@ -572,10 +604,58 @@ packages:
     dependency: "direct main"
     description:
       name: provider
-      sha256: "9a96a0a19b594dbc5bf0f1f27d2bc67d5f95957359b461cd9feb44ed6ae75096"
+      sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.1"
+    version: "6.1.2"
+  push:
+    dependency: "direct main"
+    description:
+      name: push
+      sha256: "15f47b829ac0a0c4ae592ae5d7f1b57cf27f8637744a4f2fd5f4f5dd1563a0d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  push_android:
+    dependency: transitive
+    description:
+      name: push_android
+      sha256: e3ad795fc758363c5f1c1aab3af0fff10e50bd1e7cd23a51ed6cc3825673b107
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
+  push_ios:
+    dependency: transitive
+    description:
+      name: push_ios
+      sha256: c6a284994ef8a2e09c4e92c89317b14912b56cb74b31fb2efba7b9d2b8f4ff60
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
+  push_macos:
+    dependency: transitive
+    description:
+      name: push_macos
+      sha256: "800997d1d6ca19aa957ab237a25074a732a7e36ef917ef4546fc75ec9aa1b9da"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  push_platform_interface:
+    dependency: transitive
+    description:
+      name: push_platform_interface
+      sha256: "709c98b6e33cb0d76aa1e9017d0b16c17c077d0d0035a7b63d41ba19822a805e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
+  rxdart:
+    dependency: "direct main"
+    description:
+      name: rxdart
+      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.27.7"
   settings_ui:
     dependency: "direct main"
     description:
@@ -717,22 +797,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  universal_html:
+    dependency: transitive
+    description:
+      name: universal_html
+      sha256: "56536254004e24d9d8cfdb7dbbf09b74cf8df96729f38a2f5c238163e3d58971"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.4"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   url_launcher:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: d25bb0ca00432a5e1ee40e69c36c85863addf7cc45e433769d61bed3fe81fd96
+      sha256: "0ecc004c62fd3ed36a2ffcbe0dd9700aee63bd7532d0b642a488b1ec310f492e"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.3"
+    version: "6.2.5"
   url_launcher_android:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "507dc655b1d9cb5ebc756032eb785f114e415f91557b73bf60b7e201dfedeb2f"
+      sha256: d4ed0711849dd8e33eb2dd69c25db0d0d3fdc37e0a62e629fe32f57a22db2745
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.2"
+    version: "6.3.0"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -761,10 +857,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_platform_interface
-      sha256: a932c3a8082e118f80a475ce692fde89dc20fddb24c57360b96bc56f7035de1f
+      sha256: "552f8a1e663569be95a8190206a38187b531910283c3e982193e4f2733f01029"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   url_launcher_web:
     dependency: transitive
     description:
