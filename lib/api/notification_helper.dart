@@ -214,6 +214,9 @@ class NotificationHelper extends StatelessWidget {
         timeIntervalMinutes = 10;
     }
     final int minutes = timeIntervalMinutes;
+
+    debugPrint("showing alarm in 10 minutes $timeIntervalMinutes");
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
         "Alarm from: $sensorAddress, $deviceName",
