@@ -182,47 +182,17 @@ class NotificationHelper extends StatelessWidget {
     //String ?t2 = text2.data;
     //String ?t3 = text3.data;
 
-    String? showInterval = await SharedPreferences.getInstance().then((value) {
-      if (value.getString("alarm_interval") != null) {
-        return value.getString("alarm_interval");
-      }
-    });
-    debugPrint("sending message... interval $showInterval");
 
-    int timeIntervalMinutes = 1;
-    const int seconds = 5;
-    switch (showInterval) {
-      case ShowAlarmTimeSettings.minutes10:
-        timeIntervalMinutes = 10;
-        break;
-      case ShowAlarmTimeSettings.minutes30:
-        timeIntervalMinutes = 30;
-        break;
-      case ShowAlarmTimeSettings.hour:
-        timeIntervalMinutes = 60;
-        break;
-      case ShowAlarmTimeSettings.hour6:
-        timeIntervalMinutes = 360;
-        break;
-      case ShowAlarmTimeSettings.hour12:
-        timeIntervalMinutes = 720;
-        break;
-      case ShowAlarmTimeSettings.day:
-        timeIntervalMinutes = 1440;
-        break;
-      default:
-        timeIntervalMinutes = 10;
-    }
-    final int minutes = timeIntervalMinutes;
+    //final int minutes = timeIntervalMinutes;
 
-    debugPrint("showing alarm in 10 minutes $timeIntervalMinutes");
+    debugPrint("showing alarm...");
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
         "v: $v, $alarmValue \n$formattedDate",
-        tz.TZDateTime.now(slovenia).add(Duration(minutes: 1)),
+        tz.TZDateTime.now(slovenia).add(Duration(seconds: 5)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
