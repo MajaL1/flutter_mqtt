@@ -52,7 +52,7 @@ class UserDataSettings {
   }
 
   Map<String, dynamic> toJson() {
-    debugPrint("ToJson:: ");
+    //debugPrint("ToJson:: ");
     return {
       "device_name": deviceName,
       "friendlyName": friendlyName,
@@ -203,7 +203,7 @@ class UserDataSettings {
   static List<UserDataSettings> getUserDataSettingsList(
       String? mqttSettings) {
     List<UserDataSettings> userDataSettingsList = [];
-    debugPrint("777777777 parse $mqttSettings");
+    //debugPrint("777777777 parse $mqttSettings");
     Map jsonMap;
       // Todo: tole daj v novo metodo
       //jsonDecode(mqttSettings!);

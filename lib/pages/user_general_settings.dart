@@ -142,7 +142,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       ),
       //menuHeight: 30,
       textStyle: const TextStyle(color: Color.fromRGBO(20, 20, 120, 1)),
-      initialSelection: (dropdownValue!=null && dropdownValue!.isNotEmpty) ? dropdownValue : ShowAlarmTimeSettings.changeOnly,
+      initialSelection: (dropdownValue!=null && dropdownValue!.isNotEmpty) ? dropdownValue : ShowAlarmTimeSettings.minutes10,
       onSelected: (String? value) {
         // This is called when the user selects an item.
         debugPrint("-- 1 dropdown value: $dropdownValue");

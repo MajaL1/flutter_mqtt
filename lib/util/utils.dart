@@ -147,12 +147,12 @@ class Utils {
 
   static void setAlarmGeneralIntervalSettings(String setting) async {
     await SharedPreferences.getInstance().then((value) {
-      /*if (value.getString("alarm_interval_setting") != null) {
+      if (value.getString("alarm_interval_setting") != null) {
         String? str = value.getString("alarm_interval_settings_list");
         if (str != null) {
           return str;
         }
-      } */
+      }
       value.setString("alarm_interval_setting", setting);
     });
   }

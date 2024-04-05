@@ -227,100 +227,100 @@ class SmartMqtt extends ChangeNotifier {
       //preferences.setString("data_mqtt", decodeMessage);
     }
     if (topicName.contains("alarm")) {
-      //debugPrint("alarm!!!!!, messageCount: ${messageCount}");
-      //if (messageCount > 0) {
-        debugPrint("alarm!!!!!, showing alarm: ${messageCount}");
+      debugPrint("+++++alarm!!!!!, showing alarm: ${messageCount}");
 
-        Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
-        List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
-        currentAlarmList.first.deviceName = topicName.split("/alarm").first;
-        //prebere listo alarmov iz preferenc in jim doda nov alarm
-        SharedPreferences preferences = await SharedPreferences.getInstance();
+      Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
+      List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
+      currentAlarmList.first.deviceName = topicName.split("/alarm").first;
+      //prebere listo alarmov iz preferenc in jim doda nov alarm
+      SharedPreferences preferences = await SharedPreferences.getInstance();
 
-        // 1. dobi listo prejsnjih alarmov
-        String? alarmListOldData =
-            preferences.get("alarm_list_mqtt") as String?;
-        List oldAlarmList = [];
-        if (alarmListOldData != null) {
-          oldAlarmList = json.decode(alarmListOldData);
+      // 1. dobi listo prejsnjih alarmov
+      String? alarmListOldData = preferences.get("alarm_list_mqtt") as String?;
+      List oldAlarmList = [];
+      if (alarmListOldData != null) {
+        oldAlarmList = json.decode(alarmListOldData);
+      }
+
+      int minutes = 0;
+      int timeIntervalMinutes = 0;
+      // preveri interval
+      String? showInterval =
+          await SharedPreferences.getInstance().then((value) {
+        if (value.getString("alarm_interval_setting") != null) {
+          return value.getString("alarm_interval_setting");
         }
-
-        DateTime? lastAlarmDate = await _getLastAlarmDateFromHistory(
-            currentAlarmList.first.deviceName,
-            currentAlarmList.first.sensorAddress);
-
-        int minutes = 0;
-        //if (lastAlarmDate != null) {
-        /**  Todo: pojdi cez listo history
-         *   preveri, ali je zadnji v historiju za dolocen alarm
-         * */
-
-        int timeIntervalMinutes = 0;
-        // preveri interval
-        String? showInterval =
-            await SharedPreferences.getInstance().then((value) {
-          if (value.getString("alarm_interval") != null) {
-            return value.getString("alarm_interval");
-          }
-        });
-        switch (showInterval) {
-          case ShowAlarmTimeSettings.minutes10:
-            timeIntervalMinutes = 10;
-            break;
-          case ShowAlarmTimeSettings.minutes30:
-            timeIntervalMinutes = 30;
-            break;
-          case ShowAlarmTimeSettings.hour:
-            timeIntervalMinutes = 60;
-            break;
-          case ShowAlarmTimeSettings.hour6:
-            timeIntervalMinutes = 360;
-            break;
-          case ShowAlarmTimeSettings.hour12:
-            timeIntervalMinutes = 720;
-            break;
-          case ShowAlarmTimeSettings.day:
-            timeIntervalMinutes = 1440;
-            break;
-          default:
-            timeIntervalMinutes = 10;
-        }
-        //minutes = Utils.compareDatesInMinutes(lastAlarmDate!, DateTime.now());
-        // }
-
-        //ali je vec kot 5 minut od alarma
-        /**** ToDo ali je prejsnja vrednost poslanega alarma vecja od druge in je minilo manj kot 5 min*****/
+      });
+      timeIntervalMinutes =
+          _getIntervalFromPrerences(showInterval);
+      debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
+      // dobi zadnji datum od alarma iz naprave iz historija
+      _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName,
+              currentAlarmList.first.sensorAddress)
+          .then((value) async {
+        // primerjaj zadnji alarm s trenutnim casom
+        // trenutni cas - zadnji alarm
+        bool showAlarm = false;
         debugPrint(
-            "from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
+            "+++++ value: $value for device ${currentAlarmList.first.deviceName} ${currentAlarmList.first.sensorAddress}");
+        if (value != null) {
+          minutes = Utils.compareDatesInMinutes(value!, DateTime.now());
+          debugPrint("+++++ got minutes from compare: $minutes");
+          // primerjaj s shranjenim intervalom
+          if (minutes > timeIntervalMinutes!) {
+            debugPrint("+++++ minutes > timeIntervalMinutes, will show alarm");
 
-        // 2. dobi trenuten alarm
-        // currentAlarmList.first.sensorAddress =
-        //    topicName.split("/alarm").first;
-        // 3. doda alarm na listo starih alarmov
-        // odkomentiraj, da bo dodajalo alarm
-        oldAlarmList.addAll(currentAlarmList);
-        String alarmListMqtt = jsonEncode(oldAlarmList);
-        preferences.setString("alarm_list_mqtt", alarmListMqtt);
-        //debugPrint("alarmList---: $alarmListMqtt");
-        messageCount++;
+            showAlarm = true;
+            // ce je minilo vec minut od prejsnjega alarma
+            // prikazi alarm
+          } else {
+            debugPrint("+++++ minutes < timeIntervalMinutes, NOT show alarm");
+          }
+        } else {
+          showAlarm = true;
+        }
+        if (showAlarm) {
+          debugPrint(
+              "+++++ from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
+          oldAlarmList.addAll(currentAlarmList);
+          String alarmListMqtt = jsonEncode(oldAlarmList);
+          preferences.setString("alarm_list_mqtt", alarmListMqtt);
+          //debugPrint("alarmList---: $alarmListMqtt");
+          messageCount++;
 
-        Utils.setFriendlyName(currentAlarmList.first);
-        // prikaze sporocilo z alarmom
-        await NotificationHelper.sendMessage(currentAlarmList.first);
-
-        // debugPrint("message is not retain, message count: $firstRetainMessage");
-     /* } else {
-        debugPrint("first-retain message ignored $messageCount");
-        messageCount++;
-      } */
-
-      //debugPrint("payload: $pt");
+          Utils.setFriendlyName(currentAlarmList.first);
+          // prikaze sporocilo z alarmom
+          await NotificationHelper.sendMessage(currentAlarmList.first);
+        }
+      });
     }
+  }
 
-    // print("======= pt: ${pt} , topic: $topicList[0], $topicList[1]");
-    //print(
-    //  'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
-    //print('');
+  int _getIntervalFromPrerences(String? showInterval) {
+    int timeIntervalMinutes = 1;
+    switch (showInterval) {
+      case ShowAlarmTimeSettings.minutes10:
+        timeIntervalMinutes = 10;
+        break;
+      case ShowAlarmTimeSettings.minutes30:
+        timeIntervalMinutes = 30;
+        break;
+      case ShowAlarmTimeSettings.hour:
+        timeIntervalMinutes = 60;
+        break;
+      case ShowAlarmTimeSettings.hour6:
+        timeIntervalMinutes = 360;
+        break;
+      case ShowAlarmTimeSettings.hour12:
+        timeIntervalMinutes = 720;
+        break;
+      case ShowAlarmTimeSettings.day:
+        timeIntervalMinutes = 1440;
+        break;
+      default:
+        timeIntervalMinutes = 10;
+    }
+    return timeIntervalMinutes;
   }
 
   Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences,
@@ -330,7 +330,7 @@ class SmartMqtt extends ChangeNotifier {
     // parse trenutno sporocilo
     Map decodeMessageSettings = <String, String>{};
     decodeMessageSettings = json.decode(decodeMessage);
-    debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
+    //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
     await setDeviceNameToSettings(
         decodeMessageSettings, topicName.split("/settings").first);
     //-----
@@ -341,11 +341,11 @@ class SmartMqtt extends ChangeNotifier {
       //   "1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
       newUserSettings = decodeMessage;
       newSettings = json.decode(newUserSettings);
-      debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
+      //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
 
       await setDeviceNameToSettings(
           newSettings, topicName.split("/settings").first);
-      debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
+      //debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
 
       await setNewUserSettings(newSettings);
       notifyListeners();
@@ -384,6 +384,10 @@ class SmartMqtt extends ChangeNotifier {
         alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
       }
     }
+
+    /**
+     * Todo: najdi zadnji alarm za napravo
+     * ***/
     bool found = true;
     DateTime? lastSentAlarm;
     for (Alarm alarm in alarmList) {
@@ -394,13 +398,23 @@ class SmartMqtt extends ChangeNotifier {
           alarmSensorAddress == alarm.sensorAddress) {
         found = true;
         lastSentAlarm = alarm.ts;
-        break;
+        if (lastSentAlarm!.isAfter(alarm.ts!)) {
+          lastSentAlarm = alarm.ts;
+          break;
+        }
       }
     }
+
+    for (Alarm alarm in alarmList) {
+      debugPrint("Printing alarmList ${alarm.toString()}");
+    }
+
     debugPrint("alarmList.size: ${alarmList.length}");
     debugPrint(
         "----lastSentAlarm: $lastSentAlarm for device $deviceName, sensonName: $sensorName");
-    lastSentAlarm ??= DateTime.now();
+    //lastSentAlarm ??= DateTime.now();
+
+    return lastSentAlarm;
   }
 
   Future<MqttServerClient> initializeMQTTClient(String username,
@@ -462,8 +476,8 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<String> getNewUserSettingsList() async {
     // if(newUserSettings != null) {
-    debugPrint(
-        "1111111111111 new User settings - smart mqtt: $newUserSettings");
+    //debugPrint(
+    //    "1111111111111 new User settings - smart mqtt: $newUserSettings");
 
     return newUserSettings;
     //}
