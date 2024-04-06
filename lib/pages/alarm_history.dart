@@ -22,14 +22,14 @@ class AlarmHistory extends StatefulWidget {
 
 class _AlarmHistoryState extends State<AlarmHistory> {
   List<Alarm> _returnAlarmList(List<Alarm> alarmList) {
-    debugPrint("alarm_history alarmList ${alarmList.toString()}");
+   // debugPrint("alarm_history alarmList ${alarmList.toString()}");
     return alarmList;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
-      future: ApiService.getAlarmsHistory()
+      future: ApiService.getAlarmsHistoryTest()
           .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)) //),
           .then((alarmHistoryList) =>
               _pairAlarmListWithSettings(alarmHistoryList)),

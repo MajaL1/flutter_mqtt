@@ -40,6 +40,47 @@ class ApiService {
     }
     alarmList.add(Alarm());
     alarmList = alarmList.reversed.toList();
+    // Ce je vec kot 2000 zadetkov, izbrisi zadnje
+    if(alarmList.length> 2000) {
+      alarmList.removeRange(2000, alarmList.length);
+    }
+    return alarmList;
+  }
+
+  static Future<List<Alarm>> getAlarmsHistoryTest() async {
+    List<Alarm> alarmList = [];
+    int i = 0;
+    while (i < 1000) {
+      Alarm alarm1 = Alarm(
+          deviceName: "aa1",
+          sensorAddress: "aa1bb2",
+          hiAlarm: 10,
+          loAlarm: 1,
+          ts: DateTime.now());
+      Alarm alarm2 = Alarm(
+          deviceName: "aa1",
+          sensorAddress: "bb1cc2",
+          hiAlarm: 20,
+          loAlarm: 2,
+          ts: DateTime.now());
+      Alarm alarm3 = Alarm(
+          deviceName: "bb1",
+          sensorAddress: "dd1ee1",
+          hiAlarm: 40,
+          loAlarm: 4,
+          ts: DateTime.now());
+      Alarm alarm4 = Alarm(
+          deviceName: "bb1",
+          sensorAddress: "bb1cc2",
+          hiAlarm: 60,
+          loAlarm: 6,
+          ts: DateTime.now());
+      alarmList.add(alarm1);
+      alarmList.add(alarm2);
+      alarmList.add(alarm3);
+      alarmList.add(alarm4);
+      i++;
+    }
     return alarmList;
   }
 
@@ -86,7 +127,7 @@ class ApiService {
         List<UserTopic> userTopicList;
         //UserTopic userTopic;
         if (data["topics"] != null) {
-         // userTopic = getUserTopic(data["topics"]);
+          // userTopic = getUserTopic(data["topics"]);
           userTopicList = getUserTopicList(data["topics"]);
 
           User user = User(
@@ -114,11 +155,10 @@ class ApiService {
     debugPrint("logging out");
     stopService();
     _removeUserPreferences();
-
   }
 
   static void _removeUserPreferences() {
-     SharedPreferences.getInstance().then((value) {
+    SharedPreferences.getInstance().then((value) {
       if (value.getString("username") != null) {
         value.remove("username");
       }
@@ -143,11 +183,11 @@ class ApiService {
         value.remove("current_mqtt_settings");
       }
     });
-     SharedPreferences.getInstance().then((value) {
-       if (value.getBool("appRunInBackground") != null) {
-         value.remove("appRunInBackground");
-       }
-     });
+    SharedPreferences.getInstance().then((value) {
+      if (value.getBool("appRunInBackground") != null) {
+        value.remove("appRunInBackground");
+      }
+    });
   }
 
   static Future<void> stopService() async {
@@ -155,8 +195,7 @@ class ApiService {
     var isRunning = await service.isRunning();
     if (isRunning) {
       service.invoke("stopService");
-    }
-    else {
+    } else {
       service.startService();
     }
     debugPrint("stopping service");
@@ -164,7 +203,7 @@ class ApiService {
 
   static List<UserTopic> getUserTopicList(Map topics) {
     List<TopicData> topicList = [];
-    List <UserTopic> userTopicList = [];
+    List<UserTopic> userTopicList = [];
 
     for (var devices in topics.keys) {
       var deviceName = devices;
@@ -187,10 +226,11 @@ class ApiService {
           TopicData topicData = TopicData(name: topicName, rw: rw);
           topicList.add(topicData);
         }
-        userTopicList.add(UserTopic(sensorName: deviceName, topicList: topicList));
+        userTopicList
+            .add(UserTopic(sensorName: deviceName, topicList: topicList));
       }
     }
-   // topic.topicList = topicList;
+    // topic.topicList = topicList;
     return userTopicList;
   }
 
