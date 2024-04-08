@@ -249,7 +249,7 @@ class SmartMqtt extends ChangeNotifier {
 
       debugPrint("+++++got alarmInterval: $alarmInterval");
       if (alarmInterval == "") {
-        debugPrint("alarmInterval == ''");
+        debugPrint("+++++alarmInterval == ''");
       } else if (alarmInterval != "") {
         timeIntervalMinutes = _getIntervalFromPreferences(alarmInterval);
         debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");

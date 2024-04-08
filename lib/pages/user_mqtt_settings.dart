@@ -698,8 +698,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   ],
                   //enableInteractiveSelection: false,
                   showCursor: false,
+                 // enabled: false,
                   controller: textController,
-                  onChanged: (val) {},
+                  onChanged: (val) {
+
+                  },
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
                     MaxLengthValidator(6, errorText: "Value too long")

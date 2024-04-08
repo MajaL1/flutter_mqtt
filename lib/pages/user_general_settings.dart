@@ -211,7 +211,12 @@ surfaceTintColor:  MaterialStateProperty.all<Color>(Colors.green),
     }); */
 
     debugPrint("saving interval settings.... $interval");
-
+/***
+ * TODO: ce skenslas aplikacijo, ne dobi alarmInterval!!!
+ * ko jo na novo odpres, interval ni shranjen!!
+ *
+ * units -> not set
+ * ***/
     /*SharedPreferences.getInstance().then((value) {
       String? v = value.getString("alarm_interval_setting");
       debugPrint("v: $v");
