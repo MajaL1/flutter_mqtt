@@ -65,8 +65,6 @@ class SmartMqtt extends ChangeNotifier {
   late String newMqttData = "";
   late String alarmInterval = "";
 
-
-
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
     print('Disconnected');
@@ -248,53 +246,55 @@ class SmartMqtt extends ChangeNotifier {
       int minutes = 0;
       int timeIntervalMinutes = 0;
       // preveri interval
-      String? showInterval =
-          await SharedPreferences.getInstance().then((value) {
-        if (value.getString("alarm_interval_setting") != null) {
-          return value.getString("alarm_interval_setting");
-        }
-      });
-      timeIntervalMinutes = _getIntervalFromPreferences(alarmInterval);
-      debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
-      // dobi zadnji datum od alarma iz naprave iz historija
-      _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName,
-              currentAlarmList.first.sensorAddress)
-          .then((value) async {
-        // primerjaj zadnji alarm s trenutnim casom
-        // trenutni cas - zadnji alarm
-        bool showAlarm = false;
-        debugPrint(
-            "+++++ value: $value for device ${currentAlarmList.first.deviceName} ${currentAlarmList.first.sensorAddress}");
-        if (value != null) {
-          minutes = Utils.compareDatesInMinutes(value!, DateTime.now());
-          debugPrint("+++++ got minutes from compare: $minutes");
-          // primerjaj s shranjenim intervalom
-          if (minutes > timeIntervalMinutes!) {
-            debugPrint("+++++ minutes > timeIntervalMinutes, will show alarm");
 
-            showAlarm = true;
-            // ce je minilo vec minut od prejsnjega alarma
-            // prikazi alarm
-          } else {
-            debugPrint("+++++ minutes < timeIntervalMinutes, NOT show alarm");
-          }
-        } else {
-          showAlarm = true;
-        }
-        if (showAlarm) {
+      debugPrint("+++++got alarmInterval: $alarmInterval");
+      if (alarmInterval == "") {
+        debugPrint("alarmInterval == ''");
+      } else if (alarmInterval != "") {
+        timeIntervalMinutes = _getIntervalFromPreferences(alarmInterval);
+        debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
+
+        // dobi zadnji datum od alarma iz naprave iz historija
+        _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName,
+                currentAlarmList.first.sensorAddress)
+            .then((value) async {
+          // primerjaj zadnji alarm s trenutnim casom
+          // trenutni cas - zadnji alarm
+          bool showAlarm = false;
           debugPrint(
-              "+++++ from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
-          oldAlarmList.addAll(currentAlarmList);
-          String alarmListMqtt = jsonEncode(oldAlarmList);
-          preferences.setString("alarm_list_mqtt", alarmListMqtt);
-          //debugPrint("alarmList---: $alarmListMqtt");
-          messageCount++;
+              "+++++ value: $value for device ${currentAlarmList.first.deviceName} ${currentAlarmList.first.sensorAddress}");
+          if (value != null) {
+            minutes = Utils.compareDatesInMinutes(value!, DateTime.now());
+            debugPrint("+++++ got minutes from compare: $minutes");
+            // primerjaj s shranjenim intervalom
+            if (minutes > timeIntervalMinutes!) {
+              debugPrint(
+                  "+++++ minutes > timeIntervalMinutes, will show alarm");
 
-          Utils.setFriendlyName(currentAlarmList.first);
-          // prikaze sporocilo z alarmom
-          await NotificationHelper.sendMessage(currentAlarmList.first);
-        }
-      });
+              showAlarm = true;
+              // ce je minilo vec minut od prejsnjega alarma
+              // prikazi alarm
+            } else {
+              debugPrint("+++++ minutes < timeIntervalMinutes, NOT show alarm");
+            }
+          } else {
+            showAlarm = true;
+          }
+          if (showAlarm) {
+            debugPrint(
+                " WILL SHOW ALARM +++++ from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
+            oldAlarmList.addAll(currentAlarmList);
+            String alarmListMqtt = jsonEncode(oldAlarmList);
+            preferences.setString("alarm_list_mqtt", alarmListMqtt);
+            //debugPrint("alarmList---: $alarmListMqtt");
+            messageCount++;
+
+            Utils.setFriendlyName(currentAlarmList.first);
+            // prikaze sporocilo z alarmom
+            await NotificationHelper.sendMessage(currentAlarmList.first);
+          }
+        });
+      }
     }
   }
 
@@ -510,7 +510,6 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<void> setAlarmIntervalSettings(String interval) async {
     alarmInterval = interval;
-
   }
 
   Data? convertMessageToData(String message, String deviceName) {

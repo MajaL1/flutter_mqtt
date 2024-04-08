@@ -50,7 +50,7 @@ class ApiService {
   static Future<List<Alarm>> getAlarmsHistoryTest() async {
     List<Alarm> alarmList = [];
     int i = 0;
-    while (i < 500) {
+    while (i < 50) {
       Alarm alarm1 = Alarm(
           deviceName: "aa1",
           sensorAddress: "aa1bb2",

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -84,6 +85,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   Widget _buildUserGeneralSettings() {
     debugPrint("-- 0 dropdown value: $dropdownValue");
+
     return Container(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 15),
       alignment: Alignment.center,
@@ -209,15 +211,16 @@ surfaceTintColor:  MaterialStateProperty.all<Color>(Colors.green),
     }); */
 
     debugPrint("saving interval settings.... $interval");
-    Utils.setAlarmGeneralIntervalSettings(interval);
 
-    SharedPreferences.getInstance().then((value) {
+    /*SharedPreferences.getInstance().then((value) {
       String? v = value.getString("alarm_interval_setting");
       debugPrint("v: $v");
       dropdownValue = v;
-    });
-
+    }); */
+    dropdownValue = interval;
+    debugPrint("dropdown value from smartMqtt ${SmartMqtt.instance.alarmInterval}");
     Utils.getAlarmGeneralIntervalSettings().then((str) {
+      Utils.setAlarmGeneralIntervalSettings(interval);
       debugPrint("getting interval....$str");
     });
     debugPrint("interval saved...");

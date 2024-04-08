@@ -147,12 +147,13 @@ class Utils {
     return SmartMqtt.instance.alarmInterval;
   }
 
-  static void setAlarmGeneralIntervalSettings(String setting) async {
+  static  void setAlarmGeneralIntervalSettings(String setting) async {
     await SharedPreferences.getInstance().then((value) {
       value.setString("alarm_interval_setting", setting);
+      SmartMqtt.instance.setAlarmIntervalSettings(setting);
     });
 
-    SmartMqtt.instance.setAlarmIntervalSettings(setting);
+
   }
 
   /** Pride v postev za nastavitve za vsak alarm posebej **/

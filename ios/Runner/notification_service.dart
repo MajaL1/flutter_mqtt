@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:flutter_push_notifications/utils/download_util.dart';
+//import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+//import 'package:flutter_push_notifications/utils/download_util.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -18,8 +18,8 @@ class NotificationService {
     const AndroidInitializationSettings initializationSettingsAndroid =
     AndroidInitializationSettings('ic_stat_justwater');
 
-    final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
+    final DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings(
         requestSoundPermission: true,
         requestBadgePermission: true,
         requestAlertPermission: true,
@@ -32,7 +32,8 @@ class NotificationService {
     );
 
     await _localNotifications.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+       // onDidReceiveNotificationResponse: onDidReceiveLocalNotification,
+        );
   }
 
   void onDidReceiveLocalNotification(
