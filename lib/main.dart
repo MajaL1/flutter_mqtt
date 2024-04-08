@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
-
 import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -94,8 +93,8 @@ Future<void> initializeService() async {
       autoStart: true,
       isForegroundMode: true,
       notificationChannelId: 'my_foreground',
-     // initialNotificationTitle: 'Alarm app',
-     // initialNotificationContent: 'Initializing',
+      // initialNotificationTitle: 'Alarm app',
+      // initialNotificationContent: 'Initializing',
       foregroundServiceNotificationId: 888,
     ),
     iosConfiguration: IosConfiguration(
@@ -164,61 +163,72 @@ void onStart(ServiceInstance service) async {
   MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
   debugPrint("////////////////1 main.dart - $appState");
 
-  // bring to foreground
-  Timer.periodic(const Duration(seconds: 180), (timer) async {
-    if (service is AndroidServiceInstance) {
-      if (await service.isForegroundService()) {
-        /// OPTIONAL for use custom notification
-        /// the notification id must be equals with AndroidConfiguration when you call configure() method.
+ /* SharedPreferences.getInstance().then((value) {
+    debugPrint("kkk isLoggedIn ??");
+    if (value.getBool("isLoggedIn") != null) {
+      debugPrint("kkk isLoggedIn ! = null");
+      if (value.getBool("isLoggedIn") == true) {
+        debugPrint("kkk isLoggedIn = true");
+ */
+        // bring to foreground
+        /** ali je uporabnik logiran - startaj servis */
+
+        Timer.periodic(const Duration(seconds: 180), (timer) async {
+          if (service is AndroidServiceInstance) {
+            if (await service.isForegroundService()) {
+              /// OPTIONAL for use custom notification
+              /// the notification id must be equals with AndroidConfiguration when you call configure() method.
+            }
+          }
+          prefs?.setBool("appRunInBackground", true);
+
+          MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
+          debugPrint("////////////////2 main.dart - $appState");
+
+          if (SmartMqtt.instance.currentState ==
+              MQTTAppConnectionState.connected) {
+            debugPrint("////////////////main.dart - connected:");
+          }
+          if (SmartMqtt.instance.currentState == null ||
+              SmartMqtt.instance.currentState ==
+                  MQTTAppConnectionState.disconnected) {
+            debugPrint("////////////////main.dart - disconnected:");
+            print("////////////////main.dart will call _reconnectToMqtt");
+
+            /*** ce je povezava prekinjena, reconnect **/
+            await _reconnectToMqtt();
+          } else {
+            debugPrint("///main.dart - connected ??? x:");
+          }
+
+          /// you can see this log in logcat
+          print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
+
+          // test using external plugin
+          final deviceInfo = DeviceInfoPlugin();
+          String? device;
+          if (io.Platform.isAndroid) {
+            final androidInfo = await deviceInfo.androidInfo;
+            device = androidInfo.model;
+          }
+
+          if (io.Platform.isIOS) {
+            final iosInfo = await deviceInfo.iosInfo;
+            device = iosInfo.model;
+          }
+
+          service.invoke(
+            'update',
+            {
+              "current_date": DateTime.now().toIso8601String(),
+              "device": device,
+            },
+          );
+        });
       }
-    }
-    prefs?.setBool("appRunInBackground", true);
-
-    MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
-    debugPrint("////////////////2 main.dart - $appState");
-
-    if (SmartMqtt.instance.currentState == MQTTAppConnectionState.connected) {
-      debugPrint("////////////////main.dart - connected:");
-    }
-    if (SmartMqtt.instance.currentState == null ||
-        SmartMqtt.instance.currentState ==
-            MQTTAppConnectionState.disconnected) {
-      debugPrint("////////////////main.dart - disconnected:");
-      print("////////////////main.dart will call _reconnectToMqtt");
-
-      /*** ce je povezava prekinjena, reconnect **/
-      await _reconnectToMqtt();
-    } else {
-      debugPrint("///main.dart - connected ??? x:");
-    }
-
-    /// you can see this log in logcat
-    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
-
-    // test using external plugin
-    final deviceInfo = DeviceInfoPlugin();
-    String? device;
-    if (io.Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      device = androidInfo.model;
-    }
-
-    if (io.Platform.isIOS) {
-      final iosInfo = await deviceInfo.iosInfo;
-      device = iosInfo.model;
-    }
-
-    service.invoke(
-      'update',
-      {
-        "current_date": DateTime.now().toIso8601String(),
-        "device": device,
-      },
-    );
+ /*   }
   });
-}
-
-
+} */
 
 Future<void> _reconnectToMqtt() async {
   print("////////////////calling _reconnectToMqtt");
@@ -276,7 +286,7 @@ Future<void> _reconnectToMqtt() async {
     SmartMqtt.instance.client = MqttServerClient(
         Constants.BROKER_IP, identifier,
         maxConnectionAttempts: 1);
-    SmartMqtt. instance.initializeMQTTClient(
+    SmartMqtt.instance.initializeMQTTClient(
         username, mqttPassword, identifier, userTopicList);
     //SmartMqtt.instance.client.
     //await SmartMqtt.instance.client.connect();

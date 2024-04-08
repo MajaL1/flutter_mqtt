@@ -63,6 +63,9 @@ class SmartMqtt extends ChangeNotifier {
   late bool newSettingsMessageLoaded = false;
   late String newUserSettings = "";
   late String newMqttData = "";
+  late String alarmInterval = "";
+
+
 
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
@@ -227,7 +230,7 @@ class SmartMqtt extends ChangeNotifier {
       //preferences.setString("data_mqtt", decodeMessage);
     }
     if (topicName.contains("alarm")) {
-      debugPrint("+++++alarm!!!!!, showing alarm: ${messageCount}");
+      debugPrint("+++++alarm!!!!!,: ${messageCount}");
 
       Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
       List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
@@ -251,8 +254,7 @@ class SmartMqtt extends ChangeNotifier {
           return value.getString("alarm_interval_setting");
         }
       });
-      timeIntervalMinutes =
-          _getIntervalFromPrerences(showInterval);
+      timeIntervalMinutes = _getIntervalFromPreferences(alarmInterval);
       debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
       // dobi zadnji datum od alarma iz naprave iz historija
       _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName,
@@ -296,7 +298,7 @@ class SmartMqtt extends ChangeNotifier {
     }
   }
 
-  int _getIntervalFromPrerences(String? showInterval) {
+  int _getIntervalFromPreferences(String? showInterval) {
     int timeIntervalMinutes = 1;
     switch (showInterval) {
       case ShowAlarmTimeSettings.minutes10:
@@ -504,6 +506,11 @@ class SmartMqtt extends ChangeNotifier {
   Future<void> setNewUserSettings(Map concatenatedSettings) async {
     newUserSettings = json.encode(concatenatedSettings);
     debugPrint("map: ${concatenatedSettings}");
+  }
+
+  Future<void> setAlarmIntervalSettings(String interval) async {
+    alarmInterval = interval;
+
   }
 
   Data? convertMessageToData(String message, String deviceName) {

@@ -49,3 +49,7 @@
 	<true/>
 </dict>
 </plist>
+<key>BGTaskSchedulerPermittedIdentifiers</key>
+<array>
+    <string>dev.flutter.background.refresh</string>
+</array>

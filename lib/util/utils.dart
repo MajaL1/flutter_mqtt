@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:mqtt_test/model/user_topic.dart';
+import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -134,7 +135,7 @@ class Utils {
   }
 
   static Future<String?> getAlarmGeneralIntervalSettings() async {
-    String? setting = await SharedPreferences.getInstance().then((value) {
+    /*String? setting = await SharedPreferences.getInstance().then((value) {
       if (value.getString("alarm_interval_setting") != null) {
         String? str = value.getString("alarm_interval_setting");
         if (str != null) {
@@ -142,19 +143,16 @@ class Utils {
         }
       }
     });
-    return setting;
+    return setting; */
+    return SmartMqtt.instance.alarmInterval;
   }
 
   static void setAlarmGeneralIntervalSettings(String setting) async {
     await SharedPreferences.getInstance().then((value) {
-      if (value.getString("alarm_interval_setting") != null) {
-        String? str = value.getString("alarm_interval_settings_list");
-        if (str != null) {
-          return str;
-        }
-      }
       value.setString("alarm_interval_setting", setting);
     });
+
+    SmartMqtt.instance.setAlarmIntervalSettings(setting);
   }
 
   /** Pride v postev za nastavitve za vsak alarm posebej **/
