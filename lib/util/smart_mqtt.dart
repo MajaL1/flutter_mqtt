@@ -61,7 +61,7 @@ class SmartMqtt extends ChangeNotifier {
   bool debug = true;
   late bool isSaved = false;
   late bool newSettingsMessageLoaded = false;
-  late String newUserSettings = "";
+  String newUserSettings = "";
   late String newMqttData = "";
   String alarmInterval = "";
 

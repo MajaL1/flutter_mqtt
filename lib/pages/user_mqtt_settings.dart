@@ -448,6 +448,10 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       builder: (context, snapshot) {
         //debugPrint(
         //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
+
+        if (snapshot.connectionState == ConnectionState.waiting){
+          return const CircularProgressIndicator(color: Colors.green,);
+        }
         if (snapshot.hasData) {
           List<UserDataSettings>? editableSettingsList = snapshot.data;
           List<TextEditingController> textControllerList =
