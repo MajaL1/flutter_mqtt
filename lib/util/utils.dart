@@ -135,7 +135,7 @@ class Utils {
   }
 
   static Future<String?> getAlarmGeneralIntervalSettings() async {
-    /*String? setting = await SharedPreferences.getInstance().then((value) {
+    String? setting = await SharedPreferences.getInstance().then((value) {
       if (value.getString("alarm_interval_setting") != null) {
         String? str = value.getString("alarm_interval_setting");
         if (str != null) {
@@ -143,8 +143,8 @@ class Utils {
         }
       }
     });
-    return setting; */
-    return SmartMqtt.instance.alarmInterval;
+    return setting;
+   // return SmartMqtt.instance.alarmInterval;
   }
 
   static  void setAlarmGeneralIntervalSettings(String setting) async {

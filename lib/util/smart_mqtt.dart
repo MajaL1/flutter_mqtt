@@ -63,7 +63,7 @@ class SmartMqtt extends ChangeNotifier {
   late bool newSettingsMessageLoaded = false;
   late String newUserSettings = "";
   late String newMqttData = "";
-  late String alarmInterval = "";
+  String alarmInterval = "";
 
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
@@ -233,6 +233,8 @@ class SmartMqtt extends ChangeNotifier {
       Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
       List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
       currentAlarmList.first.deviceName = topicName.split("/alarm").first;
+      debugPrint("+++++ALARM ? ${currentAlarmList.first.toString()},: ${messageCount}");
+
       //prebere listo alarmov iz preferenc in jim doda nov alarm
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
