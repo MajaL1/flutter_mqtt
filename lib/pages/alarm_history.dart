@@ -29,7 +29,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
-      future: ApiService.getAlarmsHistoryTest()
+      future: ApiService.getAlarmsHistory()
           .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)) //),
           .then((alarmHistoryList) =>
               _pairAlarmListWithSettings(alarmHistoryList)),

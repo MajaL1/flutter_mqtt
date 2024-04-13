@@ -35,6 +35,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     Utils.getAlarmGeneralIntervalSettings().then((str) {
       setState(() {
         dropdownValue = str;
+        Utils.setAlarmGeneralIntervalSettings(dropdownValue!);
       });
     });
     super.initState();

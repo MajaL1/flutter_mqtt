@@ -327,7 +327,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     }); */
   }
 
-  @override
+ /* @override
   void initState() {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
     debugPrint("main init state: ");
@@ -345,14 +345,12 @@ class _NotificationsAppState extends State<NotificationsApp> {
       onDetach: () => _handleTransition('detach'),
       onRestart: () => _handleTransition('restart'),
       onExitRequested: () => _onExitRequested(),
-      // This fires for each state change. Callbacks above fire only for
-      // specific state transitions.
       onStateChange: _handleStateChange,
     );
     if (_state != null) {
       _states.add(_state!.name);
     }
-  }
+  } */
 
   Future<AppExitResponse> _onExitRequested() async {
     final response = await showDialog<AppExitResponse>(
@@ -388,7 +386,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     super.dispose();
   }
 
-  Future<void> _handleTransition(String name) async {
+ /* Future<void> _handleTransition(String name) async {
     setState(() {
       _states.add(name);
     });
@@ -413,7 +411,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
           });
     }
   }
-
+*/
   void _handleStateChange(AppLifecycleState state) {
     setState(() {
       _state = state;

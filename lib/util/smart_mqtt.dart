@@ -76,7 +76,7 @@ class SmartMqtt extends ChangeNotifier {
     builder.addString(message);
     // find settings topic
 
-    debugPrint("publishing to current topic: $topicName");
+    debugPrint("publishing to current topic: $topicName, message: $message");
     isSaved = true;
     client.publishMessage(topicName, MqttQos.exactlyOnce, builder.payload!);
     //notifyListeners();
@@ -249,6 +249,7 @@ class SmartMqtt extends ChangeNotifier {
       int timeIntervalMinutes = 0;
       // preveri interval
 
+      String alarmInterval = getAlarmInterval();
       debugPrint("+++++got alarmInterval: $alarmInterval");
       if (alarmInterval == "") {
         debugPrint("+++++alarmInterval == ''");
@@ -269,7 +270,7 @@ class SmartMqtt extends ChangeNotifier {
             minutes = Utils.compareDatesInMinutes(value!, DateTime.now());
             debugPrint("+++++ got minutes from compare: $minutes");
             // primerjaj s shranjenim intervalom
-            if (minutes > timeIntervalMinutes!) {
+            if (minutes >= timeIntervalMinutes!) {
               debugPrint(
                   "+++++ minutes > timeIntervalMinutes, will show alarm");
 
@@ -334,15 +335,15 @@ class SmartMqtt extends ChangeNotifier {
     // parse trenutno sporocilo
     Map decodeMessageSettings = <String, String>{};
     decodeMessageSettings = json.decode(decodeMessage);
-    //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
+    debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
     await setDeviceNameToSettings(
         decodeMessageSettings, topicName.split("/settings").first);
     //-----
     //String oldUserSettings = newUserSettings;
     Map newSettings = <String, String>{};
     if (newUserSettings.isEmpty) {
-      // debugPrint(
-      //   "1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
+       debugPrint(
+         "1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
       newUserSettings = decodeMessage;
       newSettings = json.decode(newUserSettings);
       //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
@@ -355,21 +356,24 @@ class SmartMqtt extends ChangeNotifier {
       notifyListeners();
       debugPrint("notifying listeners..");
     } else if (newUserSettings.isNotEmpty &&
-        !decodeMessage.contains(newUserSettings)) {
+        !newUserSettings.contains(decodeMessage)) {
       /* debugPrint(
           "2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
       debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
-      debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}"); */
+      */debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}");
       newSettings = json.decode(newUserSettings);
 
+     //  stare settinge za doloceno napravo zamenja za nove
+      // ... je concatenate, iz mapa nadomesti key-e z decodemessagesettings
       final concatenatedSettings = {
-        ...decodeMessageSettings,
         ...newSettings,
+        ...decodeMessageSettings,
       };
       newUserSettings = json.encode(concatenatedSettings);
-      notifyListeners();
       debugPrint("notifying listeners.. $newUserSettings");
       preferences.setString("current_mqtt_settings", newUserSettings);
+      notifyListeners();
+
       //print("map: ${concatenatedSettings}");
       //debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
     }
@@ -401,11 +405,11 @@ class SmartMqtt extends ChangeNotifier {
       if (alarmDeviceName == alarm.deviceName &&
           alarmSensorAddress == alarm.sensorAddress) {
         found = true;
-        lastSentAlarm = alarm.ts;
-        if (lastSentAlarm!.isAfter(alarm.ts!)) {
-          lastSentAlarm = alarm.ts;
+        //lastSentAlarm = alarm.ts;
+        //if (lastSentAlarm!.isAfter(alarm.ts!)) {
+        //  lastSentAlarm = alarm.ts;
           break;
-        }
+        //}
       }
     }
 
@@ -413,10 +417,10 @@ class SmartMqtt extends ChangeNotifier {
       debugPrint("Printing alarmList ${alarm.toString()}");
     }
 
-    debugPrint("alarmList.size: ${alarmList.length}");
+    //debugPrint("alarmList.size: ${alarmList.length}");
+    //lastSentAlarm ??= DateTime.now();
     debugPrint(
         "----lastSentAlarm: $lastSentAlarm for device $deviceName, sensonName: $sensorName");
-    //lastSentAlarm ??= DateTime.now();
 
     return lastSentAlarm;
   }
@@ -512,6 +516,10 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<void> setAlarmIntervalSettings(String interval) async {
     alarmInterval = interval;
+  }
+
+  String getAlarmInterval(){
+    return alarmInterval;
   }
 
   Data? convertMessageToData(String message, String deviceName) {

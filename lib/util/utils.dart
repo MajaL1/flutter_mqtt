@@ -141,19 +141,19 @@ class Utils {
         if (str != null) {
           return str;
         }
+        return ShowAlarmTimeSettings.minutes10;
+      } else {
+        return ShowAlarmTimeSettings.minutes10;
       }
     });
     return setting;
-   // return SmartMqtt.instance.alarmInterval;
+    // return SmartMqtt.instance.alarmInterval;
   }
 
-  static  void setAlarmGeneralIntervalSettings(String setting) async {
+  static void setAlarmGeneralIntervalSettings(String setting) async {
     await SharedPreferences.getInstance().then((value) {
       value.setString("alarm_interval_setting", setting);
-      SmartMqtt.instance.setAlarmIntervalSettings(setting);
-    });
-
-
+    }).then((value) => SmartMqtt.instance.setAlarmIntervalSettings(setting));
   }
 
   /** Pride v postev za nastavitve za vsak alarm posebej **/

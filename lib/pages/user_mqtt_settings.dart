@@ -791,7 +791,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
     //}
 
-    SmartMqtt.instance.publish(publishText, "settings/$deviceAddress");
+    SmartMqtt.instance.publish(publishText, "$deviceAddress/settings");
 
     Future.delayed(const Duration(milliseconds: 2000), () {
       setState(() {});
