@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -482,7 +481,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   _parseUserDataSettingsToList(dataSettingsList!)),
       builder: (context, snapshot) {
         debugPrint(
-         "00000 snapshot.connectionState: ${snapshot.connectionState}");
+            "00000 snapshot.connectionState: ${snapshot.connectionState}");
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return showCircularProgressIndicator();
@@ -695,6 +694,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
       settingText = " Low alarm:  ";
     }
+
+    ValueNotifier<bool> _notifier = ValueNotifier(isEnabledSave);
     return Stack(
       children: [
         Wrap(children: [
@@ -725,47 +726,56 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   ],
                   //enableInteractiveSelection: false,
                   showCursor: false,
-                  // enabled: false,
                   controller: textController,
-                  onChanged: (val) {},
+                  onChanged: (val) {
+                    debugPrint(
+                        "on changed, textController.text: ${textController.text}, val: ${val}");
+                    if (val == "") {
+                      isEnabledSave = false;
+                      _notifier.notifyListeners();
+                      //
+                    } else if (val == value) {
+                      isEnabledSave = false;
+                      _notifier.notifyListeners();
+                    } else {
+                      isEnabledSave = true;
+                      _notifier.notifyListeners();
+                    }
+                    debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
+                  },
+                  enabled: isEnabledSave,
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
                     MaxLengthValidator(6, errorText: "Value too long")
                   ]))),
           Container(width: 10),
           SizedBox(
-            // height: 50,
-            width: 100,
-            //  margin: const EdgeInsets.only(right: 2),
-            //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
-            child: //ElevatedButton(
-                //style: Utils.buildSaveMqttSettingsButtonDecoration1(),
-                ElevatedButton(
-              style: GuiUtils.buildElevatedButtonSettings(),
-              onPressed: () {
-                // Todo: same value - don't call save
-                // Todo: debouncing
-                if (!isEnabledSave) {
-                  return null;
-                }
-                EasyDebounce.debounce(
-                    'debouncer1', const Duration(milliseconds: 5000), () {
-                  saveMqttSettings(deviceName!, sensorAddress, item,
-                      textController, settingToChange);
-                  debugPrint("executing saveMqttSettings debouncer");
-                  isEnabledSave = false;
-                });
+              // height: 50,
+              width: 100,
+              child: Column(children: [
+                //  _notifier.value ?
+                ValueListenableBuilder(
+                    valueListenable: _notifier,
+                    builder: (BuildContext context, bool val, Widget? child) {
+                      //return Text("value builder: ${isEnabledSave.toString()}");
 
-                setState(() {
-                  savePressed = !savePressed;
-                });
-              },
-              child: const Text(
-                Constants.SAVE_DEVICE_SETTINGS,
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
-          ) //  ?
+                      return ElevatedButton(
+                        style: isEnabledSave ? GuiUtils.buildElevatedButtonSettings(): null,
+                        onPressed: !_notifier.value
+                            ? null
+                            : () {
+                                saveMqttSettings(deviceName!, sensorAddress,
+                                    item, textController, settingToChange);
+                              },
+                        child: Column(children: [
+                          Text(
+                            "${Constants.SAVE_DEVICE_SETTINGS} ${val}",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),Text("value builder: ${isEnabledSave.toString()}", style: TextStyle(color: Colors.white, fontSize: 12))
+                        ]),
+                      );
+                    }), //: Text("aa"),
+              ])),
         ]),
       ],
     );
@@ -822,7 +832,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   }
 
   void saveInterval(String interval) {
-    debugPrint("save interval...");
+    debugPrint("save interval...$interval");
   }
 
   void saveFriendlyName(
