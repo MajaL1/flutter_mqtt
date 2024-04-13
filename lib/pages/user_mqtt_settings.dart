@@ -435,22 +435,57 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }
   }
 
+  Column showCircularProgressIndicator() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 200.0,
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 15,
+                    value: 1.0,
+                  ),
+                ),
+              ),
+              Center(child: Text("Getting user settings...")),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<String> _getNewUserSettingsList() async {
+    String settings = "";
+    settings = await Provider.of<SmartMqtt>(context, listen: true)
+        .getNewUserSettingsList();
+    if (settings != null) {
+      return settings;
+    }
+    return "";
+  }
+
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: Provider.of<SmartMqtt>(context, listen: true)
-          .getNewUserSettingsList()
-          //_getNewUserSettingsList()
-          //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
-          .then((dataSettingsList) =>
-              _checkAndPairOldSettingsWithNew(dataSettingsList))
-          .then((dataSettingsList) =>
-              _parseUserDataSettingsToList(dataSettingsList!)),
+      future: //Provider.of<SmartMqtt>(context, listen: true)
+          //.getNewUserSettingsList()
+          _getNewUserSettingsList()
+              //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
+              .then((dataSettingsList) =>
+                  _checkAndPairOldSettingsWithNew(dataSettingsList))
+              .then((dataSettingsList) =>
+                  _parseUserDataSettingsToList(dataSettingsList!)),
       builder: (context, snapshot) {
-        //debugPrint(
-        //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
+        debugPrint(
+         "00000 snapshot.connectionState: ${snapshot.connectionState}");
 
-        if (snapshot.connectionState == ConnectionState.waiting){
-          return const CircularProgressIndicator(color: Colors.green,);
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return showCircularProgressIndicator();
         }
         if (snapshot.hasData) {
           List<UserDataSettings>? editableSettingsList = snapshot.data;
@@ -634,18 +669,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           //return const CircularProgressIndicator();
 
         } */
-        else if (!snapshot.hasData) {
-          // && SmartMqtt.instance.isNewSettings) {
-          debugPrint("00000 !snapshot.hasData: !$snapshot.hasData");
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          debugPrint("00002 snapshot.hasError: $snapshot.hasError");
-          // return const CircularProgressIndicator();
-          return Text(snapshot.error.toString());
-        }
-        debugPrint(
-            "00003 default: snapshot.hasData: $snapshot.hasData, $SmartMqtt.instance.isNewSettings");
-        // By default show a loading spinner.
         return const CircularProgressIndicator();
       },
     );
@@ -685,11 +708,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   maxLines: 1,
                   softWrap: false,
                   style: const TextStyle(
-                      // color: Colors.indigo,
-                      color: Colors.black,
-                      // letterSpacing: 4,
-                      fontSize: 16,
-                      //fontWeight: FontWeight.bold
+                    // color: Colors.indigo,
+                    color: Colors.black,
+                    // letterSpacing: 4,
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold
                   ))),
           //Container(width: 5),
           SizedBox(
@@ -702,11 +725,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   ],
                   //enableInteractiveSelection: false,
                   showCursor: false,
-                 // enabled: false,
+                  // enabled: false,
                   controller: textController,
-                  onChanged: (val) {
-
-                  },
+                  onChanged: (val) {},
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Required value"),
                     MaxLengthValidator(6, errorText: "Value too long")
@@ -793,10 +814,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
     SmartMqtt.instance.publish(publishText, "$deviceAddress/settings");
 
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    /*Future.delayed(const Duration(milliseconds: 2000), () {
       setState(() {});
-    });
-    //setState(() {});
+    }); */
     debugPrint(
         "after publish:: saveMqttSettings: $controller.text, $sensorName, $settingToChange");
   }
