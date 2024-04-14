@@ -193,8 +193,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     return SingleChildScrollView(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        // padding:
-        //    const EdgeInsets.only(left: 30, right: 30, top: 40, bottom: 10),
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -209,9 +207,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           const Divider(height: 4, color: Colors.black12, thickness: 5),
 
           _buildMqttSettingsView(),
-          /* const Padding(
-           padding: EdgeInsets.symmetric(vertical: 5),
-          ), */
           //_buildIntervalSpinBox(context),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
@@ -538,12 +533,14 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                             child: Column(children: [
                               Container(
                                   //color: Colors.tealAccent,
+                                  padding: const EdgeInsets.only(left:15),
+
                                   alignment: Alignment.center,
                                   //decoration: //index % 2 == 0
                                   //?
                                   //GuiUtils.buildBoxDecorationSettings(),
                                   //: null,
-                                  padding: const EdgeInsets.only(bottom: 0),
+                                  //padding: const EdgeInsets.only(bottom: 0, left: 10),
                                   //padding: EdgeInsets.all(5),
                                   child: settingToChange != "u"
                                       ? Wrap(children: [
@@ -622,7 +619,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                         ])
                                       : Container()),
                               Container(height: 2),
-                              Wrap(children: [
+                              Container(
+                                  padding: const EdgeInsets.only(left:15),
+                                  child:
                                 Row(children: [
                                   settingToChange != Constants.U_JSON
                                       ? _buildEditableSettingsTest2(
@@ -638,7 +637,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                           textControllerList[index])
                                       : Container(height: 0)
                                 ])
-                              ])
+                              )
                             ])));
                   }));
         }
@@ -710,9 +709,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       isEnabledSave = false;
+                      notifier.value = isEnabledSave;
                       return '';
                     }
                     if (value.length > 4) {
+                      notifier.value = isEnabledSave;
                       isEnabledSave = false;
                       return '';
                     }
@@ -723,14 +724,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                         "on changed, textController.text: ${textController.text}, val: ${val}");
                     if (val == "") {
                       isEnabledSave = false;
-                      notifier.notifyListeners();
-                      //
+                      notifier.value = isEnabledSave;
                     } else if (val == value) {
                       isEnabledSave = false;
-                      notifier.notifyListeners();
+                      notifier.value = isEnabledSave;
                     } else {
                       isEnabledSave = true;
-                      notifier.notifyListeners();
+                      notifier.value = isEnabledSave;
                     }
                     debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
                   })),
@@ -742,8 +742,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                 ValueListenableBuilder(
                     valueListenable: notifier,
                     builder: (BuildContext context, bool val, Widget? child) {
-                      //return Text("value builder: ${isEnabledSave.toString()}");
-
                       return ElevatedButton(
                         style: isEnabledSave
                             ? GuiUtils.buildElevatedButtonSettings()
@@ -753,13 +751,16 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                             : () {
                                 saveMqttSettings(deviceName!, sensorAddress,
                                     item, textController, settingToChange);
+                                isEnabledSave = false;
+
+                                notifier.value = false;
                               },
-                        child: Column(children: [
-                          Text(
-                            "${Constants.SAVE_DEVICE_SETTINGS} ${val}",
+                        child:  Column(children: [
+                         Text(
+                            Constants.SAVE_DEVICE_SETTINGS,
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
-                          /* Text("value builder: ${isEnabledSave.toString()}",
+                          /* Text("value builder: ${notifier.value}",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 12)) */
                         ]),
