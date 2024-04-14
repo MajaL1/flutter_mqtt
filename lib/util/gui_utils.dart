@@ -77,7 +77,8 @@ class GuiUtils {
           ),
         ],
         color: const Color.fromRGBO(222, 242, 255, 1),
-        border: const Border(bottom: BorderSide(color: Colors.indigo, width: 3)));
+        border:
+            const Border(bottom: BorderSide(color: Colors.indigo, width: 3)));
   }
 
   static BoxDecoration buildBoxDecoration() {
@@ -224,18 +225,18 @@ class GuiUtils {
 
   static ButtonStyle buildElevatedButtonFriendlyName() {
     return ButtonStyle(
-      //side: MaterialStateProperty.BorderSide(color: Colors.red),
+        //side: MaterialStateProperty.BorderSide(color: Colors.red),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-              //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
-            )),
+          borderRadius: BorderRadius.circular(12.0),
+          //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
+        )),
         backgroundColor:
-        getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
         foregroundColor:
-        getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
         overlayColor:
-        getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
   }
 
   static ButtonStyle buildElevatedButtonLogin() {
@@ -304,19 +305,32 @@ class GuiUtils {
       labelStyle: const TextStyle(letterSpacing: 1.8),
     );
   }
-
+  static InputDecoration setInputDecorationFriendlyName() {
+    return InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        border: UnderlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey, width: 1),
+            borderRadius: BorderRadius.circular(14)),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+        ),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+        ));
+  }
   static InputDecoration setInputDecoration(val) {
     return InputDecoration(
         labelText: val,
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(
+        border: UnderlineInputBorder(
             borderSide: const BorderSide(color: Colors.grey, width: 1),
             borderRadius: BorderRadius.circular(14)),
-        focusedBorder: const OutlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
         ),
-        enabledBorder: const OutlineInputBorder(
+        enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),
         ));
   }

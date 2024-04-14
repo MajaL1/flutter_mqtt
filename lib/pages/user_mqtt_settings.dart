@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
@@ -303,46 +302,44 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     // String $settingsData = ": ";
     TextEditingController controllerFriendlyName =
         TextEditingController(text: friendlyName);
-    return Container(
-        width: 200,
-        child: Wrap(children: [
-          const Text(
-            "Friendly name:",
-            style: TextStyle(
-              fontSize: 16,
-              letterSpacing: 0.6,
-              //fontWeight: FontWeight.bold,
-            ),
+    return Row(children: [
+      const Text(
+        "Friendly name:",
+        style: TextStyle(
+          fontSize: 16,
+          letterSpacing: 0.6,
+          //fontWeight: FontWeight.bold,
+        ),
+      ),
+      Wrap(children: [
+        Container(
+            width: 100,
+            height: 40,
+            child: (TextFormField(
+              style: const TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromRGBO(00, 20, 20, 80),
+                  fontSize: 14),
+              decoration: GuiUtils.setInputDecorationFriendlyName(),
+              controller: controllerFriendlyName,
+            ))),
+        Container(
+          width: 10,
+        ),
+        ElevatedButton(
+          style: GuiUtils.buildElevatedButtonSettings(),
+          onPressed: () {
+            saveFriendlyName(
+                controllerFriendlyName.text, deviceName!, sensorAddress);
+          },
+          child: Text(
+            "Save",
+            style: TextStyle(color: Colors.white),
           ),
-          Wrap(children: [
-            Container(
-                width: 100,
-                height: 40,
-                child: (TextFormField(
-                  style: const TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(00, 20, 20, 80),
-                      fontSize: 14),
-                  decoration: GuiUtils.buildFriendlyNameDecoration(),
-                  controller: controllerFriendlyName,
-                ))),
-            Container(
-              width: 10,
-            ),
-            ElevatedButton(
-              style: GuiUtils.buildElevatedButtonSettings(),
-              onPressed: () {
-                saveFriendlyName(
-                    controllerFriendlyName.text, deviceName!, sensorAddress);
-              },
-              child: Text(
-                "Save",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ])
-        ]));
+        ),
+      ])
+    ]);
   }
 
   /*Widget _buildDataView() {
@@ -512,7 +509,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     String? deviceName = snapshot.data![index].deviceName;
                     String? settingToChange = item.editableSetting ?? "";
                     String? value = "";
-                    String? data = item.data;
                     String? friendlyName = item.friendlyName;
 
                     if (item.editableSetting == Constants.HI_ALARM_JSON) {
@@ -556,7 +552,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                           Container(
                                               // color: Colors.red,
                                               alignment: Alignment.center,
-                                              padding: const EdgeInsets.all(15),
+                                              //padding: const EdgeInsets.all(15),
                                               child: Wrap(children: [
                                                 SizedBox(
                                                     // padding: EdgeInsets.all(5),
@@ -577,14 +573,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       letterSpacing: 0.8,
                                                     ),
                                                   ),
-                                                  /* Text(
-                                                "Data: $data",
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 18,
-                                                  letterSpacing: 1.1,
-                                                ),
-                                              ), */
                                                   Row(children: [
                                                     const SizedBox(
                                                         child: Text(
@@ -628,12 +616,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       friendlyName,
                                                       deviceName,
                                                       sensorAddress),
-                                                  /*Container(
-                                                height: 10,
-                                              ),
-                                              Container(
-                                                height: 10,
-                                              ),*/
                                                 ]))
                                               ]))
                                           //: const Text(""),
@@ -641,24 +623,21 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                       : Container()),
                               Container(height: 2),
                               Wrap(children: [
-                                /* const Padding(
-                          padding: EdgeInsets.only(top: 15, bottom: 10, left: 5, right: 8),
-                                                      ), */
-                                // Column(children: [Text("a1"), Text("a2")]),
-                                settingToChange != Constants.U_JSON
-                                    ? _buildEditableSettingsTest2(
-                                        sensorAddress,
-                                        deviceName,
-                                        index,
-                                        u,
-                                        settingToChange,
-                                        value,
-                                        controller,
-                                        item,
-                                        savePressed,
-                                        textControllerList[index])
-                                    : Container(height: 0)
-                                //ListTile(enabled: false)
+                                Row(children: [
+                                  settingToChange != Constants.U_JSON
+                                      ? _buildEditableSettingsTest2(
+                                          sensorAddress,
+                                          deviceName,
+                                          index,
+                                          u,
+                                          settingToChange,
+                                          value,
+                                          controller,
+                                          item,
+                                          savePressed,
+                                          textControllerList[index])
+                                      : Container(height: 0)
+                                ])
                               ])
                             ])));
                   }));
@@ -685,25 +664,25 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       bool savePressed,
       TextEditingController textController) {
     String settingText = "";
-    bool isEnabledSave = true;
+    bool isEnabledSave = false;
 //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
     //debugPrint("00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange, u: $u");
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
-      settingText = " High alarm:  ";
+      settingText = "High alarm:  ";
     }
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
-      settingText = " Low alarm:  ";
+      settingText = "Low alarm:  ";
     }
 
-    ValueNotifier<bool> _notifier = ValueNotifier(isEnabledSave);
+    ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
     return Stack(
       children: [
-        Wrap(children: [
-          Container(
-              padding:
-                  const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
+        Row(children: [
+          SizedBox(
+              // padding:
+              // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
               //  height: 40,
-              alignment: Alignment.center,
+              //alignment: Alignment.center,
               width: MediaQuery.of(context).size.width / 4,
               child: Text(settingText,
                   maxLines: 1,
@@ -727,41 +706,49 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   //enableInteractiveSelection: false,
                   showCursor: false,
                   controller: textController,
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      isEnabledSave = false;
+                      return '';
+                    }
+                    if (value.length > 4) {
+                      isEnabledSave = false;
+                      return '';
+                    }
+                    return null;
+                  },
                   onChanged: (val) {
                     debugPrint(
                         "on changed, textController.text: ${textController.text}, val: ${val}");
                     if (val == "") {
                       isEnabledSave = false;
-                      _notifier.notifyListeners();
+                      notifier.notifyListeners();
                       //
                     } else if (val == value) {
                       isEnabledSave = false;
-                      _notifier.notifyListeners();
+                      notifier.notifyListeners();
                     } else {
                       isEnabledSave = true;
-                      _notifier.notifyListeners();
+                      notifier.notifyListeners();
                     }
                     debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
-                  },
-                  enabled: isEnabledSave,
-                  validator: MultiValidator([
-                    RequiredValidator(errorText: "Required value"),
-                    MaxLengthValidator(6, errorText: "Value too long")
-                  ]))),
-          Container(width: 10),
+                  })),
           SizedBox(
               // height: 50,
               width: 100,
               child: Column(children: [
                 //  _notifier.value ?
                 ValueListenableBuilder(
-                    valueListenable: _notifier,
+                    valueListenable: notifier,
                     builder: (BuildContext context, bool val, Widget? child) {
                       //return Text("value builder: ${isEnabledSave.toString()}");
 
                       return ElevatedButton(
-                        style: isEnabledSave ? GuiUtils.buildElevatedButtonSettings(): null,
-                        onPressed: !_notifier.value
+                        style: isEnabledSave
+                            ? GuiUtils.buildElevatedButtonSettings()
+                            : null,
+                        onPressed: !notifier.value
                             ? null
                             : () {
                                 saveMqttSettings(deviceName!, sensorAddress,
@@ -771,10 +758,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                           Text(
                             "${Constants.SAVE_DEVICE_SETTINGS} ${val}",
                             style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),Text("value builder: ${isEnabledSave.toString()}", style: TextStyle(color: Colors.white, fontSize: 12))
+                          ),
+                          /* Text("value builder: ${isEnabledSave.toString()}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12)) */
                         ]),
                       );
-                    }), //: Text("aa"),
+                    }),
               ])),
         ]),
       ],
