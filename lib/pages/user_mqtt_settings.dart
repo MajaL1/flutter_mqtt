@@ -293,7 +293,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   notifier.value = isEnabledSave;
                 }
               },
-          decoration: GuiUtils.setInputDecorationFriendlyName(),
+          decoration: GuiUtils. setInputDecorationFriendlyName(),
           controller: controllerFriendlyName,
         )),
         Container(
@@ -497,11 +497,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     }
 
                     String unitText = UnitsConstants.getUnits(u);
-
                     bool savePressed = false;
                     TextEditingController controller = TextEditingController();
-                    TextEditingController controllerFriendlyName =
-                        TextEditingController(text: friendlyName);
 
                     ///debugPrint("000000000000000 build SingleChildScroollView: sensorAddress: $sensorAddress deviceName: $deviceName ");
                     //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
@@ -779,12 +776,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       String settingToChange) {
     String value = controller.text;
 
-    debugPrint(
-        "saveMqttSettings: deviceName: ${deviceAddress}, sensorAddress: $sensorName, $controller.text, $sensorName, $settingToChange");
-    debugPrint("::: sensorName, paramName, paramValue  $sensorName ");
+    //debugPrint(
+     //   "saveMqttSettings: deviceName: ${deviceAddress}, sensorName: $sensorName, ${controller.text}, $sensorName, $settingToChange");
     //var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
-    debugPrint("concatenated text: $publishText");
+    //debugPrint("concatenated text: $publishText");
 
     /*** ToDo: ce hocemo shraniti isto vrednost kot
         prej, potem ne klikni na gumb */

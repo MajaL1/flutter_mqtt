@@ -43,7 +43,7 @@ class UserDataSettings {
       friendlyName: parsedJson['friendlyName'].toString(),
       data: parsedJson['data'].toString(),
       editableSetting: parsedJson['editableSetting'].toString(),
-      u: parsedJson['s'],
+      u: parsedJson['u'],
       t: parsedJson['a'],
       typ: parsedJson['typ'],
       hiAlarm: parsedJson['hi_alarm'],
