@@ -4,6 +4,7 @@ import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';
+import '../pages/data_page.dart';
 import '../pages/login_form.dart';
 
 //import '../pages/data_page.dart';
@@ -130,6 +131,31 @@ class _NavDrawerState extends State<NavDrawer> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const UserSettings.base())),
+                        )),
+                    Container(
+                        decoration: buildDrawerDecorationListTile(),
+                        child: ListTile(
+                          hoverColor: Colors.blue,
+                          //tileColor: Colors.blue,
+                          dense: false,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 16.0),
+                          visualDensity: const VisualDensity(vertical: -4),
+                          leading: const Icon(
+                            Icons.dataset,
+                            color: Colors.white60,
+                          ),
+                          title: const Text(
+                            'Data',
+                            style: TextStyle(
+                              color: Colors.white60,
+                              letterSpacing: 1.8,
+                            ),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const DataPage.base())),
                         )),
                     //const Divider(height: 15),
                     Container(

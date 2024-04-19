@@ -1,137 +1,90 @@
-import 'dart:convert';
+import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_debouncer/flutter_debouncer.dart';
+import 'package:mqtt_test/components/custom_app_bar.dart';
+import 'package:mqtt_test/pages/user_general_settings.dart';
+import 'package:mqtt_test/pages/user_mqtt_settings.dart';
+import 'package:mqtt_test/pages/user_personal_settings.dart';
+import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../components/custom_app_bar.dart';
-import '../model/alarm.dart';
+import '../components/drawer.dart';
 import '../model/constants.dart';
 
-class DetailsPage extends StatefulWidget {
-  const DetailsPage.base({Key? key}) : super(key: key);
+class DataPage extends StatefulWidget {
+  const DataPage.base({Key? key}) : super(key: key);
 
   @override
-  State<DetailsPage> createState() => _DetailsPageState();
+  State<DataPage> createState() => _DataState();
 }
 
-class _DetailsPageState extends State<DetailsPage> {
-  int countTest = 0;
+class _DataState extends State<DataPage> {
+  TextStyle headingStyle = const TextStyle(
+      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
 
-  @override
-  Widget build(BuildContext context) {
-    {
-      return Scaffold(
-          appBar: CustomAppBar("Data"),
-          //drawer: NavDrawer(),
-          body: _buildDetailsView());
-    }
-  }
+  TextStyle headingStyleIOS = const TextStyle(
+    fontWeight: FontWeight.w600,
+    fontSize: 16,
+    color: CupertinoColors.inactiveGray,
+  );
+  TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
   @override
   void initState() {
     super.initState();
+
+    debugPrint("data initState");
   }
 
-  Widget _buildDetailsView() {
-    return FutureBuilder<List<Alarm>>(
-      future: getAlarmData(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          //List<Alarm>? alarmList = snapshot.data;
-          return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data!.length,
-              scrollDirection: Axis.vertical,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    padding: const EdgeInsets.only(
-                        top: 40.0, bottom: 40.0, left: 10.0, right: 40.0),
-                    child: ListView(shrinkWrap: true, children: [
-                      Text(
-                          "${Constants.SENSOR_ID}: ${snapshot.data![index].sensorAddress.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.TYP}: ${snapshot.data![index].typ.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.R}: ${snapshot.data![index].r.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.LB}: ${snapshot.data![index].lb.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.T}: ${snapshot.data![index].t.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.L}: ${snapshot.data![index].l.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.BV}: ${snapshot.data![index].bv.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.TS}: ${snapshot.data![index].ts.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.DEVICE_SETTING_HI_ALARM}: ${snapshot.data![index].hiAlarm.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Text(
-                          "${Constants.DEVICE_SETTING_LO_ALARM}: ${snapshot.data![index].loAlarm.toString()}",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 16),
-                          textAlign: TextAlign.justify),
-                      Column(children: [
-                        Container(
-                            alignment: Alignment.bottomCenter,
-                            child: const Text(" ",
-                                style: TextStyle(), textAlign: TextAlign.left)),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                        ),
-                      ])
-                    ]));
-              });
-        } else if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        // By default show a loading spinner.
-        return const CircularProgressIndicator();
-      },
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("calling build method data.dart");
+
+       return Scaffold(
+      backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+      appBar: CustomAppBar(Constants.DATA),
+      drawer: const NavDrawer.base(),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.only(left: 15, right: 10),
+        scrollDirection: Axis.vertical,
+        child: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 15),
+          ),
+
+          //Divider(height: 1, color: Colors.black12, thickness: 5),
+
+        ]),
+      ),
+    );
+  }
+  BoxDecoration buildBoxDecoration() {
+    return BoxDecoration(
+      color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
+      borderRadius: BorderRadius.circular(9),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.15),
+          spreadRadius: 4,
+          blurRadius: 5,
+          offset: const Offset(0, 2), // changes position of shadow
+        ),
+      ],
     );
   }
 
-  Future<List<Alarm>> getAlarmData() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String? data = preferences.get("data_mqtt").toString();
-    String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
-    debugPrint("****************** alarm data $data");
-    //alarm data {"135":{"typ":7,"l":0,"t":202,"b":0,"r":-73,"lb":1,"bv":384}}{
-    List<Alarm> alarmData = [];
-    //if(decodeMessage != null) {
-    Map<String, dynamic> jsonMap = json.decode(decodeMessage);
-    alarmData = Alarm.getAlarmList(jsonMap);
-    //debugPrint("AlarmData from JSON: $alarmData");
-    //}
-    //List<Data> dataList  = Data.getDataList();
-    return alarmData;
+
+  SharedPreferences? preferences;
+
+  Future<void> initializePreference() async {
+    preferences = await SharedPreferences.getInstance();
+  }
+
+
+  void saveInterval() {
+    debugPrint("save interval...");
   }
 }

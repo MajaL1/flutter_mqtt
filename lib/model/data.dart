@@ -83,26 +83,7 @@ class Data {
       if (key.isNotEmpty) {
         Map value = json[key];
         for (String key1 in value.keys) {
-          //   if (key1 != null) {
 
-          /* int value1 = key1;
-              //print("key1: $key1, value1: $value1");
-              if (key1 == "t") {
-                t = value1;
-              }
-              if (key1 == "typ") {
-                typ = value1;
-              }
-              if (key1 == "w") {
-                w = value1;
-              }
-              if (key1 == "r") {
-                r = value1;
-              }
-              if (key1 == "lb") {
-                lb = value1;
-              }
-*/
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           data = Data(
               //this.sensorAddress, this.typ, this.l, this.t, this.b, this.r, this.lb, this.bv

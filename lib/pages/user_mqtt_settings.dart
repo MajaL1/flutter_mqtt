@@ -782,13 +782,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     //debugPrint("concatenated text: $publishText");
 
-    /*** ToDo: ce hocemo shraniti isto vrednost kot
-        prej, potem ne klikni na gumb */
-    //List <UserDataSettings> userSettings = ;
-    //if(value.){
-
-    //}
-
     SmartMqtt.instance.publish(publishText, "$deviceAddress/settings");
 
     /*Future.delayed(const Duration(milliseconds: 2000), () {
