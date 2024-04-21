@@ -240,8 +240,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
-
-
   Widget _buildFriendlyNameView(friendlyName, deviceName, sensorAddress) {
     TextEditingController controllerFriendlyName =
         TextEditingController(text: friendlyName);
@@ -259,8 +257,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         ),
       ),
       Wrap(children: [
-        SizedBox(width: 100, height: 40, child:
-          TextFormField(
+        SizedBox(
+            width: 100,
+            height: 40,
+            child: TextFormField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(10),
+            ],
               style: const TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.bold,
@@ -291,33 +294,35 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   notifier.value = isEnabledSave;
                 }
               },
-          decoration: GuiUtils. setInputDecorationFriendlyName(),
-          controller: controllerFriendlyName,
-        )),
+              decoration: GuiUtils.setInputDecorationFriendlyName(),
+              controller: controllerFriendlyName,
+            )),
         Container(
           width: 10,
         ),
         ValueListenableBuilder(
             valueListenable: notifier,
-            builder: (BuildContext context, bool val, Widget? child) => ElevatedButton(
-                  style: isEnabledSave ? GuiUtils.buildElevatedButtonSettings() : null,
-                  onPressed: !notifier.value
-                      ? null
-                      : () {
-                          saveFriendlyName(controllerFriendlyName.text,
-                              deviceName!, sensorAddress);
-                          isEnabledSave = false;
+            builder: (BuildContext context, bool val, Widget? child) =>
+                ElevatedButton(
+                    style: isEnabledSave
+                        ? GuiUtils.buildElevatedButtonSettings()
+                        : null,
+                    onPressed: !notifier.value
+                        ? null
+                        : () {
+                            saveFriendlyName(controllerFriendlyName.text,
+                                deviceName!, sensorAddress);
+                            isEnabledSave = false;
 
-                          notifier.value = false;
-                        },
-                  child: Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
-                  )))
+                            notifier.value = false;
+                          },
+                    child: Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
+                    )))
       ])
     ]);
   }
-
 
   Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(
       String newUserSettings) async {
@@ -655,7 +660,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               child: TextFormField(
                   decoration: GuiUtils.setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(5),
                   ],
                   //enableInteractiveSelection: false,
                   showCursor: false,
@@ -668,8 +674,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                       return '';
                     }
                     if (value.length > 4) {
-                      notifier.value = isEnabledSave;
                       isEnabledSave = false;
+                      notifier.value = isEnabledSave;
+                     // notifier.notifyListeners();
                       return '';
                     }
                     return null;
@@ -683,6 +690,10 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     } else if (val == value) {
                       isEnabledSave = false;
                       notifier.value = isEnabledSave;
+                    } else if (val.length > 4) {
+                      isEnabledSave = false;
+                      notifier.value = isEnabledSave;
+                      //notifier.notifyListeners();
                     } else {
                       isEnabledSave = true;
                       notifier.value = isEnabledSave;
@@ -755,7 +766,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     String value = controller.text;
 
     //debugPrint(
-     //   "saveMqttSettings: deviceName: ${deviceAddress}, sensorName: $sensorName, ${controller.text}, $sensorName, $settingToChange");
+    //   "saveMqttSettings: deviceName: ${deviceAddress}, sensorName: $sensorName, ${controller.text}, $sensorName, $settingToChange");
     //var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     //debugPrint("concatenated text: $publishText");
