@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +10,12 @@ import 'package:mqtt_test/pages/user_general_settings.dart';
 import 'package:mqtt_test/pages/user_mqtt_settings.dart';
 import 'package:mqtt_test/pages/user_personal_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
 import '../model/constants.dart';
+import '../model/data.dart';
 
 class DataPage extends StatefulWidget {
   const DataPage.base({Key? key}) : super(key: key);
@@ -76,6 +79,47 @@ class _DataState extends State<DataPage> {
     );
   }
 
+  Future<String> _getNewDataList() async {
+    String data = "";
+    data = await Provider.of<SmartMqtt>(context, listen: true)
+        .getNewDataList();
+    debugPrint("^^^^^ data: % $data");
+
+    if (data != null) {
+      return data;
+    }
+    return "";
+  }
+
+  Future<List<Data>> _getMqttData(String snapshot) async {
+    List<Data> dataList = [];
+    List jsonMap1 = json.decode(snapshot!);
+    dataList =
+        jsonMap1.map((val) => Data.fromJson(val)).toList();
+    debugPrint("^^^^^ Data.fromJson: $dataList");
+    return dataList;
+  }
+
+  Widget _buildDataView() {
+    String $settingsData = "Data: ";
+
+    return FutureBuilder<List<Data>>(
+        future: //Provider.of<SmartMqtt>(context, listen: true)
+        //.getNewUserSettingsList()
+        _getNewDataList().then((dataList) => _getMqttData(dataList)),
+        builder: (context, snapshot) {
+          debugPrint(
+           "^^^^^ snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
+          if (snapshot.hasData) {
+          return Container(
+            child: Text(snapshot.data as String,
+                style: const TextStyle(color: Colors.indigo)),
+          );
+          } else {
+            return Container();
+           }
+        });
+  }
 
   SharedPreferences? preferences;
 
@@ -84,7 +128,4 @@ class _DataState extends State<DataPage> {
   }
 
 
-  void saveInterval() {
-    debugPrint("save interval...");
-  }
 }

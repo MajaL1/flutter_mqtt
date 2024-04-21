@@ -240,9 +240,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
-  Future<String> _getNewDataList() async {
-    return await Provider.of<SmartMqtt>(context, listen: true).getNewDataList();
-  }
+
 
   Widget _buildFriendlyNameView(friendlyName, deviceName, sensorAddress) {
     TextEditingController controllerFriendlyName =
@@ -320,26 +318,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     ]);
   }
 
-  /*Widget _buildDataView() {
-    String $settingsData = "Data: ";
-
-    return FutureBuilder<List<Data>>(
-        future: //Provider.of<SmartMqtt>(context, listen: true)
-            //.getNewUserSettingsList()
-            _getNewDataList().then((dataList) => _getMqttData(dataList)),
-        builder: (context, snapshot) {
-          //debugPrint(
-          //  "00000 snapshot.hasData: $snapshot.hasData, SmartMqtt.instance.isNewSettings: $SmartMqtt.instance.isNewSettings");
-          // if (snapshot.hasData) {
-          return Container(
-            child: Text($settingsData,
-                style: const TextStyle(color: Colors.indigo)),
-          );
-          // } else {
-          //   return Container();
-          // }
-        });
-  }*/
 
   Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(
       String newUserSettings) async {
