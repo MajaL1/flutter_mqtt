@@ -131,16 +131,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   Widget build(BuildContext context) {
     debugPrint("calling build method user_settings.dart");
 
-    debugPrint("[[[[isSaved ${SmartMqtt.instance.isSaved.toString()}]]]]");
-    debugPrint(
-        "[[[[newSettingsMessageLoaded ${SmartMqtt.instance.newSettingsMessageLoaded.toString()}]]]]");
-
-    // if(isSaved)
-    /*String newUserSettings = SmartMqtt.instance.newUserSettings;
-    setState(() {
-      preferences?.setString("settings_mqtt", newUserSettings);
-    }); */
-
     return SingleChildScrollView(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -251,8 +241,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       const Text(
         "Friendly name:",
         style: TextStyle(
-          fontSize: 16,
-          letterSpacing: 0.6,
+          fontSize: 14,
+          letterSpacing: 0.2,
           //fontWeight: FontWeight.bold,
         ),
       ),
@@ -261,9 +251,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             width: 100,
             height: 40,
             child: TextFormField(
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(10),
-            ],
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(10),
+              ],
               style: const TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.bold,
@@ -303,23 +293,21 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         ValueListenableBuilder(
             valueListenable: notifier,
             builder: (BuildContext context, bool val, Widget? child) =>
-                ElevatedButton(
-                    style: isEnabledSave
-                        ? GuiUtils.buildElevatedButtonSettings()
-                        : null,
-                    onPressed: !notifier.value
-                        ? null
-                        : () {
-                            saveFriendlyName(controllerFriendlyName.text,
-                                deviceName!, sensorAddress);
-                            isEnabledSave = false;
+                IconButton(
+                  //style: isEnabledSave
+                   //   ? GuiUtils.buildElevatedButtonSettings()
+                   //   : null,
+                  onPressed: !notifier.value
+                      ? null
+                      : () {
+                          saveFriendlyName(controllerFriendlyName.text,
+                              deviceName!, sensorAddress);
+                          isEnabledSave = false;
 
-                            notifier.value = false;
-                          },
-                    child: Text(
-                      "Save",
-                      style: TextStyle(color: Colors.white),
-                    )))
+                          notifier.value = false;
+                        },
+                  icon: isEnabledSave ? const Icon(Icons.check) : Icon(null),
+                ))
       ])
     ]);
   }
@@ -520,7 +508,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                     "Device: ",
                                                     style: TextStyle(
                                                       fontSize: 16,
-                                                      letterSpacing: 0.8,
+                                                      letterSpacing: 0.3,
                                                     ),
                                                   ),
                                                   Text(
@@ -528,8 +516,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                     style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w800,
-                                                      fontSize: 18,
-                                                      letterSpacing: 0.8,
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.3,
                                                     ),
                                                   ),
                                                   Row(children: [
@@ -538,7 +526,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                             "Sensor address:  ",
                                                             style: TextStyle(
                                                                 letterSpacing:
-                                                                    0.6,
+                                                                    0.3,
                                                                 fontSize: 16))),
                                                     SizedBox(
                                                         child: Text(
@@ -546,8 +534,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                             style:
                                                                 const TextStyle(
                                                               letterSpacing:
-                                                                  0.6,
-                                                              fontSize: 18,
+                                                                  0.3,
+                                                              fontSize: 16,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w800,
@@ -558,7 +546,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                         child: Text(
                                                       "units:  ",
                                                       style: TextStyle(
-                                                          fontSize: 18),
+                                                          fontSize: 16),
                                                     )),
                                                     SizedBox(
                                                         child: Text(
@@ -567,7 +555,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                         fontWeight:
                                                             FontWeight.w800,
                                                         fontSize: 16,
-                                                        letterSpacing: 0.6,
+                                                        letterSpacing: 0.3,
                                                       ),
                                                     ))
                                                   ]),
@@ -650,7 +638,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     // color: Colors.indigo,
                     color: Colors.black,
                     // letterSpacing: 4,
-                    fontSize: 16,
+                    fontSize: 14,
                     //fontWeight: FontWeight.bold
                   ))),
           //Container(width: 5),
@@ -676,7 +664,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     if (value.length > 4) {
                       isEnabledSave = false;
                       notifier.value = isEnabledSave;
-                     // notifier.notifyListeners();
+                      // notifier.notifyListeners();
                       return '';
                     }
                     return null;
@@ -701,38 +689,32 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
                   })),
           SizedBox(
-              // height: 50,
-              width: 100,
-              child: Column(children: [
-                //  _notifier.value ?
-                ValueListenableBuilder(
-                    valueListenable: notifier,
-                    builder: (BuildContext context, bool val, Widget? child) {
-                      return ElevatedButton(
-                        style: isEnabledSave
-                            ? GuiUtils.buildElevatedButtonSettings()
-                            : null,
-                        onPressed: !notifier.value
-                            ? null
-                            : () {
-                                saveMqttSettings(deviceName!, sensorAddress,
-                                    item, textController, settingToChange);
-                                isEnabledSave = false;
+            // height: 50,
+            width: 100,
+            child: Column(children: [
+              //  _notifier.value ?
+              ValueListenableBuilder(
+                valueListenable: notifier,
+                builder: (BuildContext context, bool val, Widget? child) {
+                  return IconButton(
+                      //style: isEnabledSave
+                      //? GuiUtils.buildElevatedButtonSettings()
+                      //: null,
+                      icon:
+                          isEnabledSave ? const Icon(Icons.check) : Icon(null),
+                      onPressed: !notifier.value
+                          ? null
+                          : () {
+                              saveMqttSettings(deviceName!, sensorAddress, item,
+                                  textController, settingToChange);
+                              isEnabledSave = false;
 
-                                notifier.value = false;
-                              },
-                        child: Column(children: [
-                          Text(
-                            Constants.SAVE_DEVICE_SETTINGS,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          /* Text("value builder: ${notifier.value}",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12)) */
-                        ]),
-                      );
-                    }),
-              ])),
+                              notifier.value = false;
+                            });
+                },
+              ),
+            ]),
+          )
         ]),
       ],
     );

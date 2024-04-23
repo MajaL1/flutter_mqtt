@@ -21,7 +21,7 @@ class GuiUtils {
           borderSide: const BorderSide(
               color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
-        labelStyle: const TextStyle(letterSpacing: 1.8),
+        labelStyle: const TextStyle(letterSpacing: 0.8),
         hintStyle: const TextStyle(fontSize: 12));
   }
 
@@ -207,12 +207,13 @@ class GuiUtils {
     return MaterialStateProperty.resolveWith(getColor);
   }
 
+
   static ButtonStyle buildElevatedButtonSettings() {
     return ButtonStyle(
         //side: MaterialStateProperty.BorderSide(color: Colors.red),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape:MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(6.0),
           //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
         )),
         backgroundColor:
@@ -278,7 +279,7 @@ class GuiUtils {
           borderSide: const BorderSide(color: Colors.black12, width: 0.5),
         ),
         //labelText: Constants.ENTER_VALID_USER,
-        labelStyle: const TextStyle(letterSpacing: 1.8),
+        labelStyle: const TextStyle(letterSpacing: 0.8),
         hintText: Constants.ENTER_VALID_USER,
         hintStyle: const TextStyle(fontSize: 12));
   }
@@ -302,7 +303,7 @@ class GuiUtils {
         borderSide: const BorderSide(color: Colors.black12, width: 0.5),
       ),
       //labelText: Constants.ENTER_VALID_USER,
-      labelStyle: const TextStyle(letterSpacing: 1.8),
+      labelStyle: const TextStyle(letterSpacing: 0.8),
     );
   }
   static InputDecoration setInputDecorationFriendlyName() {

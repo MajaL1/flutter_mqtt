@@ -94,39 +94,39 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Wrap(
-            alignment: WrapAlignment.center,
+            //alignment: WrapAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-              Container(
-                  child: Text(" Show alarm interval:", style: headingStyle)),
-              Container(),
-              Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                  decoration: GuiUtils.buildBoxDecorationInterval(),
-                  child: _buildDropdownMenu()),
-              const Row(),
-              Container(
-                height: 20,
-              ),
-              Container(
-                  height: 50,
-                  width: 130,
-                  margin: const EdgeInsets.only(right: 10),
-                  //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
-                  child: //SmartMqtt.instance.isSaved != true
-                      ElevatedButton(
-                    style: GuiUtils.buildElevatedButtonSettings(),
-                    onPressed: () {
-                      String? val = dropdownValue ?? alarmIntervalsList.first;
-                      saveInterval(val);
-                    },
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  )),
+              // const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+              Row(children: [
+                Container(
+                    child: Text("Alarm interval:",
+                        style: const TextStyle(fontSize: 14)))
+              ]),
+              Row(children: [
+                Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                    decoration: GuiUtils.buildBoxDecorationInterval(),
+                    child: _buildDropdownMenu()),
+                Container(
+                    height: 50,
+                    //width: 130,
+                    margin: const EdgeInsets.only(left: 10),
+                    //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
+                    child: //SmartMqtt.instance.isSaved != true
+                        ElevatedButton(
+                      style: GuiUtils.buildElevatedButtonSettings(),
+                      onPressed: () {
+                        String? val = dropdownValue ?? alarmIntervalsList.first;
+                        saveInterval(val);
+                      },
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    )),
+              ]),
             ],
           ),
           const Divider(height: 20, color: Colors.transparent, thickness: 2),
@@ -138,14 +138,14 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   DropdownMenu<String> _buildDropdownMenu() {
     return DropdownMenu<String>(
       menuStyle: MenuStyle(
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-            const EdgeInsets.all(0)),
-
-        visualDensity: const VisualDensity(vertical: 2, horizontal: 3)
-      ),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              const EdgeInsets.all(0)),
+          visualDensity: const VisualDensity(vertical: 2, horizontal: 3)),
       //menuHeight: 30,
       textStyle: const TextStyle(color: Color.fromRGBO(20, 20, 120, 1)),
-      initialSelection: (dropdownValue!=null && dropdownValue!.isNotEmpty) ? dropdownValue : ShowAlarmTimeSettings.minutes10,
+      initialSelection: (dropdownValue != null && dropdownValue!.isNotEmpty)
+          ? dropdownValue
+          : ShowAlarmTimeSettings.minutes10,
       onSelected: (String? value) {
         // This is called when the user selects an item.
         debugPrint("-- 1 dropdown value: $dropdownValue");
@@ -163,12 +163,12 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
             style: ButtonStyle(
                 padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                     const EdgeInsets.only(left: 13)),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.white54)
-                ,overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
-surfaceTintColor:  MaterialStateProperty.all<Color>(Colors.green),
-
-                shadowColor: MaterialStateProperty.all<Color>(Colors.black)
-            ));
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white54),
+                overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
+                surfaceTintColor:
+                    MaterialStateProperty.all<Color>(Colors.green),
+                shadowColor: MaterialStateProperty.all<Color>(Colors.black)));
       }).toList(),
     );
   }
@@ -212,19 +212,20 @@ surfaceTintColor:  MaterialStateProperty.all<Color>(Colors.green),
     }); */
 
     debugPrint("saving interval settings.... $interval");
-/***
- * TODO: ce skenslas aplikacijo, ne dobi alarmInterval!!!
- * ko jo na novo odpres, interval ni shranjen!!
- *
- * units -> not set
- * ***/
+    /***
+     * TODO: ce skenslas aplikacijo, ne dobi alarmInterval!!!
+     * ko jo na novo odpres, interval ni shranjen!!
+     *
+     * units -> not set
+     * ***/
     /*SharedPreferences.getInstance().then((value) {
       String? v = value.getString("alarm_interval_setting");
       debugPrint("v: $v");
       dropdownValue = v;
     }); */
     dropdownValue = interval;
-    debugPrint("dropdown value from smartMqtt ${SmartMqtt.instance.alarmInterval}");
+    debugPrint(
+        "dropdown value from smartMqtt ${SmartMqtt.instance.alarmInterval}");
     Utils.getAlarmGeneralIntervalSettings().then((str) {
       Utils.setAlarmGeneralIntervalSettings(interval);
       debugPrint("getting interval....$str");

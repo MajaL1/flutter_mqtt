@@ -50,10 +50,6 @@ class _UserSettingsState extends State<UserSettings> {
   Widget build(BuildContext context) {
     debugPrint("calling build method user_settings.dart");
 
-    debugPrint("[[[[isSaved ${SmartMqtt.instance.isSaved.toString()}]]]]");
-    debugPrint(
-        "[[[[newSettingsMessageLoaded ${SmartMqtt.instance.newSettingsMessageLoaded.toString()}]]]]");
-
     return Scaffold(
       backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.SETTINGS),
