@@ -63,14 +63,41 @@ class Utils {
             userTopicList.add(deviceName + "/alarm");
           }
         }
-        /* if (topicData.name.contains("data")) {
-        userTopicList.add(deviceName + "/data");
-      } */
+        if (topicData.name.contains("data")) {
+          if (!userTopicList.contains(deviceName + "/data")) {
+            userTopicList.add(deviceName + "/data");
+          }
+        }
       }
     }
     return userTopicList;
   }
 
+
+  static Column showCircularProgressIndicator() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 200.0,
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 15,
+                    value: 1.0,
+                  ),
+                ),
+              ),
+              Center(child: Text("Getting user settings...")),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
   static bool currentSettingsContainNewSettings(
       String decodeMessage, SharedPreferences preferences) {
     String? parsedMqttSettings =

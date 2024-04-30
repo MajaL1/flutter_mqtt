@@ -32,7 +32,7 @@ class NotificationService {
     );
 
     await _localNotifications.initialize(initializationSettings,
-       // onDidReceiveNotificationResponse: onDidReceiveLocalNotification,
+       //onDidReceiveNotificationResponse: onDidReceiveLocalNotification,
         );
   }
 

@@ -380,30 +380,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }
   }
 
-  Column showCircularProgressIndicator() {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: 200.0,
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: Container(
-                  width: 200,
-                  height: 200,
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 15,
-                    value: 1.0,
-                  ),
-                ),
-              ),
-              Center(child: Text("Getting user settings...")),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+
 
   Future<String> _getNewUserSettingsList() async {
     String settings = "";
@@ -430,7 +407,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             "00000 snapshot.connectionState: ${snapshot.connectionState}");
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return showCircularProgressIndicator();
+          return Utils.showCircularProgressIndicator();
         }
         if (snapshot.hasData) {
           List<UserDataSettings>? editableSettingsList = snapshot.data;

@@ -62,7 +62,7 @@ class SmartMqtt extends ChangeNotifier {
   late bool isSaved = false;
   late bool newSettingsMessageLoaded = false;
   String newUserSettings = "";
-  late String newMqttData = "";
+  late Data newMqttData;
   String alarmInterval = "";
 
   void disconnect() {
@@ -138,6 +138,7 @@ class SmartMqtt extends ChangeNotifier {
     print('on Connected: EXAMPLE::Mosquitto client connected....');
     for (String topicName in topicList) {
       client.subscribe(topicName, MqttQos.atLeastOnce);
+      debugPrint("topicName: $topicName");
     }
     // client!.subscribe(topic3, MqttQos.atLeastOnce);
 
@@ -188,8 +189,8 @@ class SmartMqtt extends ChangeNotifier {
     preferences.clear(); */
 
     if (topicName!.contains("data")) {
-      if (!dataSet) {
-        Data? data = convertMessageToData(decodeMessage, topicName);
+      //if (!dataSet) {
+        Data? data = await convertMessageToData(decodeMessage, topicName);
         setDataListToPreferences(data!, preferences);
         //preferences.setString("data_mqtt", decodeMessage);
 
@@ -197,9 +198,13 @@ class SmartMqtt extends ChangeNotifier {
         debugPrint("from topic data $topicName");
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
+        debugPrint("data: ${data.toString()}");
+
         dataSet = true;
-        newMqttData = decodeMessage;
-      }
+        newMqttData = data;
+
+       // notifyListeners();
+      //}
     }
     /***  polnjenje objekta - settings ***/
     if (topicName.contains("settings")) {
@@ -504,7 +509,7 @@ class SmartMqtt extends ChangeNotifier {
     //}
   }
 
-  Future<String> getNewDataList() async {
+  Future<Data> getNewDataList() async {
     return newMqttData;
   }
 
@@ -552,17 +557,20 @@ class SmartMqtt extends ChangeNotifier {
   void setDataListToPreferences(Data newData, SharedPreferences preferences) {
     String? dataListStr = preferences.getString("data_mqtt_list");
     List? dataList;
-    if (dataListStr != null) {
+
+    // zaenkrat dodamo samo eno element na listo
+    /*if (dataListStr != null) {
       final jsonResult = jsonDecode(dataListStr!);
       dataList = Data.fromJsonList(jsonResult);
       dataList.add(newData);
-    } else {
+    } else { */
       dataList = [];
       dataList.add(newData);
-    }
+   // }
     String encodedData = json.encode(dataList);
+    debugPrint("encodedData:  $encodedData");
     preferences.setString("data_mqtt_list", encodedData);
-    debugPrint("setting data_mqtt_list $encodedData");
+    debugPrint("setting data_mqtt_list encodedData: $encodedData");
   }
 }
 

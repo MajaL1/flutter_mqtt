@@ -322,7 +322,7 @@ class GuiUtils {
   }
   static InputDecoration setInputDecoration(val) {
     return InputDecoration(
-        labelText: val,
+        //labelText: val,
         filled: true,
         fillColor: Colors.white,
         border: UnderlineInputBorder(

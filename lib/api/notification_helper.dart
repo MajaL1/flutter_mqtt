@@ -8,6 +8,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/widgets/show_alarm_time_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
@@ -48,14 +49,18 @@ class NotificationHelper extends StatelessWidget {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
 
+
+    //flutterLocalNotificationsPlugin.initialize(initializationSettings, onSe)
+
     if (Platform.isIOS || Platform.isAndroid) {
       await flutterLocalNotificationsPlugin.initialize(
         const InitializationSettings(
           iOS: DarwinInitializationSettings(),
           android: AndroidInitializationSettings('icon'),
-        ),
+        ), 
       );
     }
+    
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -67,7 +72,6 @@ class NotificationHelper extends StatelessWidget {
           // this will be executed when app is in foreground or background in separated isolate
           onStart: onStart,
           // auto start service
-
           autoStart: true,
           isForegroundMode: false,
           notificationChannelId: 'alarms',
@@ -81,7 +85,6 @@ class NotificationHelper extends StatelessWidget {
 
         // this will be executed when app is in foreground in separated isolate
         onForeground: onStart,
-
         // you have to enable background fetch capability on xcode project
         onBackground: onIosBackground,
           ),
@@ -155,6 +158,7 @@ class NotificationHelper extends StatelessWidget {
       "deviceName: $deviceName, sensor: $sensorAddress",
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
+      //actions: ,
       largeIcon: FilePathAndroidBitmap(bigPicture),
       importance: Importance.max,
       priority: Priority.high,
@@ -162,6 +166,7 @@ class NotificationHelper extends StatelessWidget {
       setAsGroupSummary: false,
       colorized: true,
       enableLights: true,
+
       /*styleInformation: const BigTextStyleInformation(
           '<b>Your</b> notification',
           htmlFormatBigText: true,
@@ -195,9 +200,21 @@ class NotificationHelper extends StatelessWidget {
         tz.TZDateTime.now(slovenia).add(Duration(seconds: 5)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+            UILocalNotificationDateInterpretation.absoluteTime
+    );
     //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
     //uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
+  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+    final String? payload = notificationResponse.payload;
+    if (notificationResponse.payload != null) {
+      debugPrint('notification payload: $payload');
+    }
+    //await Navigator.push(
+    //  context as BuildContext,
+    //  MaterialPageRoute<void>(builder: (context) => AlarmHistory()),
+    //);
   }
 
   @pragma('vm:entry-point')
