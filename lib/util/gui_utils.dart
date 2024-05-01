@@ -311,11 +311,12 @@ class GuiUtils {
     return InputDecoration(
         filled: true,
         fillColor: Colors.white,
+        contentPadding: EdgeInsets.only(left:3, right: 3),
         border: UnderlineInputBorder(
             borderSide: const BorderSide(color: Colors.grey, width: 1),
             borderRadius: BorderRadius.circular(14)),
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 1.0),
         ),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),

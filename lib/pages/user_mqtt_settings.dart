@@ -434,8 +434,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           debugPrint("END print editableSettingsList ");
           */
           return Container(
-            //color: Colors.lightBlueAccent,
+              color: Colors.white,
+
+              //color: Colors.lightBlueAccent,
               //alignment: Alignment.center,
+              //decoration: BoxDecoration(border: Border(
+              //  bottom: const BorderSide(color: Colors.black12, width: 8.5),
+              //),),
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: snapshot.data!.length,
@@ -472,18 +477,19 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                         padding: const EdgeInsets.only(
                             top: 30.0, bottom: 1.0, left: 0.0, right: 30.0),
                         child: Container(
-
+                            color: Colors.white,
                             //color: Colors.blueAccent.shade100.withAlpha(5),
-                            decoration: GuiUtils.buildBoxDecorationSettings(),
+                            //decoration: GuiUtils.buildBoxDecorationSettings(),
                             child: Wrap(children: [
+                              !previousSettingToChange ?
                               Container(
-                                  //color: Colors.tealAccent,
+                                  color: Colors.white70,
                                   padding: const EdgeInsets.only(left: 15, bottom: 5),
                                   alignment: Alignment.center,
                                   // This is ugly hack: previousSettingToChange
                                   child: settingToChange != "u"
                                       ? Wrap(children: [
-                                         !previousSettingToChange ?
+                                         //!previousSettingToChange ?
                                           // index % 2 == 0
                                           //        ?
                                           Container(
@@ -494,6 +500,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                 SizedBox(
                                                     // padding: EdgeInsets.all(5),
                                                     child: Wrap(children: [
+                                                  const Divider(height: 30, color: Colors.black54,),
                                                   const Text(
                                                     "Device:  ",
                                                     style: TextStyle(
@@ -555,9 +562,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       sensorAddress),
                                                 ]))
                                               ]))
-                                          :  Text(""),
+                                          //:  Text(""),
                                         ])
-                                      : Text("")),
+                                      : Text("")): Text(""),
                               Container(
                                   padding: const EdgeInsets.only(left: 15),
                                   child: Wrap(children: [
@@ -611,7 +618,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }
 
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
-    return Wrap(
+    return Column(
       children: [
         Row(children: [
           SizedBox(
