@@ -239,10 +239,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
     return Row(children: [
       const Text(
-        "Friendly name:",
+        "Friendly name:  ",
         style: TextStyle(
           fontSize: 14,
           letterSpacing: 0.2,
+          //color: Color.fromRGBO(0, 0, 190, 1)//.shade900,
           //fontWeight: FontWeight.bold,
         ),
       ),
@@ -295,8 +296,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             builder: (BuildContext context, bool val, Widget? child) =>
                 IconButton(
                   //style: isEnabledSave
-                   //   ? GuiUtils.buildElevatedButtonSettings()
-                   //   : null,
+                  //   ? GuiUtils.buildElevatedButtonSettings()
+                  //   : null,
                   onPressed: !notifier.value
                       ? null
                       : () {
@@ -380,8 +381,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }
   }
 
-
-
   Future<String> _getNewUserSettingsList() async {
     String settings = "";
     settings = await Provider.of<SmartMqtt>(context, listen: true)
@@ -390,6 +389,20 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       return settings;
     }
     return "";
+  }
+
+  //(sensorAddress, snapshot.data!, index)
+  bool getPreviousSettingToChange(
+      String sensorAddress, var snapshot, int index) {
+    if (index < 1) {
+      return false;
+    } else if (snapshot![index].sensorAddress ==
+        snapshot![index - 1].sensorAddress) {
+      debugPrint("getPreviousSettingToChange: true");
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Widget _buildMqttSettingsView() {
@@ -421,6 +434,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           debugPrint("END print editableSettingsList ");
           */
           return Container(
+            //color: Colors.lightBlueAccent,
+              //alignment: Alignment.center,
               child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: snapshot.data!.length,
@@ -434,6 +449,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
                     String? deviceName = snapshot.data![index].deviceName;
                     String? settingToChange = item.editableSetting ?? "";
+                    bool previousSettingToChange = getPreviousSettingToChange(
+                        sensorAddress, snapshot.data!, index);
                     String? value = "";
                     String? friendlyName = item.friendlyName;
 
@@ -445,7 +462,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     }
 
                     String unitText = UnitsConstants.getUnits(u);
-                    bool savePressed = false;
                     TextEditingController controller = TextEditingController();
 
                     ///debugPrint("000000000000000 build SingleChildScroollView: sensorAddress: $sensorAddress deviceName: $deviceName ");
@@ -456,33 +472,30 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                         padding: const EdgeInsets.only(
                             top: 30.0, bottom: 1.0, left: 0.0, right: 30.0),
                         child: Container(
-                            //color: Colors.blueGrey,
+
+                            //color: Colors.blueAccent.shade100.withAlpha(5),
                             decoration: GuiUtils.buildBoxDecorationSettings(),
-                            child: Column(children: [
+                            child: Wrap(children: [
                               Container(
                                   //color: Colors.tealAccent,
-                                  padding: const EdgeInsets.only(left: 15),
+                                  padding: const EdgeInsets.only(left: 15, bottom: 5),
                                   alignment: Alignment.center,
-                                  //decoration: //index % 2 == 0
-                                  //?
-                                  //GuiUtils.buildBoxDecorationSettings(),
-                                  //: null,
-                                  //padding: const EdgeInsets.only(bottom: 0, left: 10),
-                                  //padding: EdgeInsets.all(5),
+                                  // This is ugly hack: previousSettingToChange
                                   child: settingToChange != "u"
                                       ? Wrap(children: [
+                                         !previousSettingToChange ?
                                           // index % 2 == 0
                                           //        ?
                                           Container(
                                               // color: Colors.red,
                                               alignment: Alignment.center,
-                                              //padding: const EdgeInsets.all(15),
+                                              padding: const EdgeInsets.only(top:15),
                                               child: Wrap(children: [
                                                 SizedBox(
                                                     // padding: EdgeInsets.all(5),
                                                     child: Wrap(children: [
                                                   const Text(
-                                                    "Device: ",
+                                                    "Device:  ",
                                                     style: TextStyle(
                                                       fontSize: 16,
                                                       letterSpacing: 0.3,
@@ -542,24 +555,22 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       sensorAddress),
                                                 ]))
                                               ]))
-                                          //: const Text(""),
+                                          :  Text(""),
                                         ])
-                                      : Container()),
-                              Container(height: 2),
+                                      : Text("")),
                               Container(
                                   padding: const EdgeInsets.only(left: 15),
-                                  child: Row(children: [
+                                  child: Wrap(children: [
                                     settingToChange != Constants.U_JSON
                                         ? _buildEditableSettingsTest2(
                                             sensorAddress,
                                             deviceName,
                                             index,
-                                            u,
                                             settingToChange,
                                             value,
                                             controller,
                                             item,
-                                            savePressed,
+                                            //savePressed,
                                             textControllerList[index])
                                         : Container(height: 0)
                                   ]))
@@ -580,17 +591,18 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       String sensorAddress,
       String? deviceName,
       int index,
-      int? u,
+      //int? u,
       String settingToChange,
       String value,
       TextEditingController controller,
       UserDataSettings item,
-      bool savePressed,
+      //bool savePressed,
       TextEditingController textController) {
     String settingText = "";
     bool isEnabledSave = false;
 //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
-    //debugPrint("00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange, u: $u");
+    debugPrint(
+        "00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange");
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
       settingText = "High alarm:  ";
     }
@@ -599,7 +611,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }
 
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
-    return Stack(
+    return Wrap(
       children: [
         Row(children: [
           SizedBox(
@@ -618,7 +630,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     fontSize: 14,
                     //fontWeight: FontWeight.bold
                   ))),
-          //Container(width: 5),
+          Container(width: 5),
           SizedBox(
               //height: 50,
               width: MediaQuery.of(context).size.width / 5,
@@ -647,8 +659,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     return null;
                   },
                   onChanged: (val) {
-                    debugPrint(
-                        "on changed, textController.text: ${textController.text}, val: ${val}");
+                    //debugPrint(
+                    //    "on changed, textController.text: ${textController.text}, val: ${val}");
                     if (val == "") {
                       isEnabledSave = false;
                       notifier.value = isEnabledSave;
@@ -691,7 +703,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                 },
               ),
             ]),
-          )
+          ),
         ]),
       ],
     );
