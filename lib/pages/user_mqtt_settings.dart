@@ -307,7 +307,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
                           notifier.value = false;
                         },
-                  icon: isEnabledSave ? const Icon(Icons.check) : Icon(null),
+                  icon: isEnabledSave ? const Icon(Icons.check,size: 35,) : Icon(null),
                 ))
       ])
     ]);
@@ -481,90 +481,99 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                             //color: Colors.blueAccent.shade100.withAlpha(5),
                             //decoration: GuiUtils.buildBoxDecorationSettings(),
                             child: Wrap(children: [
-                              !previousSettingToChange ?
-                              Container(
-                                  color: Colors.white70,
-                                  padding: const EdgeInsets.only(left: 15, bottom: 5),
-                                  alignment: Alignment.center,
-                                  // This is ugly hack: previousSettingToChange
-                                  child: settingToChange != "u"
-                                      ? Wrap(children: [
-                                         //!previousSettingToChange ?
-                                          // index % 2 == 0
-                                          //        ?
-                                          Container(
-                                              // color: Colors.red,
-                                              alignment: Alignment.center,
-                                              padding: const EdgeInsets.only(top:15),
-                                              child: Wrap(children: [
-                                                SizedBox(
-                                                    // padding: EdgeInsets.all(5),
-                                                    child: Wrap(children: [
-                                                  const Divider(height: 30, color: Colors.black54,),
-                                                  const Text(
-                                                    "Device:  ",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      letterSpacing: 0.3,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "$deviceName",
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      fontSize: 16,
-                                                      letterSpacing: 0.3,
-                                                    ),
-                                                  ),
-                                                  Row(children: [
-                                                    const SizedBox(
-                                                        child: Text(
-                                                            "Sensor address:  ",
-                                                            style: TextStyle(
-                                                                letterSpacing:
-                                                                    0.3,
-                                                                fontSize: 16))),
+                              !previousSettingToChange
+                                  ? Container(
+                                      color: Colors.white70,
+                                      padding: const EdgeInsets.only(
+                                          left: 15, bottom: 5),
+                                      alignment: Alignment.center,
+                                      // This is ugly hack: previousSettingToChange
+                                      child: settingToChange != "u"
+                                          ? Wrap(children: [
+                                              //!previousSettingToChange ?
+                                              // index % 2 == 0
+                                              //        ?
+                                              Container(
+                                                  // color: Colors.red,
+                                                  alignment: Alignment.center,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 15),
+                                                  child: Wrap(children: [
                                                     SizedBox(
-                                                        child: Text(
-                                                            sensorAddress,
-                                                            style:
-                                                                const TextStyle(
-                                                              letterSpacing:
-                                                                  0.3,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                            )))
-                                                  ]),
-                                                  Row(children: [
-                                                    const SizedBox(
-                                                        child: Text(
-                                                      "units:  ",
-                                                      style: TextStyle(
-                                                          fontSize: 16),
-                                                    )),
-                                                    SizedBox(
-                                                        child: Text(
-                                                      unitText,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                        fontSize: 16,
-                                                        letterSpacing: 0.3,
+                                                        // padding: EdgeInsets.all(5),
+                                                        child: Wrap(children: [
+                                                      const Divider(
+                                                        height: 30,
+                                                        color: Colors.black54,
                                                       ),
-                                                    ))
-                                                  ]),
-                                                  _buildFriendlyNameView(
-                                                      friendlyName,
-                                                      deviceName,
-                                                      sensorAddress),
-                                                ]))
-                                              ]))
-                                          //:  Text(""),
-                                        ])
-                                      : Text("")): Text(""),
+                                                      const Text(
+                                                        "Device:  ",
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.3,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "$deviceName",
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.3,
+                                                        ),
+                                                      ),
+                                                      Row(children: [
+                                                        const SizedBox(
+                                                            child: Text(
+                                                                "Sensor address:  ",
+                                                                style: TextStyle(
+                                                                    letterSpacing:
+                                                                        0.3,
+                                                                    fontSize:
+                                                                        16))),
+                                                        SizedBox(
+                                                            child: Text(
+                                                                sensorAddress,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  letterSpacing:
+                                                                      0.3,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                )))
+                                                      ]),
+                                                      Row(children: [
+                                                        const SizedBox(
+                                                            child: Text(
+                                                          "units:  ",
+                                                          style: TextStyle(
+                                                              fontSize: 16),
+                                                        )),
+                                                        SizedBox(
+                                                            child: Text(
+                                                          unitText,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            fontSize: 16,
+                                                            letterSpacing: 0.3,
+                                                          ),
+                                                        ))
+                                                      ]),
+                                                      _buildFriendlyNameView(
+                                                          friendlyName,
+                                                          deviceName,
+                                                          sensorAddress),
+                                                    ]))
+                                                  ]))
+                                              //:  Text(""),
+                                            ])
+                                          : Text(""))
+                                  : Text(""),
                               Container(
                                   padding: const EdgeInsets.only(left: 15),
                                   child: Wrap(children: [
@@ -577,6 +586,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                             value,
                                             controller,
                                             item,
+                                            unitText,
                                             //savePressed,
                                             textControllerList[index])
                                         : Container(height: 0)
@@ -603,6 +613,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       String value,
       TextEditingController controller,
       UserDataSettings item,
+      String unitText,
+
       //bool savePressed,
       TextEditingController textController) {
     String settingText = "";
@@ -611,46 +623,46 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     debugPrint(
         "00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange");
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
-      settingText = "High alarm:  ";
+      settingText = "High alarm ($unitText): ";
     }
     if (settingToChange.compareTo(Constants.LO_ALARM_JSON) == 0) {
-      settingText = "Low alarm:  ";
+      settingText = "Low alarm ($unitText): ";
     }
 
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
-    return Column(
+    return Wrap(
       children: [
-        Row(children: [
+       Row (children: [
           SizedBox(
               // padding:
               // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
               //  height: 40,
               //alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width / 4,
+              width: MediaQuery.of(context).size.width / 3,
               child: Text(settingText,
                   maxLines: 1,
                   softWrap: false,
-                  style: const TextStyle(
-                    // color: Colors.indigo,
-                    color: Colors.black,
-                    // letterSpacing: 4,
-                    fontSize: 14,
-                    //fontWeight: FontWeight.bold
-                  ))),
-          Container(width: 5),
+                style: const TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(00, 20, 20, 80),
+                    fontSize: 14),)),
+         //Container(alignment: Alignment.center, child: Text(unitText)),
+         //Container(width: 5),
           SizedBox(
               //height: 50,
               width: MediaQuery.of(context).size.width / 5,
               child: TextFormField(
-                  decoration: GuiUtils.setInputDecoration(value),
+                  decoration: GuiUtils.setInputDecorationFriendlyName(),
+                 // decoration: GuiUtils.setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(5),
+                    LengthLimitingTextInputFormatter(4),
                   ],
                   //enableInteractiveSelection: false,
                   showCursor: false,
                   controller: textController,
-                  autovalidateMode: AutovalidateMode.always,
+                  //autovalidateMode: AutovalidateMode.always,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       isEnabledSave = false;
@@ -684,10 +696,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     }
                     debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
                   })),
-          SizedBox(
+
+         SizedBox(
             // height: 50,
             width: 100,
-            child: Column(children: [
+            child: Row(children: [
               //  _notifier.value ?
               ValueListenableBuilder(
                 valueListenable: notifier,
@@ -697,14 +710,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                       //? GuiUtils.buildElevatedButtonSettings()
                       //: null,
                       icon:
-                          isEnabledSave ? const Icon(Icons.check) : Icon(null),
+                          isEnabledSave ? const Icon(Icons.check, size: 35,) : Icon(null),
                       onPressed: !notifier.value
                           ? null
                           : () {
                               saveMqttSettings(deviceName!, sensorAddress, item,
                                   textController, settingToChange);
                               isEnabledSave = false;
-
                               notifier.value = false;
                             });
                 },

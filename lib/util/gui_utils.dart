@@ -311,7 +311,7 @@ class GuiUtils {
     return InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.only(left:3, right: 3),
+        contentPadding: const EdgeInsets.only(left:3, right: 3),
         border: UnderlineInputBorder(
             borderSide: const BorderSide(color: Colors.grey, width: 1),
             borderRadius: BorderRadius.circular(14)),
@@ -325,6 +325,7 @@ class GuiUtils {
   static InputDecoration setInputDecoration(val) {
     return InputDecoration(
         //labelText: val,
+        contentPadding: const EdgeInsets.only(left:3, right: 3),
         filled: true,
         fillColor: Colors.white,
         border: UnderlineInputBorder(
