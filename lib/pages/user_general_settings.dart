@@ -85,7 +85,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   }
 
   Widget _buildUserGeneralSettings() {
-    debugPrint("-- 0 dropdown value: $dropdownValue");
+    //debugPrint("-- 0 dropdown value: $dropdownValue");
 
     return Container(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 15),
@@ -100,17 +100,17 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
               // const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
               Row(children: [
                 Container(
-                    child: Text("Alarm interval:",
-                        style: const TextStyle(fontSize: 14)))
+                    child: const Text("Alarm interval:",
+                        style:  TextStyle(fontSize: 14)))
               ]),
               Row(children: [
                 Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                        const EdgeInsets.symmetric(horizontal: 0.1, vertical: 0.1),
                     decoration: GuiUtils.buildBoxDecorationInterval(),
                     child: _buildDropdownMenu()),
                 Container(
-                    height: 50,
+                    height: 35,
                     //width: 130,
                     margin: const EdgeInsets.only(left: 10),
                     //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
@@ -140,9 +140,11 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       menuStyle: MenuStyle(
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
               const EdgeInsets.all(0)),
-          visualDensity: const VisualDensity(vertical: 2, horizontal: 3)),
+
+          //visualDensity: const VisualDensity(vertical: 0, horizontal: 3)
+      ),
       //menuHeight: 30,
-      textStyle: const TextStyle(color: Color.fromRGBO(20, 20, 120, 1)),
+      textStyle: const TextStyle(color: Colors.black87),//Color.fromRGBO(20, 20, 120, 1)),
       initialSelection: (dropdownValue != null && dropdownValue!.isNotEmpty)
           ? dropdownValue
           : ShowAlarmTimeSettings.minutes10,
@@ -154,7 +156,15 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
           dropdownValue = value!;
         });
       },
-
+      inputDecorationTheme: InputDecorationTheme(
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        constraints: BoxConstraints.tight(const
+        Size.fromHeight(50)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+        ),
+      ),
       dropdownMenuEntries:
           alarmIntervalsList.map<DropdownMenuEntry<String>>((String value) {
         return DropdownMenuEntry<String>(
@@ -165,36 +175,15 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                     const EdgeInsets.only(left: 13)),
                 backgroundColor:
                     MaterialStateProperty.all<Color>(Colors.white54),
-                overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
-                surfaceTintColor:
-                    MaterialStateProperty.all<Color>(Colors.green),
-                shadowColor: MaterialStateProperty.all<Color>(Colors.black)));
+                //overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
+               // surfaceTintColor:
+                 //   MaterialStateProperty.all<Color>(Colors.green),
+               // shadowColor: MaterialStateProperty.all<Color>(Colors.black)
+            ));
       }).toList(),
     );
   }
 
-  /* Widget _buildDropdownButtonField1(alarmIntervalList) {
-    return DropdownButtonFormField(
-      decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(30.0),
-            ),
-          ),
-          filled: true,
-          // hintStyle: TextStyle(color: Colors.grey[800]),
-          //hintText: "Name",
-          fillColor: Colors.blue[200]),
-      value: dropdownValue,
-      onChanged: (value) {
-        setState(() {
-          dropdownValue = value as String?;
-        });
-      },
-      items: [],
-    );
-
-  } */
 
   SharedPreferences? preferences;
 

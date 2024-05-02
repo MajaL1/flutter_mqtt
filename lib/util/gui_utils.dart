@@ -7,6 +7,7 @@ class GuiUtils {
     return InputDecoration(
         filled: true,
         fillColor: Colors.white,
+        contentPadding: EdgeInsets.zero,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
           borderSide: const BorderSide(color: Colors.black12, width: 8.5),
@@ -21,7 +22,7 @@ class GuiUtils {
           borderSide: const BorderSide(
               color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
-        labelStyle: const TextStyle(letterSpacing: 0.8),
+        labelStyle: const TextStyle(),
         hintStyle: const TextStyle(fontSize: 12));
   }
 
@@ -77,9 +78,9 @@ class GuiUtils {
             offset: const Offset(0, 1), // changes position of shadow
           ),
         ],
-        color: const Color.fromRGBO(222, 242, 255, 1),
+        color: const Color.fromRGBO(230, 249, 255, 0.7019607843137254),
         border:
-            const Border(bottom: BorderSide(color: Colors.indigo, width: 3)));
+            const Border(bottom: BorderSide(color: Colors.grey, width: 1)));
   }
 
   static BoxDecoration buildBoxDecoration() {

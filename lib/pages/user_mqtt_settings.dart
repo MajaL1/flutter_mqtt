@@ -119,14 +119,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     // debugPrint("got Mqtt Data: $dataMqtt");
   }
 
-  /* Widget _connectToTopic() {
-    if (_connectMqtt == null) {
-      _connectMqtt =
-          _clientConnectToTopic(); //Container(); // here put whatever your function used to be.
-    }
-    return _connectMqtt!;
-  } */
-
   @override
   Widget build(BuildContext context) {
     debugPrint("calling build method user_settings.dart");
@@ -159,63 +151,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
-  Column _buildIntervalSpinBox(BuildContext context) {
-    int value;
-    return Column(
-      //leading: const Icon(Icons.exit_to_app, color: Colors.black87),
-      children: [
-        const SizedBox(
-            child: (Text("Alarm interval (in minutes)",
-                style: TextStyle(
-                    color: Colors.indigo,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14)))),
-        Row(children: [
-          const SizedBox(
-            width: 30,
-            height: 5,
-          ),
-          SizedBox(
-              width: 150,
-              height: 50,
-              child: SpinBox(
-                iconSize: 18,
-                value: 10,
-                max: 60,
-                min: 5,
-                readOnly: true,
-                decoration: GuiUtils.buildAlarmIntervalDecoration(),
-                onChanged: (val) {
-                  value = val as int;
-                  debugPrint(val as String?);
-                },
-              )),
-          SizedBox(
-            width: 20,
-            height: 5,
-          ),
-          Container(
-              height: 20,
-              width: MediaQuery.of(context).size.width / 5,
-              margin: const EdgeInsets.only(right: 10),
-              //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
-              child: //SmartMqtt.instance.isSaved != true
-                  ElevatedButton(
-                style: GuiUtils.buildElevatedButtonSettings(),
-                onPressed: () {
-                  // saveInterval(value);
-                },
-                child: const Text(
-                  "Save",
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              )),
-        ])
-      ],
-    );
-  }
-
-  BoxDecoration buildBoxDecoration() {
+   BoxDecoration buildBoxDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
@@ -504,8 +440,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                         // padding: EdgeInsets.all(5),
                                                         child: Wrap(children: [
                                                       const Divider(
-                                                        height: 30,
-                                                        color: Colors.black54,
+                                                        height: 45,
+                                                        color: Colors.grey,
                                                       ),
                                                       const Text(
                                                         "Device:  ",

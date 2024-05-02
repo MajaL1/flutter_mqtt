@@ -51,7 +51,7 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("calling build method user_settings.dart");
 
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+     // backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.SETTINGS),
       drawer: const NavDrawer.base(),
       body: const SingleChildScrollView(

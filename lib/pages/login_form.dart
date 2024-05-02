@@ -242,7 +242,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               wordSpacing: 5.9,
                                               fontWeight: FontWeight.w900,
                                               fontStyle: FontStyle.normal,
-                                              fontFamily: 'San Frencisco',
+                                              fontFamily: 'Roboto',
                                               fontSize: 20),
                                         ),
                                         Container(
