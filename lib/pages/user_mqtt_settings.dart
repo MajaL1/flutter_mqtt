@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
@@ -151,7 +150,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
-   BoxDecoration buildBoxDecoration() {
+  BoxDecoration buildBoxDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
       borderRadius: BorderRadius.circular(9),
@@ -243,7 +242,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
                           notifier.value = false;
                         },
-                  icon: isEnabledSave ? const Icon(Icons.check,size: 35,) : Icon(null),
+                  icon: isEnabledSave
+                      ? const Icon(
+                          Icons.check,
+                          size: 35,
+                        )
+                      : Icon(null),
                 ))
       ])
     ]);
@@ -436,7 +440,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       const EdgeInsets.only(
                                                           top: 15),
                                                   child: Wrap(children: [
-                                                    SizedBox(
+                                                    Container(
+                                                        // color:  const Color.fromRGBO(108, 165, 22, 60),
                                                         // padding: EdgeInsets.all(5),
                                                         child: Wrap(children: [
                                                       const Divider(
@@ -446,6 +451,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       const Text(
                                                         "Device:  ",
                                                         style: TextStyle(
+                                                          fontFamily:
+                                                              "Roboto Regular",
                                                           fontSize: 16,
                                                           letterSpacing: 0.3,
                                                         ),
@@ -457,6 +464,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                               FontWeight.w800,
                                                           fontSize: 16,
                                                           letterSpacing: 0.3,
+                                                          //217,334, 243
+                                                          backgroundColor:
+                                                              Color.fromRGBO(
+                                                                  217,
+                                                                  244,
+                                                                  243,
+                                                                  95),
                                                         ),
                                                       ),
                                                       Row(children: [
@@ -479,6 +493,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w800,
+                                                                  backgroundColor: Color.fromRGBO(
+                                                                          217,
+                                                                          234,
+                                                                          243,
+                                                                          95),
                                                                 )))
                                                       ]),
                                                       Row(children: [
@@ -568,29 +587,31 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
     return Wrap(
       children: [
-       Row (children: [
+        Row(children: [
           SizedBox(
               // padding:
               // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
               //  height: 40,
               //alignment: Alignment.center,
               width: MediaQuery.of(context).size.width / 3,
-              child: Text(settingText,
-                  maxLines: 1,
-                  softWrap: false,
+              child: Text(
+                settingText,
+                maxLines: 1,
+                softWrap: false,
                 style: const TextStyle(
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(00, 20, 20, 80),
-                    fontSize: 14),)),
-         //Container(alignment: Alignment.center, child: Text(unitText)),
-         //Container(width: 5),
+                    fontSize: 14),
+              )),
+          //Container(alignment: Alignment.center, child: Text(unitText)),
+          //Container(width: 5),
           SizedBox(
               //height: 50,
               width: MediaQuery.of(context).size.width / 5,
               child: TextFormField(
                   decoration: GuiUtils.setInputDecorationFriendlyName(),
-                 // decoration: GuiUtils.setInputDecoration(value),
+                  // decoration: GuiUtils.setInputDecoration(value),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(4),
@@ -633,7 +654,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
                   })),
 
-         SizedBox(
+          SizedBox(
             // height: 50,
             width: 100,
             child: Row(children: [
@@ -645,8 +666,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                       //style: isEnabledSave
                       //? GuiUtils.buildElevatedButtonSettings()
                       //: null,
-                      icon:
-                          isEnabledSave ? const Icon(Icons.check, size: 35,) : Icon(null),
+                      icon: isEnabledSave
+                          ? const Icon(
+                              Icons.check,
+                              size: 35,
+                            )
+                          : Icon(null),
                       onPressed: !notifier.value
                           ? null
                           : () {

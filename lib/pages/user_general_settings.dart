@@ -49,7 +49,8 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   SingleChildScrollView buildUserGeneralSettings() {
     return SingleChildScrollView(
       //body: SingleChildScrollView(
-      child: Column(children: <Widget>[
+      child: Column(
+          children: <Widget>[
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
         ),
@@ -90,6 +91,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     return Container(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 15),
       alignment: Alignment.center,
+      color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
