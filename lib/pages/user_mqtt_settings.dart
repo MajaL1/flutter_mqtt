@@ -467,9 +467,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                           //217,334, 243
                                                           backgroundColor:
                                                               Color.fromRGBO(
-                                                                  217,
-                                                                  244,
-                                                                  243,
+                                                                  226,
+                                                                  239,
+                                                                  250,
                                                                   95),
                                                         ),
                                                       ),
@@ -493,10 +493,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w800,
-                                                                  backgroundColor: Color.fromRGBO(
-                                                                          217,
-                                                                          234,
-                                                                          243,
+                                                                      backgroundColor:
+                                                                      Color.fromRGBO(
+                                                                          226,
+                                                                          239,
+                                                                          250,
                                                                           95),
                                                                 )))
                                                       ]),
