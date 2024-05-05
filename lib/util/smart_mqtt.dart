@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt_test/util/data_smart_mqtt.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +27,6 @@ class SmartMqtt extends ChangeNotifier {
   late String currentTopic;
 
   int messageCount = 0;
-  bool dataSet = false;
 
   MQTTAppConnectionState? currentState; //= MQTTAppConnectionState.disconnected;
 
@@ -189,8 +189,15 @@ class SmartMqtt extends ChangeNotifier {
     preferences.clear(); */
 
     if (topicName!.contains("data")) {
-      //if (!dataSet) {
-        Data? data = await convertMessageToData(decodeMessage, topicName);
+      /********************************/
+      // DataSmartMqtt implementira notifierja za getNewData
+      DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
+
+     await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
+
+
+      /********************************/
+      /*  Data? data = await convertMessageToData(decodeMessage, topicName);
         setDataListToPreferences(data!, preferences);
         //preferences.setString("data_mqtt", decodeMessage);
 
@@ -199,10 +206,8 @@ class SmartMqtt extends ChangeNotifier {
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         debugPrint("data: ${data.toString()}");
-
-        dataSet = true;
         newMqttData = data;
-
+*/
        // notifyListeners();
       //}
     }
@@ -259,6 +264,7 @@ class SmartMqtt extends ChangeNotifier {
         if (alarmInterval == "") {
           debugPrint("+++++alarmInterval == ''");
         }
+        // ce ni prazen in ce ni izbrano, da prikaze vse alarme
         if (alarmInterval != "" && alarmInterval != ShowAlarmTimeSettings.all) {
           timeIntervalMinutes = _getIntervalFromPreferences(alarmInterval);
           debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
@@ -310,8 +316,10 @@ class SmartMqtt extends ChangeNotifier {
             }
           });
         }
+        // ce izbere vse alarme
         if (alarmInterval == ShowAlarmTimeSettings.all) {
-          // prikazi vse, await NotificationHelper.sendMessage(currentAlarmList.first);
+          debugPrint("alarm interval = all, showing alarm");
+          await NotificationHelper.sendMessage(currentAlarmList.first);
         }
       }
     }

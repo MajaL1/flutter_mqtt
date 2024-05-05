@@ -10,6 +10,8 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt_test/util/data_smart_mqtt.dart';
+import 'package:mqtt_test/util/settings_smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:provider/provider.dart';
@@ -142,7 +144,7 @@ void onStart(ServiceInstance service) async {
   //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   //  FlutterLocalNotificationsPlugin();
 
-  SmartMqtt.instance.addListener(() {});
+  //SmartMqtt.instance.addListener(() {});
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
@@ -442,8 +444,8 @@ class _NotificationsAppState extends State<NotificationsApp> {
         providers: [
           //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
           ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
-          ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
-
+          ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
+         // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
         ],
         builder: (context, child) => Builder(builder: (context) {
               //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);

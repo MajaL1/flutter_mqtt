@@ -167,7 +167,7 @@ class Data {
             if (key1 != null) {
               value[key1];
               int value1 = value[key1];
-              print("key1: $key1, value1: $value1");
+            //  print("key1: $key1, value1: $value1");
               if (key1 == "t") {
                 t = value1;
               }

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../model/data.dart';
+import '../util/data_smart_mqtt.dart';
 import '../util/utils.dart';
 
 class DataPage extends StatefulWidget {
@@ -76,9 +77,9 @@ class _DataState extends State<DataPage> {
   }
 
   Future<Data?> _getNewDataList() async {
-    Data data;
+    Data? data;
     data =
-        await Provider.of<SmartMqtt>(context, listen: true).getNewDataList();
+        await Provider.of<DataSmartMqtt>(context, listen: true).getNewDataList();
     debugPrint("^^^^^ data: % $data");
 
     if (data != null) {

@@ -47,8 +47,9 @@ class DataSmartMqtt extends ChangeNotifier {
 
     setNewMqttData(data);
      //newMqttData = data;
-    // notifyListeners();
-  }
+    notifyListeners();
+
+   }
 
   static Data? convertMessageToData(String message, String deviceName) {
     String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
@@ -78,7 +79,7 @@ class DataSmartMqtt extends ChangeNotifier {
     dataList.add(newData);
     // }
     String encodedData = json.encode(dataList);
-    debugPrint("encodedData:  $encodedData");
+    debugPrint("encodedData data:  $encodedData");
     preferences.setString("data_mqtt_list", encodedData);
     debugPrint("setting data_mqtt_list encodedData: $encodedData");
   }
@@ -86,47 +87,14 @@ class DataSmartMqtt extends ChangeNotifier {
    void setNewMqttData(Data data) {
     newMqttData = data;
   }
+
+  Future<Data?> getNewDataList() async {
+    return newMqttData;
+  }
 }
 
 
 
 
-
-
-
-
-
-  Data? convertMessageToData(String message, String deviceName) {
-    String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
-    Map<String, dynamic> dataStr = json.decode(decodeMessage);
-
-    Data? data = Data().getData(dataStr);
-    // Data data = json.decode(dataStr);
-    data?.deviceName = deviceName.split("/data").first;
-
-    debugPrint(
-        "converting data object...${data?.deviceName}, ${data?.sensorAddress}, ${data?.typ}, ${data?.t}");
-
-    return data;
-  }
-
-  void setDataListToPreferences(Data newData, SharedPreferences preferences) {
-    String? dataListStr = preferences.getString("data_mqtt_list");
-    List? dataList;
-
-    // zaenkrat dodamo samo eno element na listo
-    /*if (dataListStr != null) {
-      final jsonResult = jsonDecode(dataListStr!);
-      dataList = Data.fromJsonList(jsonResult);
-      dataList.add(newData);
-    } else { */
-      dataList = [];
-      dataList.add(newData);
-   // }
-    String encodedData = json.encode(dataList);
-    debugPrint("encodedData:  $encodedData");
-    preferences.setString("data_mqtt_list", encodedData);
-    debugPrint("setting data_mqtt_list encodedData: $encodedData");
-  }
 
 
