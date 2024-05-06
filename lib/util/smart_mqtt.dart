@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt_test/model/alarm_interval_setting.dart';
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +54,6 @@ class SmartMqtt extends ChangeNotifier {
     _instance.username = username;
     _instance.mqttPass = mqttPass;
     _instance.topicList = topicList;
-    //_instance.initializeMQTTClient();
     debugPrint("SMARTMQTT");
     return _instance;
   }
@@ -264,10 +264,19 @@ class SmartMqtt extends ChangeNotifier {
         if (alarmInterval == "") {
           debugPrint("+++++alarmInterval == ''");
         }
+
+
         // ce ni prazen in ce ni izbrano, da prikaze vse alarme
-        if (alarmInterval != "" && alarmInterval != ShowAlarmTimeSettings.all) {
+        if (alarmInterval != "") {
           timeIntervalMinutes = _getIntervalFromPreferences(alarmInterval);
           debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
+
+          bool showAlarm = false;
+
+
+        if(alarmInterval == ShowAlarmTimeSettings.all){
+           showAlarm = true;
+        }
 
           // dobi zadnji datum od alarma iz naprave iz historija
           _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName,
@@ -275,7 +284,6 @@ class SmartMqtt extends ChangeNotifier {
               .then((value) async {
             // primerjaj zadnji alarm s trenutnim casom
             // trenutni cas - zadnji alarm
-            bool showAlarm = false;
             debugPrint(
                 "+++++ value: $value for device ${currentAlarmList.first.deviceName} ${currentAlarmList.first.sensorAddress}");
             if (value != null) {
@@ -315,11 +323,6 @@ class SmartMqtt extends ChangeNotifier {
               await NotificationHelper.sendMessage(currentAlarmList.first);
             }
           });
-        }
-        // ce izbere vse alarme
-        if (alarmInterval == ShowAlarmTimeSettings.all) {
-          debugPrint("alarm interval = all, showing alarm");
-          await NotificationHelper.sendMessage(currentAlarmList.first);
         }
       }
     }

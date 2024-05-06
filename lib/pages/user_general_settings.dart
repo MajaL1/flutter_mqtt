@@ -48,6 +48,8 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   SingleChildScrollView buildUserGeneralSettings() {
     return SingleChildScrollView(
+      //color: Colors.white,
+
       //body: SingleChildScrollView(
       child: Column(
           children: <Widget>[
@@ -55,7 +57,8 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
           padding: EdgeInsets.symmetric(horizontal: 15),
         ),
         // const Divider(height: 1, color: Colors.black12, thickness: 5),
-        Container(height: 30),
+        Container(height: 30,         color: Colors.white,
+        ),
         const Text("General settings ",
             style: TextStyle(
                 color: Colors.black,
