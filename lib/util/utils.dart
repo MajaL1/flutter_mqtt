@@ -338,6 +338,7 @@ class Utils {
 
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
+
         parsedMqttSettingsList =
             UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
 

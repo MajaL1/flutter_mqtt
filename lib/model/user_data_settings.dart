@@ -74,7 +74,7 @@ class UserDataSettings {
   static List<UserDataSettings> getUserDataSettingsAlarm(List json) {
     List<UserDataSettings> userSettingsList = [];
     for (Map key in json) {
-      debugPrint("a-- json key $key");
+      //debugPrint("a-- json key $key");
       int t = 0;
       int typ = 0;
       int hiAlarm = 0;
@@ -127,8 +127,8 @@ class UserDataSettings {
           );
           userSettingsList.add(userDataSet);
         }
-        debugPrint(
-            "t, deviceName, friendlyNAme, ... $deviceName, $friendlyName");
+       // debugPrint(
+         //   "t, deviceName, friendlyNAme, ... $deviceName, $friendlyName");
       }
     }
     return userSettingsList;
@@ -204,11 +204,11 @@ class UserDataSettings {
       String? mqttSettings) {
     List<UserDataSettings> userDataSettingsList = [];
     //debugPrint("777777777 parse $mqttSettings");
-    Map jsonMap;
+    var jsonMap;
       // Todo: tole daj v novo metodo
       //jsonDecode(mqttSettings!);
       // end Todo
-      Map jsonMap1 = json.decode(mqttSettings!);
+      var jsonMap1 = json.decode(mqttSettings!);
       jsonMap = jsonMap1;
       // jsonMap = jsonDecode(mqttSettings.toString()!);
 

@@ -144,7 +144,7 @@ void onStart(ServiceInstance service) async {
   //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   //  FlutterLocalNotificationsPlugin();
 
-  //SmartMqtt.instance.addListener(() {});
+  SmartMqtt.instance.addListener(() {});
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
@@ -175,7 +175,7 @@ void onStart(ServiceInstance service) async {
         // bring to foreground
         /** ali je uporabnik logiran - startaj servis */
 
-        Timer.periodic(const Duration(seconds: 180), (timer) async {
+        Timer.periodic(const Duration(seconds: 80), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
@@ -444,7 +444,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         providers: [
           //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
           ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
-          ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
+        //  ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
          // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
         ],
         builder: (context, child) => Builder(builder: (context) {

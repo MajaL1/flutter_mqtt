@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:mqtt_test/model/alarm_interval_setting.dart';
-import 'package:mqtt_test/util/data_smart_mqtt.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,6 +52,7 @@ class SmartMqtt extends ChangeNotifier {
     _instance.username = username;
     _instance.mqttPass = mqttPass;
     _instance.topicList = topicList;
+    //_instance.initializeMQTTClient();
     debugPrint("SMARTMQTT");
     return _instance;
   }
@@ -189,12 +188,12 @@ class SmartMqtt extends ChangeNotifier {
     preferences.clear(); */
 
     if (topicName!.contains("data")) {
+      debugPrint("data: $decodeMessage");
       /********************************/
       // DataSmartMqtt implementira notifierja za getNewData
-      DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
+      // DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
 
-     await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
-
+      // await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
 
       /********************************/
       /*  Data? data = await convertMessageToData(decodeMessage, topicName);
@@ -207,8 +206,10 @@ class SmartMqtt extends ChangeNotifier {
         debugPrint("___________________________________________________");
         debugPrint("data: ${data.toString()}");
         newMqttData = data;
-*/
-       // notifyListeners();
+
+       */
+
+      // notifyListeners();
       //}
     }
     /***  polnjenje objekta - settings ***/
@@ -259,24 +260,23 @@ class SmartMqtt extends ChangeNotifier {
         int timeIntervalMinutes = 0;
         // preveri interval
 
+        bool showAlarm = false;
         String alarmInterval = getAlarmInterval();
         debugPrint("+++++got alarmInterval: $alarmInterval");
         if (alarmInterval == "") {
           debugPrint("+++++alarmInterval == ''");
         }
 
-
         // ce ni prazen in ce ni izbrano, da prikaze vse alarme
         if (alarmInterval != "") {
-          timeIntervalMinutes = _getIntervalFromPreferences(alarmInterval);
+          debugPrint("+++++alarmInterval != "": $alarmInterval");
+
+          timeIntervalMinutes = await _getIntervalFromPreferences(alarmInterval);
           debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
 
-          bool showAlarm = false;
-
-
-        if(alarmInterval == ShowAlarmTimeSettings.all){
-           showAlarm = true;
-        }
+          if (alarmInterval == ShowAlarmTimeSettings.all) {
+            showAlarm = true;
+          }
 
           // dobi zadnji datum od alarma iz naprave iz historija
           _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName,
@@ -284,6 +284,7 @@ class SmartMqtt extends ChangeNotifier {
               .then((value) async {
             // primerjaj zadnji alarm s trenutnim casom
             // trenutni cas - zadnji alarm
+            showAlarm = false;
             debugPrint(
                 "+++++ value: $value for device ${currentAlarmList.first.deviceName} ${currentAlarmList.first.sensorAddress}");
             if (value != null) {
@@ -318,7 +319,7 @@ class SmartMqtt extends ChangeNotifier {
               //debugPrint("alarmList---: $alarmListMqtt");
               messageCount++;
 
-              Utils.setFriendlyName(currentAlarmList.first);
+              //Utils.setFriendlyName(currentAlarmList.first);
               // prikaze sporocilo z alarmom
               await NotificationHelper.sendMessage(currentAlarmList.first);
             }
@@ -348,6 +349,9 @@ class SmartMqtt extends ChangeNotifier {
         break;
       case ShowAlarmTimeSettings.day:
         timeIntervalMinutes = 1440;
+        break;
+      case ShowAlarmTimeSettings.all:
+        timeIntervalMinutes = 0;
         break;
       default:
         timeIntervalMinutes = 10;
@@ -575,9 +579,9 @@ class SmartMqtt extends ChangeNotifier {
       dataList = Data.fromJsonList(jsonResult);
       dataList.add(newData);
     } else { */
-      dataList = [];
-      dataList.add(newData);
-   // }
+    dataList = [];
+    dataList.add(newData);
+    // }
     String encodedData = json.encode(dataList);
     debugPrint("encodedData:  $encodedData");
     preferences.setString("data_mqtt_list", encodedData);
