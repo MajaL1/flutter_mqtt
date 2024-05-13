@@ -32,13 +32,15 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   @override
   void initState() {
-    Utils.getAlarmGeneralIntervalSettings().then((str) {
+
+
+    /*Utils.getAlarmGeneralIntervalSettings().then((str) {
       setState(() {
         dropdownValue = str;
         Utils.setAlarmGeneralIntervalSettings(dropdownValue!);
       });
-    });
-    super.initState();
+    }); */
+   // super.initState();
   }
 
   @override
@@ -90,6 +92,18 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   Widget _buildUserGeneralSettings() {
     //debugPrint("-- 0 dropdown value: $dropdownValue");
+    SharedPreferences.getInstance().then((pref){
+      if(dropdownValue!.isEmpty){
+
+        String? val =  pref?.getString("alarm_interval_setting");
+        if(val == null || val.isEmpty){
+          dropdownValue = ShowAlarmTimeSettings.minutes10;
+        }
+        else {
+          dropdownValue = val;
+        }
+      }
+    });
 
     return Container(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 15),
@@ -123,8 +137,8 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                         ElevatedButton(
                       style: GuiUtils.buildElevatedButtonSettings(),
                       onPressed: () {
-                        String? val = dropdownValue ?? alarmIntervalsList.first;
-                        saveInterval(val);
+                        String? val = dropdownValue; //?? alarmIntervalsList.first;
+                        saveInterval(val!);
                       },
                       child: const Text(
                         "Save",
@@ -150,7 +164,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       ),
       //menuHeight: 30,
       textStyle: const TextStyle(color: Colors.black87),//Color.fromRGBO(20, 20, 120, 1)),
-      initialSelection: (dropdownValue != null && dropdownValue!.isNotEmpty)
+      initialSelection: (dropdownValue != null || dropdownValue!.isNotEmpty)
           ? dropdownValue
           : ShowAlarmTimeSettings.minutes10,
       onSelected: (String? value) {
@@ -192,18 +206,9 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   SharedPreferences? preferences;
 
-  Future<void> initializePreference() async {
-    preferences = await SharedPreferences.getInstance();
-  }
 
-  void saveInterval(String interval) {
-    /*Utils.getAlarmIntervalSettingsList().then((list){
-      if(list != null){
-        for (AlarmIntervalSetting setting in list){
 
-        }
-      }
-    }); */
+  Future<void> saveInterval(String interval) async {
 
     debugPrint("saving interval settings.... $interval");
     /***
@@ -218,12 +223,22 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       dropdownValue = v;
     }); */
     dropdownValue = interval;
+    SmartMqtt.instance.setAlarmIntervalSettings(interval);
+    //SmartMqtt.instance.alarmInterval = interval;
     debugPrint(
         "dropdown value from smartMqtt ${SmartMqtt.instance.alarmInterval}");
-    Utils.getAlarmGeneralIntervalSettings().then((str) {
-      Utils.setAlarmGeneralIntervalSettings(interval);
-      debugPrint("getting interval....$str");
-    });
+    //SharedPreferences.getInstance().then((value) => value.setString(key, value))
+    SharedPreferences.getInstance().then((value) {
+      value.setString("alarm_interval_setting", interval);
+      debugPrint("setting: $interval");
+    }).then((value) => SmartMqtt.instance.setAlarmIntervalSettings(interval));
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+    //Utils.getAlarmGeneralIntervalSettings().then((str) {
+     // Utils.setAlarmGeneralIntervalSettings(interval);
+     // debugPrint("getting interval....$str");
+   // });
     debugPrint("interval saved...");
   }
 }

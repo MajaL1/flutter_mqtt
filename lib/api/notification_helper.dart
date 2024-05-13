@@ -17,6 +17,7 @@ import 'package:timezone/standalone.dart' as tz;
 import '../main.dart';
 import '../model/alarm.dart';
 import '../util/utils.dart';
+import '../widgets/units.dart';
 
 class NotificationHelper extends StatelessWidget {
   const NotificationHelper({Key? key}) : super(key: key);
@@ -129,8 +130,9 @@ class NotificationHelper extends StatelessWidget {
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();
     String? v = alarmMessage?.v.toString();
+    int ? u = alarmMessage?.u;
     String? sensorAddress = alarmMessage?.sensorAddress;
-
+    String units = UnitsConstants.getUnits(u);
     String alarmValue = "";
 
     if (alarmMessage?.hiAlarm != 0 && alarmMessage?.hiAlarm != null) {
@@ -196,7 +198,7 @@ class NotificationHelper extends StatelessWidget {
         notificationId,
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
-        "v: $v, $alarmValue \n$formattedDate",
+        "v: $v $units, $alarmValue \n$formattedDate",
         tz.TZDateTime.now(slovenia).add(Duration(seconds: 5)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:

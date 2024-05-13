@@ -184,11 +184,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       ),
       Wrap(children: [
         SizedBox(
-            width: 100,
+            width: 150,
             height: 40,
             child: TextFormField(
               inputFormatters: [
-                LengthLimitingTextInputFormatter(10),
+                LengthLimitingTextInputFormatter(20),
               ],
               style: const TextStyle(
                   fontFamily: 'Roboto',
@@ -201,7 +201,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   notifier.value = isEnabledSave;
                   return '';
                 }
-                if (value.length > 10) {
+                if (value.length > 20) {
                   notifier.value = isEnabledSave;
                   isEnabledSave = false;
                   return '';
@@ -576,8 +576,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     String settingText = "";
     bool isEnabledSave = false;
 //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
-    debugPrint(
-        "00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange");
+   // debugPrint(
+    //    "00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange");
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
       settingText = "High alarm ($unitText): ";
     }

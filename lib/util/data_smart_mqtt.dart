@@ -56,15 +56,17 @@ class DataSmartMqtt extends ChangeNotifier {
     List? dataList;
 
     // zaenkrat dodamo samo eno element na listo
-    if (dataListStr != null) {
+    /*if (dataListStr != null) {
       final jsonResult = jsonDecode(dataListStr!);
       if(jsonResult!= null) {
         dataList = Data.fromJsonList(jsonResult);
         dataList.add(newData);
       }
-    } //else {
-      //dataList = [];
-     // dataList.add(newData);
+    }*/
+    //else {
+
+    dataList = [];
+     dataList.add(newData);
     //}
     String encodedData = json.encode(dataList);
     debugPrint("encodedData data:  $encodedData");

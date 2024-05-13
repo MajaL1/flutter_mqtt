@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 
+import 'api/notification_helper.dart';
 import 'model/alarm.dart';
 import 'model/constants.dart';
 import 'mqtt/MQTTAppState.dart';
@@ -148,12 +149,12 @@ void onStart(ServiceInstance service) async {
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
-      debugPrint("service.setAsForegroundService()");
+      debugPrint(">>>>>>> service.setAsForegroundService()");
     });
 
     service.on('setAsBackground').listen((event) {
       service.setAsBackgroundService();
-      debugPrint("service.setAsBAckgroundService()");
+      debugPrint(">>>>>>> service.setAsBAckgroundService()");
     });
   }
 
@@ -175,7 +176,7 @@ void onStart(ServiceInstance service) async {
         // bring to foreground
         /** ali je uporabnik logiran - startaj servis */
 
-        Timer.periodic(const Duration(seconds: 80), (timer) async {
+        Timer.periodic(const Duration(seconds: 180), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
@@ -295,6 +296,20 @@ Future<void> _reconnectToMqtt() async {
     print("================== connecting to client =========================");
     print("===========================================");
 
+     Alarm alarm = Alarm(
+        sensorAddress: "start connect to client",
+        typ: 2,
+        v: 1,
+        hiAlarm: 10,
+        loAlarm: 2,
+        ts: DateTime.timestamp(),
+        lb: 1,
+        bv: 3,
+        r: 1,
+        l: 3,
+        b: 2,
+        t: 3);
+    NotificationHelper.sendMessage(alarm);
     print("current smartmqtt state: $SmartMqtt.instance.client");
   } else {
     print(
@@ -444,7 +459,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
         providers: [
           //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
           ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
-        //  ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
+          ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
          // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
         ],
         builder: (context, child) => Builder(builder: (context) {

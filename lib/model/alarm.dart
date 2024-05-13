@@ -4,6 +4,7 @@ class Alarm {
   String? friendlyName;
   int? typ;
   int? v;
+  int? u;
   int? hiAlarm;
   int? loAlarm;
   DateTime? ts;
@@ -21,6 +22,7 @@ class Alarm {
       this.friendlyName,
       this.typ,
       this.v,
+        this.u,
       this.hiAlarm,
       this.loAlarm,
       this.ts,
@@ -57,6 +59,7 @@ class Alarm {
       "friendlyName": friendlyName,
       "typ": typ,
       "v": v,
+      "u": u,
       "l": l,
       "lb": lb,
       "bv": bv,
@@ -81,6 +84,7 @@ class Alarm {
           int hiAlarm = 0;
           int loAlarm = 0;
           int v = 0;
+          int u = 0XFFFF;
           int lb = 0;
           int r = 0;
           int bv = 0;
@@ -99,6 +103,9 @@ class Alarm {
               }
               if (key1 == "v") {
                 v = value1;
+              }
+              if (key1 == "u") {
+                u = value1;
               }
               if (key1 == "hi_alarm") {
                 hiAlarm = value1;
@@ -135,6 +142,7 @@ class Alarm {
               sensorAddress: key,
               typ: typ,
               v: v,
+              u: u,
               hiAlarm: hiAlarm,
               loAlarm: loAlarm,
               ts: ts,
@@ -162,6 +170,7 @@ class Alarm {
       int hiAlarm = 0;
       int loAlarm = 0;
       int v = 0;
+      int u = 0XFFFF;
       DateTime? ts = null;
       int lb = 0;
       int r = 0;
@@ -205,6 +214,9 @@ class Alarm {
           if (key == "v") {
             v = valueInt;
           }
+          if (key == "u") {
+            u = valueInt;
+          }
           if (key == "hi_alarm") {
             hiAlarm = valueInt;
           }
@@ -245,6 +257,7 @@ class Alarm {
           friendlyName: friendlyName  ,
           typ: typ,
           v: v,
+          u: u,
           hiAlarm: hiAlarm,
           loAlarm: loAlarm,
           ts: ts,
@@ -274,6 +287,7 @@ class Alarm {
           int hiAlarm = 0;
           int loAlarm = 0;
           int v = 0;
+          int u = 0XFFFF;
           DateTime? ts = null;
           int lb = 0;
           int r = 0;
@@ -302,6 +316,9 @@ class Alarm {
                 }
                 if (key1 == "v") {
                   v = valueInt;
+                }
+                if (key1 == "u") {
+                  u = valueInt;
                 }
                 if (key1 == "hi_alarm") {
                   hiAlarm = valueInt;
@@ -340,6 +357,7 @@ class Alarm {
               deviceName: "",
               typ: typ,
               v: v,
+              u: u,
               hiAlarm: hiAlarm,
               loAlarm: loAlarm,
               ts: ts,
@@ -359,7 +377,7 @@ class Alarm {
   @override
   String toString() {
     return "Alarm{sensorAddress: $sensorAddress, deviceName: $deviceName,typ: $typ, "
-        " high_alarm: $hiAlarm, loAlarm: $loAlarm, ts: $ts, lb: $lb, bv: $bv, r: $r, b: $b, v:$v, t:$t"
+        " high_alarm: $hiAlarm, loAlarm: $loAlarm, ts: $ts, lb: $lb, bv: $bv, r: $r, b: $b, u: $u, v:$v, t:$t"
         '}';
   }
 }

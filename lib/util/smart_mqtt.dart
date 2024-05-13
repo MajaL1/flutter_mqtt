@@ -12,6 +12,8 @@ import '../model/constants.dart';
 import '../model/data.dart';
 import '../mqtt/MQTTAppState.dart';
 import '../widgets/show_alarm_time_settings.dart';
+import '../widgets/units.dart';
+import 'data_smart_mqtt.dart';
 
 class SmartMqtt extends ChangeNotifier {
   late String host;
@@ -167,7 +169,13 @@ class SmartMqtt extends ChangeNotifier {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    // todo: testni alarm - izbrisi
+
+    String ? alarmInterval1 = await SharedPreferences.getInstance().then((value) {
+      return value.getString("alarm_interval_setting");
+    });
+    debugPrint("alarmInterval 1: $alarmInterval1");
+
+    // todo: testni alarm
     /* Alarm alarm = Alarm(
         sensorAddress: "test1233",
         typ: 2,
@@ -193,24 +201,19 @@ class SmartMqtt extends ChangeNotifier {
       // DataSmartMqtt implementira notifierja za getNewData
       // DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
 
-      // await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
+     // await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
 
       /********************************/
-      /*  Data? data = await convertMessageToData(decodeMessage, topicName);
-        setDataListToPreferences(data!, preferences);
+        //Data? data = await convertMessageToData(decodeMessage, topicName);
+        //setDataListToPreferences(data!, preferences);
         //preferences.setString("data_mqtt", decodeMessage);
 
-        debugPrint("___________________________________________________");
+        /*debugPrint("___________________________________________________");
         debugPrint("from topic data $topicName");
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
         debugPrint("data: ${data.toString()}");
-        newMqttData = data;
-
-       */
-
-      // notifyListeners();
-      //}
+        newMqttData = data; */
     }
     /***  polnjenje objekta - settings ***/
     if (topicName.contains("settings")) {
@@ -239,9 +242,12 @@ class SmartMqtt extends ChangeNotifier {
     if (topicName.contains("alarm")) {
       debugPrint("+++++alarm!!!!!, isRetain $isRetain");
       if (!isRetain!) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.reload();
         Map<String, dynamic> currentAlarmJson = json.decode(decodeMessage);
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
         currentAlarmList.first.deviceName = topicName.split("/alarm").first;
+
         debugPrint(
             "+++++ALARM ? check below if show ${currentAlarmList.first.toString()},: ${messageCount}");
 
@@ -261,18 +267,40 @@ class SmartMqtt extends ChangeNotifier {
         // preveri interval
 
         bool showAlarm = false;
-        String alarmInterval = getAlarmInterval();
+        String? alarmInterval; //= getAlarmInterval();
+        //if(alarmInterval.isEmpty){
+
+
+        String ? alarmInterval1  = preferences.getString("alarm_interval_setting");
+
+        debugPrint("+++++got alarmInterval1: $alarmInterval1");
+        String ? a = await SharedPreferences.getInstance().then((value) {
+          if (value.getString("alarm_interval_setting") != null) {
+            debugPrint("aaa: ${value.getString("alarm_interval_setting")}");
+             return value.getString("alarm_interval_setting")!;
+          }
+          else{
+            debugPrint("aaa 1: ${value.getString("alarm_interval_setting")}");
+          }
+          return "";
+        });
+
+        alarmInterval =  preferences.getString("alarm_interval_setting");
+        //}
         debugPrint("+++++got alarmInterval: $alarmInterval");
-        if (alarmInterval == "") {
-          debugPrint("+++++alarmInterval == ''");
+        timeIntervalMinutes = await _getIntervalFromPreferences(alarmInterval);
+        debugPrint("+++++ 1timeIntervalMinutes $timeIntervalMinutes");
+
+        if (timeIntervalMinutes == "") {
+          debugPrint("+++++ 2timeIntervalMinutes == ''");
+          showAlarm = true;
         }
 
         // ce ni prazen in ce ni izbrano, da prikaze vse alarme
-        if (alarmInterval != "") {
-          debugPrint("+++++alarmInterval != "": $alarmInterval");
+        if (timeIntervalMinutes != "") {
+          debugPrint("+++++ 3timeIntervalMinutes != "": $timeIntervalMinutes");
 
-          timeIntervalMinutes = await _getIntervalFromPreferences(alarmInterval);
-          debugPrint("+++++got timeIntervalMinutes: $timeIntervalMinutes");
+          debugPrint("+++++ 4got timeIntervalMinutes: $timeIntervalMinutes");
 
           if (alarmInterval == ShowAlarmTimeSettings.all) {
             showAlarm = true;
@@ -319,7 +347,7 @@ class SmartMqtt extends ChangeNotifier {
               //debugPrint("alarmList---: $alarmListMqtt");
               messageCount++;
 
-              //Utils.setFriendlyName(currentAlarmList.first);
+              Utils.setFriendlyName(currentAlarmList.first);
               // prikaze sporocilo z alarmom
               await NotificationHelper.sendMessage(currentAlarmList.first);
             }
@@ -351,7 +379,7 @@ class SmartMqtt extends ChangeNotifier {
         timeIntervalMinutes = 1440;
         break;
       case ShowAlarmTimeSettings.all:
-        timeIntervalMinutes = 0;
+        timeIntervalMinutes = 1;
         break;
       default:
         timeIntervalMinutes = 10;
@@ -530,7 +558,7 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<void> setDeviceNameToSettings(Map settings, String deviceName) async {
     for (String key in settings.keys) {
-      if (settings[key] != null) {
+      if (settings[key] != null && (key!="ts")) {
         Map val = settings[key];
 
         for (String key1 in val.keys) {

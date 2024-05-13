@@ -10,6 +10,7 @@ import '../model/alarm.dart';
 import '../model/constants.dart';
 import '../model/user_data_settings.dart';
 import '../util/gui_utils.dart';
+import '../widgets/units.dart';
 
 class AlarmHistory extends StatefulWidget {
   //var sharedPreferences;
@@ -103,9 +104,11 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       String hiAlarm = snapshot.data![index].hiAlarm.toString();
                       String loAlarm = snapshot.data![index].loAlarm.toString();
                       String v = snapshot.data![index].v.toString();
+                      int? u = snapshot.data![index].u;
                       String sensorAddress =
                           snapshot.data![index].sensorAddress.toString();
                       String alarmValue = "";
+                      String units = UnitsConstants.getUnits(u);
 
                       //     DateTime ts = snapshot.data![index].ts!;
 
@@ -193,7 +196,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                               textAlign: TextAlign.center)),
                                       Container(
                                           padding: const EdgeInsets.all(1.0),
-                                          child: Text("Value: $v \n$alarmValue",
+                                          child: Text("Value: $v \n$alarmValue \n$units",
                                               textAlign: TextAlign.center)),
                                       Container(
                                         padding: const EdgeInsets.all(1.0),

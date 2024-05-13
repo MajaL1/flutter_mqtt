@@ -63,11 +63,11 @@ class Utils {
             userTopicList.add(deviceName + "/alarm");
           }
         }
-        if (topicData.name.contains("data")) {
+        /*if (topicData.name.contains("data")) {
           if (!userTopicList.contains(deviceName + "/data")) {
             userTopicList.add(deviceName + "/data");
           }
-        }
+        }*/
       }
     }
     return userTopicList;
@@ -161,10 +161,11 @@ class Utils {
     return alarmIntervalList;
   }
 
-  static Future<String?> getAlarmGeneralIntervalSettings() async {
+  /*static Future<String?> getAlarmGeneralIntervalSettings() async {
     String? setting = await SharedPreferences.getInstance().then((value) {
       if (value.getString("alarm_interval_setting") != null) {
         String? str = value.getString("alarm_interval_setting");
+        debugPrint("getAlarmGeneralIntervalSettings: $str");
         if (str != null) {
           return str;
         }
@@ -175,11 +176,12 @@ class Utils {
     });
     return setting;
     // return SmartMqtt.instance.alarmInterval;
-  }
+  } */
 
   static void setAlarmGeneralIntervalSettings(String setting) async {
     await SharedPreferences.getInstance().then((value) {
       value.setString("alarm_interval_setting", setting);
+      debugPrint("setting: $setting");
     }).then((value) => SmartMqtt.instance.setAlarmIntervalSettings(setting));
   }
 
