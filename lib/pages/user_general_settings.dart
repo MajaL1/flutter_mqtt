@@ -92,18 +92,6 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   Widget _buildUserGeneralSettings() {
     //debugPrint("-- 0 dropdown value: $dropdownValue");
-    SharedPreferences.getInstance().then((pref){
-      if(dropdownValue!.isEmpty){
-
-        String? val =  pref?.getString("alarm_interval_setting");
-        if(val == null || val.isEmpty){
-          dropdownValue = ShowAlarmTimeSettings.minutes10;
-        }
-        else {
-          dropdownValue = val;
-        }
-      }
-    });
 
     return Container(
       padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 15),
@@ -155,6 +143,19 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   }
 
   DropdownMenu<String> _buildDropdownMenu() {
+    SharedPreferences.getInstance().then((pref){
+      if(dropdownValue!.isEmpty){
+
+        String? val =  pref?.getString("alarm_interval_setting");
+        if(val == null || val.isEmpty){
+          dropdownValue = ShowAlarmTimeSettings.minutes10;
+        }
+        else {
+          dropdownValue = val;
+        }
+      }
+    });
+
     return DropdownMenu<String>(
       menuStyle: MenuStyle(
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
