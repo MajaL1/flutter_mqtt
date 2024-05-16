@@ -12,8 +12,6 @@ import '../model/constants.dart';
 import '../model/data.dart';
 import '../mqtt/MQTTAppState.dart';
 import '../widgets/show_alarm_time_settings.dart';
-import '../widgets/units.dart';
-import 'data_smart_mqtt.dart';
 
 class SmartMqtt extends ChangeNotifier {
   late String host;
@@ -169,8 +167,8 @@ class SmartMqtt extends ChangeNotifier {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-
-    String ? alarmInterval1 = await SharedPreferences.getInstance().then((value) {
+    String? alarmInterval1 =
+        await SharedPreferences.getInstance().then((value) {
       return value.getString("alarm_interval_setting");
     });
     debugPrint("alarmInterval 1: $alarmInterval1");
@@ -201,14 +199,14 @@ class SmartMqtt extends ChangeNotifier {
       // DataSmartMqtt implementira notifierja za getNewData
       // DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
 
-     // await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
+      // await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
 
       /********************************/
-        //Data? data = await convertMessageToData(decodeMessage, topicName);
-        //setDataListToPreferences(data!, preferences);
-        //preferences.setString("data_mqtt", decodeMessage);
+      //Data? data = await convertMessageToData(decodeMessage, topicName);
+      //setDataListToPreferences(data!, preferences);
+      //preferences.setString("data_mqtt", decodeMessage);
 
-        /*debugPrint("___________________________________________________");
+      /*debugPrint("___________________________________________________");
         debugPrint("from topic data $topicName");
         debugPrint("__________ $decodeMessage");
         debugPrint("___________________________________________________");
@@ -270,22 +268,21 @@ class SmartMqtt extends ChangeNotifier {
         String? alarmInterval; //= getAlarmInterval();
         //if(alarmInterval.isEmpty){
 
-
-        String ? alarmInterval1  = preferences.getString("alarm_interval_setting");
+        String? alarmInterval1 =
+            preferences.getString("alarm_interval_setting");
 
         debugPrint("+++++got alarmInterval1: $alarmInterval1");
-        String ? a = await SharedPreferences.getInstance().then((value) {
+        String? a = await SharedPreferences.getInstance().then((value) {
           if (value.getString("alarm_interval_setting") != null) {
             debugPrint("aaa: ${value.getString("alarm_interval_setting")}");
-             return value.getString("alarm_interval_setting")!;
-          }
-          else{
+            return value.getString("alarm_interval_setting")!;
+          } else {
             debugPrint("aaa 1: ${value.getString("alarm_interval_setting")}");
           }
           return "";
         });
 
-        alarmInterval =  preferences.getString("alarm_interval_setting");
+        alarmInterval = preferences.getString("alarm_interval_setting");
         //}
         debugPrint("+++++got alarmInterval: $alarmInterval");
         timeIntervalMinutes = await _getIntervalFromPreferences(alarmInterval);
@@ -298,7 +295,7 @@ class SmartMqtt extends ChangeNotifier {
 
         // ce ni prazen in ce ni izbrano, da prikaze vse alarme
         if (timeIntervalMinutes != "") {
-          debugPrint("+++++ 3timeIntervalMinutes != "": $timeIntervalMinutes");
+          debugPrint("+++++ 3timeIntervalMinutes != " ": $timeIntervalMinutes");
 
           debugPrint("+++++ 4got timeIntervalMinutes: $timeIntervalMinutes");
 
@@ -318,9 +315,10 @@ class SmartMqtt extends ChangeNotifier {
             if (value != null) {
               // if(!value.isBefore(DateTime.now())) {
               minutes = Utils.compareDatesInMinutes(value!, DateTime.now());
-              debugPrint("+++++ got minutes from compare: $minutes, timeIntervalInMinutes: ${minutes}");
+              debugPrint(
+                  "+++++ got minutes from compare: $minutes, timeIntervalInMinutes: ${minutes}");
               // primerjaj s shranjenim intervalom
-              if (minutes >= timeIntervalMinutes! ) {
+              if (minutes >= timeIntervalMinutes!) {
                 debugPrint(
                     "+++++ minutes > timeIntervalMinutes, will show alarm");
 
@@ -543,6 +541,10 @@ class SmartMqtt extends ChangeNotifier {
     return client;
   }
 
+  Future<MQTTAppConnectionState?> getCurrentState() async {
+    return currentState;
+  }
+
   Future<String> getNewUserSettingsList() async {
     // if(newUserSettings != null) {
     debugPrint(
@@ -558,7 +560,7 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<void> setDeviceNameToSettings(Map settings, String deviceName) async {
     for (String key in settings.keys) {
-      if (settings[key] != null && (key!="ts")) {
+      if (settings[key] != null && (key != "ts")) {
         Map val = settings[key];
 
         for (String key1 in val.keys) {

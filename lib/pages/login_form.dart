@@ -118,8 +118,8 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setBool("isLoggedIn", true);
           });
           //*** Test
-          Utils.setLastAlarmHistoryFromPreferencesTEST();
-          Utils.getLastAlarmHistoryListFromPreferencesTEST();
+         // Utils.setLastAlarmHistoryFromPreferencesTEST();
+         // Utils.getLastAlarmHistoryListFromPreferencesTEST();
           //*** End test
           //*********************************************/
           await Navigator.pushReplacement(
