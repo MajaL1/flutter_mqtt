@@ -136,7 +136,7 @@ class SmartMqtt extends ChangeNotifier {
     print(
         "///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
 
-    print('on Connected: EXAMPLE::Mosquitto client connected....');
+    print('on Connected: ALARM APP:Mosquitto client connected....');
     for (String topicName in topicList) {
       client.subscribe(topicName, MqttQos.atLeastOnce);
       debugPrint("topicName: $topicName");
@@ -318,9 +318,9 @@ class SmartMqtt extends ChangeNotifier {
             if (value != null) {
               // if(!value.isBefore(DateTime.now())) {
               minutes = Utils.compareDatesInMinutes(value!, DateTime.now());
-              debugPrint("+++++ got minutes from compare: $minutes");
+              debugPrint("+++++ got minutes from compare: $minutes, timeIntervalInMinutes: ${minutes}");
               // primerjaj s shranjenim intervalom
-              if (minutes >= timeIntervalMinutes!) {
+              if (minutes >= timeIntervalMinutes! ) {
                 debugPrint(
                     "+++++ minutes > timeIntervalMinutes, will show alarm");
 
@@ -545,8 +545,8 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<String> getNewUserSettingsList() async {
     // if(newUserSettings != null) {
-    //debugPrint(
-    //    "1111111111111 new User settings - smart mqtt: $newUserSettings");
+    debugPrint(
+        "1111111111111 new User settings - smart mqtt: $newUserSettings");
 
     return newUserSettings;
     //}

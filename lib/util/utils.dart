@@ -185,6 +185,22 @@ class Utils {
     }).then((value) => SmartMqtt.instance.setAlarmIntervalSettings(setting));
   }
 
+  static Future<String> getIntervalTest() async {
+    String test = "";
+
+    test = await SharedPreferences.getInstance().then((value) {
+      if (value.getString("alarm_interval_setting") != null) {
+        String? str = value.getString("alarm_interval_setting");
+        if (str != null) {
+          return str;
+        }
+      }
+      return "";
+    });
+    return test;
+
+  }
+
   /** Pride v postev za nastavitve za vsak alarm posebej **/
   static Future<List<AlarmIntervalSetting>>
       getAlarmIntervalSettingsList() async {
@@ -336,13 +352,19 @@ class Utils {
   static void setFriendlyName(Alarm alarm) {
     SharedPreferences.getInstance().then((value) {
       if (value.getString("parsed_current_mqtt_settings") != null) {
-        List<UserDataSettings> parsedMqttSettingsList = [];
+        List parsedMqttSettingsList = [];
 
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
 
+
+        var jsonMap =
+        json.decode(parsedMqttSettings!); //jsonMap.runtimeType
+
         parsedMqttSettingsList =
-            UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
+        jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
+       // parsedMqttSettingsList =
+       //     UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
 
         for (UserDataSettings setting in parsedMqttSettingsList) {
           String? deviceName = setting.deviceName;

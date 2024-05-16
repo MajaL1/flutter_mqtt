@@ -32,15 +32,15 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   @override
   void initState() {
-
-
-    /*Utils.getAlarmGeneralIntervalSettings().then((str) {
+    Utils.getIntervalTest().then((str) {
       setState(() {
         dropdownValue = str;
-        Utils.setAlarmGeneralIntervalSettings(dropdownValue!);
+        //Utils.setAlarmGeneralIntervalSettings(dropdownValue!);
       });
-    }); */
-   // super.initState();
+    });
+   // String? val = pref?.getString("alarm_interval_setting");
+
+    super.initState();
   }
 
   @override
@@ -49,17 +49,21 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   }
 
   SingleChildScrollView buildUserGeneralSettings() {
+
+    //super.initState();
+
     return SingleChildScrollView(
       //color: Colors.white,
 
       //body: SingleChildScrollView(
-      child: Column(
-          children: <Widget>[
+      child: Column(children: <Widget>[
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
         ),
         // const Divider(height: 1, color: Colors.black12, thickness: 5),
-        Container(height: 30,         color: Colors.white,
+        Container(
+          height: 30,
+          color: Colors.white,
         ),
         const Text("General settings ",
             style: TextStyle(
@@ -108,12 +112,12 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
               Row(children: [
                 Container(
                     child: const Text("Alarm interval:",
-                        style:  TextStyle(fontSize: 14)))
+                        style: TextStyle(fontSize: 14)))
               ]),
               Row(children: [
                 Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 0.1, vertical: 0.1),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 0.1, vertical: 0.1),
                     decoration: GuiUtils.buildBoxDecorationInterval(),
                     child: _buildDropdownMenu()),
                 Container(
@@ -125,7 +129,8 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                         ElevatedButton(
                       style: GuiUtils.buildElevatedButtonSettings(),
                       onPressed: () {
-                        String? val = dropdownValue; //?? alarmIntervalsList.first;
+                        String? val =
+                            dropdownValue; //?? alarmIntervalsList.first;
                         saveInterval(val!);
                       },
                       child: const Text(
@@ -143,29 +148,36 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   }
 
   DropdownMenu<String> _buildDropdownMenu() {
-    SharedPreferences.getInstance().then((pref){
-      if(dropdownValue!.isEmpty){
+    debugPrint("initState _buildDRopDownMenu, val $dropdownValue");
 
-        String? val =  pref?.getString("alarm_interval_setting");
-        if(val == null || val.isEmpty){
+    SharedPreferences.getInstance().then((pref) {
+      if (dropdownValue!.isEmpty) {
+        String? val = pref?.getString("alarm_interval_setting");
+        debugPrint("initState user_general_settings, val $val");
+        if (val == null || val.isEmpty) {
           dropdownValue = ShowAlarmTimeSettings.minutes10;
-        }
-        else {
+        } else {
           dropdownValue = val;
+
+          debugPrint(
+              "initState user_general_settings, dropdown value: $dropdownValue");
         }
+        //setState(() {
+        //  dropdownValue = val;
+        //});
       }
     });
-
     return DropdownMenu<String>(
       menuStyle: MenuStyle(
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-              const EdgeInsets.all(0)),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+            const EdgeInsets.all(0)),
 
-          //visualDensity: const VisualDensity(vertical: 0, horizontal: 3)
+        //visualDensity: const VisualDensity(vertical: 0, horizontal: 3)
       ),
       //menuHeight: 30,
-      textStyle: const TextStyle(color: Colors.black87),//Color.fromRGBO(20, 20, 120, 1)),
-      initialSelection: (dropdownValue != null || dropdownValue!.isNotEmpty)
+      textStyle: const TextStyle(color: Colors.black87),
+      //Color.fromRGBO(20, 20, 120, 1)),
+      initialSelection: (dropdownValue!.isNotEmpty)
           ? dropdownValue
           : ShowAlarmTimeSettings.minutes10,
       onSelected: (String? value) {
@@ -179,8 +191,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        constraints: BoxConstraints.tight(const
-        Size.fromHeight(50)),
+        constraints: BoxConstraints.tight(const Size.fromHeight(50)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
         ),
@@ -191,26 +202,21 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
             value: value,
             label: value,
             style: ButtonStyle(
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    const EdgeInsets.only(left: 13)),
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.white54),
-                //overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
-               // surfaceTintColor:
-                 //   MaterialStateProperty.all<Color>(Colors.green),
-               // shadowColor: MaterialStateProperty.all<Color>(Colors.black)
+              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  const EdgeInsets.only(left: 13)),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.white54),
+              //overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
+              // surfaceTintColor:
+              //   MaterialStateProperty.all<Color>(Colors.green),
+              // shadowColor: MaterialStateProperty.all<Color>(Colors.black)
             ));
       }).toList(),
     );
   }
 
-
   SharedPreferences? preferences;
 
-
-
   Future<void> saveInterval(String interval) async {
-
     debugPrint("saving interval settings.... $interval");
     /***
      * TODO: ce skenslas aplikacijo, ne dobi alarmInterval!!!
@@ -237,9 +243,9 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
     //Utils.getAlarmGeneralIntervalSettings().then((str) {
-     // Utils.setAlarmGeneralIntervalSettings(interval);
-     // debugPrint("getting interval....$str");
-   // });
+    // Utils.setAlarmGeneralIntervalSettings(interval);
+    // debugPrint("getting interval....$str");
+    // });
     debugPrint("interval saved...");
   }
 }

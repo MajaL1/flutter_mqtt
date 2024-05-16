@@ -59,8 +59,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
         sensorAddress: setting.sensorAddress,
         hiAlarm: setting.hiAlarm,
         // Todo: add data
-        data: setting.data,
-        //setting.data,
+        ts: setting.ts,
         u: setting.u,
         editableSetting: Constants.HI_ALARM_JSON));
 

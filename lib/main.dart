@@ -176,7 +176,7 @@ void onStart(ServiceInstance service) async {
         // bring to foreground
         /** ali je uporabnik logiran - startaj servis */
 
-        Timer.periodic(const Duration(seconds: 180), (timer) async {
+        Timer.periodic(const Duration(seconds: 80), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
