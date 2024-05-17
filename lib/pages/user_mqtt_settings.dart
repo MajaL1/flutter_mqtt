@@ -175,10 +175,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       const Text(
         "Friendly name:  ",
         style: TextStyle(
-          fontSize: 14,
-          letterSpacing: 0.2,
-          //color: Color.fromRGBO(0, 0, 190, 1)//.shade900,
-          //fontWeight: FontWeight.bold,
+          fontSize: 14,           //color: Color.fromRGBO(0, 0, 190, 1)//.shade900,
+          fontWeight: FontWeight.bold,
         ),
       ),
       Wrap(children: [

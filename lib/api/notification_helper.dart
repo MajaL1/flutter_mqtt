@@ -161,7 +161,7 @@ class NotificationHelper extends StatelessWidget {
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
       //actions: ,
-      largeIcon: FilePathAndroidBitmap(bigPicture),
+      //largeIcon: FilePathAndroidBitmap(bigPicture),
       importance: Importance.max,
       priority: Priority.high,
       groupKey: "alarms",

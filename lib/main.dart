@@ -44,7 +44,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //DartPluginRegistrant.ensureInitialized();
   await initializeService();
-
+  SharedPreferences.setMockInitialValues({});
   SharedPreferences.getInstance().then((value) {
     if (value.getBool("isLoggedIn") != null) {
       if (!value.getBool("isLoggedIn")!) {
@@ -96,8 +96,8 @@ Future<void> initializeService() async {
       autoStart: true,
       isForegroundMode: true,
       notificationChannelId: 'my_foreground',
-      // initialNotificationTitle: 'Alarm app',
-      // initialNotificationContent: 'Initializing',
+       initialNotificationTitle: 'Alarm app',
+       initialNotificationContent: 'Initializing',
       foregroundServiceNotificationId: 888,
     ),
     iosConfiguration: IosConfiguration(
@@ -163,35 +163,60 @@ void onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
-  debugPrint("////////////////1 main.dart - $appState");
-
- /* SharedPreferences.getInstance().then((value) {
-    debugPrint("kkk isLoggedIn ??");
-    if (value.getBool("isLoggedIn") != null) {
-      debugPrint("kkk isLoggedIn ! = null");
-      if (value.getBool("isLoggedIn") == true) {
-        debugPrint("kkk isLoggedIn = true");
- */
-        // bring to foreground
-        /** ali je uporabnik logiran - startaj servis */
+  //FlutterBackgroundService().invoke("setAsBackground");
 
         Timer.periodic(const Duration(seconds: 80), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
               /// the notification id must be equals with AndroidConfiguration when you call configure() method.
+              /*flutterLocalNotificationsPlugin.show(
+                888,
+                'COOL SERVICE',
+                'Awesome ${DateTime.now()}',
+                const NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    'my_foreground',
+                    'MY FOREGROUND SERVICE',
+                    icon: 'ic_bg_service_small',
+                    ongoing: true,
+                  ),
+                ),
+              ); */
+
+              // if you don't using custom notification, uncomment this
+              service.setForegroundNotificationInfo(
+                title: "My App Service",
+                content: "Updated at ${DateTime.now()}",
+              );
             }
           }
           prefs?.setBool("appRunInBackground", true);
+          Alarm alarm = Alarm(
+              sensorAddress: "start connect to client",
+              typ: 2,
+              v: 1,
+              hiAlarm: 10,
+              loAlarm: 2,
+              ts: DateTime.timestamp(),
+              lb: 1,
+              bv: 3,
+              r: 1,
+              l: 3,
+              b: 2,
+              t: 3);
+          NotificationHelper.sendMessage(alarm);
 
           MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
           debugPrint("////////////////2 main.dart - $appState");
 
-          if (SmartMqtt.instance.currentState ==
+          if (SmartMqtt.instance.getCurrentState() ==
               MQTTAppConnectionState.connected) {
             debugPrint("////////////////main.dart - connected:");
           }
+          SmartMqtt.instance.getCurrentState().then((val){
+            debugPrint("///////////// VAL: $val");
+          });
           if (SmartMqtt.instance.currentState == null ||
               SmartMqtt.instance.currentState ==
                   MQTTAppConnectionState.disconnected) {
@@ -206,6 +231,8 @@ void onStart(ServiceInstance service) async {
 
           /// you can see this log in logcat
           print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
+
+
 
           // test using external plugin
           final deviceInfo = DeviceInfoPlugin();
@@ -224,7 +251,7 @@ void onStart(ServiceInstance service) async {
             'update',
             {
               "current_date": DateTime.now().toIso8601String(),
-              "device": device,
+              "device": "aaa",
             },
           );
         });
@@ -272,6 +299,7 @@ Future<void> _reconnectToMqtt() async {
       userTopicList!.isNotEmpty) {
     print(
         "////////////////main.dart _reconnectToMqtt username != null && pass != null && userTopicList != null");
+    debugPrint("////////////////main.dart _reconnectToMqtt $username, $mqttPassword, $userTopicList");
 
     prefs?.setBool("appRunInBackground", true);
 
@@ -286,31 +314,17 @@ Future<void> _reconnectToMqtt() async {
     //String identifier = "_12apxeeejjjewg";
     String identifier = l.toString();
 
-    SmartMqtt.instance.client = MqttServerClient(
-        Constants.BROKER_IP, identifier,
-        maxConnectionAttempts: 1);
-    SmartMqtt.instance.initializeMQTTClient(
-        username, mqttPassword, identifier, userTopicList);
+    //SmartMqtt.instance.client = MqttServerClient(
+    //    Constants.BROKER_IP, identifier,
+    //    maxConnectionAttempts: 1);
+    await SmartMqtt.instance.initializeMQTTClient();
     //SmartMqtt.instance.client.
-    //await SmartMqtt.instance.client.connect();
+    await SmartMqtt.instance.client.connect();
     print("================== connecting to client =========================");
     print("===========================================");
 
-     Alarm alarm = Alarm(
-        sensorAddress: "start connect to client",
-        typ: 2,
-        v: 1,
-        hiAlarm: 10,
-        loAlarm: 2,
-        ts: DateTime.timestamp(),
-        lb: 1,
-        bv: 3,
-        r: 1,
-        l: 3,
-        b: 2,
-        t: 3);
-    NotificationHelper.sendMessage(alarm);
-    print("current smartmqtt state: $SmartMqtt.instance.client");
+
+    print("current smartmqtt state: ${SmartMqtt.instance.client}");
   } else {
     print(
         "////////////////main.dart _reconnectToMqtt error -> null: username,pass,userTopicList == null, $username, $mqttPassword, $userTopicList");

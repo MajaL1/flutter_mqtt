@@ -5,6 +5,8 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+
 
 import '../api/notification_helper.dart';
 import '../model/alarm.dart';
@@ -14,11 +16,11 @@ import '../mqtt/MQTTAppState.dart';
 import '../widgets/show_alarm_time_settings.dart';
 
 class SmartMqtt extends ChangeNotifier {
-  late String host;
-  late int port;
+   String ? host;
+   int ?port;
 
-  late String mqttPass;
-  late String username;
+   String ? mqttPass;
+   String ? username;
 
   late List topicList;
   late String _identifier;
@@ -52,8 +54,10 @@ class SmartMqtt extends ChangeNotifier {
     _instance.username = username;
     _instance.mqttPass = mqttPass;
     _instance.topicList = topicList;
-    //_instance.initializeMQTTClient();
+    _instance.initializeMQTTClient();
     debugPrint("SMARTMQTT");
+    //FlutterBackgroundService().invoke("setAsBackground");
+
     return _instance;
   }
 
@@ -66,6 +70,7 @@ class SmartMqtt extends ChangeNotifier {
 
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
+    setCurrentState(currentState);
     print('Disconnected');
     client.disconnect();
   }
@@ -103,19 +108,19 @@ class SmartMqtt extends ChangeNotifier {
 
   void onAutoReconnect() {
     String clientID = client.clientIdentifier;
-    currentState = MQTTAppConnectionState.connected;
+    instance.currentState = MQTTAppConnectionState.connected;
 
     print(
-        "///////////////////////////// onAutoReconnect  $clientID, $currentState ///////////////////////////////////");
+        "///////////////////////////// onAutoReconnect  $clientID, $instance.currentState ///////////////////////////////////");
   }
 
   /// The unsolicited disconnect callback
   void onDisconnected() {
-    currentState = MQTTAppConnectionState.disconnected;
+    instance.currentState = MQTTAppConnectionState.disconnected;
 
     String clientID = client.clientIdentifier;
     print(
-        "///////////////////////////// onDisconnected  $clientID, $currentState ///////////////////////////////////");
+        "///////////////////////////// onDisconnected  $clientID, $instance.currentState ///////////////////////////////////");
     MqttConnectReturnCode? returnCode = client.connectionStatus!.returnCode;
     print(
         ':OnDisconnected client callback - Client disconnection, return code: $returnCode');
@@ -123,13 +128,14 @@ class SmartMqtt extends ChangeNotifier {
         MqttConnectReturnCode.noneSpecified) {
       print(":OnDisconnected callback is solicited, this is correct");
     }
-    currentState = MQTTAppConnectionState.disconnected;
+    instance.currentState = MQTTAppConnectionState.disconnected;
   }
 
   /// The successful connect callback
   void onConnected() {
     String clientID = client.clientIdentifier;
-    currentState = MQTTAppConnectionState.connected;
+    _instance.currentState = MQTTAppConnectionState.connected;
+    setCurrentState(currentState);
 
     print(
         "///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
@@ -142,20 +148,25 @@ class SmartMqtt extends ChangeNotifier {
     // client!.subscribe(topic3, MqttQos.atLeastOnce);
 
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
+
       await mqttMessageProcessor(c);
     });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+
   }
 
   Future<void> mqttMessageProcessor(
       List<MqttReceivedMessage<MqttMessage?>>? c) async {
     final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
 
+    debugPrint("mqttMessageProcessor: currentState: $currentState");
     // final MqttPublishMessage recMess = c![0].payload;
-    final String pt =
-        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+   // final String pt =
+   //     MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
     //_currentState.setReceivedText(pt);
+
+   // FlutterBackgroundService().invoke("setAsBackground");
 
     String message =
         MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
@@ -484,13 +495,12 @@ class SmartMqtt extends ChangeNotifier {
     return lastSentAlarm;
   }
 
-  Future<MqttServerClient> initializeMQTTClient(String username,
-      String password1, String identifier, List topicList1) async {
+  Future<MqttServerClient> initializeMQTTClient() async {
     debugPrint(" calling smart_mqtt.dart - initializeMQTTClient");
     String osPrefix = 'Flutter_iOS';
     // if (Platform.isAndroid()) {
     osPrefix = 'Flutter_Android';
-    topicList = topicList1;
+    topicList = topicList;
 
     String l = Utils.generateRandomString(10);
     //String identifier = "_12apxeeejjjewg";
@@ -516,7 +526,7 @@ class SmartMqtt extends ChangeNotifier {
     // client.resubscribeOnAutoReconnect = true;
 
     final MqttConnectMessage connMess = MqttConnectMessage()
-        .authenticateAs(username, password1)
+        .authenticateAs(username, mqttPass)
         .withClientIdentifier(_identifier)
         .withWillTopic('willtopic')
         .withWillMessage('My Will message')
@@ -528,12 +538,13 @@ class SmartMqtt extends ChangeNotifier {
 
     try {
       print('::Navis app client connecting....');
-      currentState = MQTTAppConnectionState.connecting;
+      instance.currentState = MQTTAppConnectionState.connecting;
+      setCurrentState(instance.currentState);
       //client.keepAlivePeriod = 20;
       String clientID = client.clientIdentifier;
       print(
           "*********************** Connecting to broker, client id $clientID, $currentState *******************************");
-      await client.connect(username, password1);
+      await client.connect(username, mqttPass);
     } on Exception catch (e) {
       print('Navis app::client exception - $e');
       disconnect();
@@ -616,6 +627,10 @@ class SmartMqtt extends ChangeNotifier {
     debugPrint("encodedData:  $encodedData");
     preferences.setString("data_mqtt_list", encodedData);
     debugPrint("setting data_mqtt_list encodedData: $encodedData");
+  }
+
+  void setCurrentState(MQTTAppConnectionState? currentState) {
+    instance.currentState = currentState;
   }
 }
 

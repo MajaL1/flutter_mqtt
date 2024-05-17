@@ -44,6 +44,11 @@
 
             </intent-filter>
         </activity>
+
+        <service
+            android:name="id.flutter.flutter_background_service.BackgroundService"
+            android:foregroundServiceType="connectedDevice"
+            />
         <service
             android:name=".MyForegroundService"
             android:foregroundServiceType="connectedDevice" />

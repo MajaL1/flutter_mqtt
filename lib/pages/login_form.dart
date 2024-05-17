@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -15,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../api/api_service.dart';
 import '../model/constants.dart';
 import '../model/user.dart';
+import '../mqtt/MQTTAppState.dart';
 import '../util/gui_utils.dart';
 import '../util/utils.dart';
 
@@ -86,13 +88,15 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
+SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+          //SmartMqtt.instance.client = MqttServerClient(
+          //    Constants.BROKER_IP, Constants.BROKER_IP,
+          //    maxConnectionAttempts: 1);
+         // await SmartMqtt.instance.initializeMQTTClient(
+         //     user.username, user.mqtt_pass, identifier, userTopicList);
 
-          SmartMqtt.instance.client = MqttServerClient(
-              Constants.BROKER_IP, Constants.BROKER_IP,
-              maxConnectionAttempts: 1);
-          SmartMqtt.instance.initializeMQTTClient(
-              user.username, user.mqtt_pass, identifier, userTopicList);
 
+          SmartMqtt.instance.setCurrentState(MQTTAppConnectionState.connected);
           /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
             //value.setString("username", username);
@@ -117,6 +121,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance().then((value) {
             value.setBool("isLoggedIn", true);
           });
+         // FlutterBackgroundService().invoke("setAsBackground");
           //*** Test
          // Utils.setLastAlarmHistoryFromPreferencesTEST();
          // Utils.getLastAlarmHistoryListFromPreferencesTEST();
