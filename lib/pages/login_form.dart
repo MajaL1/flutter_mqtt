@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -35,15 +34,20 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
+  String emailText = "test3";
+  String passwordText = "OTA1YzRhZDNlZjAxMjU4Zg==";
+
   /*final emailController = TextEditingController(
     text: "test",
   );
   final passwordController = TextEditingController(text: "Test1234");
 
 */
-  final emailController = TextEditingController(text: "test3");
+  /*final emailController = TextEditingController(text: "test3");
   final passwordController =
-      TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg==");
+      TextEditingController(text: "OTA1YzRhZDNlZjAxMjU4Zg=="); */
+  final emailController = TextEditingController(text: "");
+  final passwordController = TextEditingController(text: "");
 
   @override
   initState() {
@@ -66,8 +70,8 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
   Future<void> login() async {
-    var username = emailController.text;
-    var password = passwordController.text;
+    var username = emailText;//emailController.text;
+    var password = passwordText;//passwordController.text;
 
     //debugPrint("u, p $username, $password");
 
@@ -88,13 +92,12 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
-          //SmartMqtt.instance.client = MqttServerClient(
+          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+         // SmartMqtt.instance.client = MqttServerClient(
           //    Constants.BROKER_IP, Constants.BROKER_IP,
           //    maxConnectionAttempts: 1);
-         // await SmartMqtt.instance.initializeMQTTClient(
-         //     user.username, user.mqtt_pass, identifier, userTopicList);
-
+          // await SmartMqtt.instance.initializeMQTTClient(
+          //     user.username, user.mqtt_pass, identifier, userTopicList);
 
           SmartMqtt.instance.setCurrentState(MQTTAppConnectionState.connected);
           /** saving user data in shared prefs **/
@@ -121,14 +124,14 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
           await SharedPreferences.getInstance().then((value) {
             value.setBool("isLoggedIn", true);
           });
-         // FlutterBackgroundService().invoke("setAsBackground");
+          // FlutterBackgroundService().invoke("setAsBackground");
           //*** Test
-         // Utils.setLastAlarmHistoryFromPreferencesTEST();
-         // Utils.getLastAlarmHistoryListFromPreferencesTEST();
+          // Utils.setLastAlarmHistoryFromPreferencesTEST();
+          // Utils.getLastAlarmHistoryListFromPreferencesTEST();
           //*** End test
           //*********************************************/
-          await Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const UserSettings.base()));
+          await Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => const UserSettings.base()));
 
           debugPrint("Validated");
         } else {
@@ -167,7 +170,7 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
     }
     return userTopicList; */
     List<String> userTopicList = [];
-    return userTopicList ;
+    return userTopicList;
   }
 
   String? validatePassword(String value) {
@@ -212,7 +215,9 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
                                         connectionStatusText != null
                                             ? connectionStatusText!
                                             : "",
-                                        style: const TextStyle(color: Colors.redAccent, fontSize: 14),
+                                        style: const TextStyle(
+                                            color: Colors.redAccent,
+                                            fontSize: 14),
                                       )),
                                   const Padding(
                                       padding: EdgeInsets.only(
@@ -257,14 +262,16 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
                                               top: 40,
                                               bottom: 15),
                                           child: TextFormField(
+                                              initialValue:
+                                              emailText,
                                               style: const TextStyle(
                                                   fontFamily: 'Roboto',
                                                   color: Color.fromRGBO(
                                                       00, 20, 20, 80),
                                                   fontSize: 16),
-                                              decoration:
-                                                  GuiUtils.buildInputUsernameLoginDecoration(),
-                                              controller: emailController,
+                                              decoration: GuiUtils
+                                                  .buildInputUsernameLoginDecoration(),
+                                              //controller: emailController,
                                               validator: MultiValidator([
                                                 RequiredValidator(
                                                     errorText: "Required")
@@ -273,14 +280,16 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
                                         ),
                                         Container(
                                           margin: const EdgeInsets.only(
-                                              left: 65.0,
-                                              right: 65.0,
-                                              ),
+                                            left: 65.0,
+                                            right: 65.0,
+                                          ),
                                           //height: 60,
                                           //width: 220,
                                           child: TextFormField(
                                               obscureText: true,
                                               enableSuggestions: false,
+                                              initialValue:
+                                                  passwordText,
                                               autocorrect: false,
                                               style: const TextStyle(
                                                   fontFamily: 'Roboto',
@@ -289,7 +298,7 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
                                                   fontSize: 16),
                                               decoration:
                                                   buildInputUsernamePasswordDecoration(),
-                                              controller: passwordController,
+                                              //controller: passwordController,
                                               validator: MultiValidator([
                                                 RequiredValidator(
                                                     errorText: "* Required"),
@@ -310,10 +319,11 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
                                         SizedBox(
                                           // height: 50,
                                           width: 120,
-                                         // decoration: Utils
-                                           //   .buildLoginButtonBoxDecoration(),
+                                          // decoration: Utils
+                                          //   .buildLoginButtonBoxDecoration(),
                                           child: ElevatedButton(
-                                            style: GuiUtils.buildElevatedButtonLogin(),
+                                            style: GuiUtils
+                                                .buildElevatedButtonLogin(),
                                             onPressed: () {
                                               login();
                                             },
@@ -400,8 +410,8 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide:
-              const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+          borderSide: const BorderSide(
+              color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -412,7 +422,6 @@ SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port
         hintText: Constants.ENTER_SECURE_PASS,
         hintStyle: const TextStyle(fontSize: 12));
   }
-
 
   BoxDecoration buildLoginBoxDecoration() {
     return const BoxDecoration(

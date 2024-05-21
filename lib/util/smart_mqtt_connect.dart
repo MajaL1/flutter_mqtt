@@ -15,7 +15,7 @@ import '../model/data.dart';
 import '../mqtt/MQTTAppState.dart';
 import '../widgets/show_alarm_time_settings.dart';
 
-class SmartMqtt extends ChangeNotifier {
+class SmartMqttConnect extends ChangeNotifier {
    String ? host;
    int ?port;
 
@@ -37,28 +37,21 @@ class SmartMqtt extends ChangeNotifier {
   late bool isConnected = false;
   late bool userIsLoggedIn = false;
 
-  static final SmartMqtt _instance = SmartMqtt._internal();
 
-  SmartMqtt._internal();
 
-  static SmartMqtt get instance => _instance;
-
-  factory SmartMqtt(
+   SmartMqtt(
       {required String host,
       required int port,
       required String username,
       required String mqttPass,
       required topicList}) {
-    _instance.host = host;
-    _instance.port = port;
-    _instance.username = username;
-    _instance.mqttPass = mqttPass;
-    _instance.topicList = topicList;
-    _instance.initializeMQTTClient();
-    debugPrint("SMARTMQTT");
-    //FlutterBackgroundService().invoke("setAsBackground");
-
-    return _instance;
+    host = host;
+    port = port;
+    username = username;
+    mqttPass = mqttPass;
+    topicList = topicList;
+    initializeMQTTClient();
+    debugPrint("SMARTMQTT CONNECT");
   }
 
   bool debug = true;
@@ -108,19 +101,19 @@ class SmartMqtt extends ChangeNotifier {
 
   void onAutoReconnect() {
     String clientID = client.clientIdentifier;
-    instance.currentState = MQTTAppConnectionState.connected;
+    currentState = MQTTAppConnectionState.connected;
 
     print(
-        "///////////////////////////// onAutoReconnect  $clientID, $instance.currentState ///////////////////////////////////");
+        "///////////////////////////// onAutoReconnect  $clientID, $currentState ///////////////////////////////////");
   }
 
   /// The unsolicited disconnect callback
   void onDisconnected() {
-    instance.currentState = MQTTAppConnectionState.disconnected;
+    currentState = MQTTAppConnectionState.disconnected;
 
     String clientID = client.clientIdentifier;
     print(
-        "///////////////////////////// onDisconnected  $clientID, $instance.currentState ///////////////////////////////////");
+        "///////////////////////////// onDisconnected  $clientID, $currentState ///////////////////////////////////");
     MqttConnectReturnCode? returnCode = client.connectionStatus!.returnCode;
     print(
         ':OnDisconnected client callback - Client disconnection, return code: $returnCode');
@@ -128,13 +121,13 @@ class SmartMqtt extends ChangeNotifier {
         MqttConnectReturnCode.noneSpecified) {
       print(":OnDisconnected callback is solicited, this is correct");
     }
-    instance.currentState = MQTTAppConnectionState.disconnected;
+    currentState = MQTTAppConnectionState.disconnected;
   }
 
   /// The successful connect callback
   void onConnected() {
     String clientID = client.clientIdentifier;
-    _instance.currentState = MQTTAppConnectionState.connected;
+    currentState = MQTTAppConnectionState.connected;
     setCurrentState(currentState);
 
     print(
@@ -171,7 +164,7 @@ class SmartMqtt extends ChangeNotifier {
     String message =
         MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
     String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
-    debugPrint("MQTT: $decodeMessage");
+
     String? topicName = recMess.variableHeader?.topicName;
 
     bool? isRetain = recMess.header?.retain;
@@ -296,7 +289,7 @@ class SmartMqtt extends ChangeNotifier {
         alarmInterval = preferences.getString("alarm_interval_setting");
         //}
         debugPrint("+++++got alarmInterval: $alarmInterval");
-        timeIntervalMinutes = await _getIntervalFromPreferences(alarmInterval);
+        timeIntervalMinutes = await Utils.getIntervalFromPreferences(alarmInterval);
         debugPrint("+++++ 1timeIntervalMinutes $timeIntervalMinutes");
 
         if (timeIntervalMinutes == "") {
@@ -366,36 +359,6 @@ class SmartMqtt extends ChangeNotifier {
     }
   }
 
-  int _getIntervalFromPreferences(String? showInterval) {
-    int timeIntervalMinutes = 1;
-    switch (showInterval) {
-      case ShowAlarmTimeSettings.minutes10:
-        timeIntervalMinutes = 10;
-        break;
-      case ShowAlarmTimeSettings.minutes30:
-        timeIntervalMinutes = 30;
-        break;
-      case ShowAlarmTimeSettings.hour:
-        timeIntervalMinutes = 60;
-        break;
-      case ShowAlarmTimeSettings.hour6:
-        timeIntervalMinutes = 360;
-        break;
-      case ShowAlarmTimeSettings.hour12:
-        timeIntervalMinutes = 720;
-        break;
-      case ShowAlarmTimeSettings.day:
-        timeIntervalMinutes = 1440;
-        break;
-      case ShowAlarmTimeSettings.all:
-        timeIntervalMinutes = 1;
-        break;
-      default:
-        timeIntervalMinutes = 10;
-    }
-    return timeIntervalMinutes;
-  }
-
   Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences,
       String decodeMessage, String topicName) async {
     debugPrint("new user settings");
@@ -403,7 +366,7 @@ class SmartMqtt extends ChangeNotifier {
     // parse trenutno sporocilo
     Map decodeMessageSettings = <String, String>{};
     decodeMessageSettings = json.decode(decodeMessage);
-    debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
+    //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
     await setDeviceNameToSettings(
         decodeMessageSettings, topicName.split("/settings").first);
     //-----
@@ -538,8 +501,8 @@ class SmartMqtt extends ChangeNotifier {
 
     try {
       print('::Navis app client connecting....');
-      instance.currentState = MQTTAppConnectionState.connecting;
-      setCurrentState(instance.currentState);
+      currentState = MQTTAppConnectionState.connecting;
+      setCurrentState(currentState);
       //client.keepAlivePeriod = 20;
       String clientID = client.clientIdentifier;
       print(
@@ -630,7 +593,7 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   void setCurrentState(MQTTAppConnectionState? currentState) {
-    instance.currentState = currentState;
+    currentState = currentState;
   }
 }
 

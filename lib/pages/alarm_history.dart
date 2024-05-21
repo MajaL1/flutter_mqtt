@@ -57,7 +57,28 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                         child: ElevatedButton.icon(
                             style: GuiUtils.buildElevatedButtonSettings(),
                             onPressed: () {
-                              _clearHistory();
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('Clear history'),
+                                  content: const Text(
+                                    'Are you sure you want to clear history?',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        _clearHistory();
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
                             label: const Text(
                               'Clear history',
@@ -109,6 +130,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                           snapshot.data![index].sensorAddress.toString();
                       String alarmValue = "";
                       String units = UnitsConstants.getUnits(u);
+
+                      if(friendlyName.isEmpty){
+                        deviceName = "$deviceName - $sensorAddress";
+                      }
 
                       //     DateTime ts = snapshot.data![index].ts!;
 
@@ -192,7 +217,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                       Container(
                                           padding: const EdgeInsets.all(1.0),
                                           child: Text(
-                                              "$deviceName-\n$sensorAddress-$friendlyName",
+                                              deviceName,
                                               textAlign: TextAlign.center)),
                                       Container(
                                           padding: const EdgeInsets.all(1.0),

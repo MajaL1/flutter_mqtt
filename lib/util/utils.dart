@@ -108,7 +108,7 @@ class Utils {
     if (parsedMqttSettings == null) {
       return false;
     }
-    if (parsedMqttSettings!.contains(decodeMessage) ||
+    if (parsedMqttSettings.contains(decodeMessage) ||
         (parsedMqttSettings == null || parsedMqttSettings.isEmpty)) {
       return true;
     } else {
@@ -325,12 +325,6 @@ class Utils {
   // json
   // }
 
-  Alarm findLastSentAlarm(String deviceName, String sensorName) {
-    Map<String, List<Alarm>> alarmHistoryList = Map();
-    Alarm alarm = Alarm();
-
-    return alarm;
-  }
 
   static Future<String> getImageFilePathFromAssets(
       String asset, String filename) async {
@@ -414,5 +408,35 @@ class Utils {
     debugPrint("diffOldAndNewSettings:  newUserSettings: $newUserSettings");
 
     return newUserSettings;
+  }
+
+  static int getIntervalFromPreferences(String? showInterval) {
+    int timeIntervalMinutes = 1;
+    switch (showInterval) {
+      case ShowAlarmTimeSettings.minutes10:
+        timeIntervalMinutes = 10;
+        break;
+      case ShowAlarmTimeSettings.minutes30:
+        timeIntervalMinutes = 30;
+        break;
+      case ShowAlarmTimeSettings.hour:
+        timeIntervalMinutes = 60;
+        break;
+      case ShowAlarmTimeSettings.hour6:
+        timeIntervalMinutes = 360;
+        break;
+      case ShowAlarmTimeSettings.hour12:
+        timeIntervalMinutes = 720;
+        break;
+      case ShowAlarmTimeSettings.day:
+        timeIntervalMinutes = 1440;
+        break;
+      case ShowAlarmTimeSettings.all:
+        timeIntervalMinutes = 1;
+        break;
+      default:
+        timeIntervalMinutes = 10;
+    }
+    return timeIntervalMinutes;
   }
 }

@@ -44,7 +44,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //DartPluginRegistrant.ensureInitialized();
   await initializeService();
-  SharedPreferences.setMockInitialValues({});
+  //SharedPreferences.setMockInitialValues({});
   SharedPreferences.getInstance().then((value) {
     if (value.getBool("isLoggedIn") != null) {
       if (!value.getBool("isLoggedIn")!) {
@@ -165,7 +165,7 @@ void onStart(ServiceInstance service) async {
 
   //FlutterBackgroundService().invoke("setAsBackground");
 
-        Timer.periodic(const Duration(seconds: 80), (timer) async {
+        Timer.periodic(const Duration(seconds: 180), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
@@ -205,7 +205,7 @@ void onStart(ServiceInstance service) async {
               l: 3,
               b: 2,
               t: 3);
-          NotificationHelper.sendMessage(alarm);
+         // NotificationHelper.sendMessage(alarm);
 
           MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
           debugPrint("////////////////2 main.dart - $appState");

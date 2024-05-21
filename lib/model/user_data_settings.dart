@@ -86,7 +86,7 @@ class UserDataSettings {
 
       if (key.isNotEmpty) {
       if(key == "ts"){
-          break;
+          continue;
       }
         else {
         for (var item in key.keys) {
@@ -148,7 +148,7 @@ class UserDataSettings {
         if (key.isNotEmpty) {
 
           if(key == "ts"){
-              break;
+              continue;
           }
           int t = 0;
           int typ = 0;
@@ -241,7 +241,7 @@ class UserDataSettings {
 
 
       if(key=="ts"){
-        break;
+        continue;
       }
       Map map = jsonMap[key];
 
