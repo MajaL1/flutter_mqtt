@@ -132,7 +132,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                       String units = UnitsConstants.getUnits(u);
 
                       if(friendlyName.isEmpty){
-                        deviceName = "$deviceName - $sensorAddress";
+                        deviceName = "$deviceName \n$sensorAddress";
+                      }
+                      else {
+                        deviceName = friendlyName;
                       }
 
                       //     DateTime ts = snapshot.data![index].ts!;
@@ -296,4 +299,5 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       //
     });
   }
+
 }

@@ -92,12 +92,17 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
-         // SmartMqtt.instance.client = MqttServerClient(
+          SmartMqtt smartMqtt = SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+
+          SharedPreferences.getInstance().then((val) {
+            String instanceString = json.encode(smartMqtt.toString());
+            val.setString("smart_mqtt", instanceString);
+            val.reload();
+          });
+          // SmartMqtt.instance.client = MqttServerClient(
           //    Constants.BROKER_IP, Constants.BROKER_IP,
           //    maxConnectionAttempts: 1);
-          // await SmartMqtt.instance.initializeMQTTClient(
-          //     user.username, user.mqtt_pass, identifier, userTopicList);
+           await SmartMqtt.instance.initializeMQTTClient();
 
           SmartMqtt.instance.setCurrentState(MQTTAppConnectionState.connected);
           /** saving user data in shared prefs **/

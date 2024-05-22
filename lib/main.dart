@@ -192,6 +192,7 @@ void onStart(ServiceInstance service) async {
             }
           }
           prefs?.setBool("appRunInBackground", true);
+          debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
           Alarm alarm = Alarm(
               sensorAddress: "start connect to client",
               typ: 2,
@@ -205,8 +206,39 @@ void onStart(ServiceInstance service) async {
               l: 3,
               b: 2,
               t: 3);
-         // NotificationHelper.sendMessage(alarm);
+          NotificationHelper.sendMessage(alarm);
 
+          //SmartMqtt.instance.client;
+
+          SharedPreferences.getInstance().then((val){
+            String? smartMqtt = val.getString("smart_mqtt");
+            debugPrint("///////////// SmartMqtt from preferences: ${smartMqtt.toString()}");
+          });
+
+          SharedPreferences.getInstance().then((val){
+            String? clientMqtt = val.getString("client_mqtt");
+
+            Object clientObj = json.decode(clientMqtt!);
+            debugPrint("///////////// ClientMqtt from preferences: ${clientMqtt.toString()}");
+          });
+
+          SharedPreferences.getInstance().then((val){
+            String ? currentState = val.getString("current_state");
+            debugPrint("////////////////2 main.dart - currentState - $currentState");
+
+            if(currentState == "MQTTAppConnectionState.connected"){
+              debugPrint("////////////////2 main.dart - currentState is connected - $currentState");
+              SmartMqtt.instance.ping();
+              //SmartMqtt.instance.client!.connectionStatus;
+
+            }
+            else {
+              debugPrint("////////////////2 main.dart - NOT CONNECTED currentState is connected - $currentState");
+
+             // _reconnectToMqtt();
+            }
+          });
+          /*
           MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
           debugPrint("////////////////2 main.dart - $appState");
 
@@ -224,10 +256,11 @@ void onStart(ServiceInstance service) async {
             print("////////////////main.dart will call _reconnectToMqtt");
 
             /*** ce je povezava prekinjena, reconnect **/
-            await _reconnectToMqtt();
+            //await _reconnectToMqtt();
           } else {
             debugPrint("///main.dart - connected ??? x:");
           }
+          */
 
           /// you can see this log in logcat
           print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
@@ -319,7 +352,7 @@ Future<void> _reconnectToMqtt() async {
     //    maxConnectionAttempts: 1);
     await SmartMqtt.instance.initializeMQTTClient();
     //SmartMqtt.instance.client.
-    await SmartMqtt.instance.client.connect();
+    //await SmartMqtt.instance.client!.connect();
     print("================== connecting to client =========================");
     print("===========================================");
 
