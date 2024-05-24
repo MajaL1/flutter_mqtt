@@ -204,7 +204,7 @@ class SmartMqttConnect extends ChangeNotifier {
       }
 
     //  debugPrint("SmartMqtt:: ${SmartMqttConnect.instance.toString()}");
-      Alarm alarm = Alarm(
+     /* Alarm alarm = Alarm(
               sensorAddress: "start connect to client",
               typ: 2,
               v: 1,
@@ -217,15 +217,20 @@ class SmartMqttConnect extends ChangeNotifier {
               l: 3,
               b: 2,
               t: 3);
-          NotificationHelper.sendMessage(alarm);
+          NotificationHelper.sendMessage(alarm); */
 
       //SmartMqtt.instance.client;
         debugPrint("///// toString: ${instance.toString()}");
         SharedPreferences.getInstance().then((val){
             String? smartMqtt = val.getString("smart_mqtt");
+            SmartMqttConnect smartMqttObj = json.decode(smartMqtt!);
 
-            debugPrint("///////////// SmartMqtt from preferences: ${smartMqtt.toString()}");
-          });
+            //String username
+
+         //   SmartMqttConnect smartMqttConnect = SmartMqttConnect(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+            debugPrint("///////////// SmartMqtt from preferences: ${smartMqttObj.toString()}");
+            instance.initializeMQTTClient();
+        });
 
           SharedPreferences.getInstance().then((val){
             String? clientMqtt = val.getString("client_mqtt");
@@ -234,24 +239,7 @@ class SmartMqttConnect extends ChangeNotifier {
             debugPrint("///////////// ClientMqtt from preferences: ${clientMqtt.toString()}");
           });
 
-          SharedPreferences.getInstance().then((val){
-            String ? currentState = val.getString("current_state");
-            debugPrint("////////////////2 main.dart - currentState - $currentState");
 
-            if(currentState == "MQTTAppConnectionState.connected"){
-              debugPrint("////////////////2 main.dart - currentState is connected - $currentState");
-
-              //SmartMqtt.instance.client!.connectionStatus;
-
-            }
-            else {
-              debugPrint("////////////////2 main.dart - NOT CONNECTED currentState is connected - $currentState");
-              debugPrint("////////////////2 main.dart - will reconnect to mqtt");
-
-              instance.initializeMQTTClient();
-             // _reconnectToMqtt();
-            }
-          });
 
 
 
