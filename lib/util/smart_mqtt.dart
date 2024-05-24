@@ -53,7 +53,7 @@ class SmartMqtt extends ChangeNotifier {
     _instance.username = username;
     _instance.mqttPass = mqttPass;
     _instance.topicList = topicList;
-    _instance.initializeMQTTClient();
+   // _instance.initializeMQTTClient();
     debugPrint("SMARTMQTT");
     return _instance;
   }
@@ -461,9 +461,6 @@ class SmartMqtt extends ChangeNotifier {
       }
     }
 
-    /**
-     * Todo: najdi zadnji alarm za napravo
-     * ***/
     bool found = true;
     DateTime? lastSentAlarm;
     for (Alarm alarm in alarmList) {
@@ -505,7 +502,7 @@ class SmartMqtt extends ChangeNotifier {
 
     _identifier = identifier;
     _instance.client = MqttServerClient(Constants.BROKER_IP, identifier,
-        maxConnectionAttempts: 1);
+        maxConnectionAttempts: 2);
     _instance.client!.port = 1883;
     _instance.client!.keepAlivePeriod = 50;
     //client.autoReconnect = true;
@@ -541,7 +538,34 @@ class SmartMqtt extends ChangeNotifier {
       String clientID = client!.clientIdentifier;
       print(
           "*********************** Connecting to broker, client id $clientID, $currentState *******************************");
-       client!.connect(username, mqttPass);
+
+      client!.connect(username, mqttPass);
+
+    } on Exception catch (e) {
+      print('Navis app::client exception - $e');
+      disconnect();
+    }
+    SharedPreferences.getInstance().then((val){
+      String clientStr = json.encode(client.toString());
+      val.setString("client_mqtt", clientStr);
+      debugPrint("CLIENT SmartMqtt from prefereces: ${client.toString()}");
+      val.reload();
+    });
+    return client!;
+  }
+
+  Future<MqttServerClient> allowedToConnect(String username, String password, String identifier) async {
+
+
+    try {
+      print('::Navis app client connecting....');
+      instance.currentState = MQTTAppConnectionState.connecting;
+      setCurrentState(instance.currentState);
+      //client.keepAlivePeriod = 20;
+      String clientID = client!.clientIdentifier;
+      print(
+          "*********************** Connecting to broker, client id $clientID, $currentState *******************************");
+      client!.connect(username, mqttPass);
 
     } on Exception catch (e) {
       print('Navis app::client exception - $e');

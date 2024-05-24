@@ -13,6 +13,8 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
 import 'package:mqtt_test/util/settings_smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:mqtt_test/util/smart_mqtt_connect.dart';
+import 'package:mqtt_test/util/smart_mqtt_obj.dart';
 import 'package:mqtt_test/util/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -131,7 +133,6 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
-// Todo: premakni v UTIL
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
@@ -193,7 +194,7 @@ void onStart(ServiceInstance service) async {
           }
           prefs?.setBool("appRunInBackground", true);
           debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
-          Alarm alarm = Alarm(
+          /*Alarm alarm = Alarm(
               sensorAddress: "start connect to client",
               typ: 2,
               v: 1,
@@ -206,12 +207,13 @@ void onStart(ServiceInstance service) async {
               l: 3,
               b: 2,
               t: 3);
-          NotificationHelper.sendMessage(alarm);
+          NotificationHelper.sendMessage(alarm); */
 
           //SmartMqtt.instance.client;
 
-          SharedPreferences.getInstance().then((val){
+        /*  SharedPreferences.getInstance().then((val){
             String? smartMqtt = val.getString("smart_mqtt");
+
             debugPrint("///////////// SmartMqtt from preferences: ${smartMqtt.toString()}");
           });
 
@@ -234,12 +236,15 @@ void onStart(ServiceInstance service) async {
             }
             else {
               debugPrint("////////////////2 main.dart - NOT CONNECTED currentState is connected - $currentState");
+              debugPrint("////////////////2 main.dart - will reconnect to mqtt");
 
+              _reconnectToMqtt();
              // _reconnectToMqtt();
             }
-          });
-          /*
-          MQTTAppConnectionState? appState = SmartMqtt.instance.currentState;
+          }); */
+
+          MQTTAppConnectionState? appState = SmartMqtt.
+          instance.currentState;
           debugPrint("////////////////2 main.dart - $appState");
 
           if (SmartMqtt.instance.getCurrentState() ==
@@ -256,11 +261,12 @@ void onStart(ServiceInstance service) async {
             print("////////////////main.dart will call _reconnectToMqtt");
 
             /*** ce je povezava prekinjena, reconnect **/
-            //await _reconnectToMqtt();
+            /*** todo: preveri ali je mqtt ze povezan!!  **/
+           // await _reconnectToMqtt();
           } else {
             debugPrint("///main.dart - connected ??? x:");
           }
-          */
+
 
           /// you can see this log in logcat
           print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
@@ -343,19 +349,11 @@ Future<void> _reconnectToMqtt() async {
         mqttPass: mqttPassword,
         topicList: userTopicList); */
     //await mqtt.initializeMQTTClient();
-    String l = Utils.generateRandomString(10);
-    //String identifier = "_12apxeeejjjewg";
-    String identifier = l.toString();
 
-    //SmartMqtt.instance.client = MqttServerClient(
-    //    Constants.BROKER_IP, identifier,
-    //    maxConnectionAttempts: 1);
-    await SmartMqtt.instance.initializeMQTTClient();
-    //SmartMqtt.instance.client.
-    //await SmartMqtt.instance.client!.connect();
-    print("================== connecting to client =========================");
+    print("================== connecting to client from main.dart =========================");
     print("===========================================");
 
+    await SmartMqtt.instance.initializeMQTTClient();
 
     print("current smartmqtt state: ${SmartMqtt.instance.client}");
   } else {
@@ -416,7 +414,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     return MultiProvider(
         providers: [
           //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
-          ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
+          ChangeNotifierProvider(create: (context) => SmartMqttConnect.instance),
           ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
          // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
         ],

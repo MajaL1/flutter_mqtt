@@ -17,6 +17,8 @@ import '../model/constants.dart';
 import '../model/user.dart';
 import '../mqtt/MQTTAppState.dart';
 import '../util/gui_utils.dart';
+import '../util/smart_mqtt_connect.dart';
+import '../util/smart_mqtt_obj.dart';
 import '../util/utils.dart';
 
 class LoginForm extends StatefulWidget {
@@ -92,7 +94,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqtt smartMqtt = SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+          SmartMqttConnect smartMqtt = SmartMqttConnect(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
 
           SharedPreferences.getInstance().then((val) {
             String instanceString = json.encode(smartMqtt.toString());
@@ -102,13 +104,14 @@ class _LoginFormValidationState extends State<LoginForm> {
           // SmartMqtt.instance.client = MqttServerClient(
           //    Constants.BROKER_IP, Constants.BROKER_IP,
           //    maxConnectionAttempts: 1);
-           await SmartMqtt.instance.initializeMQTTClient();
+          await smartMqtt.initializeMQTTClient();
+           //await SmartMqttConnect.instance.initializeMQTTClient();
 
-          SmartMqtt.instance.setCurrentState(MQTTAppConnectionState.connected);
+          //SmartMqttConnect.instance.setCurrentState(MQTTAppConnectionState.connected);
           /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
-            //value.setString("username", username);
-            //value.setString("pass", password);
+            value.setString("username", username);
+            value.setString("pass", password);
             value.setStringList("user_topics", userTopicList);
             value.setString("username", user.username);
 

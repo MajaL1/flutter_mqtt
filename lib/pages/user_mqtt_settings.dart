@@ -13,6 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/constants.dart';
 import '../util/gui_utils.dart';
+import '../util/smart_mqtt_connect.dart';
+import '../util/smart_mqtt_obj.dart';
 import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
@@ -320,7 +322,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Future<String> _getNewUserSettingsList() async {
     String settings = "";
-    settings = await Provider.of<SmartMqtt>(context, listen: true)
+    settings = await Provider.of<SmartMqttConnect>(context, listen: true)
         .getNewUserSettingsList();
     if (settings != null) {
       return settings;
