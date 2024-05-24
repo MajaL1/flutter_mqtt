@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
 
-import '../main2.dart';
+import '../main.dart';
 import '../model/alarm.dart';
 import '../util/utils.dart';
 import '../widgets/units.dart';
