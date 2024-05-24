@@ -124,8 +124,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     debugPrint("calling build method user_settings.dart");
 
     return SingleChildScrollView(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Container(
+
+        color: Colors.white,
         child: Column(children: <Widget>[
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -148,7 +151,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           Container(height: 30),
         ]),
       ),
-    );
+    ));
   }
 
   BoxDecoration buildBoxDecoration() {
@@ -177,7 +180,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       const Text(
         "Friendly name:  ",
         style: TextStyle(
-          fontSize: 14,           //color: Color.fromRGBO(0, 0, 190, 1)//.shade900,
+          fontSize: 14, //color: Color.fromRGBO(0, 0, 190, 1)//.shade900,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -492,7 +495,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w800,
-                                                                      backgroundColor:
+                                                                  backgroundColor:
                                                                       Color.fromRGBO(
                                                                           226,
                                                                           239,
@@ -575,7 +578,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     String settingText = "";
     bool isEnabledSave = false;
 //if(sensorAddress == "135" || sensorAddress == "26") { debugPrint("container"); return Container();}
-   // debugPrint(
+    // debugPrint(
     //    "00000000000000000000000000 _buildEditableSettingsTest2 sensorAddress $sensorAddress deviceName: $deviceName, settingToChange: $settingToChange");
     if (settingToChange.compareTo(Constants.HI_ALARM_JSON) == 0) {
       settingText = "High alarm ($unitText): ";

@@ -222,13 +222,14 @@ class SmartMqttConnect extends ChangeNotifier {
       //SmartMqtt.instance.client;
         debugPrint("///// toString: ${instance.toString()}");
         SharedPreferences.getInstance().then((val){
-            String? smartMqtt = val.getString("smart_mqtt");
-            SmartMqttConnect smartMqttObj = json.decode(smartMqtt!);
+            var smartMqtt = val.getString("smart_mqtt");
+            SmartMqttConnect smartMqtt1 =json.decode(smartMqtt!);
+           // var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
 
             //String username
 
          //   SmartMqttConnect smartMqttConnect = SmartMqttConnect(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
-            debugPrint("///////////// SmartMqtt from preferences: ${smartMqttObj.toString()}");
+            debugPrint("///////////// SmartMqtt from preferences: ${smartMqtt.toString()}");
             instance.initializeMQTTClient();
         });
 

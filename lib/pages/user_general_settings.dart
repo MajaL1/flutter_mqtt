@@ -38,7 +38,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         //Utils.setAlarmGeneralIntervalSettings(dropdownValue!);
       });
     });
-   // String? val = pref?.getString("alarm_interval_setting");
+    // String? val = pref?.getString("alarm_interval_setting");
 
     super.initState();
   }
@@ -49,13 +49,14 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   }
 
   SingleChildScrollView buildUserGeneralSettings() {
-
     //super.initState();
 
     return SingleChildScrollView(
-      //color: Colors.white,
+        //color: Colors.white,
 
-      //body: SingleChildScrollView(
+        //body: SingleChildScrollView(
+        child: Container(
+      color: Colors.white,
       child: Column(children: <Widget>[
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
@@ -65,18 +66,22 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
           height: 30,
           color: Colors.white,
         ),
-        const Text("General settings ",
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 20)),
+        Container(
+          //height: 30,
+          color: Colors.white,
+          child: const Text("General settings ",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20)),
+        ),
         const Divider(height: 14, color: Colors.transparent, thickness: 5),
 
         const Divider(height: 4, color: Colors.black12, thickness: 5),
         _buildUserGeneralSettings(),
       ]),
       // ),
-    );
+    ));
   }
 
   BoxDecoration buildBoxDecoration() {
