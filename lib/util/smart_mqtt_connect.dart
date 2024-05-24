@@ -113,7 +113,7 @@ class SmartMqttConnect extends ChangeNotifier {
         onStart: onStart,
         // auto start service
         autoStart: true,
-        isForegroundMode: true,
+        isForegroundMode: false,
         notificationChannelId: 'my_foreground',
         initialNotificationTitle: 'Alarm app',
         initialNotificationContent: 'Initializing',
@@ -220,8 +220,8 @@ class SmartMqttConnect extends ChangeNotifier {
           NotificationHelper.sendMessage(alarm);
 
       //SmartMqtt.instance.client;
-
-      /*  SharedPreferences.getInstance().then((val){
+        debugPrint("///// toString: ${instance.toString()}");
+        SharedPreferences.getInstance().then((val){
             String? smartMqtt = val.getString("smart_mqtt");
 
             debugPrint("///////////// SmartMqtt from preferences: ${smartMqtt.toString()}");
@@ -240,7 +240,7 @@ class SmartMqttConnect extends ChangeNotifier {
 
             if(currentState == "MQTTAppConnectionState.connected"){
               debugPrint("////////////////2 main.dart - currentState is connected - $currentState");
-              SmartMqtt.instance.ping();
+
               //SmartMqtt.instance.client!.connectionStatus;
 
             }
@@ -248,10 +248,10 @@ class SmartMqttConnect extends ChangeNotifier {
               debugPrint("////////////////2 main.dart - NOT CONNECTED currentState is connected - $currentState");
               debugPrint("////////////////2 main.dart - will reconnect to mqtt");
 
-              _reconnectToMqtt();
+              instance.initializeMQTTClient();
              // _reconnectToMqtt();
             }
-          }); */
+          });
 
 
 
