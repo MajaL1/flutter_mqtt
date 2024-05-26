@@ -477,9 +477,9 @@ class SmartMqtt extends ChangeNotifier {
       }
     }
 
-    for (Alarm alarm in alarmList) {
+   /* for (Alarm alarm in alarmList) {
       debugPrint("Printing alarmList ${alarm.toString()}");
-    }
+    } */
 
     //debugPrint("alarmList.size: ${alarmList.length}");
     //lastSentAlarm ??= DateTime.now();

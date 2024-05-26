@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'dart:io' as io;
 import 'dart:ui';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:http/http.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/utils.dart';
@@ -63,7 +61,9 @@ class SmartMqttConnect extends ChangeNotifier {
     _instance.topicList = topicList;
     // _instance.initializeMQTTClient();
     WidgetsFlutterBinding.ensureInitialized();
-    initializeService();
+    initializeService().then((val){
+      instance.initializeMQTTClient();
+    });
 
     debugPrint("SMARTMQTT CONNECT");
     return _instance;
@@ -79,7 +79,8 @@ class SmartMqttConnect extends ChangeNotifier {
   /***************** background service *********************/
   static Future<void> initializeService() async {
     final service = FlutterBackgroundService();
-    debugPrint("main.dart initializing background service");
+    debugPrint("smart_mqtt_connect initializing background service");
+    debugPrint(" smart_mqtt_connect initalizeService(): instance: ${instance}");
 
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -89,7 +90,7 @@ class SmartMqttConnect extends ChangeNotifier {
       'This channel is used for important notifications.', // description
       importance: Importance.low, // importance must be at low or higher level
     );
-
+//channel.toExternalReference;
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -113,7 +114,7 @@ class SmartMqttConnect extends ChangeNotifier {
         onStart: onStart,
         // auto start service
         autoStart: true,
-        isForegroundMode: false,
+        isForegroundMode: true,
         notificationChannelId: 'my_foreground',
         initialNotificationTitle: 'Alarm app',
         initialNotificationContent: 'Initializing',
@@ -130,6 +131,7 @@ class SmartMqttConnect extends ChangeNotifier {
         onBackground: onIosBackground,
       ),
     );
+
     debugPrint("main.dart end initializing background service");
   }
 
@@ -154,7 +156,19 @@ class SmartMqttConnect extends ChangeNotifier {
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
+    debugPrint(" smart_mqtt_connect onStart: ");
     DartPluginRegistrant.ensureInitialized();
+    SmartMqttConnect.instance.addListener(() {});
+
+    /*SharedPreferences.getInstance().then((val) {
+      String ? username = val.getString("username") ?? "";
+      String ? password = val.getString("password") ?? "";
+      String ? userTopicList = val.getString("user_topic_list") ?? "";
+      String? currentState = val.getString("current_state") ?? "";
+
+      debugPrint("////////////////currentState - $currentState");
+      debugPrint(" smart_mqtt_connect onStart: ${instance}");
+    }); */
 
     //SmartMqttConnect.instance.addListener(() {});
     if (service is AndroidServiceInstance) {
@@ -162,6 +176,8 @@ class SmartMqttConnect extends ChangeNotifier {
         service.setAsForegroundService();
         debugPrint(">>>>>>> service.setAsForegroundService()");
       });
+
+      //FlutterBackgroundService().invoke("setAsBackground");
 
       service.on('setAsBackground').listen((event) {
         service.setAsBackgroundService();
@@ -174,14 +190,17 @@ class SmartMqttConnect extends ChangeNotifier {
       service.stopSelf();
     });
 
-    //FlutterBackgroundService().invoke("setAsBackground");
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
-    Timer.periodic(const Duration(seconds: 180), (timer) async {
+    Timer.periodic(const Duration(seconds: 13), (timer) async {
+      debugPrint("///// Timer.periodic(const Duration(seconds: 180)");
+
       if (service is AndroidServiceInstance) {
         if (await service.isForegroundService()) {
           /// OPTIONAL for use custom notification
           /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-          /*flutterLocalNotificationsPlugin.show(
+          flutterLocalNotificationsPlugin.show(
                 888,
                 'COOL SERVICE',
                 'Awesome ${DateTime.now()}',
@@ -192,8 +211,9 @@ class SmartMqttConnect extends ChangeNotifier {
                     icon: 'ic_bg_service_small',
                     ongoing: true,
                   ),
-                ),
-              ); */
+                  ),
+                );
+
 
           // if you don't using custom notification, uncomment this
           service.setForegroundNotificationInfo(
@@ -222,53 +242,21 @@ class SmartMqttConnect extends ChangeNotifier {
       //SmartMqtt.instance.client;
         debugPrint("///// toString: ${instance.toString()}");
         SharedPreferences.getInstance().then((val){
-            var smartMqtt = val.getString("smart_mqtt");
-            SmartMqttConnect smartMqtt1 =json.decode(smartMqtt!);
-           // var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
+            //var smartMqtt = val.getString("smart_mqtt");
+            //String smartMqtt1 =json.decode(smartMqtt!);
+            //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
 
-            //String username
+            String ? username = val.getString("username");
+            String ? password = val.getString("pass");
+            String ? userTopicList = val.getString("user_topic_list");
+            String? currentState = val.getString("current_state");
+            debugPrint("////////////////currentState - $username, $password, $userTopicList $currentState");
 
-         //   SmartMqttConnect smartMqttConnect = SmartMqttConnect(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
-            debugPrint("///////////// SmartMqtt from preferences: ${smartMqtt.toString()}");
-            instance.initializeMQTTClient();
         });
-
-          SharedPreferences.getInstance().then((val){
-            String? clientMqtt = val.getString("client_mqtt");
-
-            Object clientObj = json.decode(clientMqtt!);
-            debugPrint("///////////// ClientMqtt from preferences: ${clientMqtt.toString()}");
-          });
-
-
-
-
 
       /// you can see this log in logcat
       print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
-
-
-
-      // test using external plugin
-      final deviceInfo = DeviceInfoPlugin();
-      String? device;
-      if (io.Platform.isAndroid) {
-        final androidInfo = await deviceInfo.androidInfo;
-        device = androidInfo.model;
-      }
-
-      if (io.Platform.isIOS) {
-        final iosInfo = await deviceInfo.iosInfo;
-        device = iosInfo.model;
-      }
-
-      service.invoke(
-        'update',
-        {
-          "current_date": DateTime.now().toIso8601String(),
-          "device": "aaa",
-        },
-      );
+      debugPrint('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
     });
   }
   /*   }
@@ -689,9 +677,9 @@ class SmartMqttConnect extends ChangeNotifier {
       }
     }
 
-    for (Alarm alarm in alarmList) {
+    /*for (Alarm alarm in alarmList) {
       debugPrint("Printing alarmList ${alarm.toString()}");
-    }
+    } */
 
     //debugPrint("alarmList.size: ${alarmList.length}");
     //lastSentAlarm ??= DateTime.now();
@@ -891,7 +879,7 @@ class SmartMqttConnect extends ChangeNotifier {
     };
   }
 
-  factory SmartMqttConnect.fromJson(Map<String, dynamic> map) {
+  factory SmartMqttConnect.fromJson(Map<dynamic, dynamic> map) {
     return SmartMqttConnect(
       host: map["host"],
       port: map["port"],

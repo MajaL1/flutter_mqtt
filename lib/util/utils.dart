@@ -365,7 +365,7 @@ class Utils {
           String? sensorAddress = setting.sensorAddress;
           String? friendlyName = setting.friendlyName;
 
-          debugPrint("utils - before sendMessage setFriendlyName");
+          //debugPrint("utils - before sendMessage setFriendlyName");
           if (alarm.sensorAddress == sensorAddress &&
               alarm.deviceName == deviceName) {
             alarm.friendlyName = friendlyName;

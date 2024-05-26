@@ -94,18 +94,17 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqttConnect smartMqtt = SmartMqttConnect(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+          SmartMqtt smartMqtt = SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
 
-          SharedPreferences.getInstance().then((val) {
+         /* SharedPreferences.getInstance().then((val) {
             String instanceString = json.encode(smartMqtt.toString());
             val.setString("smart_mqtt", instanceString);
             val.reload();
-          });
+          }); */
           // SmartMqtt.instance.client = MqttServerClient(
           //    Constants.BROKER_IP, Constants.BROKER_IP,
           //    maxConnectionAttempts: 1);
-          await smartMqtt.initializeMQTTClient();
-           //await SmartMqttConnect.instance.initializeMQTTClient();
+         // smartMqtt.initializeMQTTClient();
 
           //SmartMqttConnect.instance.setCurrentState(MQTTAppConnectionState.connected);
           /** saving user data in shared prefs **/
@@ -126,18 +125,13 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setString("user_topic_list", userTopicListPref);
           });
 
-          //await mqtt.initializeMQTTClient();
+          await smartMqtt.initializeMQTTClient();
           // inicializiraj servis za posiljanje sporocil
           await NotificationHelper.initializeService();
           await SharedPreferences.getInstance().then((value) {
             value.setBool("isLoggedIn", true);
           });
-          // FlutterBackgroundService().invoke("setAsBackground");
-          //*** Test
-          // Utils.setLastAlarmHistoryFromPreferencesTEST();
-          // Utils.getLastAlarmHistoryListFromPreferencesTEST();
-          //*** End test
-          //*********************************************/
+
           await Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => const UserSettings.base()));
 
