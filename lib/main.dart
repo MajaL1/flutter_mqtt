@@ -166,7 +166,7 @@ void onStart(ServiceInstance service) async {
 
   //FlutterBackgroundService().invoke("setAsBackground");
 
-        Timer.periodic(const Duration(seconds: 180), (timer) async {
+        Timer.periodic(const Duration(seconds: 80), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
@@ -192,7 +192,6 @@ void onStart(ServiceInstance service) async {
               );
             }
           }
-          prefs?.setBool("appRunInBackground", true);
           debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
           /*Alarm alarm = Alarm(
               sensorAddress: "start connect to client",
@@ -214,6 +213,7 @@ void onStart(ServiceInstance service) async {
             //var smartMqtt = val.getString("smart_mqtt");
             //String smartMqtt1 =json.decode(smartMqtt!);
             //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
+            //val?.setBool("appRunInBackground", true);
 
             String ? username = val.getString("username");
             String ? password = val.getString("pass");
@@ -351,6 +351,8 @@ class NotificationsApp extends StatefulWidget {
   State<NotificationsApp> createState() => _NotificationsAppState();
 }
 
+
+
 class _NotificationsAppState extends State<NotificationsApp> {
   var prefs = 1;
   late final AppLifecycleListener _listener;
@@ -367,6 +369,103 @@ class _NotificationsAppState extends State<NotificationsApp> {
       print(call.method);
       return Future(() => call);
     }); */
+  }
+  @override
+  void initState() {
+    // ce shared preferences se nimajo objekta za alarme, ustvari novega
+    debugPrint("main init state: ");
+    initAlarmHistoryList();
+    //NotificationHelper.initializeService();
+    //WidgetsBinding.instance.addObserver();
+    super.initState();
+    _state = SchedulerBinding.instance.lifecycleState;
+    _listener = AppLifecycleListener(
+      onShow: () => _handleTransition('show'),
+      onResume: () => _handleTransition('resume'),
+      onHide: () => _handleTransition('hide'),
+      onInactive: () => _handleTransition('inactive'),
+      onPause: () => _handleTransition('pause'),
+      onDetach: () => _handleTransition('detach'),
+      onRestart: () => _handleTransition('restart'),
+      onExitRequested: () => _onExitRequested(),
+      // This fires for each state change. Callbacks above fire only for
+      // specific state transitions.
+      onStateChange: _handleStateChange,
+    );
+    SharedPreferences.getInstance().then((val){
+      val.setBool("appRunInBackground", false);
+
+    });
+    if (_state != null) {
+      _states.add(_state!.name);
+    }
+  }
+
+  Future<AppExitResponse> _onExitRequested() async {
+    final response = await showDialog<AppExitResponse>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Are you sure you want to quit this app?'),
+        content: const Text('All unsaved progress will be lost.'),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(AppExitResponse.cancel);
+            },
+          ),
+          TextButton(
+            child: const Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop(AppExitResponse.exit);
+            },
+          ),
+        ],
+      ),
+    );
+
+    return response ?? AppExitResponse.exit;
+  }
+
+  @override
+  void dispose() {
+    debugPrint("main.dart - dispose");
+    _listener.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleTransition(String name) async {
+    setState(() {
+      _states.add(name);
+    });
+
+    debugPrint("--handleTransition $name");
+    if (name == "detach") {
+      debugPrint("--handleTransition $name detaching from app");
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setBool("appRunInBackground", true);
+      preferences.reload();
+      initializeService().then((value) => {
+        // if(SmartMqtt.instance.client.connectionStatus == MQTTAppConnectionState.disconnected)
+
+        Future.delayed(const Duration(milliseconds: 500), () {
+          print("SmartMqtt.instance.initializeMQTTClient()");
+          /** Todo: if logged in _reconnect*/
+          String currState = SmartMqtt.instance.currentState.toString();
+          /*** ce je povezava prekinjena, reconnect **/
+          _reconnectToMqtt();
+        })
+
+        // }
+      });
+    }
+  }
+
+  void _handleStateChange(AppLifecycleState state) {
+    setState(() {
+      _state = state;
+    });
   }
 
 
