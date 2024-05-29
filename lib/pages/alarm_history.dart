@@ -73,6 +73,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                     TextButton(
                                       onPressed: () {
                                         _clearHistory();
+                                        Navigator.pop(context, 'OK');
                                       },
                                       child: const Text('OK'),
                                     ),
