@@ -73,7 +73,6 @@ class Utils {
     return userTopicList;
   }
 
-
   static Column showCircularProgressIndicator() {
     return Column(
       children: <Widget>[

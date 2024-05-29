@@ -293,7 +293,7 @@ class SmartMqtt extends ChangeNotifier {
         alarmInterval = preferences.getString("alarm_interval_setting");
         //}
         debugPrint("+++++got alarmInterval: $alarmInterval");
-        timeIntervalMinutes = await _getIntervalFromPreferences(alarmInterval);
+        timeIntervalMinutes = await Utils.getIntervalFromPreferences(alarmInterval);
         debugPrint("+++++ 1timeIntervalMinutes $timeIntervalMinutes");
 
         if (timeIntervalMinutes == "") {
@@ -363,35 +363,6 @@ class SmartMqtt extends ChangeNotifier {
     }
   }
 
-  int _getIntervalFromPreferences(String? showInterval) {
-    int timeIntervalMinutes = 1;
-    switch (showInterval) {
-      case ShowAlarmTimeSettings.minutes10:
-        timeIntervalMinutes = 10;
-        break;
-      case ShowAlarmTimeSettings.minutes30:
-        timeIntervalMinutes = 30;
-        break;
-      case ShowAlarmTimeSettings.hour:
-        timeIntervalMinutes = 60;
-        break;
-      case ShowAlarmTimeSettings.hour6:
-        timeIntervalMinutes = 360;
-        break;
-      case ShowAlarmTimeSettings.hour12:
-        timeIntervalMinutes = 720;
-        break;
-      case ShowAlarmTimeSettings.day:
-        timeIntervalMinutes = 1440;
-        break;
-      case ShowAlarmTimeSettings.all:
-        timeIntervalMinutes = 1;
-        break;
-      default:
-        timeIntervalMinutes = 10;
-    }
-    return timeIntervalMinutes;
-  }
 
   Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences,
       String decodeMessage, String topicName) async {
@@ -539,32 +510,6 @@ class SmartMqtt extends ChangeNotifier {
       print(
           "*********************** Connecting to broker, client id $clientID, $currentState *******************************");
 
-      client!.connect(username, mqttPass);
-
-    } on Exception catch (e) {
-      print('Navis app::client exception - $e');
-      disconnect();
-    }
-    SharedPreferences.getInstance().then((val){
-      String clientStr = json.encode(client.toString());
-      val.setString("client_mqtt", clientStr);
-      val.setString("identifier", identifier);
-      debugPrint("CLIENT SmartMqtt from prefereces: ${client.toString()}");
-      val.reload();
-    });
-    return client!;
-  }
-
-  Future<MqttServerClient> allowedToConnect(String username, String password, String identifier) async {
-
-    try {
-      print('::Navis app client connecting....');
-      instance.currentState = MQTTAppConnectionState.connecting;
-      setCurrentState(instance.currentState);
-      //client.keepAlivePeriod = 20;
-      String clientID = client!.clientIdentifier;
-      print(
-          "*********************** Connecting to broker, client id $clientID, $currentState *******************************");
       client!.connect(username, mqttPass);
 
     } on Exception catch (e) {
