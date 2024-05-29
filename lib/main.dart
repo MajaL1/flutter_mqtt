@@ -222,11 +222,19 @@ void onStart(ServiceInstance service) async {
             String ? userTopicList = val.getString("user_topic_list");
             String? currentState = val.getString("current_state");
             String? clientIdentifier = val.getString("identifier");
+            bool? connected = val.getBool("connected");
 
             debugPrint("////////////////currentState - $currentState, $username, $password, $userTopicList $currentState");
 
             /// ce ni povezan v mqtt, naredi novo povezavo
-            _reconnectToMqtt();
+            ///
+            ///
+            if(connected== null || !connected) {
+              debugPrint("////////////////connected!= null && !connected");
+
+              _reconnectToMqtt();
+              val.setBool("connected", true);
+            }
 
             if(currentState != null) {
               if (currentState != "MQTTAppConnectionState.disconnected") {

@@ -497,8 +497,8 @@ class SmartMqtt extends ChangeNotifier {
     topicList = topicList;
 
     String l = Utils.generateRandomString(10);
-    String identifier = "_12apxeeejjjewg";
-    //String identifier = l.toString();
+    //String identifier = "_12apxeeejjjewg";
+    String identifier = l.toString();
 
     _identifier = identifier;
     _instance.client = MqttServerClient(Constants.BROKER_IP, identifier,
