@@ -221,13 +221,18 @@ void onStart(ServiceInstance service) async {
             String ? password = val.getString("pass");
             String ? userTopicList = val.getString("user_topic_list");
             String? currentState = val.getString("current_state");
+            String? clientIdentifier = val.getString("identifier");
+
             debugPrint("////////////////currentState - $currentState, $username, $password, $userTopicList $currentState");
 
             /// ce ni povezan v mqtt, naredi novo povezavo
-            if(currentState != "MQTTAppConnectionState.connected" && currentState != "MQTTAppConnectionState.connecting") {
-              debugPrint("////////////////currentState != MQTTAppConnectionState.connected && currentState != connecting - $currentState");
+            _reconnectToMqtt();
 
-              _reconnectToMqtt();
+            if(currentState != null) {
+              if (currentState != "MQTTAppConnectionState.disconnected") {
+                debugPrint(
+                    "////////////////currentState != MQTTAppConnectionState.connected && currentState != connecting - $currentState");
+              }
             }
           });
           print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;

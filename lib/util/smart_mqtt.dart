@@ -114,7 +114,6 @@ class SmartMqtt extends ChangeNotifier {
 
   /// The unsolicited disconnect callback
   void onDisconnected() {
-    instance.currentState = MQTTAppConnectionState.disconnected;
 
     String clientID = client!.clientIdentifier;
     print(
@@ -127,6 +126,7 @@ class SmartMqtt extends ChangeNotifier {
       print(":OnDisconnected callback is solicited, this is correct");
     }
     instance.currentState = MQTTAppConnectionState.disconnected;
+    setCurrentState(currentState);
   }
 
   /// The successful connect callback
@@ -497,8 +497,8 @@ class SmartMqtt extends ChangeNotifier {
     topicList = topicList;
 
     String l = Utils.generateRandomString(10);
-    //String identifier = "_12apxeeejjjewg";
-    String identifier = l.toString();
+    String identifier = "_12apxeeejjjewg";
+    //String identifier = l.toString();
 
     _identifier = identifier;
     _instance.client = MqttServerClient(Constants.BROKER_IP, identifier,
@@ -548,6 +548,7 @@ class SmartMqtt extends ChangeNotifier {
     SharedPreferences.getInstance().then((val){
       String clientStr = json.encode(client.toString());
       val.setString("client_mqtt", clientStr);
+      val.setString("identifier", identifier);
       debugPrint("CLIENT SmartMqtt from prefereces: ${client.toString()}");
       val.reload();
     });
@@ -555,7 +556,6 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   Future<MqttServerClient> allowedToConnect(String username, String password, String identifier) async {
-
 
     try {
       print('::Navis app client connecting....');
@@ -574,6 +574,7 @@ class SmartMqtt extends ChangeNotifier {
     SharedPreferences.getInstance().then((val){
       String clientStr = json.encode(client.toString());
       val.setString("client_mqtt", clientStr);
+      val.setString("identifier", identifier);
       debugPrint("CLIENT SmartMqtt from prefereces: ${client.toString()}");
       val.reload();
     });
