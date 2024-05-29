@@ -16,6 +16,7 @@ import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt_connect.dart';
 import 'package:mqtt_test/util/smart_mqtt_obj.dart';
 import 'package:mqtt_test/util/utils.dart';
+import 'package:mqtt_test/widgets/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
@@ -214,70 +215,25 @@ void onStart(ServiceInstance service) async {
             //String smartMqtt1 =json.decode(smartMqtt!);
             //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
             //val?.setBool("appRunInBackground", true);
-
+            bool? appRunInBackground = val.getBool("appRunInBackground");
+            debugPrint("main.dart appRunInBackground: $appRunInBackground");
             String ? username = val.getString("username");
             String ? password = val.getString("pass");
             String ? userTopicList = val.getString("user_topic_list");
             String? currentState = val.getString("current_state");
-            debugPrint("////////////////currentState - $username, $password, $userTopicList $currentState");
+            debugPrint("////////////////currentState - $currentState, $username, $password, $userTopicList $currentState");
 
+            /// ce ni povezan v mqtt, naredi novo povezavo
+            if(currentState != "MQTTAppConnectionState.connected" && currentState != "MQTTAppConnectionState.connecting") {
+              debugPrint("////////////////currentState != MQTTAppConnectionState.connected && currentState != connecting - $currentState");
+
+              _reconnectToMqtt();
+            }
           });
-
-          MQTTAppConnectionState? appState = SmartMqtt.
-          instance.currentState;
-          debugPrint("////////////////2 main.dart - $appState");
-
-          if (SmartMqtt.instance.getCurrentState() ==
-              MQTTAppConnectionState.connected) {
-            debugPrint("////////////////main.dart - connected:");
-          }
-          SmartMqtt.instance.getCurrentState().then((val){
-            debugPrint("///////////// VAL: $val");
-          });
-          if (SmartMqtt.instance.currentState == null ||
-              SmartMqtt.instance.currentState ==
-                  MQTTAppConnectionState.disconnected) {
-            debugPrint("////////////////main.dart - disconnected:");
-            print("////////////////main.dart will call _reconnectToMqtt");
-
-            /*** ce je povezava prekinjena, reconnect **/
-            /*** todo: preveri ali je mqtt ze povezan!!  **/
-           // await _reconnectToMqtt();
-          } else {
-            debugPrint("///main.dart - connected ??? x:");
-          }
-
-
-          /// you can see this log in logcat
           print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
-
-
-
-          // test using external plugin
-          final deviceInfo = DeviceInfoPlugin();
-          String? device;
-          if (io.Platform.isAndroid) {
-            final androidInfo = await deviceInfo.androidInfo;
-            device = androidInfo.model;
-          }
-
-          if (io.Platform.isIOS) {
-            final iosInfo = await deviceInfo.iosInfo;
-            device = iosInfo.model;
-          }
-
-          service.invoke(
-            'update',
-            {
-              "current_date": DateTime.now().toIso8601String(),
-              "device": "aaa",
-            },
-          );
         });
       }
- /*   }
-  });
-} */
+
 
 Future<void> _reconnectToMqtt() async {
   print("////////////////calling _reconnectToMqtt");
@@ -320,7 +276,7 @@ Future<void> _reconnectToMqtt() async {
         "////////////////main.dart _reconnectToMqtt username != null && pass != null && userTopicList != null");
     debugPrint("////////////////main.dart _reconnectToMqtt $username, $mqttPassword, $userTopicList");
 
-    prefs?.setBool("appRunInBackground", true);
+   // prefs?.setBool("appRunInBackground", true);
 
     /*SmartMqtt mqtt = SmartMqtt(
         host: Constants.BROKER_IP,
@@ -333,8 +289,9 @@ Future<void> _reconnectToMqtt() async {
     print("================== connecting to client from main.dart =========================");
     print("===========================================");
 
-    await SmartMqtt.instance.initializeMQTTClient();
-
+     //SmartMqtt.instance.initializeMQTTClient();
+    SmartMqtt smartMqtt = SmartMqtt(host: Constants.BROKER_IP, port: Constants.BROKER_PORT, username: username, mqttPass: password, topicList: userTopicList);
+    smartMqtt.initializeMQTTClient();
     print("current smartmqtt state: ${SmartMqtt.instance.client}");
   } else {
     print(
@@ -392,10 +349,9 @@ class _NotificationsAppState extends State<NotificationsApp> {
       // specific state transitions.
       onStateChange: _handleStateChange,
     );
-    SharedPreferences.getInstance().then((val){
+    /*SharedPreferences.getInstance().then((val){
       val.setBool("appRunInBackground", false);
-
-    });
+    });*/
     if (_state != null) {
       _states.add(_state!.name);
     }
@@ -446,19 +402,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setBool("appRunInBackground", true);
       preferences.reload();
-      initializeService().then((value) => {
-        // if(SmartMqtt.instance.client.connectionStatus == MQTTAppConnectionState.disconnected)
-
-        Future.delayed(const Duration(milliseconds: 500), () {
-          print("SmartMqtt.instance.initializeMQTTClient()");
-          /** Todo: if logged in _reconnect*/
-          String currState = SmartMqtt.instance.currentState.toString();
-          /*** ce je povezava prekinjena, reconnect **/
-          _reconnectToMqtt();
-        })
-
-        // }
-      });
     }
   }
 
