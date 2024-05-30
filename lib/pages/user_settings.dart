@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:mqtt_test/components/custom_app_bar.dart';
 import 'package:mqtt_test/pages/user_general_settings.dart';
@@ -51,30 +50,30 @@ class _UserSettingsState extends State<UserSettings> {
     debugPrint("calling build method user_settings.dart");
 
     return Scaffold(
-     // backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
+      backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.SETTINGS),
       drawer: const NavDrawer.base(),
       body: const SingleChildScrollView(
-        padding: EdgeInsets.only(left: 15, right: 10),
+        padding: EdgeInsets.only(left: 15, right: 10, top: 10),
         scrollDirection: Axis.vertical,
         child: Column(children: <Widget>[
+          Padding(padding: EdgeInsets.symmetric(vertical: 15)),
           UserGeneralSettings.base(),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 15),
-          ),
-         // Divider(height: 4, color: Colors.black12, thickness: 5),
+          Divider(height: 4, color: Colors.black12, thickness: 5),
+          Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+
           UserMqttSettings.base(),
           //Divider(height: 4, color: Colors.black12, thickness: 5),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 15),
-          ),
-          //Divider(height: 1, color: Colors.black12, thickness: 5),
 
-         UserPersonalSettings.base(),
+          //Divider(height: 1, color: Colors.black12, thickness: 5),
+          Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+
+          UserPersonalSettings.base(),
         ]),
       ),
     );
   }
+
   BoxDecoration buildBoxDecoration() {
     return BoxDecoration(
       color: Colors.blue, //Color.fromRGBO(0, 87, 153, 60),
@@ -90,13 +89,11 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-
   SharedPreferences? preferences;
 
   Future<void> initializePreference() async {
     preferences = await SharedPreferences.getInstance();
   }
-
 
   void saveInterval() {
     debugPrint("save interval...");

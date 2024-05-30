@@ -9,4 +9,6 @@ class ShowAlarmTimeSettings {
   static const String hour12 = "12 hours";
   static const String day = "1 day";
   static const String changeOnly = "On alarm change only";
+  static const String noAlarm = "No alarms";
+
 }

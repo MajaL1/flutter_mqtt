@@ -75,7 +75,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                   fontWeight: FontWeight.bold,
                   fontSize: 20)),
         ),
-        const Divider(height: 14, color: Colors.transparent, thickness: 5),
+        const Divider(height: 14, color: Colors.white, thickness: 5),
 
         const Divider(height: 4, color: Colors.black12, thickness: 5),
         _buildUserGeneralSettings(),
@@ -101,14 +101,15 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
   Widget _buildUserGeneralSettings() {
     //debugPrint("-- 0 dropdown value: $dropdownValue");
+    bool isEnabledSave = false;
+    ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
 
     return Container(
-      padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 15),
-      alignment: Alignment.center,
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        padding:
+            const EdgeInsets.only(left: 30, right: 12, bottom: 12, top: 15),
+        alignment: Alignment.center,
+        color: Colors.white,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Wrap(
             //alignment: WrapAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.start,
@@ -119,40 +120,38 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                     child: const Text("Alarm interval:",
                         style: TextStyle(fontSize: 14)))
               ]),
-              Row(children: [
-                Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 0.1, vertical: 0.1),
-                    decoration: GuiUtils.buildBoxDecorationInterval(),
-                    child: _buildDropdownMenu()),
-                Container(
-                    height: 35,
-                    //width: 130,
-                    margin: const EdgeInsets.only(left: 10),
-                    //decoration: Utils.buildSaveMqttSettingsButtonDecoration(),
-                    child: //SmartMqtt.instance.isSaved != true
-                        ElevatedButton(
-                      style: GuiUtils.buildElevatedButtonSettings(),
-                      onPressed: () {
-                        String? val =
-                            dropdownValue; //?? alarmIntervalsList.first;
-                        saveInterval(val!);
-                      },
-                      child: const Text(
-                        "Save",
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    )),
-              ]),
+              Row(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 0.1, vertical: 0.1),
+                      decoration: GuiUtils.buildBoxDecorationInterval(),
+                      child: _buildDropdownMenu(isEnabledSave, notifier)),
+                  IconButton(
+                      icon: notifier.value != dropdownValue
+                          ? const Icon(
+                              Icons.check,
+                              size: 35,
+                            )
+                          : Icon(null),
+                      onPressed: notifier.value == dropdownValue
+                          ? null
+                          : () {
+                              saveInterval(dropdownValue!);
+                              isEnabledSave = false;
+                              notifier.value = false;
+                            })
+                ],
+              ),
+              const Divider(
+                  height: 20, color: Colors.transparent, thickness: 2),
             ],
           ),
-          const Divider(height: 20, color: Colors.transparent, thickness: 2),
-        ],
-      ),
-    );
+        ]));
   }
 
-  DropdownMenu<String> _buildDropdownMenu() {
+  DropdownMenu<String> _buildDropdownMenu(
+      bool isEnabledSave, ValueNotifier notifier) {
     debugPrint("initState _buildDRopDownMenu, val $dropdownValue");
 
     SharedPreferences.getInstance().then((pref) {
@@ -172,6 +171,10 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         //});
       }
     });
+
+    bool isEnabledSave = false;
+    ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
+
     return DropdownMenu<String>(
       menuStyle: MenuStyle(
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
@@ -185,12 +188,22 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       initialSelection: (dropdownValue!.isNotEmpty)
           ? dropdownValue
           : ShowAlarmTimeSettings.minutes10,
-      onSelected: (String? value) {
+      onSelected: (String? val) {
         // This is called when the user selects an item.
         debugPrint("-- 1 dropdown value: $dropdownValue");
-
+        if (val == "") {
+          isEnabledSave = false;
+          notifier.value = isEnabledSave;
+        } else if (val == val) {
+          isEnabledSave = false;
+          notifier.value = isEnabledSave;
+        } else {
+          isEnabledSave = true;
+          notifier.value = isEnabledSave;
+        }
+        debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
         setState(() {
-          dropdownValue = value!;
+          dropdownValue = val!;
         });
       },
       inputDecorationTheme: InputDecorationTheme(

@@ -156,6 +156,8 @@ class Utils {
     alarmIntervalList.add(ShowAlarmTimeSettings.hour12);
     alarmIntervalList.add(ShowAlarmTimeSettings.all);
     alarmIntervalList.add(ShowAlarmTimeSettings.changeOnly);
+    alarmIntervalList.add(ShowAlarmTimeSettings.noAlarm);
+
 
     return alarmIntervalList;
   }

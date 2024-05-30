@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/constants.dart';
 import '../util/gui_utils.dart';
-import '../util/smart_mqtt.dart';
 import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
@@ -122,20 +121,18 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     debugPrint("calling build method user_settings.dart");
 
     return SingleChildScrollView(
-        child: SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
-
         color: Colors.white,
         child: Column(children: <Widget>[
-
+          const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
           const Text("Device settings ",
               style: TextStyle(
                   color: Colors.black,
                   decorationColor: Colors.blueAccent,
                   fontSize: 20,
                   fontWeight: FontWeight.bold)),
-          const Divider(height: 10, color: Colors.transparent, thickness: 5),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
           const Divider(height: 4, color: Colors.black12, thickness: 5),
 
           _buildMqttSettingsView(),
@@ -147,7 +144,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           Container(height: 30),
         ]),
       ),
-    ));
+    );
   }
 
   BoxDecoration buildBoxDecoration() {
@@ -279,7 +276,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             settings.cast<UserDataSettings>();
 
         //debugPrint(
-          //  "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
+        //  "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
 
         // ce trenutni settingi niso prazni in ce novi settingi niso prazni
         if (newUserSettings != null) {
@@ -413,7 +410,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                     return SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         padding: const EdgeInsets.only(
-                            top: 30.0, bottom: 1.0, left: 0.0, right: 30.0),
+                            top: 5.0, bottom: 0, left: 0.0, right: 30.0),
                         child: Container(
                             color: Colors.white,
                             //color: Colors.blueAccent.shade100.withAlpha(5),

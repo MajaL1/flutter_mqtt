@@ -280,7 +280,7 @@ class SmartMqtt extends ChangeNotifier {
             preferences.getString("alarm_interval_setting");
 
         debugPrint("+++++got alarmInterval1: $alarmInterval1");
-        String? a = await SharedPreferences.getInstance().then((value) {
+        /*String? a = await SharedPreferences.getInstance().then((value) {
           if (value.getString("alarm_interval_setting") != null) {
             debugPrint("aaa: ${value.getString("alarm_interval_setting")}");
             return value.getString("alarm_interval_setting")!;
@@ -288,7 +288,7 @@ class SmartMqtt extends ChangeNotifier {
             debugPrint("aaa 1: ${value.getString("alarm_interval_setting")}");
           }
           return "";
-        });
+        });*/
 
         alarmInterval = preferences.getString("alarm_interval_setting");
         //}
@@ -371,7 +371,7 @@ class SmartMqtt extends ChangeNotifier {
     // parse trenutno sporocilo
     Map decodeMessageSettings = <String, String>{};
     decodeMessageSettings = json.decode(decodeMessage);
-    debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
+    //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
     await setDeviceNameToSettings(
         decodeMessageSettings, topicName.split("/settings").first);
     //-----
@@ -382,7 +382,7 @@ class SmartMqtt extends ChangeNotifier {
       //   "1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
       newUserSettings = decodeMessage;
       newSettings = json.decode(newUserSettings);
-      debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
+      //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
 
       await setDeviceNameToSettings(
           newSettings, topicName.split("/settings").first);
@@ -393,9 +393,9 @@ class SmartMqtt extends ChangeNotifier {
       debugPrint("notifying listeners 0.. $newSettings");
     } else if (newUserSettings.isNotEmpty &&
         !newUserSettings.contains(decodeMessage)) {
-      debugPrint(
-          "2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
-      debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
+     // debugPrint(
+        //  "2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
+      //debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
 
       //debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}");
       newSettings = json.decode(newUserSettings);
