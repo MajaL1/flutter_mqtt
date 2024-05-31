@@ -436,6 +436,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
       String alarmListData = json.encode(alarmList);
       //json.decode(alarmListData);
       preferences.setString("alarm_list_mqtt", alarmListData);
+      preferences.reload();
     }
     preferences.get("alarm_list_mqtt");
   }

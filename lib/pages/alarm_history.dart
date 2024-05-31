@@ -23,7 +23,7 @@ class AlarmHistory extends StatefulWidget {
 
 class _AlarmHistoryState extends State<AlarmHistory> {
   List<Alarm> _returnAlarmList(List<Alarm> alarmList) {
-   // debugPrint("alarm_history alarmList ${alarmList.toString()}");
+    debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     return alarmList;
   }
 
@@ -31,9 +31,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarmsHistory()
-          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)) //),
-          .then((alarmHistoryList) =>
-              _pairAlarmListWithSettings(alarmHistoryList)),
+          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)), //),
+         // .then((alarmHistoryList) =>
+         //     _pairAlarmListWithSettings(alarmHistoryList)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -279,7 +279,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
           }
         }
         debugPrint(
-            "alarm_history parsedMqttSettings ${parsedMqttSettingsList.toString()}");
+            "alarm_history parsedMqttSettings parsedMqttSettingsList.size, ${parsedMqttSettingsList.length}, ${parsedMqttSettingsList.toString()}");
       }
     });
     return alarmList;

@@ -439,10 +439,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                         // color:  const Color.fromRGBO(108, 165, 22, 60),
                                                         // padding: EdgeInsets.all(5),
                                                         child: Wrap(children: [
-                                                      const Divider(
-                                                        height: 45,
-                                                        color: Colors.grey,
-                                                      ),
+                                                      if (index > 0)
+                                                        const Divider(
+                                                          height: 45,
+                                                          color: Colors.grey,
+                                                        )
+                                                      else
+                                                        Container(),
                                                       const Text(
                                                         "Device:  ",
                                                         style: TextStyle(
@@ -583,6 +586,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
     return Wrap(
       children: [
+        Container(
+          //color: Colors.red,
+          child:
         Row(children: [
           SizedBox(
               // padding:
@@ -681,7 +687,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             ]),
           ),
         ]),
-      ],
+        )],
     );
   }
 
