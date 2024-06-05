@@ -273,6 +273,7 @@ class SmartMqtt extends ChangeNotifier {
         // preveri interval
 
         bool showAlarm = false;
+        bool noAlarm = false;
         String? alarmInterval; //= getAlarmInterval();
         //if(alarmInterval.isEmpty){
 
@@ -294,9 +295,16 @@ class SmartMqtt extends ChangeNotifier {
         //}
         debugPrint("+++++got alarmInterval: $alarmInterval");
         timeIntervalMinutes = await Utils.getIntervalFromPreferences(alarmInterval);
+        if(timeIntervalMinutes == 100000){
+          noAlarm = true;
+        }
         debugPrint("+++++ 1timeIntervalMinutes $timeIntervalMinutes");
 
-        if (timeIntervalMinutes == "") {
+
+        if (timeIntervalMinutes == ShowAlarmTimeSettings.noAlarm) {
+          noAlarm = true;
+        }
+        if (timeIntervalMinutes == "")  {
           debugPrint("+++++ 2timeIntervalMinutes == ''");
           showAlarm = true;
         }
@@ -355,7 +363,9 @@ class SmartMqtt extends ChangeNotifier {
 
               Utils.setFriendlyName(currentAlarmList.first);
               // prikaze sporocilo z alarmom
-              await NotificationHelper.sendMessage(currentAlarmList.first);
+              if (!noAlarm) {
+                await NotificationHelper.sendMessage(currentAlarmList.first);
+              }
             }
           });
         }

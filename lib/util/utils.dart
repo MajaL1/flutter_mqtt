@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
@@ -434,6 +435,9 @@ class Utils {
         break;
       case ShowAlarmTimeSettings.all:
         timeIntervalMinutes = 1;
+        break;
+      case ShowAlarmTimeSettings.noAlarm:
+        timeIntervalMinutes = 100000;
         break;
       default:
         timeIntervalMinutes = 10;

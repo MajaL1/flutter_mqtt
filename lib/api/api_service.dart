@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:http/http.dart' show Client, Response, post;
+import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
 import '../model/alarm.dart';
 import '../model/topic_data.dart';
 import '../model/user.dart';
@@ -151,7 +153,7 @@ class ApiService {
     return null;
   }
 
-  static void logout() {
+   static void logout() {
     debugPrint("logging out");
     stopService();
     _removeUserPreferences();
@@ -191,11 +193,13 @@ class ApiService {
   }
 
   static Future<void> stopService() async {
-    final service = FlutterBackgroundService();
+    final service = NotificationsApp.service;//FlutterBackgroundService();
     var isRunning = await service.isRunning();
     if (isRunning) {
+      debugPrint(" isRunning, logout - STOP service");
       service.invoke("stopService");
     } else {
+      debugPrint(" isRunning, logout - START service");
       service.startService();
     }
     debugPrint("stopping service");

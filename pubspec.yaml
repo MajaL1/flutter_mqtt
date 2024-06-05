@@ -61,6 +61,7 @@ dependencies:
   flutter_timezone: any
   rxdart: ^0.27.7
   push: ^2.1.0
+  workmanager: ^0.5.2
  # android_alarm_manager_plus: ^3.0.4
 
 dev_dependencies:

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../api/api_service.dart';
 import '../model/constants.dart';
@@ -20,6 +22,8 @@ import '../util/gui_utils.dart';
 import '../util/smart_mqtt_connect.dart';
 import '../util/smart_mqtt_obj.dart';
 import '../util/utils.dart';
+
+
 
 class LoginForm extends StatefulWidget {
   const LoginForm.base({Key? key}) : super(key: key);
@@ -64,6 +68,8 @@ class _LoginFormValidationState extends State<LoginForm> {
     });
     debugPrint("-- loginform initstate");
   }
+  @pragma(
+      'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 
   @override
   void dispose() {
@@ -134,7 +140,20 @@ class _LoginFormValidationState extends State<LoginForm> {
 
           await Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => const UserSettings.base()));
-
+           Workmanager().executeTask((task, inputData) async {
+            Workmanager().registerPeriodicTask(
+              "simplePeriodicTask",
+              "simplePeriodicTask1",
+              existingWorkPolicy: ExistingWorkPolicy.replace,
+              initialDelay:
+              Duration(seconds: 5), //duration before showing the notification
+              //constraints: Constraints(networkType: NetworkType.connected),
+              frequency: Duration(seconds: 10),
+            );
+            // connect to mqtt
+            print(" was executed");
+            return Future.value(true);
+          });
           debugPrint("Validated");
         } else {
           setState(() {

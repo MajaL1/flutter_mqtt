@@ -23,13 +23,16 @@ class NotificationHelper extends StatelessWidget {
   const NotificationHelper({Key? key}) : super(key: key);
   static FlutterBackgroundService service = FlutterBackgroundService();
 
+
+
   @override
   Widget build(BuildContext context) {
     return Container();
   }
 
+
   static Future<void> initializeService() async {
-    service = FlutterBackgroundService();
+    //service = FlutterBackgroundService();
 
     String eventID = "as432445GFCLbd2in1en21093";
     int notificationId = eventID.hashCode;
@@ -41,6 +44,7 @@ class NotificationHelper extends StatelessWidget {
       description:
           'This channel is used for important notifications.', // description
       importance: Importance.high,
+      //sound:
     );
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -55,13 +59,19 @@ class NotificationHelper extends StatelessWidget {
 
     if (Platform.isIOS || Platform.isAndroid) {
       await flutterLocalNotificationsPlugin.initialize(
+      // onDidReceiveBackgroundNotificationResponse: (String payload)async{
+//function to navigate to the page you want to show after tapping //push notification
+       //}),
+        //onDidReceiveNotificationResponse:
         const InitializationSettings(
           iOS: DarwinInitializationSettings(),
-          android: AndroidInitializationSettings('icon'),
+          android: AndroidInitializationSettings('icon', ),
         ), 
       );
     }
-    
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()!.requestPermission();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -120,6 +130,7 @@ class NotificationHelper extends StatelessWidget {
   static Future<void> sendMessage(Alarm? alarmMessage) async {
     //tzl.initializeTimeZones();
     tzl.initializeTimeZones();
+
     debugPrint("Sending alarm: NotificationHelper.sendMessage");
     // tz.setLocalLocation(tz.getLocation('Europe/London'));
     final slovenia = await tz.getLocation('Europe/London');
@@ -179,6 +190,7 @@ class NotificationHelper extends StatelessWidget {
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 
+
     String eventID = "as432445GFCLbd2in1en21093";
     int notificationId = eventID.hashCode;
     //Text text1 = Text("Alarm value: $v", style: TextStyle(fontWeight: FontWeight.bold));
@@ -194,7 +206,9 @@ class NotificationHelper extends StatelessWidget {
 
     debugPrint("showing alarm...");
 
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
+
         notificationId,
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",

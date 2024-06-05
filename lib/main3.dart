@@ -1,62 +1,40 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
-import 'dart:ui';
 import 'dart:isolate';
+import 'dart:ui';
 
-
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
-import 'package:mqtt_test/util/settings_smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
-import 'package:mqtt_test/util/smart_mqtt_connect.dart';
-import 'package:mqtt_test/util/smart_mqtt_obj.dart';
-import 'package:mqtt_test/util/utils.dart';
 import 'package:mqtt_test/widgets/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
+import 'package:workmanager/workmanager.dart';
 
-import 'api/notification_helper.dart';
 import 'model/alarm.dart';
 import 'model/constants.dart';
-import 'mqtt/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-//final service = FlutterBackgroundService();
-
-/// The [SharedPreferences] key to access the alarm fire count.
-const String countKey = 'count';
-
-/// The name associated with the UI isolate's [SendPort].
-const String isolateName = 'isolate';
-
-
-/// A port used to communicate from a background isolate to the UI isolate.
-//ReceivePort port = ReceivePort();
-
-/// Global [SharedPreferences] object.
 SharedPreferences? prefs;
-
+const failedTaskKey = "failedTask";
+const simplePeriodicTask = "simplePeriodicTask";
 
 Future<void> main() async {
-
-  Isolate.spawn<IsolateModel>(heavyTask, IsolateModel(355000, 500));
   tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   //DartPluginRegistrant.ensureInitialized();
   final service = FlutterBackgroundService();
 
-  await initializeService(service);
+  // await initializeService(service);
   //SharedPreferences.setMockInitialValues({});
   SharedPreferences.getInstance().then((value) {
     if (value.getBool("isLoggedIn") != null) {
@@ -67,36 +45,40 @@ Future<void> main() async {
   });
   debugPrint("main method:: ");
 
-  var initialNotification =
-  await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  //var initialNotification =
+  //await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   //if (initialNotification?.didNotificationLaunchApp == true) {
-    // LocalNotifications.onClickNotification.stream.listen((event) {
+  // LocalNotifications.onClickNotification.stream.listen((event) {
 
   //}
+  Workmanager().initialize(
+      callbackDispatcher, // The top level function, aka callbackDispatcher
+      isInDebugMode:
+          true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+      );
+  Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1");
   runApp(
-     NotificationsApp(service),
+    NotificationsApp(service),
   );
 }
 
-void heavyTask(IsolateModel model) {
-  int total = 0;
-
-
-  /// Performs an iteration of the specified count
-  for (int i = 1; i < model.iteration; i++) {
-
-    /// Multiplies each index by the multiplier and computes the total
-    total += (i * model.multiplier);
-  }
-
-  debugPrint("FINAL TOTAL: $total");
-}
-
-class IsolateModel {
-  IsolateModel(this.iteration, this.multiplier);
-
-  final int iteration;
-  final int multiplier;
+@pragma(
+    'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+void callbackDispatcher() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Workmanager().executeTask((task, inputData) async {
+    Workmanager().registerPeriodicTask(
+      "simplePeriodicTask",
+      "simplePeriodicTask1",
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+      initialDelay:
+          Duration(seconds: 5), //duration before showing the notification
+      constraints: Constraints(networkType: NetworkType.connected),
+      frequency: Duration(seconds: 10),
+    );
+    print("$simplePeriodicTask was executed");
+    return Future.value(true);
+  });
 }
 
 Future<void> initializeService(service) async {
@@ -136,8 +118,8 @@ Future<void> initializeService(service) async {
       autoStart: true,
       isForegroundMode: true,
       notificationChannelId: 'my_foreground',
-       initialNotificationTitle: 'Alarm app',
-       initialNotificationContent: 'Initializing',
+      initialNotificationTitle: 'Alarm app',
+      initialNotificationContent: 'Initializing',
       foregroundServiceNotificationId: 888,
     ),
     iosConfiguration: IosConfiguration(
@@ -171,7 +153,6 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
-
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
@@ -204,12 +185,12 @@ void onStart(ServiceInstance service) async {
 
   //FlutterBackgroundService().invoke("setAsBackground");
 
-        Timer.periodic(const Duration(seconds: 80), (timer) async {
-          if (service is AndroidServiceInstance) {
-            if (await service.isForegroundService()) {
-              /// OPTIONAL for use custom notification
-              /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-              /*flutterLocalNotificationsPlugin.show(
+  Timer.periodic(const Duration(seconds: 80), (timer) async {
+    if (service is AndroidServiceInstance) {
+      if (await service.isForegroundService()) {
+        /// OPTIONAL for use custom notification
+        /// the notification id must be equals with AndroidConfiguration when you call configure() method.
+        /*flutterLocalNotificationsPlugin.show(
                 888,
                 'COOL SERVICE',
                 'Awesome ${DateTime.now()}',
@@ -223,15 +204,15 @@ void onStart(ServiceInstance service) async {
                 ),
               ); */
 
-              // if you don't using custom notification, uncomment this
-              service.setForegroundNotificationInfo(
-                title: "My App Service",
-                content: "Updated at ${DateTime.now()}",
-              );
-            }
-          }
-          debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
-          /*Alarm alarm = Alarm(
+        // if you don't using custom notification, uncomment this
+        service.setForegroundNotificationInfo(
+          title: "My App Service",
+          content: "Updated at ${DateTime.now()}",
+        );
+      }
+    }
+    debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
+    /*Alarm alarm = Alarm(
               sensorAddress: "start connect to client",
               typ: 2,
               v: 1,
@@ -246,44 +227,44 @@ void onStart(ServiceInstance service) async {
               t: 3);
           NotificationHelper.sendMessage(alarm); */
 
-          //debugPrint("///// toString: ${instance.toString()}");
-          SharedPreferences.getInstance().then((val){
-            //var smartMqtt = val.getString("smart_mqtt");
-            //String smartMqtt1 =json.decode(smartMqtt!);
-            //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
-            //val?.setBool("appRunInBackground", true);
-            bool? appRunInBackground = val.getBool("appRunInBackground");
-            debugPrint("main.dart appRunInBackground: $appRunInBackground");
-            String ? username = val.getString("username");
-            String ? password = val.getString("pass");
-            String ? userTopicList = val.getString("user_topic_list");
-            String? currentState = val.getString("current_state");
-            String? clientIdentifier = val.getString("identifier");
-            bool? connected = val.getBool("connected");
+    //debugPrint("///// toString: ${instance.toString()}");
+    SharedPreferences.getInstance().then((val) {
+      //var smartMqtt = val.getString("smart_mqtt");
+      //String smartMqtt1 =json.decode(smartMqtt!);
+      //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
+      //val?.setBool("appRunInBackground", true);
+      bool? appRunInBackground = val.getBool("appRunInBackground");
+      debugPrint("main.dart appRunInBackground: $appRunInBackground");
+      String? username = val.getString("username");
+      String? password = val.getString("pass");
+      String? userTopicList = val.getString("user_topic_list");
+      String? currentState = val.getString("current_state");
+      String? clientIdentifier = val.getString("identifier");
+      bool? connected = val.getBool("connected");
 
-            debugPrint("////////////////currentState - $currentState, $username, $password, $userTopicList $currentState");
+      debugPrint(
+          "////////////////currentState - $currentState, $username, $password, $userTopicList $currentState");
 
-            /// ce ni povezan v mqtt, naredi novo povezavo
-            ///
-            ///
-            if(connected== null || !connected) {
-              debugPrint("////////////////connected!= null && !connected");
+      /// ce ni povezan v mqtt, naredi novo povezavo
+      ///
+      ///
+      if (connected == null || !connected) {
+        debugPrint("////////////////connected!= null && !connected");
 
-              _reconnectToMqtt();
-              val.setBool("connected", true);
-            }
-
-            if(currentState != null) {
-              if (currentState != "MQTTAppConnectionState.disconnected") {
-                debugPrint(
-                    "////////////////currentState != MQTTAppConnectionState.connected && currentState != connecting - $currentState");
-              }
-            }
-          });
-          print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
-        });
+        _reconnectToMqtt();
+        val.setBool("connected", true);
       }
 
+      if (currentState != null) {
+        if (currentState != "MQTTAppConnectionState.disconnected") {
+          debugPrint(
+              "////////////////currentState != MQTTAppConnectionState.connected && currentState != connecting - $currentState");
+        }
+      }
+    });
+    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
+  });
+}
 
 Future<void> _reconnectToMqtt() async {
   print("////////////////calling _reconnectToMqtt");
@@ -324,9 +305,10 @@ Future<void> _reconnectToMqtt() async {
       userTopicList!.isNotEmpty) {
     print(
         "////////////////main.dart _reconnectToMqtt username != null && pass != null && userTopicList != null");
-    debugPrint("////////////////main.dart _reconnectToMqtt $username, $mqttPassword, $userTopicList");
+    debugPrint(
+        "////////////////main.dart _reconnectToMqtt $username, $mqttPassword, $userTopicList");
 
-   // prefs?.setBool("appRunInBackground", true);
+    // prefs?.setBool("appRunInBackground", true);
 
     /*SmartMqtt mqtt = SmartMqtt(
         host: Constants.BROKER_IP,
@@ -336,11 +318,17 @@ Future<void> _reconnectToMqtt() async {
         topicList: userTopicList); */
     //await mqtt.initializeMQTTClient();
 
-    print("================== connecting to client from main.dart =========================");
+    print(
+        "================== connecting to client from main.dart =========================");
     print("===========================================");
 
-     //SmartMqtt.instance.initializeMQTTClient();
-    SmartMqtt smartMqtt = SmartMqtt(host: Constants.BROKER_IP, port: Constants.BROKER_PORT, username: username, mqttPass: password, topicList: userTopicList);
+    //SmartMqtt.instance.initializeMQTTClient();
+    SmartMqtt smartMqtt = SmartMqtt(
+        host: Constants.BROKER_IP,
+        port: Constants.BROKER_PORT,
+        username: username,
+        mqttPass: password,
+        topicList: userTopicList);
     smartMqtt.initializeMQTTClient();
     print("current smartmqtt state: ${SmartMqtt.instance.client}");
   } else {
@@ -352,16 +340,14 @@ Future<void> _reconnectToMqtt() async {
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static FlutterBackgroundService service = FlutterBackgroundService();
-    NotificationsApp(service, {Key? key}) : super(key: key) {
-      service = service;
-   }
 
+  NotificationsApp(service, {Key? key}) : super(key: key) {
+    service = service;
+  }
 
   @override
   State<NotificationsApp> createState() => _NotificationsAppState();
 }
-
-
 
 class _NotificationsAppState extends State<NotificationsApp> {
   var prefs = 1;
@@ -380,6 +366,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
       return Future(() => call);
     }); */
   }
+
   @override
   void initState() {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
@@ -464,8 +451,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
     });
   }
 
-
-
   Future<void> initAlarmHistoryList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (!preferences.containsKey("alarm_list_mqtt")) {
@@ -492,7 +477,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
           //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
           ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
           ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
-         // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
+          // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
         ],
         builder: (context, child) => Builder(builder: (context) {
               //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
