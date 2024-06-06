@@ -32,6 +32,27 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormValidationState();
 }
 
+@pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+ void callbackDispatcher() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Workmanager().executeTask((task, inputData) async {
+    Workmanager().registerPeriodicTask(
+      "simplePeriodicTask",
+      "simplePeriodicTask1",
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+      initialDelay: Duration(seconds: 5), //duration before showing the notification
+      constraints: Constraints(networkType: NetworkType.connected),
+      frequency: Duration(seconds: 10),
+      inputData: {'optional': true}
+    );
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("workmanagerStarted", true);
+    print("simplePeriodicTask was executed1");
+    return Future.value(true);
+  });
+}
+
+
 class _LoginFormValidationState extends State<LoginForm> {
   InternetStatus? _connectionStatus;
   String? connectionStatusText;
@@ -77,6 +98,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     super.dispose();
   }
 
+
   Future<void> login() async {
     var username = emailText;//emailController.text;
     var password = passwordText;//passwordController.text;
@@ -101,18 +123,6 @@ class _LoginFormValidationState extends State<LoginForm> {
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
           SmartMqtt smartMqtt = SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
-
-         /* SharedPreferences.getInstance().then((val) {
-            String instanceString = json.encode(smartMqtt.toString());
-            val.setString("smart_mqtt", instanceString);
-            val.reload();
-          }); */
-          // SmartMqtt.instance.client = MqttServerClient(
-          //    Constants.BROKER_IP, Constants.BROKER_IP,
-          //    maxConnectionAttempts: 1);
-         // smartMqtt.initializeMQTTClient();
-
-          //SmartMqttConnect.instance.setCurrentState(MQTTAppConnectionState.connected);
           /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
             value.setString("username", username);
@@ -138,22 +148,16 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setBool("isLoggedIn", true);
           });
 
+          await Workmanager().initialize(
+              callbackDispatcher, // The top level function, aka callbackDispatcher
+              isInDebugMode:
+              true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+          );
+          Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"optional": true});
+
           await Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => const UserSettings.base()));
-           Workmanager().executeTask((task, inputData) async {
-            Workmanager().registerPeriodicTask(
-              "simplePeriodicTask",
-              "simplePeriodicTask1",
-              existingWorkPolicy: ExistingWorkPolicy.replace,
-              initialDelay:
-              Duration(seconds: 5), //duration before showing the notification
-              //constraints: Constraints(networkType: NetworkType.connected),
-              frequency: Duration(seconds: 10),
-            );
-            // connect to mqtt
-            print(" was executed");
-            return Future.value(true);
-          });
+
           debugPrint("Validated");
         } else {
           setState(() {

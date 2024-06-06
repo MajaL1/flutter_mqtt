@@ -51,19 +51,41 @@ Future<void> main() async {
   // LocalNotifications.onClickNotification.stream.listen((event) {
 
   //}
-  Workmanager().initialize(
+  /*Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher
       isInDebugMode:
           true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
       );
   Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1");
+  _listenForUpdatesFromWorkManager(); */
   runApp(
     NotificationsApp(service),
   );
 }
+void _listenForUpdatesFromWorkManager() {
+  var port = ReceivePort();
+  IsolateNameServer.registerPortWithName(port.sendPort, "mqttPort");
+  port.listen((dynamic data) async {
+    debugPrint('got $data on UI');
+  });
+}
+void callbackBackgroundDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    final sendPort = IsolateNameServer.lookupPortByName(
+        "mqttPort");
+    if (sendPort != null) {
+      debugPrint("send to port $sendPort");
+      // The port might be null if the main isolate is not running.
+      sendPort.send("true");
+    } else {
+      debugPrint("no port, $sendPort");
+    }
 
-@pragma(
-    'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+    return Future.value(true);
+  });
+}
+
+@pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() {
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager().executeTask((task, inputData) async {
@@ -76,7 +98,9 @@ void callbackDispatcher() {
       constraints: Constraints(networkType: NetworkType.connected),
       frequency: Duration(seconds: 10),
     );
-    print("$simplePeriodicTask was executed");
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("workmanagerStarted", true);
+    print("$simplePeriodicTask was executed0");
     return Future.value(true);
   });
 }
