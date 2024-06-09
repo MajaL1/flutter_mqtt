@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_form.dart';
 
 class FirstScreen extends StatefulWidget {
-  const FirstScreen.base({Key? key}) : super(key: key);
+  late FlutterBackgroundService service;
 
+  FirstScreen.base({Key? key}) : super(key: key);
+
+  FirstScreen.base1(FlutterBackgroundService service, {Key? key}) :  super(key: key) {
+    service = service;
+  }
   @override
   State<StatefulWidget> createState() => _FirstScreenState();
 }

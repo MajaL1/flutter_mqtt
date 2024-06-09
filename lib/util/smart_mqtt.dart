@@ -53,7 +53,7 @@ class SmartMqtt extends ChangeNotifier {
     _instance.username = username;
     _instance.mqttPass = mqttPass;
     _instance.topicList = topicList;
-   // _instance.initializeMQTTClient();
+    _instance.initializeMQTTClient();
     debugPrint("SMARTMQTT");
     return _instance;
   }
@@ -68,7 +68,11 @@ class SmartMqtt extends ChangeNotifier {
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
     setCurrentState(currentState);
+    SharedPreferences.getInstance().then((value) {
+      value.setBool("disconnected", true);
+    });
     print('Disconnected');
+
     client!.disconnect();
   }
 
@@ -107,7 +111,9 @@ class SmartMqtt extends ChangeNotifier {
   void onAutoReconnect() {
     String clientID = client!.clientIdentifier;
     instance.currentState = MQTTAppConnectionState.connected;
-
+    SharedPreferences.getInstance().then((value) {
+      value.setBool("disconnected", false);
+    });
     print(
         "///////////////////////////// onAutoReconnect  $clientID, $instance.currentState ///////////////////////////////////");
   }
@@ -134,7 +140,9 @@ class SmartMqtt extends ChangeNotifier {
     String clientID = client!.clientIdentifier;
     _instance.currentState = MQTTAppConnectionState.connected;
     setCurrentState(currentState);
-
+    SharedPreferences.getInstance().then((value) {
+      value.setBool("disconnected", false);
+    });
     print(
         "///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
 
@@ -334,7 +342,7 @@ class SmartMqtt extends ChangeNotifier {
               debugPrint(
                   "+++++ got minutes from compare: $minutes, timeIntervalInMinutes: ${minutes}");
               // primerjaj s shranjenim intervalom
-              if (minutes >= timeIntervalMinutes!) {
+              if (minutes >= timeIntervalMinutes! || timeIntervalMinutes == 0) {
                 debugPrint(
                     "+++++ minutes > timeIntervalMinutes, will show alarm");
 

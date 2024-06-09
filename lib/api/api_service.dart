@@ -193,7 +193,7 @@ class ApiService {
   }
 
   static Future<void> stopService() async {
-    final service = NotificationsApp.service;//FlutterBackgroundService();
+   /* final service = NotificationsApp.service;//FlutterBackgroundService();
     var isRunning = await service.isRunning();
     if (isRunning) {
       debugPrint(" isRunning, logout - STOP service");
@@ -202,7 +202,7 @@ class ApiService {
       debugPrint(" isRunning, logout - START service");
       service.startService();
     }
-    debugPrint("stopping service");
+    debugPrint("stopping service"); */
   }
 
   static List<UserTopic> getUserTopicList(Map topics) {

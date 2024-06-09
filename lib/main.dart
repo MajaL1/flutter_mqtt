@@ -57,7 +57,7 @@ Future<void> main() async {
   final service = FlutterBackgroundService();
 
   await initializeService(service);
-  //SharedPreferences.setMockInitialValues({});
+ // SharedPreferences.setMockInitialValues({});
   SharedPreferences.getInstance().then((value) {
     if (value.getBool("isLoggedIn") != null) {
       if (!value.getBool("isLoggedIn")!) {
@@ -133,7 +133,7 @@ Future<void> initializeService(service) async {
       // this will be executed when app is in foreground or background in separated isolate
       onStart: onStart,
       // auto start service
-      autoStart: true,
+      autoStart: false,
       isForegroundMode: true,
       notificationChannelId: 'my_foreground',
        initialNotificationTitle: 'Alarm app',
@@ -142,7 +142,7 @@ Future<void> initializeService(service) async {
     ),
     iosConfiguration: IosConfiguration(
       // auto start service
-      autoStart: true,
+      autoStart: false,
 
       // this will be executed when app is in foreground in separated isolate
       onForeground: onStart,
@@ -204,7 +204,7 @@ void onStart(ServiceInstance service) async {
 
   //FlutterBackgroundService().invoke("setAsBackground");
 
-        Timer.periodic(const Duration(seconds: 80), (timer) async {
+        Timer.periodic(const Duration(seconds: 10), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
@@ -358,7 +358,7 @@ class NotificationsApp extends StatefulWidget {
 
 
   @override
-  State<NotificationsApp> createState() => _NotificationsAppState();
+  State<NotificationsApp> createState() => _NotificationsAppState(service);
 }
 
 
@@ -368,12 +368,14 @@ class _NotificationsAppState extends State<NotificationsApp> {
   late final AppLifecycleListener _listener;
   final List<String> _states = <String>[];
   late AppLifecycleState? _state;
-
+  late FlutterBackgroundService service;
   //static SendPort? uiSendPort;
 
   // static MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
 
-  _NotificationsAppState() {
+  _NotificationsAppState(FlutterBackgroundService service) {
+    service = service;
+    debugPrint("main==>service: $service");
     //methodChannel.setMethodCallHandler((call) => call.);
     /*  methodChannel.setMethodCallHandler((call) {
       print(call.method);
@@ -385,7 +387,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
     debugPrint("main init state: ");
     initAlarmHistoryList();
-    //NotificationHelper.initializeService();
+    NotificationHelper.initializeService();
     //WidgetsBinding.instance.addObserver();
     super.initState();
     _state = SchedulerBinding.instance.lifecycleState;
@@ -464,8 +466,6 @@ class _NotificationsAppState extends State<NotificationsApp> {
     });
   }
 
-
-
   Future<void> initAlarmHistoryList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (!preferences.containsKey("alarm_list_mqtt")) {
@@ -486,6 +486,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
     //SharedPreferences.getInstance().then((prefValue) => debugPrint(this));
 
     debugPrint("00000000000 main.dart build");
+
 
     return MultiProvider(
         providers: [

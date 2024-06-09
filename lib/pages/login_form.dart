@@ -8,6 +8,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
+import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,7 +32,7 @@ class LoginForm extends StatefulWidget {
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
 }
-
+/*
 @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
  void callbackDispatcher() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,14 +44,14 @@ class LoginForm extends StatefulWidget {
       initialDelay: Duration(seconds: 5), //duration before showing the notification
       constraints: Constraints(networkType: NetworkType.connected),
       frequency: Duration(seconds: 10),
-      inputData: {'optional': true}
+      //inputData: {'optional': true}
     );
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("workmanagerStarted", true);
-    print("simplePeriodicTask was executed1");
+    print("simplePeriodicTask was executed1, inputData: $inputData");
     return Future.value(true);
   });
-}
+} */
 
 
 class _LoginFormValidationState extends State<LoginForm> {
@@ -122,7 +123,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqtt smartMqtt = SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
           /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
             value.setString("username", username);
@@ -139,22 +140,23 @@ class _LoginFormValidationState extends State<LoginForm> {
 
             String userTopicListPref = jsonEncode(userTopicList);
             value.setString("user_topic_list", userTopicListPref);
+            value.reload();
           });
-
-          await smartMqtt.initializeMQTTClient();
+          //await smartMqtt.initializeMQTTClient();
           // inicializiraj servis za posiljanje sporocil
           await NotificationHelper.initializeService();
           await SharedPreferences.getInstance().then((value) {
             value.setBool("isLoggedIn", true);
           });
 
-          await Workmanager().initialize(
+         /* await Workmanager().initialize(
               callbackDispatcher, // The top level function, aka callbackDispatcher
               isInDebugMode:
               true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-          );
-          Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"optional": true});
-
+            );
+          Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"isConnected": true}
+          , existingWorkPolicy: ExistingWorkPolicy.append);
+*/
           await Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => const UserSettings.base()));
 

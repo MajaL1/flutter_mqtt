@@ -1,24 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' as io;
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
-import 'package:mqtt_test/widgets/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:workmanager/workmanager.dart';
 
 import 'model/alarm.dart';
-import 'model/constants.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -32,7 +27,6 @@ Future<void> main() async {
   tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
   //DartPluginRegistrant.ensureInitialized();
-  final service = FlutterBackgroundService();
 
   // await initializeService(service);
   //SharedPreferences.setMockInitialValues({});
@@ -51,38 +45,16 @@ Future<void> main() async {
   // LocalNotifications.onClickNotification.stream.listen((event) {
 
   //}
-  /*Workmanager().initialize(
+  Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher
       isInDebugMode:
           true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
       );
   Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1");
-  _listenForUpdatesFromWorkManager(); */
   runApp(
-    NotificationsApp(service),
+    NotificationsApp(),
   );
-}
-void _listenForUpdatesFromWorkManager() {
-  var port = ReceivePort();
-  IsolateNameServer.registerPortWithName(port.sendPort, "mqttPort");
-  port.listen((dynamic data) async {
-    debugPrint('got $data on UI');
-  });
-}
-void callbackBackgroundDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    final sendPort = IsolateNameServer.lookupPortByName(
-        "mqttPort");
-    if (sendPort != null) {
-      debugPrint("send to port $sendPort");
-      // The port might be null if the main isolate is not running.
-      sendPort.send("true");
-    } else {
-      debugPrint("no port, $sendPort");
-    }
 
-    return Future.value(true);
-  });
 }
 
 @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
@@ -92,282 +64,23 @@ void callbackDispatcher() {
     Workmanager().registerPeriodicTask(
       "simplePeriodicTask",
       "simplePeriodicTask1",
-      existingWorkPolicy: ExistingWorkPolicy.replace,
-      initialDelay:
-          Duration(seconds: 5), //duration before showing the notification
+      //existingWorkPolicy: ExistingWorkPolicy.replace,
+      //initialDelay:
+      //    Duration(seconds: 5), //duration before showing the notification
       constraints: Constraints(networkType: NetworkType.connected),
       frequency: Duration(seconds: 10),
     );
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("workmanagerStarted", true);
-    print("$simplePeriodicTask was executed0");
-    return Future.value(true);
+    print("simplePeriodicTask was executed");
+    return true;
   });
-}
-
-Future<void> initializeService(service) async {
-  debugPrint("main.dart initializing background service");
-
-  /// OPTIONAL, using custom notification channel id
-  const AndroidNotificationChannel channel = AndroidNotificationChannel(
-    'my_foreground', // id
-    'MY FOREGROUND SERVICE', // title
-    description:
-        'This channel is used for important notifications.', // description
-    importance: Importance.low, // importance must be at low or higher level
-  );
-
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  if (io.Platform.isIOS || io.Platform.isAndroid) {
-    await flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
-        iOS: DarwinInitializationSettings(),
-        android: AndroidInitializationSettings('ic_bg_service_small'),
-      ),
-    );
-  }
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  await service.configure(
-    androidConfiguration: AndroidConfiguration(
-      // this will be executed when app is in foreground or background in separated isolate
-      onStart: onStart,
-      // auto start service
-      autoStart: true,
-      isForegroundMode: true,
-      notificationChannelId: 'my_foreground',
-      initialNotificationTitle: 'Alarm app',
-      initialNotificationContent: 'Initializing',
-      foregroundServiceNotificationId: 888,
-    ),
-    iosConfiguration: IosConfiguration(
-      // auto start service
-      autoStart: true,
-
-      // this will be executed when app is in foreground in separated isolate
-      onForeground: onStart,
-
-      // you have to enable background fetch capability on xcode project
-      onBackground: onIosBackground,
-    ),
-  );
-  debugPrint("main.dart end initializing background service");
-}
-
-// to ensure this is executed
-// run app from xcode, then from xcode menu, select Simulate Background Fetch
-
-@pragma('vm:entry-point')
-Future<bool> onIosBackground(ServiceInstance service) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  DartPluginRegistrant.ensureInitialized();
-
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.reload();
-  final log = preferences.getStringList('log') ?? <String>[];
-  log.add(DateTime.now().toIso8601String());
-  await preferences.setStringList('log', log);
-
-  return true;
-}
-
-@pragma('vm:entry-point')
-void onStart(ServiceInstance service) async {
-  // Only available for flutter 3.0.0 and later
-  DartPluginRegistrant.ensureInitialized();
-
-  // For flutter prior to version 3.0.0
-  // We have to register the plugin manually
-
-  /// OPTIONAL when use custom notification
-  //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //  FlutterLocalNotificationsPlugin();
-
-  SmartMqtt.instance.addListener(() {});
-  if (service is AndroidServiceInstance) {
-    service.on('setAsForeground').listen((event) {
-      service.setAsForegroundService();
-      debugPrint(">>>>>>> service.setAsForegroundService()");
-    });
-
-    service.on('setAsBackground').listen((event) {
-      service.setAsBackgroundService();
-      debugPrint(">>>>>>> service.setAsBAckgroundService()");
-    });
-  }
-
-  service.on('stopService').listen((event) {
-    debugPrint(">>>>>>>stopped service.");
-    service.stopSelf();
-  });
-
-  //FlutterBackgroundService().invoke("setAsBackground");
-
-  Timer.periodic(const Duration(seconds: 80), (timer) async {
-    if (service is AndroidServiceInstance) {
-      if (await service.isForegroundService()) {
-        /// OPTIONAL for use custom notification
-        /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-        /*flutterLocalNotificationsPlugin.show(
-                888,
-                'COOL SERVICE',
-                'Awesome ${DateTime.now()}',
-                const NotificationDetails(
-                  android: AndroidNotificationDetails(
-                    'my_foreground',
-                    'MY FOREGROUND SERVICE',
-                    icon: 'ic_bg_service_small',
-                    ongoing: true,
-                  ),
-                ),
-              ); */
-
-        // if you don't using custom notification, uncomment this
-        service.setForegroundNotificationInfo(
-          title: "My App Service",
-          content: "Updated at ${DateTime.now()}",
-        );
-      }
-    }
-    debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
-    /*Alarm alarm = Alarm(
-              sensorAddress: "start connect to client",
-              typ: 2,
-              v: 1,
-              hiAlarm: 10,
-              loAlarm: 2,
-              ts: DateTime.timestamp(),
-              lb: 1,
-              bv: 3,
-              r: 1,
-              l: 3,
-              b: 2,
-              t: 3);
-          NotificationHelper.sendMessage(alarm); */
-
-    //debugPrint("///// toString: ${instance.toString()}");
-    SharedPreferences.getInstance().then((val) {
-      //var smartMqtt = val.getString("smart_mqtt");
-      //String smartMqtt1 =json.decode(smartMqtt!);
-      //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
-      //val?.setBool("appRunInBackground", true);
-      bool? appRunInBackground = val.getBool("appRunInBackground");
-      debugPrint("main.dart appRunInBackground: $appRunInBackground");
-      String? username = val.getString("username");
-      String? password = val.getString("pass");
-      String? userTopicList = val.getString("user_topic_list");
-      String? currentState = val.getString("current_state");
-      String? clientIdentifier = val.getString("identifier");
-      bool? connected = val.getBool("connected");
-
-      debugPrint(
-          "////////////////currentState - $currentState, $username, $password, $userTopicList $currentState");
-
-      /// ce ni povezan v mqtt, naredi novo povezavo
-      ///
-      ///
-      if (connected == null || !connected) {
-        debugPrint("////////////////connected!= null && !connected");
-
-        _reconnectToMqtt();
-        val.setBool("connected", true);
-      }
-
-      if (currentState != null) {
-        if (currentState != "MQTTAppConnectionState.disconnected") {
-          debugPrint(
-              "////////////////currentState != MQTTAppConnectionState.connected && currentState != connecting - $currentState");
-        }
-      }
-    });
-    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
-  });
-}
-
-Future<void> _reconnectToMqtt() async {
-  print("////////////////calling _reconnectToMqtt");
-
-  String username;
-  String mqttPassword;
-
-  username = await SharedPreferences.getInstance().then((value) {
-    if (value.getString("mqtt_username") != null) {
-      username = value.getString("mqtt_username")!;
-      return username;
-    }
-    return "";
-  });
-
-  mqttPassword = await SharedPreferences.getInstance().then((value) {
-    if (value.getString("mqtt_pass") != null) {
-      mqttPassword = value.getString("mqtt_pass")!;
-      return mqttPassword;
-    }
-    return "";
-  });
-
-  String? userTopicListPref =
-      await SharedPreferences.getInstance().then((value) {
-    if (value.getString("user_topic_list") != null) {
-      return value.getString("user_topic_list");
-    }
-  });
-  List userTopicList = [];
-
-  if (userTopicListPref != null) {
-    userTopicList = json.decode(userTopicListPref).cast<String>();
-  }
-
-  if (username.isNotEmpty &&
-      mqttPassword.isNotEmpty &&
-      userTopicList!.isNotEmpty) {
-    print(
-        "////////////////main.dart _reconnectToMqtt username != null && pass != null && userTopicList != null");
-    debugPrint(
-        "////////////////main.dart _reconnectToMqtt $username, $mqttPassword, $userTopicList");
-
-    // prefs?.setBool("appRunInBackground", true);
-
-    /*SmartMqtt mqtt = SmartMqtt(
-        host: Constants.BROKER_IP,
-        port: Constants.BROKER_PORT,
-        username: username,
-        mqttPass: mqttPassword,
-        topicList: userTopicList); */
-    //await mqtt.initializeMQTTClient();
-
-    print(
-        "================== connecting to client from main.dart =========================");
-    print("===========================================");
-
-    //SmartMqtt.instance.initializeMQTTClient();
-    SmartMqtt smartMqtt = SmartMqtt(
-        host: Constants.BROKER_IP,
-        port: Constants.BROKER_PORT,
-        username: username,
-        mqttPass: password,
-        topicList: userTopicList);
-    smartMqtt.initializeMQTTClient();
-    print("current smartmqtt state: ${SmartMqtt.instance.client}");
-  } else {
-    print(
-        "////////////////main.dart _reconnectToMqtt error -> null: username,pass,userTopicList == null, $username, $mqttPassword, $userTopicList");
-  }
 }
 
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  static FlutterBackgroundService service = FlutterBackgroundService();
 
-  NotificationsApp(service, {Key? key}) : super(key: key) {
-    service = service;
-  }
+  NotificationsApp({Key? key}) : super(key: key) {}
 
   @override
   State<NotificationsApp> createState() => _NotificationsAppState();

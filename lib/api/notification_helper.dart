@@ -52,7 +52,7 @@ class NotificationHelper extends StatelessWidget {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestPermission();
+        ?.requestExactAlarmsPermission();
 
 
     //flutterLocalNotificationsPlugin.initialize(initializationSettings, onSe)
@@ -71,7 +71,7 @@ class NotificationHelper extends StatelessWidget {
     }
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()!.requestPermission();
+        AndroidFlutterLocalNotificationsPlugin>()!.requestExactAlarmsPermission();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
