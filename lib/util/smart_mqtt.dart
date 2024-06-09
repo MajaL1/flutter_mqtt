@@ -190,7 +190,7 @@ class SmartMqtt extends ChangeNotifier {
     debugPrint("alarmInterval 1: $alarmInterval1");
 
     // todo: testni alarm
-    /* Alarm alarm = Alarm(
+    Alarm alarm = Alarm(
         sensorAddress: "test1233",
         typ: 2,
         v: 1,
@@ -203,7 +203,7 @@ class SmartMqtt extends ChangeNotifier {
         l: 3,
         b: 2,
         t: 3);
-    NotificationHelper.sendMessage(alarm); */
+    NotificationHelper.sendMessage(alarm);
 
     /* preferences.remove("settings_mqtt");
     preferences.remove("alarm_mqtt");

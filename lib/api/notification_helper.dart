@@ -233,6 +233,7 @@ class NotificationHelper extends StatelessWidget {
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
 //service.runtimeType.
     // For flutter prior to version 3.0.0
     // We have to register the plugin manually
