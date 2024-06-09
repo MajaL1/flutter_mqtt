@@ -133,7 +133,7 @@ Future<void> initializeService(service) async {
       // this will be executed when app is in foreground or background in separated isolate
       onStart: onStart,
       // auto start service
-      autoStart: false,
+      autoStart: true,
       isForegroundMode: true,
       notificationChannelId: 'my_foreground',
        initialNotificationTitle: 'Alarm app',
@@ -204,7 +204,7 @@ void onStart(ServiceInstance service) async {
 
   //FlutterBackgroundService().invoke("setAsBackground");
 
-        Timer.periodic(const Duration(seconds: 10), (timer) async {
+        Timer.periodic(const Duration(seconds: 40), (timer) async {
           if (service is AndroidServiceInstance) {
             if (await service.isForegroundService()) {
               /// OPTIONAL for use custom notification
@@ -261,11 +261,8 @@ void onStart(ServiceInstance service) async {
             String? clientIdentifier = val.getString("identifier");
             bool? connected = val.getBool("connected");
 
-            debugPrint("////////////////currentState - $currentState, $username, $password, $userTopicList $currentState");
+            debugPrint("////////////////main shared prefs in background: - $currentState, $username, $password, $userTopicList $currentState");
 
-            /// ce ni povezan v mqtt, naredi novo povezavo
-            ///
-            ///
             if(connected== null || !connected) {
               debugPrint("////////////////connected!= null && !connected");
 

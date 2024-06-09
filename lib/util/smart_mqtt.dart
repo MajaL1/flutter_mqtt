@@ -342,7 +342,7 @@ class SmartMqtt extends ChangeNotifier {
               debugPrint(
                   "+++++ got minutes from compare: $minutes, timeIntervalInMinutes: ${minutes}");
               // primerjaj s shranjenim intervalom
-              if (minutes >= timeIntervalMinutes! || timeIntervalMinutes == 0) {
+              if (minutes >= timeIntervalMinutes! || timeIntervalMinutes == 1) {
                 debugPrint(
                     "+++++ minutes > timeIntervalMinutes, will show alarm");
 

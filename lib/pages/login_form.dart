@@ -4,11 +4,13 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
+import 'package:mqtt_test/pages/first_screen.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -157,6 +159,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"isConnected": true}
           , existingWorkPolicy: ExistingWorkPolicy.append);
 */
+          //FlutterBackgroundService().startService();
           await Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (_) => const UserSettings.base()));
 

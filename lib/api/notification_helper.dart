@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
-import 'package:mqtt_test/widgets/show_alarm_time_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:timezone/standalone.dart' as tz;
@@ -23,13 +23,10 @@ class NotificationHelper extends StatelessWidget {
   const NotificationHelper({Key? key}) : super(key: key);
   static FlutterBackgroundService service = FlutterBackgroundService();
 
-
-
   @override
   Widget build(BuildContext context) {
     return Container();
   }
-
 
   static Future<void> initializeService() async {
     //service = FlutterBackgroundService();
@@ -52,26 +49,29 @@ class NotificationHelper extends StatelessWidget {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestExactAlarmsPermission();
-
+        ?.requestNotificationsPermission();
 
     //flutterLocalNotificationsPlugin.initialize(initializationSettings, onSe)
 
     if (Platform.isIOS || Platform.isAndroid) {
       await flutterLocalNotificationsPlugin.initialize(
-      // onDidReceiveBackgroundNotificationResponse: (String payload)async{
-//function to navigate to the page you want to show after tapping //push notification
-       //}),
-        //onDidReceiveNotificationResponse:
-        const InitializationSettings(
-          iOS: DarwinInitializationSettings(),
-          android: AndroidInitializationSettings('icon', ),
-        ), 
-      );
+          //onDidReceiveNotificationResponse:
+          const InitializationSettings(
+            iOS: DarwinInitializationSettings(),
+            android: AndroidInitializationSettings(
+              'icon',
+            ),
+          ),
+          onDidReceiveBackgroundNotificationResponse: null,
+          onDidReceiveNotificationResponse:
+              (NotificationResponse details) async {
+        Get.to(const AlarmHistory());
+      });
     }
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()!.requestExactAlarmsPermission();
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestNotificationsPermission();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -98,7 +98,7 @@ class NotificationHelper extends StatelessWidget {
         onForeground: onStart,
         // you have to enable background fetch capability on xcode project
         onBackground: onIosBackground,
-          ),
+      ),
     );
     tzl.initializeTimeZones();
   }
@@ -141,7 +141,7 @@ class NotificationHelper extends StatelessWidget {
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();
     String? v = alarmMessage?.v.toString();
-    int ? u = alarmMessage?.u;
+    int? u = alarmMessage?.u;
     String? sensorAddress = alarmMessage?.sensorAddress;
     String units = UnitsConstants.getUnits(u);
     String alarmValue = "";
@@ -190,7 +190,6 @@ class NotificationHelper extends StatelessWidget {
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 
-
     String eventID = "as432445GFCLbd2in1en21093";
     int notificationId = eventID.hashCode;
     //Text text1 = Text("Alarm value: $v", style: TextStyle(fontWeight: FontWeight.bold));
@@ -201,14 +200,11 @@ class NotificationHelper extends StatelessWidget {
     //String ?t2 = text2.data;
     //String ?t3 = text3.data;
 
-
     //final int minutes = timeIntervalMinutes;
 
     debugPrint("showing alarm...");
 
-
     await flutterLocalNotificationsPlugin.zonedSchedule(
-
         notificationId,
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
@@ -216,13 +212,13 @@ class NotificationHelper extends StatelessWidget {
         tz.TZDateTime.now(slovenia).add(Duration(seconds: 5)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime
-    );
+            UILocalNotificationDateInterpretation.absoluteTime);
     //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
     //uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+  void onDidReceiveNotificationResponse(
+      NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
       debugPrint('notification payload: $payload');
