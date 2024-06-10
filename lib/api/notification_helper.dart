@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
-import 'package:timezone/standalone.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-import '../main2.dart';
+
+import '../main.dart';
 import '../model/alarm.dart';
 import '../util/utils.dart';
 import '../widgets/units.dart';
@@ -53,13 +55,14 @@ class NotificationHelper extends StatelessWidget {
 
     //flutterLocalNotificationsPlugin.initialize(initializationSettings, onSe)
 
+    //flutterLocalNotificationsPlugin.
     if (Platform.isIOS || Platform.isAndroid) {
       await flutterLocalNotificationsPlugin.initialize(
           //onDidReceiveNotificationResponse:
           const InitializationSettings(
             iOS: DarwinInitializationSettings(),
             android: AndroidInitializationSettings(
-              'icon',
+              'ic_launcher',
             ),
           ),
           onDidReceiveBackgroundNotificationResponse: null,
@@ -129,11 +132,14 @@ class NotificationHelper extends StatelessWidget {
 
   static Future<void> sendMessage(Alarm? alarmMessage) async {
     //tzl.initializeTimeZones();
-    tzl.initializeTimeZones();
+    //tzl.initializeTimeZones();
+    final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+
 
     debugPrint("Sending alarm: NotificationHelper.sendMessage");
     // tz.setLocalLocation(tz.getLocation('Europe/London'));
-    final slovenia = await tz.getLocation('Europe/London');
+    final slovenia =  tz.getLocation('Europe/Ljubljana');
 
     //final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
 
@@ -171,6 +177,7 @@ class NotificationHelper extends StatelessWidget {
       "deviceName: $deviceName, sensor: $sensorAddress",
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
+      icon: "icon",
       //actions: ,
       //largeIcon: FilePathAndroidBitmap(bigPicture),
       importance: Importance.max,
@@ -189,8 +196,10 @@ class NotificationHelper extends StatelessWidget {
 
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+        5, 'first notification', null, notificationDetails);
 
-    String eventID = "as432445GFCLbd2in1en21093";
+    String eventID = "as432445GFCLbd2in1en2103";
     int notificationId = eventID.hashCode;
     //Text text1 = Text("Alarm value: $v", style: TextStyle(fontWeight: FontWeight.bold));
     // Text text2 = Text("$alarmValue", style: TextStyle(fontWeight: FontWeight.bold));
@@ -209,7 +218,8 @@ class NotificationHelper extends StatelessWidget {
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
         "v: $v $units, $alarmValue \n$formattedDate",
-        tz.TZDateTime.now(slovenia).add(Duration(seconds: 5)),
+        //DateTime.now(),
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);

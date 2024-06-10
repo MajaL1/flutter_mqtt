@@ -16,7 +16,7 @@ class NotificationService {
 
   Future<void> initializePlatformNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_stat_justwater');
+    AndroidInitializationSettings('ic_bg_service_small');
 
     final DarwinInitializationSettings initializationSettingsIOS =
     DarwinInitializationSettings(
