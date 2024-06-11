@@ -13,6 +13,7 @@ import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/first_screen.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:mqtt_test/widgets/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workmanager/workmanager.dart';
@@ -64,8 +65,13 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
-  String emailText = "test3";
-  String passwordText = "OTA1YzRhZDNlZjAxMjU4Zg==";
+ // String emailText = "test3";
+  //String passwordText = "OTA1YzRhZDNlZjAxMjU4Zg==";
+  String emailText = "test1";
+  String passwordText = "Test@1234";
+
+  String usernameVal = '';
+  String passwordVal = '';
 
   /*final emailController = TextEditingController(
     text: "test",
@@ -102,10 +108,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   }
 
 
-  Future<void> login() async {
-    var username = emailText;//emailController.text;
-    var password = passwordText;//passwordController.text;
-
+  Future<void> login(String username, String password) async {
     //debugPrint("u, p $username, $password");
 
     //check email and password
@@ -181,26 +184,6 @@ class _LoginFormValidationState extends State<LoginForm> {
     var r = Random();
     return String.fromCharCodes(
         List.generate(len, (index) => r.nextInt(33) + 89));
-  }
-
-  List<String> createTopicListFromApi(User user) {
-    /*List<TopicData> userTopicDataList = user.topic.topicList;
-    List<String> userTopicList = [];
-    String deviceName = user.topic.sensorName;
-    for (TopicData topicData in userTopicDataList) {
-      if (topicData.name.contains("settings")) {
-        userTopicList.add(deviceName + "/settings");
-      }
-      if (topicData.name.contains("alarm")) {
-        userTopicList.add(deviceName + "/alarm");
-      }
-      if (topicData.name.contains("data")) {
-        userTopicList.add(deviceName + "/data");
-      }
-    }
-    return userTopicList; */
-    List<String> userTopicList = [];
-    return userTopicList;
   }
 
   String? validatePassword(String value) {
@@ -302,6 +285,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               decoration: GuiUtils
                                                   .buildInputUsernameLoginDecoration(),
                                               //controller: emailController,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  usernameVal = value; // Update the _inputText whenever the user types
+                                                });
+                                              },
                                               validator: MultiValidator([
                                                 RequiredValidator(
                                                     errorText: "Required")
@@ -328,6 +316,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                   fontSize: 16),
                                               decoration:
                                                   buildInputUsernamePasswordDecoration(),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  passwordVal = value; // Update the _inputText whenever the user types
+                                                });
+                                              },
                                               //controller: passwordController,
                                               validator: MultiValidator([
                                                 RequiredValidator(
@@ -355,7 +348,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             style: GuiUtils
                                                 .buildElevatedButtonLogin(),
                                             onPressed: () {
-                                              login();
+                                              if(usernameVal.isEmpty && passwordVal.isEmpty) {
+                                                usernameVal = emailText;
+                                                passwordVal = passwordText;
+                                              }
+                                              login(usernameVal, passwordVal);
                                             },
                                             child: const Text(
                                               'Login',

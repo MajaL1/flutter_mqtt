@@ -264,9 +264,9 @@ void onStart(ServiceInstance service) async {
             debugPrint("////////////////main shared prefs in background: - $currentState, $username, $password, $userTopicList $currentState");
 
             if(connected== null || !connected) {
-              debugPrint("////////////////connected!= null && !connected");
+              debugPrint("zakomentirano recconect////////////////connected!= null && !connected");
 
-              _reconnectToMqtt();
+              //_reconnectToMqtt();
               val.setBool("connected", true);
             }
 
