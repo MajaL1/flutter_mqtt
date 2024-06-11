@@ -131,19 +131,7 @@ class NotificationHelper extends StatelessWidget {
   }
 
   static Future<void> sendMessage(Alarm? alarmMessage) async {
-    //tzl.initializeTimeZones();
-    //tzl.initializeTimeZones();
-    //final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
-
-    //tz.setLocalLocation(tz.getLocation(timeZoneName!));
-
-
     debugPrint("Sending alarm: NotificationHelper.sendMessage");
-    // tz.setLocalLocation(tz.getLocation('Europe/London'));
-    final slovenia =  tz.getLocation('Europe/Ljubljana');
-
-    //final localizedDt = tz.TZDateTime.from(DateTime.now(), slovenia);
-
     String? deviceName = alarmMessage?.deviceName.toString();
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();

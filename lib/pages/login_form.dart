@@ -1,33 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
-import 'package:mqtt_test/pages/first_screen.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
-import 'package:mqtt_test/widgets/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:workmanager/workmanager.dart';
 
 import '../api/api_service.dart';
 import '../model/constants.dart';
 import '../model/user.dart';
-import '../mqtt/MQTTAppState.dart';
+import '../util/background_mqtt.dart';
 import '../util/gui_utils.dart';
-import '../util/smart_mqtt_connect.dart';
-import '../util/smart_mqtt_obj.dart';
 import '../util/utils.dart';
-
-
 
 class LoginForm extends StatefulWidget {
   const LoginForm.base({Key? key}) : super(key: key);
@@ -56,7 +47,6 @@ class LoginForm extends StatefulWidget {
   });
 } */
 
-
 class _LoginFormValidationState extends State<LoginForm> {
   InternetStatus? _connectionStatus;
   String? connectionStatusText;
@@ -65,10 +55,11 @@ class _LoginFormValidationState extends State<LoginForm> {
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
- // String emailText = "test3";
-  //String passwordText = "OTA1YzRhZDNlZjAxMjU4Zg==";
-  String emailText = "test1";
-  String passwordText = "Test@1234";
+  String emailText = "test3";
+  String passwordText = "OTA1YzRhZDNlZjAxMjU4Zg==";
+
+  //String emailText = "test1";
+  //String passwordText = "Test@1234";
 
   String usernameVal = '';
   String passwordVal = '';
@@ -98,6 +89,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     });
     debugPrint("-- loginform initstate");
   }
+
   @pragma(
       'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 
@@ -106,7 +98,6 @@ class _LoginFormValidationState extends State<LoginForm> {
     _subscription.cancel();
     super.dispose();
   }
-
 
   Future<void> login(String username, String password) async {
     //debugPrint("u, p $username, $password");
@@ -128,7 +119,12 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+          SmartMqtt(
+              mqttPass: password,
+              username: username,
+              topicList: userTopicList,
+              port: Constants.BROKER_PORT,
+              host: Constants.BROKER_IP);
           /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
             value.setString("username", username);
@@ -153,8 +149,11 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance().then((value) {
             value.setBool("isLoggedIn", true);
           });
-
-         /* await Workmanager().initialize(
+          final service = FlutterBackgroundService();
+          await BackgroundMqtt(flutterLocalNotificationsPlugin)
+              .initializeService(service);
+          await service.startService();
+          /* await Workmanager().initialize(
               callbackDispatcher, // The top level function, aka callbackDispatcher
               isInDebugMode:
               true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
@@ -275,8 +274,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               top: 40,
                                               bottom: 15),
                                           child: TextFormField(
-                                              initialValue:
-                                              emailText,
+                                              initialValue: emailText,
                                               style: const TextStyle(
                                                   fontFamily: 'Roboto',
                                                   color: Color.fromRGBO(
@@ -287,7 +285,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               //controller: emailController,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  usernameVal = value; // Update the _inputText whenever the user types
+                                                  usernameVal =
+                                                      value; // Update the _inputText whenever the user types
                                                 });
                                               },
                                               validator: MultiValidator([
@@ -306,8 +305,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           child: TextFormField(
                                               obscureText: true,
                                               enableSuggestions: false,
-                                              initialValue:
-                                                  passwordText,
+                                              initialValue: passwordText,
                                               autocorrect: false,
                                               style: const TextStyle(
                                                   fontFamily: 'Roboto',
@@ -318,7 +316,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                   buildInputUsernamePasswordDecoration(),
                                               onChanged: (value) {
                                                 setState(() {
-                                                  passwordVal = value; // Update the _inputText whenever the user types
+                                                  passwordVal =
+                                                      value; // Update the _inputText whenever the user types
                                                 });
                                               },
                                               //controller: passwordController,
@@ -348,7 +347,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             style: GuiUtils
                                                 .buildElevatedButtonLogin(),
                                             onPressed: () {
-                                              if(usernameVal.isEmpty && passwordVal.isEmpty) {
+                                              if (usernameVal.isEmpty &&
+                                                  passwordVal.isEmpty) {
                                                 usernameVal = emailText;
                                                 passwordVal = passwordText;
                                               }
