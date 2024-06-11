@@ -111,11 +111,11 @@ Future<void> initializeService(service) async {
     importance: Importance.low, // importance must be at low or higher level
   );
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //    FlutterLocalNotificationsPlugin();
 
   if (io.Platform.isIOS || io.Platform.isAndroid) {
-    await flutterLocalNotificationsPlugin.initialize(
+      await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         iOS: DarwinInitializationSettings(),
         android: AndroidInitializationSettings('ic_bg_service_small'),

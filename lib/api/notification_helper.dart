@@ -133,8 +133,9 @@ class NotificationHelper extends StatelessWidget {
   static Future<void> sendMessage(Alarm? alarmMessage) async {
     //tzl.initializeTimeZones();
     //tzl.initializeTimeZones();
-    final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    //final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+
+    //tz.setLocalLocation(tz.getLocation(timeZoneName!));
 
 
     debugPrint("Sending alarm: NotificationHelper.sendMessage");
@@ -196,8 +197,8 @@ class NotificationHelper extends StatelessWidget {
 
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
-    await flutterLocalNotificationsPlugin.show(
-        5, 'first notification', null, notificationDetails);
+
+
 
     String eventID = "as432445GFCLbd2in1en2103";
     int notificationId = eventID.hashCode;
@@ -213,18 +214,19 @@ class NotificationHelper extends StatelessWidget {
 
     debugPrint("showing alarm...");
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
+    /*await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
         "Alarm from: $sensorAddress, $deviceName",
         //"$t1 \n $t2 \n$t3",
         "v: $v $units, $alarmValue \n$formattedDate",
         //DateTime.now(),
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        tz.TZDateTime.now(slovenia).add(Duration(seconds: 5)),
         notificationDetails,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
-    //localizedDt,//tz.initializeTimeZones(),//.add(const Duration(days: 3)),
-    //uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime);
+            UILocalNotificationDateInterpretation.absoluteTime); */
+
+    await flutterLocalNotificationsPlugin.show(
+        notificationId, "Alarm from: $sensorAddress, $deviceName", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
   }
 
   void onDidReceiveNotificationResponse(
