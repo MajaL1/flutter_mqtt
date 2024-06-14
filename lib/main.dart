@@ -10,6 +10,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/background_mqtt.dart';
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
@@ -311,7 +312,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
         builder: (context, child) => Builder(builder: (context) {
               //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
               debugPrint("build main.dart");
-              return MaterialApp(home: FirstScreen.base());
+              return GetMaterialApp(home: FirstScreen.base());
             }));
   }
 }
