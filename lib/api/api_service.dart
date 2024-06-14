@@ -9,6 +9,7 @@ import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/util/background_mqtt.dart';
+import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -195,13 +196,16 @@ class ApiService {
 
   static Future<void> stopService() async {
     BackgroundMqtt.stopMqttService();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("serviceStopped", true);
     var isRunning = await service.isRunning();
     if (isRunning) {
       debugPrint(" isRunning, logout - STOP service");
       service.invoke("stopService");
+      SmartMqtt.instance.disconnect();
     } else {
-      debugPrint(" isRunning, logout - START service");
-      service.startService();
+      debugPrint(" isRunning FALSE, logout service");
+      //service.startService();
     }
     debugPrint("stopping service");
   }

@@ -43,13 +43,9 @@ class BackgroundMqtt {
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    // For flutter prior to version 3.0.0
-    // We have to register the plugin manually
-
-    /// OPTIONAL when use custom notification
-    //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    //  FlutterLocalNotificationsPlugin();
+    preferences.setBool("serviceStopped", true);
 
     SmartMqtt.instance.addListener(() {});
     if (service is AndroidServiceInstance) {
