@@ -52,7 +52,7 @@ class SmartMqtt extends ChangeNotifier {
     _instance.port = port;
     _instance.username = username;
     _instance.mqttPass = mqttPass;
-   // List topics = json.decode(topicList);
+    //List topics = json.decode(topicList);
     _instance.topicList = topicList;
     _instance.initializeMQTTClient();
     debugPrint("SMARTMQTT");

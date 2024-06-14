@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'dart:io' as io;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
@@ -16,8 +18,7 @@ import '../model/constants.dart';
 class BackgroundMqtt {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  BackgroundMqtt(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin):
-    flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin;
+  BackgroundMqtt(this.flutterLocalNotificationsPlugin);
 
 
   @pragma('vm:entry-point')
@@ -34,7 +35,10 @@ class BackgroundMqtt {
     return true;
   }
 
-
+ static void stopMqttService(){
+    service.invoke("stopService");
+ }
+ 
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
@@ -62,6 +66,7 @@ class BackgroundMqtt {
 
     service.on('stopService').listen((event) {
       debugPrint(">>>>>>>stopped service.");
+      service.invoke("stopService");
       service.stopSelf();
     });
 
@@ -115,6 +120,7 @@ class BackgroundMqtt {
         //String smartMqtt1 =json.decode(smartMqtt!);
         //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
         //val?.setBool("appRunInBackground", true);
+        val.reload();
         bool? appRunInBackground = val.getBool("appRunInBackground");
         debugPrint("main.dart appRunInBackground: $appRunInBackground");
         String ? username = val.getString("username");
@@ -126,24 +132,27 @@ class BackgroundMqtt {
 
         debugPrint(
             "////////////////main shared prefs in background: - $currentState, $username, $password, $userTopicList $currentState");
-        SmartMqtt(mqttPass: password!,
-            username: username!,
-            topicList: userTopicList,
-            port: Constants.BROKER_PORT,
-            host: Constants.BROKER_IP);
-
+       if(username !=null && password != null) {
+         /*SmartMqtt(mqttPass: password!,
+             username: username!,
+             topicList: userTopicList,
+             port: Constants.BROKER_PORT,
+             host: Constants.BROKER_IP); */
+       }
         if (connected == null || !connected) {
           debugPrint(
-              "zakomentirano recconect////////////////connected== null && !connected");
+              " recconect////////////////connected== null && !connected");
 
-          //_reconnectToMqtt();
-          val.setBool("connected", true);
-        }
-
-        if (currentState != null) {
-          if (currentState != "MQTTAppConnectionState.disconnected") {
-            debugPrint(
-                "////////////////currentState != MQTTAppConnectionState.connected && currentState != connecting - $currentState");
+          List topics;
+          if(userTopicList != null) {
+            topics = json.decode(userTopicList!);
+            SmartMqtt(mqttPass: password!,
+                username: username!,
+                topicList: topics,
+                port: Constants.BROKER_PORT,
+                host: Constants.BROKER_IP);
+            //_reconnectToMqtt();
+            val.setBool("connected", true);
           }
         }
       });
@@ -185,7 +194,7 @@ class BackgroundMqtt {
         // this will be executed when app is in foreground or background in separated isolate
         onStart: onStart,
         // auto start service
-        autoStart: false,
+        autoStart: true,
         isForegroundMode: true,
         notificationChannelId: 'my_foreground',
         initialNotificationTitle: 'Alarm app',

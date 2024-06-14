@@ -8,6 +8,7 @@ import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/user_topic.dart';
+import 'package:mqtt_test/util/background_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
@@ -193,7 +194,7 @@ class ApiService {
   }
 
   static Future<void> stopService() async {
-   /* final service = NotificationsApp.service;//FlutterBackgroundService();
+    BackgroundMqtt.stopMqttService();
     var isRunning = await service.isRunning();
     if (isRunning) {
       debugPrint(" isRunning, logout - STOP service");
@@ -202,7 +203,7 @@ class ApiService {
       debugPrint(" isRunning, logout - START service");
       service.startService();
     }
-    debugPrint("stopping service"); */
+    debugPrint("stopping service");
   }
 
   static List<UserTopic> getUserTopicList(Map topics) {

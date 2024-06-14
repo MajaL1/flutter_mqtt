@@ -29,6 +29,8 @@ import 'pages/first_screen.dart';
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+final service = FlutterBackgroundService();
+
 //final service = FlutterBackgroundService();
 
 /// The [SharedPreferences] key to access the alarm fire count.
@@ -51,8 +53,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //DartPluginRegistrant.ensureInitialized();
 
-  //final service = FlutterBackgroundService();
-  //await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
+  final service = FlutterBackgroundService();
+  await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
 
   // SharedPreferences.setMockInitialValues({});
   SharedPreferences.getInstance().then((value) {
@@ -158,12 +160,14 @@ class NotificationsApp extends StatefulWidget {
 
 
 
-class _NotificationsAppState extends State<NotificationsApp> {
+
+class _NotificationsAppState extends State<NotificationsApp> with WidgetsBindingObserver{
   var prefs = 1;
   late final AppLifecycleListener _listener;
   final List<String> _states = <String>[];
   late AppLifecycleState? _state;
-  late FlutterBackgroundService service;
+  SendPort? _sendPort;
+ // late FlutterBackgroundService service;
   //static SendPort? uiSendPort;
 
   // static MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
@@ -179,6 +183,7 @@ class _NotificationsAppState extends State<NotificationsApp> {
   void initState() {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
     debugPrint("main init state: ");
+
     initAlarmHistoryList();
     NotificationHelper.initializeService();
     //WidgetsBinding.instance.addObserver();
@@ -204,7 +209,21 @@ class _NotificationsAppState extends State<NotificationsApp> {
       _states.add(_state!.name);
     }
   }
-
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    _sendPort ??= IsolateNameServer.lookupPortByName('appState');
+    switch(state){
+      case AppLifecycleState.resumed:
+        _sendPort?.send(false);
+        break;
+      case AppLifecycleState.paused:
+        _sendPort?.send(true);
+        break;
+      default:
+        break;
+    }
+  }
 
   Future<AppExitResponse> _onExitRequested() async {
     final response = await showDialog<AppExitResponse>(

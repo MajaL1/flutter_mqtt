@@ -119,12 +119,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqtt(
-              mqttPass: password,
-              username: username,
-              topicList: userTopicList,
-              port: Constants.BROKER_PORT,
-              host: Constants.BROKER_IP);
+          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
           /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
             value.setString("username", username);
@@ -142,17 +137,18 @@ class _LoginFormValidationState extends State<LoginForm> {
             String userTopicListPref = jsonEncode(userTopicList);
             value.setString("user_topic_list", userTopicListPref);
             value.reload();
+
           });
+          await BackgroundMqtt(flutterLocalNotificationsPlugin)
+              .initializeService(service);
           //await smartMqtt.initializeMQTTClient();
           // inicializiraj servis za posiljanje sporocil
           await NotificationHelper.initializeService();
           await SharedPreferences.getInstance().then((value) {
             value.setBool("isLoggedIn", true);
           });
-          final service = FlutterBackgroundService();
-          await BackgroundMqtt(flutterLocalNotificationsPlugin)
-              .initializeService(service);
-          await service.startService();
+
+         // await service.startService();
           /* await Workmanager().initialize(
               callbackDispatcher, // The top level function, aka callbackDispatcher
               isInDebugMode:
