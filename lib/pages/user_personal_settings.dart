@@ -47,8 +47,8 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
     return buildUserPersonalSettings();
   }
 
-  SingleChildScrollView buildUserPersonalSettings() {
-    return SingleChildScrollView(
+  Container buildUserPersonalSettings() {
+    return Container(
         child: Container(
       color: Colors.white,
       child: Column(children: <Widget>[

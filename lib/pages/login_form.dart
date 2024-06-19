@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
+
+//import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
@@ -25,6 +27,8 @@ class LoginForm extends StatefulWidget {
 
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
+
+ // final VoidCallback _onPressed;
 }
 /*
 @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
@@ -137,7 +141,6 @@ class _LoginFormValidationState extends State<LoginForm> {
             String userTopicListPref = jsonEncode(userTopicList);
             value.setString("user_topic_list", userTopicListPref);
             value.reload();
-
           });
           await BackgroundMqtt(flutterLocalNotificationsPlugin)
               .initializeService(service);
@@ -339,7 +342,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           width: 120,
                                           // decoration: Utils
                                           //   .buildLoginButtonBoxDecoration(),
-                                          child: ElevatedButton(
+                                          child: TextButton(
                                             style: GuiUtils
                                                 .buildElevatedButtonLogin(),
                                             onPressed: () {
@@ -348,7 +351,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                 usernameVal = emailText;
                                                 passwordVal = passwordText;
                                               }
-                                              login(usernameVal, passwordVal);
+                                              EasyDebounce.debounce('debouncer3', Duration(seconds: 3),
+                                                  () => {
+                                                Utils.showCircularProgressIndicator(),
+                                              login(usernameVal, passwordVal)
+                                              });
                                             },
                                             child: const Text(
                                               'Login',

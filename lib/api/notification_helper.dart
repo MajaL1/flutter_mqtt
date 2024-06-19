@@ -10,6 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
@@ -65,7 +66,7 @@ class NotificationHelper extends StatelessWidget {
               'ic_launcher',
             ),
           ),
-          onDidReceiveBackgroundNotificationResponse: null,
+          onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
           onDidReceiveNotificationResponse:
               (NotificationResponse details) async {
         Get.to(const AlarmHistory());
@@ -111,6 +112,12 @@ class NotificationHelper extends StatelessWidget {
 
     // setSendAlarm(message);
     service.startService();
+  }
+
+  @pragma('vm:entry-point')
+   static Future<void> notificationTapBackground(NotificationResponse details) async {
+    debugPrint("TAP BACKGROUND");
+    Get.to(const AlarmHistory());
   }
 
 // to ensure this is executed

@@ -186,7 +186,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     debugPrint("main init state: ");
 
     initAlarmHistoryList();
-    NotificationHelper.initializeService();
+    //NotificationHelper.initializeService();
     //WidgetsBinding.instance.addObserver();
     super.initState();
     _state = SchedulerBinding.instance.lifecycleState;

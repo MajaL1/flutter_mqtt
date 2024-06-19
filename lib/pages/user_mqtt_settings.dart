@@ -120,8 +120,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   Widget build(BuildContext context) {
     debugPrint("calling build method user_settings.dart");
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+    return Container(
+      //scrollDirection: Axis.vertical,
       child: Container(
         color: Colors.white,
         child: Column(children: <Widget>[

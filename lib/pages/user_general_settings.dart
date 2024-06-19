@@ -48,10 +48,10 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     return buildUserGeneralSettings();
   }
 
-  SingleChildScrollView buildUserGeneralSettings() {
+  Container buildUserGeneralSettings() {
     //super.initState();
 
-    return SingleChildScrollView(
+    return Container(
         //color: Colors.white,
 
         //body: SingleChildScrollView(
