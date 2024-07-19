@@ -144,13 +144,21 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
             ),
           ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
+          // Text(preferences?.getBool("serviceStopped") as String),
+          Container(
+              margin: EdgeInsets.only(left: 22),
+              child: Text(
+                "111",
+                style: TextStyle(fontSize: 12),
+              )),
           ListTile(
             leading: const Icon(Icons.stop_circle, color: Colors.black87),
-            title: const Text("Stop service",
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14)),
+            title: const Text('Start service'),
+            //(preferences?.getBool("serviceStopped") == null || preferences?.getBool("serviceStopped") == false) ? const Text('1Start service') : const Text('Stop service'),
+//style: TextStyle(
+//                     color: Colors.black87,
+//                     fontWeight: FontWeight.w600,
+//                     fontSize: 14)),
             onTap: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(

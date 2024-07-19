@@ -21,15 +21,16 @@ class DataSmartMqtt extends ChangeNotifier {
 
   Future<void> dataProcessor(String decodeMessage, String topicName,
       SharedPreferences preferences) async {
-    Data? data = await convertMessageToData(decodeMessage, topicName);
-    setDataListToPreferences(data!, preferences);
-    //preferences.setString("data_mqtt", decodeMessage);
-
     debugPrint("___________________________________________________");
     debugPrint("from topic data $topicName");
     debugPrint("__________ $decodeMessage");
     debugPrint("___________________________________________________");
+
+    Data? data = await convertMessageToData(decodeMessage, topicName);
+    setDataListToPreferences(data!, preferences);
+    //preferences.setString("data_mqtt", decodeMessage);
     debugPrint("data: ${data.toString()}");
+
 
     setNewMqttData(data);
     //newMqttData = data;
@@ -55,7 +56,7 @@ class DataSmartMqtt extends ChangeNotifier {
     String? dataListStr = preferences.getString("data_mqtt_list");
     List? dataList;
 
-    // zaenkrat dodamo samo eno element na listo
+    // zaenkrat dodamo samo en element na listo
     /*if (dataListStr != null) {
       final jsonResult = jsonDecode(dataListStr!);
       if(jsonResult!= null) {
@@ -66,14 +67,20 @@ class DataSmartMqtt extends ChangeNotifier {
     //else {
 
     dataList = [];
-     dataList.add(newData);
+    dataList.add(newData);
     //}
-    String encodedData = json.encode(dataList);
-    debugPrint("encodedData data:  $encodedData");
+    // popravi
+    // String encodedData = json.encode(dataList);
+    String json =
+        jsonEncode(dataList.map((i) => i.toJson()).toList()).toString();
+    //List jsonList = dataList.map((data) => data.toJson()).toList();
+    print("jsonList: ${json}");
+
+    debugPrint("encodedData data:  $json");
     debugPrint("datalist:  $dataList");
 
-    preferences.setString("data_mqtt_list", encodedData);
-    debugPrint("setting data_mqtt_list encodedData: $encodedData");
+    preferences.setString("data_mqtt_list", json);
+    debugPrint("setting data_mqtt_list encodedData: $json");
   }
 
   void setNewMqttData(Data data) {

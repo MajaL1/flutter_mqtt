@@ -64,11 +64,11 @@ class Utils {
             userTopicList.add(deviceName + "/alarm");
           }
         }
-        /*if (topicData.name.contains("data")) {
+        if (topicData.name.contains("data")) {
           if (!userTopicList.contains(deviceName + "/data")) {
             userTopicList.add(deviceName + "/data");
           }
-        }*/
+        }
       }
     }
     return userTopicList;

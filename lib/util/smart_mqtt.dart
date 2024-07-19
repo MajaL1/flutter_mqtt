@@ -13,6 +13,7 @@ import '../model/constants.dart';
 import '../model/data.dart';
 import '../mqtt/MQTTAppState.dart';
 import '../widgets/show_alarm_time_settings.dart';
+import 'data_smart_mqtt.dart';
 
 class SmartMqtt extends ChangeNotifier {
   String? host;
@@ -211,12 +212,15 @@ class SmartMqtt extends ChangeNotifier {
     preferences.clear(); */
 
     if (topicName!.contains("data")) {
-      debugPrint("data: $decodeMessage");
+      //debugPrint("___________________________________________________");
+      //debugPrint("from topic data: $decodeMessage");
+      //debugPrint("___________________________________________________");
+
       /********************************/
       // DataSmartMqtt implementira notifierja za getNewData
-      // DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
+       DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
 
-      // await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
+       await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
 
       /********************************/
       //Data? data = await convertMessageToData(decodeMessage, topicName);

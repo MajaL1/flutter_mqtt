@@ -45,7 +45,11 @@ class BackgroundMqtt {
     DartPluginRegistrant.ensureInitialized();
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    preferences.setBool("serviceStopped", true);
+    preferences.setBool("serviceStopped", false);
+
+    SharedPreferences.getInstance().then((value) {
+        value.setBool("serviceStopped", false);
+    });
 
     SmartMqtt.instance.addListener(() {});
     if (service is AndroidServiceInstance) {

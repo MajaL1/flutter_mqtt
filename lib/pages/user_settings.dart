@@ -56,7 +56,7 @@ class _UserSettingsState extends State<UserSettings> {
       appBar: CustomAppBar(Constants.SETTINGS),
       drawer: const NavDrawer.base(),
       body: const SingleChildScrollView(
-       // padding: EdgeInsets.only(left: 15, right: 10, top: 10),
+        padding: EdgeInsets.only(left: 15, right: 10, top: 10),
        // scrollDirection: Axis.vertical,
       //  resizeToAvoidBottomInset: true,
 

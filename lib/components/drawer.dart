@@ -22,6 +22,7 @@ class _NavDrawerState extends State<NavDrawer> {
 
   @override
   initState() {
+    WidgetsFlutterBinding.ensureInitialized();
     super.initState();
 
     SharedPreferences.getInstance().then((prefValue) => {

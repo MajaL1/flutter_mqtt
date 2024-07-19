@@ -21,20 +21,6 @@ class Data {
     this.lb,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      "sensor_address": sensorAddress,
-      "deviceName": deviceName,
-      "typ": typ,
-      "d": d,
-      "ts": ts,
-      "t": t,
-      "w": w,
-      "r": r,
-      "lb": lb,
-    };
-  }
-
   static List<Data> fromJsonList(List<dynamic> json) {
     List<Data> listFromJson = [];
     Data data = Data();
@@ -59,7 +45,8 @@ class Data {
       if (key["d"] != null) d = key["d"];
       if (key["typ"] != null) typ = key["typ"];
       if (key["lb"] != null) lb = key["lb"];
-      if (key["ts"] != null) ts = key["ts"];
+      if (key["ts"] != null)
+        ts = DateTime.fromMillisecondsSinceEpoch(key["ts"] * 1000);
 
       //"ts": ts == null ? null : ts?.toIso8601String()
 
@@ -142,6 +129,7 @@ class Data {
               d: d,
               t: t,
               r: r,
+              ts: ts,
               lb: lb);
           //dataList.add(data);
           return data;
@@ -167,7 +155,7 @@ class Data {
             if (key1 != null) {
               value[key1];
               int value1 = value[key1];
-            //  print("key1: $key1, value1: $value1");
+              //  print("key1: $key1, value1: $value1");
               if (key1 == "t") {
                 t = value1;
               }
@@ -185,6 +173,10 @@ class Data {
               }
               if (key1 == "lb") {
                 lb = value1;
+              }
+              if (key1 == "ts") {
+                ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
+                // ts = valueInt;
               }
             }
           }
@@ -214,5 +206,19 @@ class Data {
     return "Data{sensorAddress: $sensorAddress, deviceName: $deviceName,typ: $typ, "
         " t: $t, w: $w, ts: $ts, d: $d, r: $r, lb: $lb"
         '}';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "sensor_address": sensorAddress,
+      "deviceName": deviceName,
+      "typ": typ,
+      "d": d,
+      "ts": ts, //DateTime.fromMillisecondsSinceEpoch(ts * 1000),
+      "t": t,
+      "w": w,
+      "r": r,
+      "lb": lb,
+    };
   }
 }
