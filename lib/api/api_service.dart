@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:http/http.dart' show Client, Response, post;
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/constants.dart';
@@ -12,7 +11,6 @@ import '../util/background_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../main.dart';
 import '../model/alarm.dart';
 import '../model/topic_data.dart';
 import '../model/user.dart';

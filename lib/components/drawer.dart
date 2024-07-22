@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_common/get_reset.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';

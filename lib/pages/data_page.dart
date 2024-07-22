@@ -1,17 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/components/custom_app_bar.dart';
-import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:provider/provider.dart';
 
 import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../model/data.dart';
 import '../util/data_smart_mqtt.dart';
-import '../util/utils.dart';
 
 class DataPage extends StatefulWidget {
   const DataPage.base({Key? key}) : super(key: key);

@@ -4,27 +4,21 @@ import 'dart:ui';
 import 'dart:isolate';
 
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:mqtt_client/mqtt_server_client.dart';
 import '../util/background_mqtt.dart';
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
-import 'package:mqtt_test/util/settings_smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 
-import 'api/notification_helper.dart';
 import 'model/alarm.dart';
 import 'model/constants.dart';
-import 'mqtt/MQTTAppState.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

@@ -7,17 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
+//import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
-import 'package:timezone/timezone.dart' as tz;
+//import 'package:timezone/timezone.dart' as tz;
 
 
-import '../main.dart';
 import '../model/alarm.dart';
 import '../util/utils.dart';
 import '../widgets/units.dart';
