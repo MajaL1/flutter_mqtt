@@ -117,15 +117,9 @@ class _LoginFormValidationState extends State<LoginForm> {
         if (user != null) {
           debugPrint(
               "loginForm, user: $user.username, $user.password, $user.topic");
-
           List<String> userTopicList = Utils.createTopicListFromApi(user);
-
-          String l = generateRandomString(10);
-          //String identifier = "_12apxeeejjjewg";
-          String identifier = l.toString();
-          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
-          /** saving user data in shared prefs **/
           await SharedPreferences.getInstance().then((value) {
+
             value.setString("username", username);
             value.setString("pass", password);
             value.setStringList("user_topics", userTopicList);
@@ -142,6 +136,13 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setString("user_topic_list", userTopicListPref);
             value.reload();
           });
+
+          String l = generateRandomString(10);
+          //String identifier = "_12apxeeejjjewg";
+          String identifier = l.toString();
+          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+          /** saving user data in shared prefs **/
+
           await BackgroundMqtt(flutterLocalNotificationsPlugin)
               .initializeService(service);
           //await smartMqtt.initializeMQTTClient();

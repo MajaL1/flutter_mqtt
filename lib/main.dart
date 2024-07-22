@@ -12,7 +12,7 @@ import 'package:flutter_background_service_android/flutter_background_service_an
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:mqtt_test/util/background_mqtt.dart';
+import '../util/background_mqtt.dart';
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
 import 'package:mqtt_test/util/settings_smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';

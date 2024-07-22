@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_common/get_reset.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,25 +20,33 @@ class NavDrawer extends StatefulWidget {
 class _NavDrawerState extends State<NavDrawer> {
   String username = "";
   String email = "";
+  late SharedPreferences prefs;
 
   @override
   initState() {
     WidgetsFlutterBinding.ensureInitialized();
     super.initState();
-
-    SharedPreferences.getInstance().then((prefValue) => {
-          setState(() {
-            username = prefValue.getString('username')!;
-            email = prefValue.getString('email')!;
-          })
-        });
-
+    initial();
     debugPrint("-- navDrawer initstate");
   }
 
-  Future getUsername() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    username = prefs.getString("username")!;
+  void initial() async{
+    //prefs = await SharedPreferences.getInstance();
+    //prefs.reload();
+
+    prefs = await SharedPreferences.getInstance().then((val){
+      val.reload();
+      setState(() {
+        debugPrint("&&&&& username: ${val.getString('username')!}");
+        username = val.getString('username')!;
+        email = val.getString('email')!;
+      });
+      return val;
+    });
+  }
+
+  Future<String> getUsername() async {
+    return prefs.getString("username")!;
   }
 
   /* Future<dynamic> _getPrefs() async {

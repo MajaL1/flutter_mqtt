@@ -8,7 +8,7 @@ import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/user_topic.dart';
-import 'package:mqtt_test/util/background_mqtt.dart';
+import '../util/background_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
