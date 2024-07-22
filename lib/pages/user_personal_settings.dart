@@ -15,12 +15,14 @@ class UserPersonalSettings extends StatefulWidget {
 }
 
 class _UserPersonalSettingsState extends State<UserPersonalSettings> {
+  late SharedPreferences prefs;
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
   int countTest = 0;
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
   bool changePassSwitchVal = true;
+  bool serviceStopped = false;
 
   TextStyle headingStyleIOS = const TextStyle(
     fontWeight: FontWeight.w600,
@@ -34,13 +36,19 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
     super.initState();
   }
 
-  /* Widget _connectToTopic() {
-    if (_connectMqtt == null) {
-      _connectMqtt =
-          _clientConnectToTopic(); //Container(); // here put whatever your function used to be.
-    }
-    return _connectMqtt!;
-  } */
+  void initial() async {
+    //prefs = await SharedPreferences.getInstance();
+    //prefs.reload();
+
+    prefs = await SharedPreferences.getInstance().then((val) {
+      val.reload();
+      setState(() {
+        //debugPrint("&&&&& username: ${val.getString('username')!}");
+        serviceStopped = val.getBool('serviceStopped')!;
+      });
+      return val;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,17 +152,14 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
             ),
           ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
-          // Text(preferences?.getBool("serviceStopped") as String),
-          Container(
-              margin: EdgeInsets.only(left: 22),
-              child: Text(
-                "111",
-                style: TextStyle(fontSize: 12),
-              )),
+          //ListTile(
+          //  title: Text('Start service ${serviceStopped}'),
+          //),
           ListTile(
             leading: const Icon(Icons.stop_circle, color: Colors.black87),
-            title: const Text('Start service'),
-            //(preferences?.getBool("serviceStopped") == null || preferences?.getBool("serviceStopped") == false) ? const Text('1Start service') : const Text('Stop service'),
+            title: serviceStopped
+                ? const Text('1Start service')
+                : const Text('Stop service'),
 //style: TextStyle(
 //                     color: Colors.black87,
 //                     fontWeight: FontWeight.w600,

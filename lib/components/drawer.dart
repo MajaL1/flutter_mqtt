@@ -37,7 +37,7 @@ class _NavDrawerState extends State<NavDrawer> {
     prefs = await SharedPreferences.getInstance().then((val){
       val.reload();
       setState(() {
-        debugPrint("&&&&& username: ${val.getString('username')!}");
+        //debugPrint("&&&&& username: ${val.getString('username')!}");
         username = val.getString('username')!;
         email = val.getString('email')!;
       });
