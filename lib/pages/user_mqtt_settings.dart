@@ -256,12 +256,13 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     });
     List<UserDataSettings> userDataSettings = [];
 
-    // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings"
+    // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings" iz storage
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {
       List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
       userDataSettings =
           jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+      debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
       return userDataSettings;
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
@@ -275,8 +276,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         List<UserDataSettings> parsedUserDataSettingsList =
             settings.cast<UserDataSettings>();
 
-        //debugPrint(
-        //  "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
+        debugPrint("===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
 
         // ce trenutni settingi niso prazni in ce novi settingi niso prazni
         if (newUserSettings != null) {
@@ -311,6 +311,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           value.setString("parsed_current_mqtt_settings", json0);
         });
       }
+      debugPrint("=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
 
       return userDataSettings;
     }

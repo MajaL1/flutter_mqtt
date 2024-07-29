@@ -46,7 +46,7 @@ Future<void> main() async {
 
   tzl.initializeTimeZones();
   WidgetsFlutterBinding.ensureInitialized();
-  //DartPluginRegistrant.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
 
   final service = FlutterBackgroundService();
   await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);

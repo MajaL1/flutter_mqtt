@@ -17,6 +17,7 @@ import '../model/constants.dart';
 class BackgroundMqtt {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+  @pragma('vm:entry-point')
   BackgroundMqtt(this.flutterLocalNotificationsPlugin);
 
 
@@ -34,6 +35,7 @@ class BackgroundMqtt {
     return true;
   }
 
+ @pragma('vm:entry-point')
  static void stopMqttService(){
     service.invoke("stopService");
  }
@@ -159,6 +161,7 @@ class BackgroundMqtt {
     });
   }
 
+  @pragma('vm:entry-point')
   Future<void> initializeService(service) async {
     debugPrint("main.dart initializing background service");
 

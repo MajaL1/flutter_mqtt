@@ -158,7 +158,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
           ListTile(
             leading: const Icon(Icons.stop_circle, color: Colors.black87),
             title: serviceStopped
-                ? const Text('1Start service')
+                ? const Text('Start service')
                 : const Text('Stop service'),
 //style: TextStyle(
 //                     color: Colors.black87,
@@ -180,6 +180,9 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context, 'OK');
+                      setState(() {
+                        serviceStopped = true;
+                      });
                       ApiService.stopService();
                     },
                     child: const Text('OK'),
