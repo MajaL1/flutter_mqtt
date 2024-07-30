@@ -191,14 +191,19 @@ class ApiService {
       }
     });
   }
+  static Future<bool> startService() async {
+    final result = await BackgroundMqtt.startMqttService();
+    return result;
+  }
+
 
   static Future<void> stopService() async {
-    BackgroundMqtt.stopMqttService();
+    final result =  await BackgroundMqtt.stopMqttService();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("serviceStopped", true);
     var isRunning = await service.isRunning();
     if (isRunning) {
-      debugPrint(" isRunning, logout - STOP service");
+      debugPrint(" isRunning TRUE, logout - STOP service");
       service.invoke("stopService");
       SmartMqtt.instance.disconnect();
     } else {
@@ -206,6 +211,7 @@ class ApiService {
       //service.startService();
     }
     debugPrint("stopping service");
+    return result;
   }
 
   static List<UserTopic> getUserTopicList(Map topics) {

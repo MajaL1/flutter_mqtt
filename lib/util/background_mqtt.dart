@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' as io;
 import 'dart:ui';
 
-import 'dart:io' as io;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-
 
 import '../model/constants.dart';
 
@@ -19,7 +18,6 @@ class BackgroundMqtt {
 
   @pragma('vm:entry-point')
   BackgroundMqtt(this.flutterLocalNotificationsPlugin);
-
 
   @pragma('vm:entry-point')
   Future<bool> onIosBackground(ServiceInstance service) async {
@@ -35,11 +33,18 @@ class BackgroundMqtt {
     return true;
   }
 
- @pragma('vm:entry-point')
- static void stopMqttService(){
-    service.invoke("stopService");
- }
- 
+  @pragma('vm:entry-point')
+  static Future<bool> startMqttService() async {
+    final result = await service.startService();
+    return result;
+  }
+
+  @pragma('vm:entry-point')
+  static Future<void> stopMqttService() async {
+     service.invoke("stopService");
+    //return result;
+  }
+
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
@@ -49,7 +54,7 @@ class BackgroundMqtt {
     preferences.setBool("serviceStopped", false);
 
     SharedPreferences.getInstance().then((value) {
-        value.setBool("serviceStopped", false);
+      value.setBool("serviceStopped", false);
     });
 
     SmartMqtt.instance.addListener(() {});
@@ -124,30 +129,31 @@ class BackgroundMqtt {
         val.reload();
         bool? appRunInBackground = val.getBool("appRunInBackground");
         debugPrint("main.dart appRunInBackground: $appRunInBackground");
-        String ? username = val.getString("username");
-        String ? password = val.getString("pass");
-        String ? userTopicList = val.getString("user_topic_list");
+        String? username = val.getString("username");
+        String? password = val.getString("pass");
+        String? userTopicList = val.getString("user_topic_list");
         String? currentState = val.getString("current_state");
         String? clientIdentifier = val.getString("identifier");
         bool? connected = val.getBool("connected");
 
         debugPrint(
             "////////////////main shared prefs in background: - $currentState, $username, $password, $userTopicList $currentState");
-       if(username !=null && password != null) {
-         /*SmartMqtt(mqttPass: password!,
+        if (username != null && password != null) {
+          /*SmartMqtt(mqttPass: password!,
              username: username!,
              topicList: userTopicList,
              port: Constants.BROKER_PORT,
              host: Constants.BROKER_IP); */
-       }
+        }
         if (connected == null || !connected) {
           debugPrint(
               " recconect////////////////connected== null && !connected");
 
           List topics;
-          if(userTopicList != null) {
+          if (userTopicList != null) {
             topics = json.decode(userTopicList!);
-            SmartMqtt(mqttPass: password!,
+            SmartMqtt(
+                mqttPass: password!,
                 username: username!,
                 topicList: topics,
                 port: Constants.BROKER_PORT,
@@ -170,7 +176,7 @@ class BackgroundMqtt {
       'my_foreground', // id
       'MY FOREGROUND SERVICE', // title
       description:
-      'This channel is used for important notifications.', // description
+          'This channel is used for important notifications.', // description
       importance: Importance.low, // importance must be at low or higher level
     );
 
@@ -188,7 +194,7 @@ class BackgroundMqtt {
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     await service.configure(
@@ -216,5 +222,4 @@ class BackgroundMqtt {
     );
     debugPrint("main.dart end initializing background service");
   }
-
 }

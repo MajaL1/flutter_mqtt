@@ -167,23 +167,52 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
             onTap: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
-                title: const Text('Stop service'),
-                content: const Text(
-                  'Are you sure you want to stop service? \n\n No alarms will be displayed.',
-                  style: TextStyle(fontSize: 14),
-                ),
+                title: !serviceStopped
+                    ? const Text('Stop service')
+                    : const Text('Start service'),
+                content: !serviceStopped
+                    ? const Text(
+                        'Are you sure you want to stop service? \n\n No alarms will be displayed.',
+                        style: TextStyle(fontSize: 14),
+                      )
+                    : const Text(
+                        'Are you sure you want to start service?',
+                        style: TextStyle(fontSize: 14),
+                      ),
                 actions: <Widget>[
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
                     child: const Text('Cancel'),
                   ),
                   TextButton(
-                    onPressed: () {
+                    onPressed: () async{
                       Navigator.pop(context, 'OK');
-                      setState(() {
-                        serviceStopped = true;
-                      });
-                      ApiService.stopService();
+                      if (serviceStopped) {
+                        final result = await ApiService.startService();
+                        if(result) {
+                          setState(() {
+                            serviceStopped = !serviceStopped;
+                          });
+                          debugPrint("will start service");
+                        }
+                        else{
+                          debugPrint("will start service ERROR");
+                        }
+                      } else {
+                        try {
+                          await ApiService.stopService();
+
+                          setState(() {
+                            serviceStopped = !serviceStopped;
+                          });
+                          debugPrint("will stop service");
+                        }
+                        catch(e){
+                          debugPrint("Error stop service...");
+                        }
+                      }
                     },
                     child: const Text('OK'),
                   ),
