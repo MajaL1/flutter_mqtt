@@ -73,6 +73,8 @@
         <service
             android:name=".MyForegroundService"
             android:foregroundServiceType="specialUse" />
+        <!-- use for Kotlin background service -->
+        <service android:name=".ExampleService" />
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

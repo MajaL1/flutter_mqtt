@@ -11,9 +11,9 @@ import '../util/background_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/alarm.dart';
-import '../model/topic_data.dart';
-import '../model/user.dart';
+import 'package:mqtt_test/model/alarm.dart';
+import 'package:mqtt_test/model/topic_data.dart';
+import 'package:mqtt_test/model/user.dart';
 
 //import 'package:mqtt_test/assets/alarms.json' show rootBundle;
 

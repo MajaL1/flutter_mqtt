@@ -70,7 +70,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
                 fontSize: 20,
                 fontWeight: FontWeight.bold)),
         Container(height: 20),
-        const Divider(height: 1, color: Colors.black12, thickness: 5),
+        //const Divider(height: 1, color: Colors.black12, thickness: 5),
         _buildUserPersonalSettings(),
       ]),
       // ),
@@ -102,7 +102,8 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+              const Padding(padding: EdgeInsets.symmetric(horizontal:15, vertical: 15,)),
+
               Text("  Account", style: headingStyle),
             ],
           ),

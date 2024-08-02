@@ -77,7 +77,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         ),
         const Divider(height: 14, color: Colors.white, thickness: 5),
 
-        const Divider(height: 4, color: Colors.black12, thickness: 5),
+        //const Divider(height: 4, color: Colors.black12, thickness: 5),
         _buildUserGeneralSettings(),
       ]),
       // ),

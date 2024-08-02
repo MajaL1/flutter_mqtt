@@ -133,7 +133,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   fontSize: 20,
                   fontWeight: FontWeight.bold)),
           const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-          const Divider(height: 4, color: Colors.black12, thickness: 5),
+          //const Divider(height: 4, color: Colors.black12, thickness: 5),
 
           _buildMqttSettingsView(),
           //_buildIntervalSpinBox(context),
@@ -173,7 +173,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       const Text(
         "Friendly name:  ",
         style: TextStyle(
-          fontSize: 14, //color: Color.fromRGBO(0, 0, 190, 1)//.shade900,
+          fontSize: 15, //color: Color.fromRGBO(0, 0, 190, 1)//.shade900,
+          fontFamily: "Roboto Regular",
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -425,7 +426,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                       alignment: Alignment.center,
                                       // This is ugly hack: previousSettingToChange
                                       child: settingToChange != "u"
-                                          ? Wrap(children: [
+                                          ? Wrap(
+                                          children: [
                                               //!previousSettingToChange ?
                                               // index % 2 == 0
                                               //        ?
