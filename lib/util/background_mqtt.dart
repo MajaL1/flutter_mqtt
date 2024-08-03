@@ -183,14 +183,14 @@ class BackgroundMqtt {
     //final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     //    FlutterLocalNotificationsPlugin();
 
-    if (io.Platform.isIOS || io.Platform.isAndroid) {
+    /*if (io.Platform.isIOS || io.Platform.isAndroid) {
       await flutterLocalNotificationsPlugin.initialize(
         const InitializationSettings(
           iOS: DarwinInitializationSettings(),
           android: AndroidInitializationSettings('ic_bg_service_small'),
         ),
       );
-    }
+    } */
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<

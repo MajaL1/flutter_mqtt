@@ -50,6 +50,16 @@ Future<void> main() async {
   DartPluginRegistrant.ensureInitialized();
 
   final service = FlutterBackgroundService();
+
+  //dodamo ios permission za plugin
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      IOSFlutterLocalNotificationsPlugin>()
+      ?.requestPermissions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
   await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
 
   // SharedPreferences.setMockInitialValues({});
