@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:mqtt_test/model/alarm.dart';
+import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,7 +62,7 @@ class _FirstScreenState extends State<FirstScreen> {
                 return Scaffold(
                     body: !isLoggedIn
                         ? const LoginForm.base()
-                        : const UserSettings.base());
+                        : const AlarmHistory());
                 //  : UserSettings.base()));
                 //body: LoginForm.base());
               }
