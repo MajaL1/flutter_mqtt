@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:ui';
 import 'dart:isolate';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';

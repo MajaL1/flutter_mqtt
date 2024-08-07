@@ -115,8 +115,8 @@ class SmartMqttConnect extends ChangeNotifier {
         autoStart: true,
         isForegroundMode: true,
         notificationChannelId: 'my_foreground',
-        initialNotificationTitle: 'Alarm app',
-        initialNotificationContent: 'Initializing',
+       // initialNotificationTitle: 'Alarm app',
+      //  initialNotificationContent: 'Initializing',
         foregroundServiceNotificationId: 888,
       ),
       iosConfiguration: IosConfiguration(

@@ -110,7 +110,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               letterSpacing: 1.8,
                             ),
                           ),
-                          onTap: () => Navigator.of(context).push(
+                          onTap: () => Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const AlarmHistory())),
@@ -136,7 +136,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               letterSpacing: 1.8,
                             ),
                           ),
-                          onTap: () => Navigator.of(context).push(
+                          onTap: () => Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const UserSettings.base())),
@@ -161,7 +161,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               letterSpacing: 1.8,
                             ),
                           ),
-                          onTap: () => Navigator.of(context).push(
+                          onTap: () => Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) =>
                                   const DataPage.base())),

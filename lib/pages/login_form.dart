@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
@@ -27,7 +26,7 @@ class LoginForm extends StatefulWidget {
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
 
- // final VoidCallback _onPressed;
+// final VoidCallback _onPressed;
 }
 /*
 @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
@@ -118,7 +117,6 @@ class _LoginFormValidationState extends State<LoginForm> {
               "loginForm, user: $user.username, $user.password, $user.topic");
           List<String> userTopicList = Utils.createTopicListFromApi(user);
           await SharedPreferences.getInstance().then((value) {
-
             value.setString("username", username);
             value.setString("pass", password);
             value.setStringList("user_topics", userTopicList);
@@ -139,7 +137,12 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqtt(mqttPass: password, username: username, topicList: userTopicList, port: Constants.BROKER_PORT, host: Constants.BROKER_IP);
+          SmartMqtt(
+              mqttPass: password,
+              username: username,
+              topicList: userTopicList,
+              port: Constants.BROKER_PORT,
+              host: Constants.BROKER_IP);
           /** saving user data in shared prefs **/
 
           await BackgroundMqtt(flutterLocalNotificationsPlugin)
@@ -151,7 +154,7 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setBool("isLoggedIn", true);
           });
 
-         // await service.startService();
+          // await service.startService();
           /* await Workmanager().initialize(
               callbackDispatcher, // The top level function, aka callbackDispatcher
               isInDebugMode:
@@ -351,11 +354,15 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                 usernameVal = emailText;
                                                 passwordVal = passwordText;
                                               }
-                                              EasyDebounce.debounce('debouncer3', Duration(seconds: 3),
+                                              EasyDebounce.debounce(
+                                                  'debouncer3',
+                                                  Duration(seconds: 3),
                                                   () => {
-                                                Utils.showCircularProgressIndicator(),
-                                              login(usernameVal, passwordVal)
-                                              });
+                                                        Utils
+                                                            .showCircularProgressIndicator(),
+                                                        login(usernameVal,
+                                                            passwordVal)
+                                                      });
                                             },
                                             child: const Text(
                                               'Login',
@@ -387,8 +394,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           padding: const EdgeInsets.only(
                                               left: 15.0,
                                               right: 15.0,
-                                              top: 15,
-                                              bottom: 20),
+                                              top: 0,
+                                              bottom: 0),
                                           child: loginError == true
                                               ? const Text(
                                                   "Login error",
@@ -398,11 +405,26 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                 )
                                               : const Text(""),
                                         ),
+                                        const Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 15.0,
+                                              right: 15.0,
+                                              top: 5,
+                                              bottom: 5),
+                                          child: Text(
+                                            "or",
+                                            style: TextStyle(
+                                              color:
+                                                  Color.fromRGBO(
+                                                      74, 96, 128, 1.0),
+                                            ),
+                                          ),
+                                        ),
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               left: 15.0,
                                               right: 15.0,
-                                              top: 35,
+                                              top: 5,
                                               bottom: 0),
                                           child: TextButton(
                                             onPressed: () {},

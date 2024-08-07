@@ -6,6 +6,7 @@ import 'package:mqtt_test/api/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/custom_app_bar.dart';
+import '../components/drawer.dart';
 import '../model/alarm.dart';
 import '../model/constants.dart';
 import '../model/user_data_settings.dart';
@@ -39,7 +40,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
           return Scaffold(
               backgroundColor: const Color.fromRGBO(220, 220, 220, 1),
               appBar: CustomAppBar(Constants.HISTORY),
-              //drawer: NavDrawer(),
+              drawer: const NavDrawer.base(),
               body: SingleChildScrollView(
                   child: Column(children: [
                 const Padding(
