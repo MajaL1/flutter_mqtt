@@ -40,225 +40,264 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         if (snapshot.hasData) {
           return Scaffold(
               backgroundColor: const Color.fromRGBO(225, 225, 225, 1),
-
+              extendBody: true,
+              resizeToAvoidBottomInset: true,
               appBar: CustomAppBar(Constants.HISTORY),
               drawer: const NavDrawer.base(),
               body: SingleChildScrollView(
-
-                  child:  Container( color: Colors.white, child: Column(children: [
-                const Padding(
-                  padding: EdgeInsets.only(
-                      left: 15.0, right: 15.0, top: 7, bottom: 15.0),
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 30,
-                        width: 150,
-                        decoration: GuiUtils.buildHistoryButtonDecoration(),
-                        child: ElevatedButton.icon(
-                            style: GuiUtils.buildElevatedButtonSettings(),
-                            onPressed: () {
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Clear history'),
-                                  content: const Text(
-                                    'Are you sure you want to clear history?',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'Cancel'),
-                                      child: const Text('Cancel'),
+                  child: Container(
+                      color: Colors.white,
+                      constraints:
+                          const BoxConstraints(maxWidth: 1000, minHeight: 1000),
+                      child: Column(children: [
+                        const Padding(
+                          padding: EdgeInsets.only(
+                              left: 15.0, right: 15.0, top: 7, bottom: 15.0),
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 30,
+                                width: 150,
+                                decoration:
+                                    GuiUtils.buildHistoryButtonDecoration(),
+                                child: ElevatedButton.icon(
+                                    style:
+                                        GuiUtils.buildElevatedButtonSettings(),
+                                    onPressed: () {
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          title: const Text('Clear history'),
+                                          content: const Text(
+                                            'Are you sure you want to clear history?',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, 'Cancel'),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                _clearHistory();
+                                                Navigator.pop(context, 'OK');
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    label: const Text(
+                                      'Clear history',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
                                     ),
-                                    TextButton(
-                                      onPressed: () {
-                                        _clearHistory();
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
+                                    icon: const Icon(Icons.clear,
+                                        color: Colors.white, size: 18)),
+                              ),
+                              Container(width: 40),
+                              Container(
+                                height: 30,
+                                width: 130,
+                                decoration:
+                                    GuiUtils.buildHistoryButtonDecoration(),
+                                child: ElevatedButton.icon(
+                                    style:
+                                        GuiUtils.buildElevatedButtonSettings(),
+                                    onPressed: () {
+                                      _refreshHistoryList();
+                                    },
+                                    label: const Text(
+                                      'Refresh',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                            label: const Text(
-                              'Clear history',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            icon: const Icon(Icons.clear,
-                                color: Colors.white, size: 18)),
-                      ),
-                      Container(width: 40),
-                      Container(
-                        height: 30,
-                        width: 130,
-                        decoration: GuiUtils.buildHistoryButtonDecoration(),
-                        child: ElevatedButton.icon(
-                            style: GuiUtils.buildElevatedButtonSettings(),
-                            onPressed: () {
-                              _refreshHistoryList();
-                            },
-                            label: const Text(
-                              'Refresh',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 12),
-                            ),
-                            icon: const Icon(Icons.refresh,
-                                color: Colors.white, size: 18)),
-                      )
-                    ]),
-                const Divider(height: 40, color: Colors.black12, thickness: 0),
-                ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      bool isHeader = index == 0;
-                      /*if(index>=1){
+                                    icon: const Icon(Icons.refresh,
+                                        color: Colors.white, size: 18)),
+                              )
+                            ]),
+                        const Divider(
+                            height: 40, color: Colors.transparent, thickness: 0),
+                        ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              bool isHeader = index == 0;
+                              /*if(index>=1){
                         index--;
                       } */
-                      String deviceName =
-                          snapshot.data![index].deviceName.toString();
-                      String friendlyName =
-                          snapshot.data![index].friendlyName.toString();
-                      String hiAlarm = snapshot.data![index].hiAlarm.toString();
-                      String loAlarm = snapshot.data![index].loAlarm.toString();
-                      String v = snapshot.data![index].v.toString();
-                      int? u = snapshot.data![index].u;
-                      String sensorAddress =
-                          snapshot.data![index].sensorAddress.toString();
-                      String alarmValue = "";
-                      String units = UnitsConstants.getUnits(u);
+                              String deviceName =
+                                  snapshot.data![index].deviceName.toString();
+                              String friendlyName =
+                                  snapshot.data![index].friendlyName.toString();
+                              String hiAlarm =
+                                  snapshot.data![index].hiAlarm.toString();
+                              String loAlarm =
+                                  snapshot.data![index].loAlarm.toString();
+                              String v = snapshot.data![index].v.toString();
+                              int? u = snapshot.data![index].u;
+                              String sensorAddress = snapshot
+                                  .data![index].sensorAddress
+                                  .toString();
+                              String alarmValue = "";
+                              String units = UnitsConstants.getUnits(u);
 
-                      if (friendlyName.isEmpty) {
-                        deviceName = "$deviceName \n$sensorAddress";
-                      } else {
-                        deviceName = friendlyName;
-                      }
+                              if (friendlyName.isEmpty) {
+                                deviceName = "$deviceName \n$sensorAddress";
+                              } else {
+                                deviceName = friendlyName;
+                              }
 
-                      //     DateTime ts = snapshot.data![index].ts!;
+                              //     DateTime ts = snapshot.data![index].ts!;
 
-                      if (snapshot.data![index].hiAlarm != 0 &&
-                          snapshot.data![index].hiAlarm != null) {
-                        alarmValue = "Hi alarm: $hiAlarm";
-                      }
-                      if (snapshot.data![index].loAlarm != 0 &&
-                          snapshot.data![index].loAlarm != null) {
-                        alarmValue += " Lo alarm: $loAlarm";
-                      }
-                      String formattedDate = "";
+                              if (snapshot.data![index].hiAlarm != 0 &&
+                                  snapshot.data![index].hiAlarm != null) {
+                                alarmValue = "Hi alarm: $hiAlarm";
+                              }
+                              if (snapshot.data![index].loAlarm != 0 &&
+                                  snapshot.data![index].loAlarm != null) {
+                                alarmValue += " Lo alarm: $loAlarm";
+                              }
+                              String formattedDate = "";
 
-                      if (snapshot.data![index].ts != null) {
-                        formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
-                            .format(snapshot.data![index].ts!);
-                      }
-                      //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
-                      return Container(
-                        //color: Colors.white,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            border: Border(
-                                bottom: BorderSide(color: Colors.blueGrey, width: 0.3))),
-                        child: Table(
-                            border: const TableBorder(horizontalInside: BorderSide(width: 0.5, color: Colors.blue, style: BorderStyle.solid)),
-                            columnWidths: const {
-                              0: FixedColumnWidth(0.5),
-                              1: FixedColumnWidth(70.0),
-                              2: FixedColumnWidth(80.0),
-                              3: FixedColumnWidth(80.0),
-                            },
-                            children: [
-                              isHeader
-                                  ? TableRow(children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                            top: 1.0,
-                                            left: 1,
-                                            right: 1,
-                                            bottom: 1.0),
-                                        child: const Text("#",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                color: Color.fromRGBO(
-                                                    32, 52, 86, 0.6),
-                                                fontSize: 15)),
-                                      ),
-                                      Container(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: const Text("device - sensor",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      32, 52, 86, 0.8),
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 15))),
-                                      Container(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: const Text("value",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      32, 52, 86, 0.8),
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 15))),
-                                      Container(
-                                        padding: const EdgeInsets.all(1.0),
-                                        child: const Text("date ",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    32, 52, 86, 0.8),
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 15)),
-                                      )
-                                    ])
-                                  : TableRow(children: [
-                                      Container(
-                                          padding: const EdgeInsets.only(
-                                              top: 1.0,
-                                              left: 1,
-                                              right: 1,
-                                              bottom: 1.0),
-                                          child: Text(index.toString(),
-                                              textAlign: TextAlign.center,style: const TextStyle(
-                                          color: Color.fromRGBO(
-                                              55, 55, 58, 0.9)),)),
-                                      Container(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: Text(deviceName,
-                                              style: const TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      55, 55, 58, 0.9)),
-                                              textAlign: TextAlign.center)),
-                                      Container(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: Text(
-                                              "Value: $v \n$alarmValue $units",
-                                              style: const TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      55, 55, 58, 0.9)),
-                                              textAlign: TextAlign.center)),
-                                      Container(
-                                        padding: const EdgeInsets.all(1.0),
-                                        child: Text("$formattedDate ",
-                                            style: const TextStyle(
-                                                color: Color.fromRGBO(
-                                                    55, 55, 58, 0.9)),
-                                            textAlign: TextAlign.center),
-                                      )
-                                    ])
-                            ]),
-                      );
-                    })
-              ]))));
+                              if (snapshot.data![index].ts != null) {
+                                formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
+                                    .format(snapshot.data![index].ts!);
+                              }
+                              //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
+                              return Container(
+                                //color: Colors.white,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.blueGrey,
+                                            width: 0.0))),
+                                child: Table(
+                                    border: const TableBorder(
+                                        horizontalInside: BorderSide(
+                                            width: 0.0,
+                                            color: Colors.blue,
+                                            style: BorderStyle.solid)),
+                                    columnWidths: const {
+                                      0: FixedColumnWidth(0.5),
+                                      1: FixedColumnWidth(70.0),
+                                      2: FixedColumnWidth(80.0),
+                                      3: FixedColumnWidth(80.0),
+                                    },
+                                    children: [
+                                      isHeader
+                                          ? TableRow(children: [
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 1.0,
+                                                    left: 1,
+                                                    right: 1,
+                                                    bottom: 1.0),
+                                                child: const Text("#",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        color: Color.fromRGBO(
+                                                            32, 52, 86, 0.6),
+                                                        fontSize: 15)),
+                                              ),
+                                              Container(
+                                                  padding:
+                                                      const EdgeInsets.all(1.0),
+                                                  child: const Text(
+                                                      "device - sensor",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color.fromRGBO(
+                                                              32, 52, 86, 0.8),
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 15))),
+                                              Container(
+                                                  padding:
+                                                      const EdgeInsets.all(1.0),
+                                                  child: const Text("value",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Color.fromRGBO(
+                                                              32, 52, 86, 0.8),
+                                                          fontWeight:
+                                                              FontWeight.w800,
+                                                          fontSize: 15))),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(1.0),
+                                                child: const Text("date ",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color: Color.fromRGBO(
+                                                            32, 52, 86, 0.8),
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 15)),
+                                              )
+                                            ])
+                                          : TableRow(children: [
+                                              Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 1.0,
+                                                          left: 1,
+                                                          right: 1,
+                                                          bottom: 1.0),
+                                                  child: Text(
+                                                    index.toString(),
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                        color: Color.fromRGBO(
+                                                            55, 55, 58, 0.9)),
+                                                  )),
+                                              Container(
+                                                  padding:
+                                                      const EdgeInsets.all(1.0),
+                                                  child: Text(deviceName,
+                                                      style: const TextStyle(
+                                                          color: Color.fromRGBO(
+                                                              55, 55, 58, 0.9)),
+                                                      textAlign:
+                                                          TextAlign.center)),
+                                              Container(
+                                                  padding:
+                                                      const EdgeInsets.all(1.0),
+                                                  child: Text(
+                                                      "Value: $v \n$alarmValue $units",
+                                                      style: const TextStyle(
+                                                          color: Color.fromRGBO(
+                                                              55, 55, 58, 0.9)),
+                                                      textAlign:
+                                                          TextAlign.center)),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(1.0),
+                                                child: Text("$formattedDate ",
+                                                    style: const TextStyle(
+                                                        color: Color.fromRGBO(
+                                                            55, 55, 58, 0.9)),
+                                                    textAlign:
+                                                        TextAlign.center),
+                                              )
+                                            ])
+                                    ]),
+                              );
+                            })
+                      ]))));
         } else if (snapshot.hasError) {
           debugPrint(snapshot.error.toString());
           return Text("No alarm history. ${snapshot.error}");

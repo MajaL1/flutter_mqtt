@@ -166,7 +166,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 */
           //FlutterBackgroundService().startService();
           await Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (_) => const AlarmHistory());
+              MaterialPageRoute(builder: (_) => const AlarmHistory()));
 
           debugPrint("Validated");
         } else {
