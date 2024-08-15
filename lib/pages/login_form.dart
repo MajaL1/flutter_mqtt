@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
-import 'package:mqtt_test/pages/user_settings.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,7 +52,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   InternetStatus? _connectionStatus;
   String? connectionStatusText;
   late StreamSubscription<InternetStatus> _subscription;
-
+  bool isLoading = false;
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
@@ -165,8 +163,8 @@ class _LoginFormValidationState extends State<LoginForm> {
           , existingWorkPolicy: ExistingWorkPolicy.append);
 */
           //FlutterBackgroundService().startService();
-          await Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (_) => const AlarmHistory()));
+          await Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
 
           debugPrint("Validated");
         } else {
@@ -346,34 +344,42 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           width: 120,
                                           // decoration: Utils
                                           //   .buildLoginButtonBoxDecoration(),
-                                          child: TextButton(
-                                            style: GuiUtils
-                                                .buildElevatedButtonLogin(),
-                                            onPressed: () {
-                                              if (usernameVal.isEmpty &&
-                                                  passwordVal.isEmpty) {
-                                                usernameVal = emailText;
-                                                passwordVal = passwordText;
-                                              }
-                                              EasyDebounce.debounce(
-                                                  'debouncer3',
-                                                  Duration(seconds: 3),
-                                                  () => {
-                                                        Utils
-                                                            .showCircularProgressIndicator(),
-                                                        login(usernameVal,
-                                                            passwordVal)
-                                                      });
-                                            },
-                                            child: const Text(
-                                              'Login',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18,
-                                                  fontFamily: 'Roboto',
-                                                  letterSpacing: 1.5),
-                                            ),
-                                          ),
+                                          child: !isLoading
+                                              ? TextButton(
+                                                  style: GuiUtils
+                                                      .buildElevatedButtonLogin(),
+                                                  onPressed: () async {
+                                                    if (usernameVal.isEmpty &&
+                                                        passwordVal.isEmpty) {
+                                                      usernameVal = emailText;
+                                                      passwordVal =
+                                                          passwordText;
+                                                    }
+                                                    setState(() {
+                                                      isLoading = true;
+                                                    });
+                                                    //EasyDebounce.debounce(
+                                                    //    'debouncer3',
+                                                    //    Duration(seconds: 3),
+                                                    //        () => {
+                                                    //Utils
+                                                    //    .showCircularProgressIndicator(),
+                                                    await login(usernameVal, passwordVal);
+                                                    setState((){
+                                                      isLoading=false;
+                                                    });
+                                                  },
+                                                  child: const Text(
+                                                    'Login',
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 18,
+                                                        fontFamily: 'Roboto',
+                                                        letterSpacing: 1.5),
+                                                  ))
+                                              : Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
                                         ),
                                         /* Padding(
                           padding: const EdgeInsets.only(
@@ -415,9 +421,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           child: Text(
                                             "or",
                                             style: TextStyle(
-                                              color:
-                                                  Color.fromRGBO(
-                                                      74, 96, 128, 1.0),
+                                              color: Color.fromRGBO(
+                                                  74, 96, 128, 1.0),
                                             ),
                                           ),
                                         ),
