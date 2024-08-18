@@ -94,28 +94,83 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
 
   Widget _buildUserPersonalSettings() {
     return Container(
-      padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12, top: 20),
+     // padding: const EdgeInsets.only(left: 12, right: 12, bottom: 2, top: 20),
       alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          /* Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Padding(padding: EdgeInsets.symmetric(horizontal:15, vertical: 15,)),
 
               Text("  Account", style: headingStyle),
             ],
-          ),
-          /* const ListTile(
-            leading: Icon(Icons.phone),
-            title: Text("Phone Number"),
-          ),
-          const Divider(),
-          const ListTile(
-            leading: Icon(Icons.mail),
-            title: Text("Email"),
           ), */
+          const Divider(height: 20, color: Colors.black12, thickness: 2),
+          ListTile(
+            leading: const Icon(Icons.stop_circle, color: Colors.black87),
+            title: serviceStopped
+                ? const Text('Start service')
+                : const Text('Stop service'),
+//style: TextStyle(
+//                     color: Colors.black87,
+//                     fontWeight: FontWeight.w600,
+//                     fontSize: 14)),
+            onTap: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: !serviceStopped
+                    ? const Text('Stop service')
+                    : const Text('Start service'),
+                content: !serviceStopped
+                    ? const Text(
+                        'Are you sure you want to stop service? \n\n No alarms will be displayed.',
+                        style: TextStyle(fontSize: 14),
+                      )
+                    : const Text(
+                        'Are you sure you want to start service?',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, 'Cancel');
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context, 'OK');
+                      if (serviceStopped) {
+                        final result = await ApiService.startService();
+                        if (result) {
+                          setState(() {
+                            serviceStopped = !serviceStopped;
+                          });
+                          debugPrint("will start service");
+                        } else {
+                          debugPrint("will start service ERROR");
+                        }
+                      } else {
+                        try {
+                          await ApiService.stopService();
+
+                          setState(() {
+                            serviceStopped = !serviceStopped;
+                          });
+                          debugPrint("will stop service");
+                        } catch (e) {
+                          debugPrint("Error stop service...");
+                        }
+                      }
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ),
+          ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
           ListTile(
             leading: const Icon(Icons.exit_to_app, color: Colors.black87),
@@ -152,75 +207,11 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
               ),
             ),
           ),
-          const Divider(height: 40, color: Colors.black12, thickness: 2),
+
           //ListTile(
           //  title: Text('Start service ${serviceStopped}'),
           //),
-          ListTile(
-            leading: const Icon(Icons.stop_circle, color: Colors.black87),
-            title: serviceStopped
-                ? const Text('Start service')
-                : const Text('Stop service'),
-//style: TextStyle(
-//                     color: Colors.black87,
-//                     fontWeight: FontWeight.w600,
-//                     fontSize: 14)),
-            onTap: () => showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: !serviceStopped
-                    ? const Text('Stop service')
-                    : const Text('Start service'),
-                content: !serviceStopped
-                    ? const Text(
-                        'Are you sure you want to stop service? \n\n No alarms will be displayed.',
-                        style: TextStyle(fontSize: 14),
-                      )
-                    : const Text(
-                        'Are you sure you want to start service?',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context, 'Cancel');
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () async{
-                      Navigator.pop(context, 'OK');
-                      if (serviceStopped) {
-                        final result = await ApiService.startService();
-                        if(result) {
-                          setState(() {
-                            serviceStopped = !serviceStopped;
-                          });
-                          debugPrint("will start service");
-                        }
-                        else{
-                          debugPrint("will start service ERROR");
-                        }
-                      } else {
-                        try {
-                          await ApiService.stopService();
 
-                          setState(() {
-                            serviceStopped = !serviceStopped;
-                          });
-                          debugPrint("will stop service");
-                        }
-                        catch(e){
-                          debugPrint("Error stop service...");
-                        }
-                      }
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ),
-          ),
           const Divider(height: 40, color: Colors.black12, thickness: 2),
         ],
       ),
