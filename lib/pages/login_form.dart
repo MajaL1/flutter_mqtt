@@ -365,6 +365,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                     //Utils
                                                     //    .showCircularProgressIndicator(),
                                                     await login(usernameVal, passwordVal);
+
+                                                    if (!mounted) return;
                                                     setState((){
                                                       isLoading=false;
                                                     });

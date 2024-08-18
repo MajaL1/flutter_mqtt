@@ -98,10 +98,10 @@ class BackgroundMqtt {
               ); */
 
           // if you don't using custom notification, uncomment this
-          service.setForegroundNotificationInfo(
-            title: "My App Service",
-            content: "Updated at ${DateTime.now()}",
-          );
+         // service.setForegroundNotificationInfo(
+         //   title: "My App Service",
+         //   content: "Updated at ${DateTime.now()}",
+         // );
         }
       }
       debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");

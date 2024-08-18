@@ -247,6 +247,48 @@ class ApiService {
     return userTopicList;
   }
 
+// Todo: use this method
+  static List<UserTopic> getUserTopicList1(Map topics) {
+    List<TopicData> topicList = [];
+    List<UserTopic> userTopicList = [];
+
+    for (var devices in topics.keys) {
+      var deviceName = devices;
+
+      String topicName = "";
+      int rw = 0;
+      UserTopic topic = UserTopic(sensorName: '1', topicList: []);
+      topic.sensorName = deviceName;
+      for (var topicVal in topics.values) {
+        int i = 0;
+        topicList = [];
+        debugPrint("i: $i, topicVal: $topicVal");
+
+        for (var topicVal1 in topicVal) {
+          debugPrint("i: $i, topicVal: $topicVal");
+
+          debugPrint("topicVal1: $topicVal1");
+
+          topicName = topicVal1["topic"];
+          rw = topicVal1["rw"];
+
+          debugPrint("topic: $topicName");
+          debugPrint("topic: $rw");
+
+          //debugPrint("rw: $rw");
+          TopicData topicData = TopicData(name: topicName, rw: rw);
+          i++;
+          topicList.add(topicData);
+        }
+        userTopicList
+            .add(UserTopic(sensorName: deviceName, topicList: topicList));
+        break;
+      }
+    }
+    // topic.topicList = topicList;
+    return userTopicList;
+  }
+
   static UserTopic getUserTopic(Map topics) {
     List<TopicData> topicList = [];
     UserTopic topic = UserTopic(sensorName: '1', topicList: []);

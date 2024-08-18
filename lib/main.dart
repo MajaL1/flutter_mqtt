@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -188,7 +189,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
   void initState() {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
     debugPrint("main init state: ");
-
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     initAlarmHistoryList();
     //NotificationHelper.initializeService();
     //WidgetsBinding.instance.addObserver();

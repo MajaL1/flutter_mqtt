@@ -202,7 +202,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                                     left: 1,
                                                     right: 1,
                                                     bottom: 1.0),
-                                                child: const Text("#",
+                                                child: const Text("",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                         fontWeight:

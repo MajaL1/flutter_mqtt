@@ -96,7 +96,7 @@ class NotificationHelper extends StatelessWidget {
           onStart: onStart,
           // auto start service
           autoStart: true,
-          isForegroundMode: false,
+          isForegroundMode: true,
           notificationChannelId: 'alarms',
           initialNotificationTitle: 'ALARM',
           initialNotificationContent: 'Initializing',
