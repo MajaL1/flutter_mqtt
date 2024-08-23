@@ -7,6 +7,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
+import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -118,7 +119,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance().then((value) {
             value.setString("username", username);
             value.setString("pass", password);
-            value.setStringList("user_topics", userTopicList);
+           // value.setStringList("user_topics", userTopicList);
             value.setString("username", user.username);
 
             if (user.email != null) {
@@ -128,8 +129,16 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setString("mqtt_username", user.username);
             value.setString("mqtt_pass", user.mqtt_pass);
 
+            debugPrint("--- user.userTopicList: ${user.userTopicList}");
+
             String userTopicListPref = jsonEncode(userTopicList);
+            List<UserTopic> userTopicListRw = user.userTopicList;
+            String userTopicListRwStr = jsonEncode(userTopicListRw);
+
+
             value.setString("user_topic_list", userTopicListPref);
+            value.setString("user_topic_list_rw", userTopicListRwStr);
+
             value.reload();
           });
 

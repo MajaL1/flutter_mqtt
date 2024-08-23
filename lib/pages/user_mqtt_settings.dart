@@ -257,6 +257,14 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     });
     List<UserDataSettings> userDataSettings = [];
 
+
+    String? userTopicListRw = await SharedPreferences.getInstance().then((val) {
+      return  preferences?.getString("user_topic_list_rw");
+    });
+
+    debugPrint("---userTopicListRw $userTopicListRw");
+
+
     // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings" iz storage
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {

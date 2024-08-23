@@ -438,6 +438,16 @@ class SmartMqtt extends ChangeNotifier {
       //print("map: ${concatenatedSettings}");
       //debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
     }
+
+    // na koncu v objekt USerDataSerrings dodaj se rw za vsak topic
+
+    //String? userTopicList = preferences.getString("user_topic_list");
+
+    //String? userTopicListRw = preferences.getString("user_topic_list_rw");
+
+
+
+    //debugPrint("--- userTopicList:: ${userTopicListRw.toString()}");
   }
 
   // iz historija dobi zadnji alarm za napravo in vrne njen datum

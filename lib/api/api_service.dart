@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' show Client, Response, post;
 import 'package:mqtt_test/main.dart';
+import 'package:mqtt_test/model/alarm.dart';
 import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/notification_message.dart';
+import 'package:mqtt_test/model/topic_data.dart';
+import 'package:mqtt_test/model/user.dart';
 import 'package:mqtt_test/model/user_topic.dart';
-import '../util/background_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:mqtt_test/model/alarm.dart';
-import 'package:mqtt_test/model/topic_data.dart';
-import 'package:mqtt_test/model/user.dart';
+import '../util/background_mqtt.dart';
 
 //import 'package:mqtt_test/assets/alarms.json' show rootBundle;
 
@@ -43,7 +43,7 @@ class ApiService {
     alarmList.add(Alarm());
     alarmList = alarmList.reversed.toList();
     // Ce je vec kot 2000 zadetkov, izbrisi zadnje
-    if(alarmList.length> 2000) {
+    if (alarmList.length > 2000) {
       alarmList.removeRange(2000, alarmList.length);
     }
     return alarmList;
@@ -130,8 +130,9 @@ class ApiService {
         //UserTopic userTopic;
         if (data["topics"] != null) {
           // userTopic = getUserTopic(data["topics"]);
-          userTopicList = getUserTopicList(data["topics"]);
+          userTopicList = await getUserTopicList(data["topics"]);
 
+          //prefs?.reload();
           User user = User(
               id: 1,
               username: data["username"],
@@ -153,7 +154,7 @@ class ApiService {
     return null;
   }
 
-   static void logout() {
+  static void logout() {
     debugPrint("logging out");
     stopService();
     _removeUserPreferences();
@@ -191,14 +192,14 @@ class ApiService {
       }
     });
   }
+
   static Future<bool> startService() async {
     final result = await BackgroundMqtt.startMqttService();
     return result;
   }
 
-
   static Future<void> stopService() async {
-    final result =  await BackgroundMqtt.stopMqttService();
+    final result = await BackgroundMqtt.stopMqttService();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("serviceStopped", true);
     var isRunning = await service.isRunning();
@@ -214,41 +215,8 @@ class ApiService {
     return result;
   }
 
-  static List<UserTopic> getUserTopicList(Map topics) {
-    List<TopicData> topicList = [];
-    List<UserTopic> userTopicList = [];
-
-    for (var devices in topics.keys) {
-      var deviceName = devices;
-
-      String topicName = "";
-      int rw = 0;
-      UserTopic topic = UserTopic(sensorName: '1', topicList: []);
-      topic.sensorName = deviceName;
-      for (var topicVal in topics.values) {
-        for (var topicVal1 in topicVal) {
-          //debugPrint("topicVal1: $topicVal1");
-
-          topicName = topicVal1["topic"];
-          rw = topicVal1["rw"];
-
-          //debugPrint("topic: $topicName");
-          //debugPrint("topic: $rw");
-
-          //debugPrint("rw: $rw");
-          TopicData topicData = TopicData(name: topicName, rw: rw);
-          topicList.add(topicData);
-        }
-        userTopicList
-            .add(UserTopic(sensorName: deviceName, topicList: topicList));
-      }
-    }
-    // topic.topicList = topicList;
-    return userTopicList;
-  }
-
 // Todo: use this method
-  static List<UserTopic> getUserTopicList1(Map topics) {
+  static Future<List<UserTopic>> getUserTopicList(Map topics) async{
     List<TopicData> topicList = [];
     List<UserTopic> userTopicList = [];
 
@@ -259,33 +227,24 @@ class ApiService {
       int rw = 0;
       UserTopic topic = UserTopic(sensorName: '1', topicList: []);
       topic.sensorName = deviceName;
-      for (var topicVal in topics.values) {
-        int i = 0;
-        topicList = [];
-        debugPrint("i: $i, topicVal: $topicVal");
+      for (var topicVal in topics[deviceName]) {
+        //debugPrint("topicVal: $topicVal");
 
-        for (var topicVal1 in topicVal) {
-          debugPrint("i: $i, topicVal: $topicVal");
+        topicName = topicVal["topic"];
+        rw = topicVal["rw"];
 
-          debugPrint("topicVal1: $topicVal1");
+        //debugPrint("topic: $topicName");
+        //debugPrint("topic: $rw");
 
-          topicName = topicVal1["topic"];
-          rw = topicVal1["rw"];
-
-          debugPrint("topic: $topicName");
-          debugPrint("topic: $rw");
-
-          //debugPrint("rw: $rw");
-          TopicData topicData = TopicData(name: topicName, rw: rw);
-          i++;
-          topicList.add(topicData);
-        }
-        userTopicList
-            .add(UserTopic(sensorName: deviceName, topicList: topicList));
-        break;
+        TopicData topicData = TopicData(name: topicName, rw: rw);
+        //debugPrint("-- create new topicData: topicName: $topicName, rw: $rw");
+        topicList.add(topicData);
+        //debugPrint("-- adding new topicData: to topicList: length: ${topicList.length} ${topicData}");
       }
+      userTopicList
+          .add(UserTopic(sensorName: deviceName, topicList: topicList));
+      topicList = [];
     }
-    // topic.topicList = topicList;
     return userTopicList;
   }
 
