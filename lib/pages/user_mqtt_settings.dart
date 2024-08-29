@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
+import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/constants.dart';
+import '../model/topic_data.dart';
 import '../util/gui_utils.dart';
 import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
@@ -257,14 +259,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     });
     List<UserDataSettings> userDataSettings = [];
 
-
-    String? userTopicListRw = await SharedPreferences.getInstance().then((val) {
-      return  preferences?.getString("user_topic_list_rw");
-    });
-
-    debugPrint("---userTopicListRw $userTopicListRw");
-
-
     // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings" iz storage
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {
@@ -358,6 +352,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
               .then((dataSettingsList) =>
                   _checkAndPairOldSettingsWithNew(dataSettingsList))
+              .then((dataSettingsList) =>
+                  _pairDevicesWithRw(dataSettingsList))
               .then((dataSettingsList) =>
                   _parseUserDataSettingsToList(dataSettingsList!)),
       builder: (context, snapshot) {
@@ -569,7 +565,50 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
-  Widget _buildEditableSettingsTest2(
+  Future<List<UserDataSettings>> _pairDevicesWithRw(List<UserDataSettings> dataSettingsList) async {
+    //List<UserDataSettings> settingsList = [];
+
+    String? userTopicListRw = await SharedPreferences.getInstance().then((val) {
+      return  preferences?.getString("user_topic_list_rw");
+    });
+
+    List<UserTopic> userTopicList = [];
+    // dobivanje liste topicov s settingsi rw
+    // potrebujemo, da vemo, katere nastavitve prikazemo kot read only
+    debugPrint("---userTopicListRw $userTopicListRw");
+    List jsonMapTopic = json.decode(userTopicListRw!);
+    debugPrint("---userTopicListRw LIST $jsonMapTopic");
+
+    userTopicList =
+        jsonMapTopic.map((val) => UserTopic.fromJson(val)).toList();
+
+    // gremo cez obstojece settingse in dodamo rw
+
+    for(UserDataSettings setting in dataSettingsList){
+      for(UserTopic userTopic in userTopicList){
+
+        if(setting.deviceName == userTopic.sensorName){
+
+          List<TopicData> userTopicList = userTopic.topicList;
+          for (TopicData topicData in userTopicList)
+            {
+              debugPrint("topicData:: $topicData");
+              if(topicData.name == "settings"){
+                setting.rw = topicData.rw;
+              }
+            }
+          // nastavimo rw
+         // setting.rw = userTopic.topicList.
+          break;
+        }
+      }
+    }
+
+    return dataSettingsList;
+
+  }
+
+    Widget _buildEditableSettingsTest2(
       String sensorAddress,
       String? deviceName,
       int index,

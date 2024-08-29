@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 class UserDataSettings {
   String? deviceName;
   String? sensorAddress;
@@ -13,6 +12,7 @@ class UserDataSettings {
   int? loAlarm;
   int? u;
   String? editableSetting;
+  int? rw;
 
   UserDataSettings(
       {this.deviceName,
@@ -24,7 +24,8 @@ class UserDataSettings {
       this.u,
       this.editableSetting,
       this.friendlyName,
-      this.ts});
+      this.ts,
+      this.rw});
 
   /*String ? _editableSetting;
   String ? get editableSetting => _editableSetting;
@@ -67,7 +68,7 @@ class UserDataSettings {
 
   @override
   String toString() {
-    return 'deviceName: ${deviceName}, SensorAddress: ${sensorAddress}, friendlyName: ${friendlyName}, hiAlarm: ${hiAlarm}, loAlarm: ${loAlarm}., ts: ${ts}';
+    return 'deviceName: ${deviceName}, rw: ${rw}, SensorAddress: ${sensorAddress}, friendlyName: ${friendlyName}, hiAlarm: ${hiAlarm}, loAlarm: ${loAlarm}., ts: ${ts}';
   }
 
   static List<UserDataSettings> getUserDataSettingsAlarm(List json) {
@@ -85,38 +86,37 @@ class UserDataSettings {
       DateTime? ts = null;
 
       if (key.isNotEmpty) {
-      if(key == "ts"){
+        if (key == "ts") {
           continue;
-      }
-        else {
-        for (var item in key.keys) {
-          if (item != null) {
-            if (item == "sensor_address") {
-              sensorAddress = key[item];
-            }
-            if (item == "device_name") {
-              deviceName = key[item];
-            }
-            if (item == "t") {
-              t = key[item];
-            }
-            if (item == "typ") {
-              t = key[item];
-            }
-            if (item == "hi_alarm") {
-              hiAlarm = key[item];
-            }
-            if (item == "lo_alarm") {
-              loAlarm = key[item];
-            }
-            if (item == "u") {
-              u = key[item];
-            }
-            if (item == "ts") {
-             // ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
+        } else {
+          for (var item in key.keys) {
+            if (item != null) {
+              if (item == "sensor_address") {
+                sensorAddress = key[item];
+              }
+              if (item == "device_name") {
+                deviceName = key[item];
+              }
+              if (item == "t") {
+                t = key[item];
+              }
+              if (item == "typ") {
+                t = key[item];
+              }
+              if (item == "hi_alarm") {
+                hiAlarm = key[item];
+              }
+              if (item == "lo_alarm") {
+                loAlarm = key[item];
+              }
+              if (item == "u") {
+                u = key[item];
+              }
+              if (item == "ts") {
+                // ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
+              }
             }
           }
-        }
           UserDataSettings userDataSet = UserDataSettings(
             deviceName: deviceName,
             sensorAddress: sensorAddress,
@@ -131,8 +131,8 @@ class UserDataSettings {
           );
           userSettingsList.add(userDataSet);
         }
-       // debugPrint(
-         //   "t, deviceName, friendlyNAme, ... $deviceName, $friendlyName");
+        // debugPrint(
+        //   "t, deviceName, friendlyNAme, ... $deviceName, $friendlyName");
       }
     }
     return userSettingsList;
@@ -146,9 +146,8 @@ class UserDataSettings {
         Map value = json[key];
         //print("value:  $value");
         if (key.isNotEmpty) {
-
-          if(key == "ts"){
-              continue;
+          if (key == "ts") {
+            continue;
           }
           int t = 0;
           int typ = 0;
@@ -157,7 +156,7 @@ class UserDataSettings {
           int u = 0;
           String friendlyName = "";
           String deviceName = "";
-          DateTime ? ts = null;
+          DateTime? ts = null;
 
           for (String key1 in value.keys) {
             if (key1 != null) {
@@ -207,29 +206,26 @@ class UserDataSettings {
     }
     return userSettingsList;
   }
+
 // tale
-  static List<UserDataSettings> getUserDataSettingsList(
-      String? mqttSettings) {
+  static List<UserDataSettings> getUserDataSettingsList(String? mqttSettings) {
     List<UserDataSettings> userDataSettingsList = [];
     //debugPrint("777777777 parse $mqttSettings");
     var jsonMap;
-      // Todo: tole daj v novo metodo
-      //jsonDecode(mqttSettings!);
-      // end Todo
-      var jsonMap1 = json.decode(mqttSettings!);
-      jsonMap = jsonMap1;
-      // jsonMap = jsonDecode(mqttSettings.toString()!);
+    // Todo: tole daj v novo metodo
+    //jsonDecode(mqttSettings!);
+    // end Todo
+    var jsonMap1 = json.decode(mqttSettings!);
+    jsonMap = jsonMap1;
+    // jsonMap = jsonDecode(mqttSettings.toString()!);
 
-
-    if(jsonMap is List){
-
-    }
+    if (jsonMap is List) {}
 
     for (var key in jsonMap.keys) {
       String deviceName = "";
       String sensorAddress = "";
       String friendlyName = "";
-      DateTime ? ts;
+      DateTime? ts;
       String editableSetting = "";
       int t = 0;
       int u = 0;
@@ -239,12 +235,10 @@ class UserDataSettings {
 
       sensorAddress = key.toString();
 
-
-      if(key=="ts"){
+      if (key == "ts") {
         continue;
       }
       Map map = jsonMap[key];
-
 
       List<UserDataSettings> topicDataList = [];
       for (var key1 in map.keys) {
