@@ -47,6 +47,7 @@ class UserDataSettings {
       typ: parsedJson['typ'],
       hiAlarm: parsedJson['hi_alarm'],
       loAlarm: parsedJson['lo_alarm'],
+      rw: parsedJson['rw'],
       // ts: "ts" == null ? null : ts?.toIso8601String()
     );
   }
@@ -61,6 +62,7 @@ class UserDataSettings {
       "typ": typ,
       "u": u,
       "hi_alarm": hiAlarm,
+      "rw": rw,
       "lo_alarm": loAlarm,
       "ts": ts == null ? null : ts?.toIso8601String()
     };
@@ -83,6 +85,7 @@ class UserDataSettings {
       String friendlyName = "";
       String deviceName = "";
       String sensorAddress = "";
+      int rw = 1;
       DateTime? ts = null;
 
       if (key.isNotEmpty) {
@@ -99,6 +102,9 @@ class UserDataSettings {
               }
               if (item == "t") {
                 t = key[item];
+              }
+              if (item == "rw") {
+                rw = key[item];
               }
               if (item == "typ") {
                 t = key[item];
@@ -128,6 +134,7 @@ class UserDataSettings {
             t: t,
             u: u,
             ts: ts,
+            rw: rw
           );
           userSettingsList.add(userDataSet);
         }
@@ -156,6 +163,7 @@ class UserDataSettings {
           int u = 0;
           String friendlyName = "";
           String deviceName = "";
+          int rw = 1;
           DateTime? ts = null;
 
           for (String key1 in value.keys) {
@@ -181,6 +189,9 @@ class UserDataSettings {
               if (key1 == "typ") {
                 typ = value1;
               }
+              if (key1 == "rw") {
+                rw = value1;
+              }
               if (key1 == "u") {
                 u = value1;
               }
@@ -199,6 +210,7 @@ class UserDataSettings {
               hiAlarm: hiAlarm,
               loAlarm: loAlarm,
               u: u,
+              rw: rw,
               ts: ts);
           userSettingsList.add(userSettings);
         }
@@ -232,6 +244,7 @@ class UserDataSettings {
       int typ = 0;
       int hiAlarm = 0;
       int loAlarm = 0;
+      int rw = 1;
 
       sensorAddress = key.toString();
 
@@ -264,6 +277,9 @@ class UserDataSettings {
           if (key1 == "typ") {
             typ = value1;
           }
+          if (key1 == "rw") {
+            rw = value1;
+          }
           if (key1 == "u") {
             u = value1;
           }
@@ -283,6 +299,7 @@ class UserDataSettings {
         t: t,
         u: u,
         ts: ts,
+        rw: rw
       );
       userDataSettingsList.add(userDataSet);
     }

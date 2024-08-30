@@ -63,6 +63,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
         // Todo: add data
         ts: setting.ts,
         u: setting.u,
+        rw: setting.rw,
         editableSetting: Constants.HI_ALARM_JSON));
 
     // ce ni nobeden od tipov WS ali WSD -> lo alarm  prikazi samo za WS ali WSD
@@ -74,6 +75,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
           sensorAddress: setting.sensorAddress,
           loAlarm: setting.loAlarm,
           u: setting.u,
+          rw: setting.rw,
           editableSetting: Constants.LO_ALARM_JSON));
       debugPrint("SensorType = WS");
     }
@@ -265,7 +267,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
       userDataSettings =
           jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
-      debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
+      debugPrint(
+          "=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
       return userDataSettings;
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
@@ -279,7 +282,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         List<UserDataSettings> parsedUserDataSettingsList =
             settings.cast<UserDataSettings>();
 
-        debugPrint("===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
+        debugPrint(
+            "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
 
         // ce trenutni settingi niso prazni in ce novi settingi niso prazni
         if (newUserSettings != null) {
@@ -314,7 +318,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           value.setString("parsed_current_mqtt_settings", json0);
         });
       }
-      debugPrint("=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
+      debugPrint(
+          "=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
 
       return userDataSettings;
     }
@@ -352,8 +357,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
               .then((dataSettingsList) =>
                   _checkAndPairOldSettingsWithNew(dataSettingsList))
-              .then((dataSettingsList) =>
-                  _pairDevicesWithRw(dataSettingsList))
+              .then((dataSettingsList) => _pairDevicesWithRw(dataSettingsList))
               .then((dataSettingsList) =>
                   _parseUserDataSettingsToList(dataSettingsList!)),
       builder: (context, snapshot) {
@@ -399,6 +403,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                         sensorAddress, snapshot.data!, index);
                     String? value = "";
                     String? friendlyName = item.friendlyName;
+                    bool rw = item.rw == 2 ? true : false;
 
                     if (item.editableSetting == Constants.HI_ALARM_JSON) {
                       value = item.hiAlarm.toString();
@@ -430,8 +435,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                       alignment: Alignment.center,
                                       // This is ugly hack: previousSettingToChange
                                       child: settingToChange != "u"
-                                          ? Wrap(
-                                          children: [
+                                          ? Wrap(children: [
                                               //!previousSettingToChange ?
                                               // index % 2 == 0
                                               //        ?
@@ -525,10 +529,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                           ),
                                                         ))
                                                       ]),
+                                                      rw ?
                                                       _buildFriendlyNameView(
                                                           friendlyName,
                                                           deviceName,
-                                                          sensorAddress),
+                                                          sensorAddress) : Container(),
                                                     ]))
                                                   ]))
                                               //:  Text(""),
@@ -548,6 +553,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                             controller,
                                             item,
                                             unitText,
+                                            rw,
                                             //savePressed,
                                             textControllerList[index])
                                         : Container(height: 0)
@@ -565,11 +571,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
-  Future<List<UserDataSettings>> _pairDevicesWithRw(List<UserDataSettings> dataSettingsList) async {
+  Future<List<UserDataSettings>> _pairDevicesWithRw(
+      List<UserDataSettings> dataSettingsList) async {
     //List<UserDataSettings> settingsList = [];
 
     String? userTopicListRw = await SharedPreferences.getInstance().then((val) {
-      return  preferences?.getString("user_topic_list_rw");
+      return preferences?.getString("user_topic_list_rw");
     });
 
     List<UserTopic> userTopicList = [];
@@ -579,36 +586,27 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     List jsonMapTopic = json.decode(userTopicListRw!);
     debugPrint("---userTopicListRw LIST $jsonMapTopic");
 
-    userTopicList =
-        jsonMapTopic.map((val) => UserTopic.fromJson(val)).toList();
+    userTopicList = jsonMapTopic.map((val) => UserTopic.fromJson(val)).toList();
 
-    // gremo cez obstojece settingse in dodamo rw
-
-    for(UserDataSettings setting in dataSettingsList){
-      for(UserTopic userTopic in userTopicList){
-
-        if(setting.deviceName == userTopic.sensorName){
-
+    for (UserDataSettings setting in dataSettingsList) {
+      for (UserTopic userTopic in userTopicList) {
+        if (setting.deviceName == userTopic.sensorName) {
           List<TopicData> userTopicList = userTopic.topicList;
-          for (TopicData topicData in userTopicList)
-            {
-              debugPrint("topicData:: $topicData");
-              if(topicData.name == "settings"){
-                setting.rw = topicData.rw;
-              }
+          for (TopicData topicData in userTopicList) {
+            debugPrint("topicData:: $topicData");
+            if (topicData.name == "settings") {
+              setting.rw = topicData.rw;
+              break;
             }
-          // nastavimo rw
-         // setting.rw = userTopic.topicList.
-          break;
+          }
         }
       }
     }
 
     return dataSettingsList;
-
   }
 
-    Widget _buildEditableSettingsTest2(
+  Widget _buildEditableSettingsTest2(
       String sensorAddress,
       String? deviceName,
       int index,
@@ -618,7 +616,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       TextEditingController controller,
       UserDataSettings item,
       String unitText,
-
+      bool rw,
       //bool savePressed,
       TextEditingController textController) {
     String settingText = "";
@@ -638,106 +636,107 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       children: [
         Container(
           //color: Colors.red,
-          child:
-        Row(children: [
-          SizedBox(
-              // padding:
-              // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
-              //  height: 40,
-              //alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width / 3,
-              child: Text(
-                settingText,
-                maxLines: 1,
-                softWrap: false,
-                style: const TextStyle(
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(00, 20, 20, 80),
-                    fontSize: 14),
-              )),
-          //Container(alignment: Alignment.center, child: Text(unitText)),
-          //Container(width: 5),
-          SizedBox(
-              //height: 50,
-              width: MediaQuery.of(context).size.width / 5,
-              child: TextFormField(
-                  decoration: GuiUtils.setInputDecorationFriendlyName(),
-                  // decoration: GuiUtils.setInputDecoration(value),
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(4),
-                  ],
-                  //enableInteractiveSelection: false,
-                  showCursor: false,
-                  controller: textController,
-                  //autovalidateMode: AutovalidateMode.always,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      isEnabledSave = false;
-                      notifier.value = isEnabledSave;
-                      return '';
-                    }
-                    if (value.length > 4) {
-                      isEnabledSave = false;
-                      notifier.value = isEnabledSave;
-                      // notifier.notifyListeners();
-                      return '';
-                    }
-                    return null;
-                  },
-                  onChanged: (val) {
-                    //debugPrint(
-                    //    "on changed, textController.text: ${textController.text}, val: ${val}");
-                    if (val == "") {
-                      isEnabledSave = false;
-                      notifier.value = isEnabledSave;
-                    } else if (val == value) {
-                      isEnabledSave = false;
-                      notifier.value = isEnabledSave;
-                    } else if (val.length > 4) {
-                      isEnabledSave = false;
-                      notifier.value = isEnabledSave;
-                      //notifier.notifyListeners();
-                    } else {
-                      isEnabledSave = true;
-                      notifier.value = isEnabledSave;
-                    }
-                    debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
-                  })),
+          child: Row(children: [
+            SizedBox(
+                // padding:
+                // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
+                //  height: 40,
+                //alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width / 3,
+                child: Text(
+                  settingText,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: const TextStyle(
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(00, 20, 20, 80),
+                      fontSize: 14),
+                )),
+            //Container(alignment: Alignment.center, child: Text(unitText)),
+            //Container(width: 5),
+            SizedBox(
+                //height: 50,
+                width: MediaQuery.of(context).size.width / 5,
+                child: TextFormField(
+                    enabled: rw == true ? true : false,
+                    decoration: GuiUtils.setInputDecorationFriendlyName(),
+                    // decoration: GuiUtils.setInputDecoration(value),
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
+                    //enableInteractiveSelection: false,
+                    showCursor: false,
+                    controller: textController,
+                    //autovalidateMode: AutovalidateMode.always,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        isEnabledSave = false;
+                        notifier.value = isEnabledSave;
+                        return '';
+                      }
+                      if (value.length > 4) {
+                        isEnabledSave = false;
+                        notifier.value = isEnabledSave;
+                        // notifier.notifyListeners();
+                        return '';
+                      }
+                      return null;
+                    },
+                    onChanged: (val) {
+                      //debugPrint(
+                      //    "on changed, textController.text: ${textController.text}, val: ${val}");
+                      if (val == "") {
+                        isEnabledSave = false;
+                        notifier.value = isEnabledSave;
+                      } else if (val == value) {
+                        isEnabledSave = false;
+                        notifier.value = isEnabledSave;
+                      } else if (val.length > 4) {
+                        isEnabledSave = false;
+                        notifier.value = isEnabledSave;
+                        //notifier.notifyListeners();
+                      } else {
+                        isEnabledSave = true;
+                        notifier.value = isEnabledSave;
+                      }
+                      debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
+                    })),
 
-          SizedBox(
-            // height: 50,
-            width: 100,
-            child: Row(children: [
-              //  _notifier.value ?
-              ValueListenableBuilder(
-                valueListenable: notifier,
-                builder: (BuildContext context, bool val, Widget? child) {
-                  return IconButton(
-                      //style: isEnabledSave
-                      //? GuiUtils.buildElevatedButtonSettings()
-                      //: null,
-                      icon: isEnabledSave
-                          ? const Icon(
-                              Icons.check,
-                              size: 35,
-                            )
-                          : Icon(null),
-                      onPressed: !notifier.value
-                          ? null
-                          : () {
-                              saveMqttSettings(deviceName!, sensorAddress, item,
-                                  textController, settingToChange);
-                              isEnabledSave = false;
-                              notifier.value = false;
-                            });
-                },
-              ),
-            ]),
-          ),
-        ]),
-        )],
+            SizedBox(
+              // height: 50,
+              width: 100,
+              child: Row(children: [
+                //  _notifier.value ?
+                ValueListenableBuilder(
+                  valueListenable: notifier,
+                  builder: (BuildContext context, bool val, Widget? child) {
+                    return IconButton(
+                        //style: isEnabledSave
+                        //? GuiUtils.buildElevatedButtonSettings()
+                        //: null,
+                        icon: isEnabledSave
+                            ? const Icon(
+                                Icons.check,
+                                size: 35,
+                              )
+                            : Icon(null),
+                        onPressed: !notifier.value
+                            ? null
+                            : () {
+                                saveMqttSettings(deviceName!, sensorAddress,
+                                    item, textController, settingToChange);
+                                isEnabledSave = false;
+                                notifier.value = false;
+                              });
+                  },
+                ),
+              ]),
+            ),
+          ]),
+        )
+      ],
     );
   }
 

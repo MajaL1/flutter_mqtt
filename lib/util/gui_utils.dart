@@ -320,8 +320,14 @@ class GuiUtils {
           borderSide: BorderSide(color: Colors.lightBlueAccent, width: 1.0),
         ),
         enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black54, width: 1.5),
+        ),
+        disabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),
-        ));
+        ),
+
+
+    );
   }
   static InputDecoration setInputDecoration(val) {
     return InputDecoration(
