@@ -12,6 +12,7 @@ import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../api/api_service.dart';
 import '../model/constants.dart';
@@ -373,8 +374,18 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                     //        () => {
                                                     //Utils
                                                     //    .showCircularProgressIndicator(),
-                                                    await login(usernameVal, passwordVal);
-
+                                                    //PermissionStatus permissionStatus;
+                                                    while (true) {
+                                                      try {
+                                                        //permissionStatus = await permission. Request();
+                                                        break;
+                                                      } catch (e) {
+                                                        await Future.delayed(Duration(milliseconds: 500), () {});
+                                                      }
+                                                    }
+                                                    notificationPermissionGranted().then((val){
+                                                     login(usernameVal, passwordVal);
+                                                    });
                                                     if (!mounted) return;
                                                     setState((){
                                                       isLoading=false;
@@ -461,6 +472,19 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     ),
                                   ),
                                 ]))))))));
+  }
+
+  static Future<bool> notificationPermissionGranted() async {
+    bool isGranted = true;
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.notification,
+    ].request();
+    statuses.forEach((key, permission) {
+      if(permission.isDenied){
+        isGranted = false;
+      }
+    });
+    return isGranted;
   }
 
   InputDecoration buildInputUsernamePasswordDecoration() {
