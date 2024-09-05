@@ -106,7 +106,7 @@ class GuiUtils {
   static BoxDecoration buildAppBarDecoration() {
     return BoxDecoration(
 // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
-// color: Colors.red,
+    //color: Colors.red,
 // borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(

@@ -53,6 +53,7 @@ class Constants {
   static const HISTORY = "HISTORY";
   static const ALARMS = "ALARMS";
   static const DATA = "DATA";
+  static const ABOUT = "ABOUT";
   static const LOGIN_PAGE = "Login page";
 
   // device settings

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../util/gui_utils.dart';
+import '../util/utils.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   String title;
 
   CustomAppBar(this.title, {Key? key})
-      : preferredSize = const Size.fromHeight(kToolbarHeight + 22), super(key: key);
+      : preferredSize = const Size.fromHeight(kToolbarHeight + 22),
+        super(key: key);
 
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
@@ -24,6 +26,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
         //preferredSize: preferredSize,
         child: AppBar(
+
             //toolbarHeight: 50,
             flexibleSpace: Container(
               //height: 180,
@@ -43,7 +46,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             shadowColor: Colors.black,
             foregroundColor: Colors.lightBlue,
             title: Container(
-                //decoration: Utils.buildAppBarDecoration(),
+                //decoration: //Utils.buildAppBarDecoration(),
                 child: Text(
               widget.title,
               style: const TextStyle(

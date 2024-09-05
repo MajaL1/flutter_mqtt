@@ -251,7 +251,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             height: 100,
                                             child: ImageIcon(
                                               AssetImage(
-                                                  "assets/images/NAVIS_LOGO_PNG.png"),
+                                                  "assets/images/LOGO_NEW.png"),
                                               size: 3.0,
                                               color: Color(0xFF3A5A98),
                                             )
@@ -384,6 +384,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                       }
                                                     }
                                                     notificationPermissionGranted().then((val){
+                                                      debugPrint("notificationPermissionGranted: $val");
                                                      login(usernameVal, passwordVal);
                                                     });
                                                     if (!mounted) return;
