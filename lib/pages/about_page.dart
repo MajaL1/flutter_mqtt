@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/components/custom_app_bar.dart';
@@ -70,17 +68,12 @@ class _AboutState extends State<AboutPage> {
     );
   }
 
-
   Widget _buildDataView() {
-    return const SizedBox(
-        width: 100,
-        height: 100,
-        child: ImageIcon(
-          AssetImage(
-              "assets/images/LOGO_NEW.png"),
-          size: 3.0,
-          color: Color(0xFF3A5A98),
-        )
+    return SizedBox(
+      width: 70,
+      height: 70,
+      child: Image.asset('assets/images/LOGO_NEW_ORIG.png'),
+
       //FlutterLogo(size: 200),
     );
   }

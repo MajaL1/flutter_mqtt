@@ -203,14 +203,14 @@ class ApiService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("serviceStopped", true);
     var isRunning = await service.isRunning();
-    if (isRunning) {
-      debugPrint(" isRunning TRUE, logout - STOP service");
+    //if (isRunning) {
+      debugPrint(" isRunning $isRunning");
       service.invoke("stopService");
       SmartMqtt.instance.disconnect();
-    } else {
-      debugPrint(" isRunning FALSE, logout service");
+    //} else {
+     // debugPrint(" isRunning FALSE, logout service");
       //service.startService();
-    }
+   // }
     debugPrint("stopping service");
     return result;
   }

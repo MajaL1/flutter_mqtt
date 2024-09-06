@@ -10,9 +10,9 @@ import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../api/api_service.dart';
 import '../model/constants.dart';
@@ -120,7 +120,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           await SharedPreferences.getInstance().then((value) {
             value.setString("username", username);
             value.setString("pass", password);
-           // value.setStringList("user_topics", userTopicList);
+            // value.setStringList("user_topics", userTopicList);
             value.setString("username", user.username);
 
             if (user.email != null) {
@@ -135,7 +135,6 @@ class _LoginFormValidationState extends State<LoginForm> {
             String userTopicListPref = jsonEncode(userTopicList);
             List<UserTopic> userTopicListRw = user.userTopicList;
             String userTopicListRwStr = jsonEncode(userTopicListRw);
-
 
             value.setString("user_topic_list", userTopicListPref);
             value.setString("user_topic_list_rw", userTopicListRwStr);
@@ -242,18 +241,18 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             color: Colors.redAccent,
                                             fontSize: 14),
                                       )),
-                                  const Padding(
-                                      padding: EdgeInsets.only(
+                                  Padding(
+                                      padding: const EdgeInsets.only(
                                           top: 40.0, bottom: 40),
                                       child: Center(
                                         child: SizedBox(
                                             width: 100,
                                             height: 100,
-                                            child: ImageIcon(
-                                              AssetImage(
-                                                  "assets/images/LOGO_NEW.png"),
-                                              size: 3.0,
-                                              color: Color(0xFF3A5A98),
+                                            child: Container(
+                                              child: Image.asset(
+                                                  'assets/images/LOGO_NEW_ORIG.png'),
+
+                                              // color: Color(0xFF3A5A98),
                                             )
                                             //FlutterLogo(size: 200),
                                             ),
@@ -380,16 +379,23 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                         //permissionStatus = await permission. Request();
                                                         break;
                                                       } catch (e) {
-                                                        await Future.delayed(Duration(milliseconds: 500), () {});
+                                                        await Future.delayed(
+                                                            Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                            () {});
                                                       }
                                                     }
-                                                    notificationPermissionGranted().then((val){
-                                                      debugPrint("notificationPermissionGranted: $val");
-                                                     login(usernameVal, passwordVal);
+                                                    notificationPermissionGranted()
+                                                        .then((val) {
+                                                      debugPrint(
+                                                          "notificationPermissionGranted: $val");
+                                                      login(usernameVal,
+                                                          passwordVal);
                                                     });
                                                     if (!mounted) return;
-                                                    setState((){
-                                                      isLoading=false;
+                                                    setState(() {
+                                                      isLoading = false;
                                                     });
                                                   },
                                                   child: const Text(
@@ -481,7 +487,7 @@ class _LoginFormValidationState extends State<LoginForm> {
       Permission.notification,
     ].request();
     statuses.forEach((key, permission) {
-      if(permission.isDenied){
+      if (permission.isDenied) {
         isGranted = false;
       }
     });
