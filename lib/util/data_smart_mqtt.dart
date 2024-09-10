@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:async';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,13 +28,17 @@ class DataSmartMqtt extends ChangeNotifier {
     debugPrint("__________ $decodeMessage");
     debugPrint("___________________________________________________");
 
-    Data? data = await convertMessageToData(decodeMessage, topicName);
-    setDataListToPreferences(data!, preferences);
-    //preferences.setString("data_mqtt", decodeMessage);
-    debugPrint("data: ${data.toString()}");
+    if(!decodeMessage.contains("con") || !decodeMessage.contains("dis") ) {
+      Data? data = await convertMessageToData(decodeMessage, topicName);
+      await setDataListToPreferences(data!, preferences);
+      //preferences.setString("data_mqtt", decodeMessage);
+      debugPrint("data: ${data.toString()}");
+      setNewMqttData(data);
+    }
+    else{
+      debugPrint("data is weird: ${decodeMessage}");
 
-
-    setNewMqttData(data);
+    }
     //newMqttData = data;
     notifyListeners();
   }
@@ -51,36 +57,46 @@ class DataSmartMqtt extends ChangeNotifier {
     return data;
   }
 
-  static void setDataListToPreferences(
-      Data newData, SharedPreferences preferences) {
+  static Future<void> setDataListToPreferences (
+      Data newData, SharedPreferences preferences) async {
     String? dataListStr = preferences.getString("data_mqtt_list");
-    List? dataList;
 
-    // zaenkrat dodamo samo en element na listo
-    /*if (dataListStr != null) {
-      final jsonResult = jsonDecode(dataListStr!);
-      if(jsonResult!= null) {
-        dataList = Data.fromJsonList(jsonResult);
+    List<Data> dataList = [];
+    List jsonMap1 = [];
+
+    if(dataListStr != null) {
+      if (dataListStr.isNotEmpty) {
+        jsonMap1 = json.decode(dataListStr!);
+        debugPrint("!!!1 jsonMap1 $jsonMap1");
+
+       // List dataList1 = jsonMap1.map((val) => Data.fromJsonList(val)).toList();
+        dataList =  Data.fromJsonList(jsonMap1);
         dataList.add(newData);
+
+        //dataList = jsonMap1.map((val) => Data.fromJson(val)).toList();
+        /*
+        List jsonMap1 = json.decode(parsedMqttSettings!);
+        parsedMqttSettingsList =
+            jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+         */
+
+        debugPrint("!datalist.size: ${dataList.length});//, encodedData dataListStr $dataList");
       }
-    }*/
-    //else {
+    }
+    else {
+      dataList.add(newData);
+    }
 
-    dataList = [];
-    dataList.add(newData);
-    //}
-    // popravi
-    // String encodedData = json.encode(dataList);
-    String json =
-        jsonEncode(dataList.map((i) => i.toJson()).toList()).toString();
+    String json1 =
+        jsonEncode(dataList);
     //List jsonList = dataList.map((data) => data.toJson()).toList();
-    print("jsonList: ${json}");
+    print("jsonList: ${json1}");
 
-    debugPrint("encodedData data:  $json");
+    debugPrint("encodedData data:  $json1");
     debugPrint("datalist:  $dataList");
 
-    preferences.setString("data_mqtt_list", json);
-    debugPrint("setting data_mqtt_list encodedData: $json");
+    preferences.setString("data_mqtt_list", json1);
+    debugPrint("setting data_mqtt_list encodedData: $json1");
   }
 
   void setNewMqttData(Data data) {

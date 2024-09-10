@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Data {
   String? deviceName;
   String? sensorAddress;
@@ -46,7 +48,7 @@ class Data {
       if (key["typ"] != null) typ = key["typ"];
       if (key["lb"] != null) lb = key["lb"];
       if (key["ts"] != null)
-        ts = DateTime.fromMillisecondsSinceEpoch(key["ts"] * 1000);
+        ts = DateTime.now();//DateTime.fromMillisecondsSinceEpoch(key["ts"] * 1000);
 
       //"ts": ts == null ? null : ts?.toIso8601String()
 
@@ -75,6 +77,7 @@ class Data {
 
     for (String key in json.keys) {
 //print("key:  $key");
+    //debugPrint("!!!! key:  $key");
       if (key.isNotEmpty) {
         Map value = json[key];
 //print("value:  $value");
@@ -143,7 +146,7 @@ class Data {
     List<Data> dataList = [];
     Data data;
     for (String key in json.keys) {
-      print("key:  $key");
+      //print("key:  $key");
       if (key.isNotEmpty) {
         Map value = json[key];
         print("value:  $value");
@@ -155,7 +158,7 @@ class Data {
             if (key1 != null) {
               value[key1];
               int value1 = value[key1];
-              //  print("key1: $key1, value1: $value1");
+             // print("key1: $key1, value1: $value1");
               if (key1 == "t") {
                 t = value1;
               }
@@ -214,7 +217,7 @@ class Data {
       "deviceName": deviceName,
       "typ": typ,
       "d": d,
-      "ts": ts, //DateTime.fromMillisecondsSinceEpoch(ts * 1000),
+      "ts":  ts?.toIso8601String(),//ts, //DateTime.fromMillisecondsSinceEpoch(ts * 1000),
       "t": t,
       "w": w,
       "r": r,

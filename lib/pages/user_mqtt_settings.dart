@@ -529,11 +529,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                           ),
                                                         ))
                                                       ]),
-                                                      rw ?
+
                                                       _buildFriendlyNameView(
                                                           friendlyName,
                                                           deviceName,
-                                                          sensorAddress) : Container(),
+                                                          sensorAddress),
                                                     ]))
                                                   ]))
                                               //:  Text(""),

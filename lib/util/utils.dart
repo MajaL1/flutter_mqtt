@@ -53,7 +53,7 @@ class Utils {
       String deviceName = userTopic.sensorName;
 
       for (TopicData topicData in userTopic.topicList) {
-        if (topicData.name.contains("settings")) {
+        /*if (topicData.name.contains("settings")) {
           if (!userTopicList.contains(deviceName + "/settings")) {
             userTopicList.add(deviceName + "/settings");
           }
@@ -62,12 +62,12 @@ class Utils {
           if (!userTopicList.contains(deviceName + "/alarm")) {
             userTopicList.add(deviceName + "/alarm");
           }
-        }
-       /* if (topicData.name.contains("data")) {
+        }*/
+        if (topicData.name.contains("data")) {
           if (!userTopicList.contains(deviceName + "/data")) {
             userTopicList.add(deviceName + "/data");
           }
-        }*/
+        }
       }
     }
     return userTopicList;
@@ -97,6 +97,7 @@ class Utils {
       ],
     );
   }
+
   static bool currentSettingsContainNewSettings(
       String decodeMessage, SharedPreferences preferences) {
     String? parsedMqttSettings =
@@ -158,7 +159,6 @@ class Utils {
     alarmIntervalList.add(ShowAlarmTimeSettings.changeOnly);
     alarmIntervalList.add(ShowAlarmTimeSettings.noAlarm);
 
-
     return alarmIntervalList;
   }
 
@@ -199,7 +199,6 @@ class Utils {
       return "";
     });
     return test;
-
   }
 
   /** Pride v postev za nastavitve za vsak alarm posebej **/
@@ -326,7 +325,6 @@ class Utils {
   // json
   // }
 
-
   static Future<String> getImageFilePathFromAssets(
       String asset, String filename) async {
     final byteData = await rootBundle.load(asset);
@@ -352,14 +350,12 @@ class Utils {
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
 
-
-        var jsonMap =
-        json.decode(parsedMqttSettings!); //jsonMap.runtimeType
+        var jsonMap = json.decode(parsedMqttSettings!); //jsonMap.runtimeType
 
         parsedMqttSettingsList =
-        jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
-       // parsedMqttSettingsList =
-       //     UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
+            jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
+        // parsedMqttSettingsList =
+        //     UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
 
         for (UserDataSettings setting in parsedMqttSettingsList) {
           String? deviceName = setting.deviceName;

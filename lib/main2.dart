@@ -29,6 +29,13 @@ class _NotificationsAppState extends State<NotificationsApp>
 
   @override
   void initState() {
+
+    testParseData();
+
+    setUserDeviceRw();
+  }
+
+  void setUserDeviceRw() {
     String userTopicListRw =
         '[{"sensorName":"c45bbe821255","topicList":[{"name":"settings","rw":2},{"name":"data","rw":1},{"name":"sensors","rw":1},{"name":"alarm","rw":1}]},{"sensorName":"c45bbe821261","topicList":[{"name":"settings","rw":1},{"name":"data","rw":1},{"name":"sensors","rw":1},{"name":"alarm","rw":1}]}]';
     List jsonMapTopic = json.decode(userTopicListRw!);
@@ -61,6 +68,61 @@ class _NotificationsAppState extends State<NotificationsApp>
       }
     }
     debugPrint("userDataSettings: $userDataSettings");
+  }
+
+  void testParseData(){
+    String inputData1 = '{"26":{"typ":2,"w":7,"d":279,"t":182,"r":-71,"lb":1,"u":0,"ts":1725893914}}';
+
+    String? dataListStr = preferences.getString("data_mqtt_list");
+
+    List dataList = [];
+    List jsonMap1 = [];
+
+    if(dataListStr != null) {
+      if (dataListStr.isNotEmpty) {
+        jsonMap1 = json.decode(dataListStr!);
+        jsonMap1.map((val) => Data.fromJson(val));
+        dataList = jsonMap1.map((val) => Data.fromJson(val)).toList();
+        /*
+        List jsonMap1 = json.decode(parsedMqttSettings!);
+        parsedMqttSettingsList =
+            jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+         */
+
+        debugPrint("encodedData dataListStr $dataList");
+      }
+    }
+
+
+    // zaenkrat dodamo samo en element na listo
+    /*if (dataListStr != null) {
+      final jsonResult = jsonDecode(dataListStr!);
+      if(jsonResult!= null) {
+        dataList = Data.fromJsonList(jsonResult);
+        dataList.add(newData);
+      }
+    }*/
+    //else {
+
+    //dataList = [];
+    dataList.add(newData);
+    //}
+    // popravi
+    // List test = dataList.map((i) => i.toJson()).toList();
+    String json1 =
+    jsonEncode(dataList);
+    //List jsonList = dataList.map((data) => data.toJson()).toList();
+    print("jsonList: ${json1}");
+
+    debugPrint("encodedData data:  $json1");
+    debugPrint("datalist:  $dataList");
+
+    preferences.setString("data_mqtt_list", json1);
+    debugPrint("setting data_mqtt_list encodedData: $json1");
+  }
+
+
+
   }
 
   @override
