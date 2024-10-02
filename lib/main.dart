@@ -109,6 +109,8 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
   final List<String> _states = <String>[];
   late AppLifecycleState? _state;
   SendPort? _sendPort;
+
+  bool _inForeground = true;
  // late FlutterBackgroundService service;
   //static SendPort? uiSendPort;
 
@@ -128,7 +130,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     initAlarmHistoryList();
     //NotificationHelper.initializeService();
-    //WidgetsBinding.instance.addObserver();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
     _state = SchedulerBinding.instance.lifecycleState;
     _listener = AppLifecycleListener(
@@ -154,13 +156,33 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+    debugPrint("&&&  didChangeAppLifecycleState");
+
     _sendPort ??= IsolateNameServer.lookupPortByName('appState');
     switch(state){
       case AppLifecycleState.resumed:
-        _sendPort?.send(false);
+        setState(() {
+          _inForeground = true;
+        });
+        debugPrint("&&&  AppLifecycleState.resumed");
         break;
       case AppLifecycleState.paused:
-        _sendPort?.send(true);
+        setState(() {
+          _inForeground = false;
+        });
+        debugPrint("&&&  AppLifecycleState.paused");
+        break;
+      case AppLifecycleState.inactive:
+        setState(() {
+          _inForeground = true;
+        });
+        debugPrint("&&&  AppLifecycleState.inactive");
+        break;
+      case AppLifecycleState.detached:
+        setState(() {
+          _inForeground = false;
+        });
+        debugPrint("&&&  AppLifecycleState.detached");
         break;
       default:
         break;
@@ -198,6 +220,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
   void dispose() {
     debugPrint("main.dart - dispose");
     _listener.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

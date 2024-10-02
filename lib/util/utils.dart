@@ -53,7 +53,7 @@ class Utils {
       String deviceName = userTopic.sensorName;
 
       for (TopicData topicData in userTopic.topicList) {
-        /*if (topicData.name.contains("settings")) {
+        if (topicData.name.contains("settings")) {
           if (!userTopicList.contains(deviceName + "/settings")) {
             userTopicList.add(deviceName + "/settings");
           }
@@ -62,7 +62,7 @@ class Utils {
           if (!userTopicList.contains(deviceName + "/alarm")) {
             userTopicList.add(deviceName + "/alarm");
           }
-        }*/
+        }
         if (topicData.name.contains("data")) {
           if (!userTopicList.contains(deviceName + "/data")) {
             userTopicList.add(deviceName + "/data");
@@ -156,28 +156,11 @@ class Utils {
     alarmIntervalList.add(ShowAlarmTimeSettings.hour6);
     alarmIntervalList.add(ShowAlarmTimeSettings.hour12);
     alarmIntervalList.add(ShowAlarmTimeSettings.all);
-    alarmIntervalList.add(ShowAlarmTimeSettings.changeOnly);
+    //alarmIntervalList.add(ShowAlarmTimeSettings.changeOnly);
     alarmIntervalList.add(ShowAlarmTimeSettings.noAlarm);
 
     return alarmIntervalList;
   }
-
-  /*static Future<String?> getAlarmGeneralIntervalSettings() async {
-    String? setting = await SharedPreferences.getInstance().then((value) {
-      if (value.getString("alarm_interval_setting") != null) {
-        String? str = value.getString("alarm_interval_setting");
-        debugPrint("getAlarmGeneralIntervalSettings: $str");
-        if (str != null) {
-          return str;
-        }
-        return ShowAlarmTimeSettings.minutes10;
-      } else {
-        return ShowAlarmTimeSettings.minutes10;
-      }
-    });
-    return setting;
-    // return SmartMqtt.instance.alarmInterval;
-  } */
 
   static void setAlarmGeneralIntervalSettings(String setting) async {
     await SharedPreferences.getInstance().then((value) {

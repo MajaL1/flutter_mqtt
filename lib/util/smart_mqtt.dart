@@ -212,7 +212,7 @@ class SmartMqtt extends ChangeNotifier {
 
     if (topicName!.contains("data")) {
       //debugPrint("___________________________________________________");
-      //debugPrint("from topic data: $decodeMessage");
+     // debugPrint("111from topic data: $decodeMessage");
       //debugPrint("___________________________________________________");
 
       /********************************/
@@ -571,9 +571,6 @@ class SmartMqtt extends ChangeNotifier {
     //}
   }
 
-  Future<Data> getNewDataList() async {
-    return newMqttData;
-  }
 
   Future<void> setDeviceNameToSettings(Map settings, String deviceName) async {
     for (String key in settings.keys) {

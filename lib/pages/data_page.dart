@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mqtt_test/components/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,7 @@ import '../components/drawer.dart';
 import '../model/constants.dart';
 import '../model/data.dart';
 import '../util/data_smart_mqtt.dart';
+import '../util/utils.dart';
 
 class DataPage extends StatefulWidget {
   const DataPage.base({Key? key}) : super(key: key);
@@ -73,41 +75,28 @@ class _DataState extends State<DataPage> {
     );
   }
 
-  Future<Data?> _getNewDataList() async {
-    Data? data;
-    data =
-        await Provider.of<DataSmartMqtt>(context, listen: true).getNewDataList();
+  Future <List<Data>?> _getNewDataList() async {
+    List<Data>? data;
+    data = await Provider.of<DataSmartMqtt>(context, listen: true).getNewDataList();
     debugPrint("^^^^^ data: % $data");
 
     if (data != null) {
       return data;
     }
+    setState(() {
 
-  }
-
-  Future<List<Data>> _getMqttData(Data snapshot) async {
-    List<Data> dataList = [];
-    debugPrint("snapshot: $snapshot");
-    //var jsonMap1 = json.decode(snapshot!);
-    //dataList =
-    //  jsonMap1.map((val) => Data.fromJson(val)).toList();
-    // zaenkrat imamo samo en element
-    //Data data = Data.fromJson(jsonMap1);
-   // dataList.add(data);
-    //debugPrint("^^^^^ Data.fromJson: $dataList");
-    dataList.add(snapshot);
-
-    return dataList;
+    });
   }
 
   Widget _buildDataView() {
-    return FutureBuilder<List<Data?>>(
-        future: _getNewDataList().then((dataList) => _getMqttData(dataList!)),
+    return FutureBuilder<List<Data>?>(
+        future: _getNewDataList(),//then((dataList) => _getMqttData(dataList!)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            //return Utils.showCircularProgressIndicator();
+           // return Utils.showCircularProgressIndicator();
           }
           if (snapshot.hasData) {
+            debugPrint("?? shapshot.hasData");
             return Container(
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -126,6 +115,7 @@ class _DataState extends State<DataPage> {
                       int? t = item.t;
                       DateTime? ts = item.ts;
                       int? lb = item.lb;
+                      String ? date = DateFormat("yyyy-MM-dd hh:mm:ss").format(ts!);
 
                       String? deviceName = item.deviceName;
                       //debugPrint("sensorAddress, deviceName: ${sensorAddress}, ${deviceName}");
@@ -138,12 +128,12 @@ class _DataState extends State<DataPage> {
                           child: Wrap(
                             children: [
                               Text("device: $deviceName, sensor: $sensorAddress \n"),
-                              Text("typ: $typ, d: $d, r: $r, w: $w, t: $t, lb: $lb, ts: $ts"),
+                              Text("typ: $typ, d: $d, r: $r, w: $w, t: $t, lb: $lb \nts: $date"),
                             ]
                       ));
                     }));
           }else {
-            return Text("No data.");
+            return const Text("No data.");
           }
           return const CircularProgressIndicator();
         });

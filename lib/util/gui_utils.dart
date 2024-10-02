@@ -268,7 +268,7 @@ class GuiUtils {
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
-              width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
+              width: 0.7, color: Color.fromRGBO(108, 165, 222, 60)),
           borderRadius: BorderRadius.circular(16), //
         ),
         focusedBorder: OutlineInputBorder(

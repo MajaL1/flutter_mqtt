@@ -38,7 +38,7 @@ class Data {
       int d = 0;
       DateTime ts = DateTime.now();
 
-      if (key["sensorAddress"] != null) sensorAddress = key["sensor_address"];
+      if (key["sensor_address"] != null) sensorAddress = key["sensor_address"];
       if (key["deviceName"] != null) deviceName = key["deviceName"];
 
       if (key["t"] != null) t = key["t"];
@@ -47,8 +47,10 @@ class Data {
       if (key["d"] != null) d = key["d"];
       if (key["typ"] != null) typ = key["typ"];
       if (key["lb"] != null) lb = key["lb"];
-      if (key["ts"] != null)
-        ts = DateTime.now();//DateTime.fromMillisecondsSinceEpoch(key["ts"] * 1000);
+      if (key["ts"] != null) {
+        //debugPrint("?? ${key['ts']}");
+        ts = DateTime.parse(key["ts"]);
+      }
 
       //"ts": ts == null ? null : ts?.toIso8601String()
 
@@ -149,7 +151,7 @@ class Data {
       //print("key:  $key");
       if (key.isNotEmpty) {
         Map value = json[key];
-        print("value:  $value");
+        debugPrint("value:  $value");
         if (key.isNotEmpty) {
           sensorAddress = key;
           int t = 0;
