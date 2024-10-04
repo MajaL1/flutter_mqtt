@@ -1,6 +1,6 @@
-/*
+/*package com.example.mqtt_test
 // change 'flutter_foreground_example' to your app name
-package com.example.flutter_foreground_example
+//package com.example.flutter_foreground_example
 
 import androidx.annotation.RequiresApi
 import android.content.Context

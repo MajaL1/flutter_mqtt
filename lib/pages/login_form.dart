@@ -146,7 +146,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
           SmartMqtt(
-              mqttPass: password,
+              mqttPass: user.mqtt_pass,
               username: username,
               topicList: userTopicList,
               port: Constants.BROKER_PORT,
