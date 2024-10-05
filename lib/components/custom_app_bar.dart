@@ -18,6 +18,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,15 +34,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
               //padding: EdgeInsets.only(top:40),
 
               decoration: GuiUtils.buildAppBarDecoration(),
-              //color: Colors.black,
-              /*child: Column(
-            children: [
-              Text('One'),
-              Text('Two'),
-              Text('Three'),
-              Text('Four'),
-            ],
-          ),*/
             ),
             shadowColor: Colors.black,
             foregroundColor: Colors.lightBlue,

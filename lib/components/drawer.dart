@@ -25,8 +25,8 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   initState() {
     WidgetsFlutterBinding.ensureInitialized();
-    super.initState();
     initial();
+    super.initState();
     debugPrint("-- navDrawer initstate");
   }
 
@@ -35,7 +35,7 @@ class _NavDrawerState extends State<NavDrawer> {
     //prefs.reload();
 
     prefs = await SharedPreferences.getInstance().then((val){
-      val.reload();
+      //val.reload();
       setState(() {
         //debugPrint("&&&&& username: ${val.getString('username')!}");
         username = val.getString('username')!;
@@ -43,25 +43,19 @@ class _NavDrawerState extends State<NavDrawer> {
       });
       return val;
     });
+    setState((){});
+
   }
 
   Future<String> getUsername() async {
+    setState((){});
     return prefs.getString("username")!;
   }
 
-  /* Future<dynamic> _getPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-  } */
-  /*String  getUserName() {
-    _getPrefs();
-    String username = "";
-    if(prefs.getString("username") != null) {
-      username = prefs.getString("username")!;
-      return username;
-    }
-    //username="test2";
-    return username;
-  } */
+  Future<String> getEmail() async {
+    setState((){});
+    return prefs.getString("email")!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -275,24 +269,33 @@ class _NavDrawerState extends State<NavDrawer> {
             title: Column(children: [
               Container(
                   alignment: Alignment.topLeft,
-                  child: Text(
-                    username,
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                        color: Colors.white70, letterSpacing: 2, fontSize: 15),
+                  child: FutureBuilder(
+                      future: getUsername(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text(snapshot.data.toString(), textAlign: TextAlign.left,
+                            style: const TextStyle(
+                                color: Colors.white70, letterSpacing: 2, fontSize: 15),);
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      },
                   )),
-              /*Container(
-                  child: Text(
-               "\n"),
-              ), */
+
               Container(
                   alignment: Alignment.topLeft,
-                  child: Text(
-                    email,
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                        color: Colors.white70, letterSpacing: 0.8, fontSize: 10),
-                  )),
+                  child: FutureBuilder(
+                  future: getEmail(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text(snapshot.data.toString(), textAlign: TextAlign.left,
+                style: const TextStyle(
+                    color: Colors.white70, letterSpacing: 0.8, fontSize: 12),);
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        )),
             ])));
   }
 

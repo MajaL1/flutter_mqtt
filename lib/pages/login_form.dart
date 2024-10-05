@@ -80,135 +80,6 @@ class _LoginFormValidationState extends State<LoginForm> {
   final passwordController = TextEditingController(text: "");
 
   @override
-  initState() {
-    super.initState();
-    WidgetsFlutterBinding.ensureInitialized();
-    _subscription = InternetConnection().onStatusChange.listen((status) {
-      setState(() {
-        _connectionStatus = status;
-        connectionStatusText =
-            status == InternetStatus.connected ? "" : "No internet connection";
-      });
-    });
-    debugPrint("-- loginform initstate");
-  }
-
-  @pragma(
-      'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  Future<void> login(String username, String password) async {
-    //debugPrint("u, p $username, $password");
-
-    //check email and password
-    if (formkey.currentState!.validate()) {
-      // test - odkomentiraj, ce ni connectiona
-      // await Navigator.pushReplacement(
-      //   context, MaterialPageRoute(builder: (_) => UserSettings.base()));
-
-      try {
-        User? user = await ApiService.login(username, password);
-        if (user != null) {
-          debugPrint(
-              "loginForm, user: $user.username, $user.password, $user.topic");
-          List<String> userTopicList = Utils.createTopicListFromApi(user);
-          await SharedPreferences.getInstance().then((value) {
-            value.setString("username", username);
-            value.setString("pass", password);
-            // value.setStringList("user_topics", userTopicList);
-            value.setString("username", user.username);
-
-            if (user.email != null) {
-              value.setString("email", user.email!);
-            }
-
-            value.setString("mqtt_username", user.username);
-            value.setString("mqtt_pass", user.mqtt_pass);
-
-            debugPrint("--- user.userTopicList: ${user.userTopicList}");
-
-            String userTopicListPref = jsonEncode(userTopicList);
-            List<UserTopic> userTopicListRw = user.userTopicList;
-            String userTopicListRwStr = jsonEncode(userTopicListRw);
-
-            value.setString("user_topic_list", userTopicListPref);
-            value.setString("user_topic_list_rw", userTopicListRwStr);
-
-            value.reload();
-          });
-
-          String l = generateRandomString(10);
-          //String identifier = "_12apxeeejjjewg";
-          String identifier = l.toString();
-          SmartMqtt(
-              mqttPass: user.mqtt_pass,
-              username: username,
-              topicList: userTopicList,
-              port: Constants.BROKER_PORT,
-              host: Constants.BROKER_IP);
-          /** saving user data in shared prefs **/
-
-          await BackgroundMqtt(flutterLocalNotificationsPlugin)
-              .initializeService(service);
-          //await smartMqtt.initializeMQTTClient();
-          // inicializiraj servis za posiljanje sporocil
-          await NotificationHelper.initializeService();
-          await SharedPreferences.getInstance().then((value) {
-            value.setBool("isLoggedIn", true);
-          });
-
-          // await service.startService();
-          /* await Workmanager().initialize(
-              callbackDispatcher, // The top level function, aka callbackDispatcher
-              isInDebugMode:
-              true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-            );
-          Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"isConnected": true}
-          , existingWorkPolicy: ExistingWorkPolicy.append);
-*/
-          //FlutterBackgroundService().startService();
-          await Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
-
-          debugPrint("Validated");
-        } else {
-          setState(() {
-            loginError = true;
-          });
-        }
-      } catch (e) {
-        debugPrint("e: $e");
-        setState(() {
-          loginError = true;
-        });
-      }
-    }
-  }
-
-  String generateRandomString(int len) {
-    var r = Random();
-    return String.fromCharCodes(
-        List.generate(len, (index) => r.nextInt(33) + 89));
-  }
-
-  String? validatePassword(String value) {
-    if (value.isEmpty) {
-      return "* Required";
-    } else if (value.length < 6) {
-      return "Password should be atleast 6 characters";
-    } else if (value.length > 15) {
-      return "Password should not be greater than 15 characters";
-    } else {
-      return null;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     //bool network = true;
     return DefaultTabController(
@@ -335,9 +206,6 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               validator: MultiValidator([
                                                 RequiredValidator(
                                                     errorText: "* Required"),
-                                                MinLengthValidator(6,
-                                                    errorText:
-                                                        "Password too short"),
                                               ])
                                               //validatePassword,        //Function to check validation
                                               ),
@@ -388,10 +256,10 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                       }
                                                     }
                                                     notificationPermissionGranted()
-                                                        .then((val) {
+                                                        .then((val) async {
                                                       debugPrint(
                                                           "notificationPermissionGranted: $val");
-                                                      login(usernameVal,
+                                                      await login(usernameVal,
                                                           passwordVal);
                                                     });
                                                     if (!mounted) return;
@@ -411,23 +279,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                   child:
                                                       CircularProgressIndicator()),
                                         ),
-                                        /* Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 15, bottom: 0),
-                          child: TextButton(
-                            onPressed: () {
-                              // forgotPass();
-                            },
-                            child: const Text(
-                              Constants.FORGOT_PASS,
-                              style: TextStyle(
-                                  color: Colors.indigoAccent,
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        ),*/
-                                        Padding(
+                                       Padding(
                                           padding: const EdgeInsets.only(
                                               left: 15.0,
                                               right: 15.0,
@@ -482,19 +334,6 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 ]))))))));
   }
 
-  static Future<bool> notificationPermissionGranted() async {
-    bool isGranted = true;
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.notification,
-    ].request();
-    statuses.forEach((key, permission) {
-      if (permission.isDenied) {
-        isGranted = false;
-      }
-    });
-    return isGranted;
-  }
-
   InputDecoration buildInputUsernamePasswordDecoration() {
     return InputDecoration(
         prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
@@ -546,5 +385,147 @@ class _LoginFormValidationState extends State<LoginForm> {
         ),
       ],
     );
+  }
+
+  @pragma(
+      'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+
+  String generateRandomString(int len) {
+    var r = Random();
+    return String.fromCharCodes(
+        List.generate(len, (index) => r.nextInt(33) + 89));
+  }
+
+  @override
+  initState() {
+    super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+    _subscription = InternetConnection().onStatusChange.listen((status) {
+      setState(() {
+        _connectionStatus = status;
+        connectionStatusText =
+            status == InternetStatus.connected ? "" : "No internet connection";
+      });
+    });
+    debugPrint("-- loginform initstate");
+  }
+
+  Future<void> login(String username, String password) async {
+    //debugPrint("u, p $username, $password");
+
+    //check email and password
+    if (formkey.currentState!.validate()) {
+      // test - odkomentiraj, ce ni connectiona
+      // await Navigator.pushReplacement(
+      //   context, MaterialPageRoute(builder: (_) => UserSettings.base()));
+
+      try {
+        User? user = await ApiService.login(username, password);
+        if (user != null) {
+          debugPrint(
+              "loginForm, user: $user.username, $user.password, $user.topic");
+          List<String> userTopicList = Utils.createTopicListFromApi(user);
+          await SharedPreferences.getInstance().then((value) {
+            value.setString("username", username);
+            value.setString("pass", password);
+            // value.setStringList("user_topics", userTopicList);
+            value.setString("username", user.username);
+
+            if (user.email != null) {
+              value.setString("email", user.email!);
+            }
+
+            value.setString("mqtt_username", user.username);
+            value.setString("mqtt_pass", user.mqtt_pass);
+
+            debugPrint("--- user.userTopicList: ${user.userTopicList}");
+
+            String userTopicListPref = jsonEncode(userTopicList);
+            List<UserTopic> userTopicListRw = user.userTopicList;
+            String userTopicListRwStr = jsonEncode(userTopicListRw);
+
+            value.setString("user_topic_list", userTopicListPref);
+            value.setString("user_topic_list_rw", userTopicListRwStr);
+
+            value.reload();
+          });
+
+          String l = generateRandomString(10);
+          //String identifier = "_12apxeeejjjewg";
+          String identifier = l.toString();
+          SmartMqtt(
+              mqttPass: user.mqtt_pass,
+              username: username,
+              topicList: userTopicList,
+              port: Constants.BROKER_PORT,
+              host: Constants.BROKER_IP);
+          /** saving user data in shared prefs **/
+
+          await BackgroundMqtt(flutterLocalNotificationsPlugin)
+              .initializeService(service);
+          //await smartMqtt.initializeMQTTClient();
+          // inicializiraj servis za posiljanje sporocil
+          await NotificationHelper.initializeService();
+          await SharedPreferences.getInstance().then((value) {
+            value.setBool("isLoggedIn", true);
+          });
+
+          // await service.startService();
+          /* await Workmanager().initialize(
+              callbackDispatcher, // The top level function, aka callbackDispatcher
+              isInDebugMode:
+              true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+            );
+          Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"isConnected": true}
+          , existingWorkPolicy: ExistingWorkPolicy.append);
+*/
+          //FlutterBackgroundService().startService();
+          await Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
+
+          debugPrint("Validated");
+        } else {
+          setState(() {
+            loginError = true;
+          });
+        }
+      } catch (e) {
+        debugPrint("e: $e");
+        setState(() {
+          loginError = true;
+        });
+      }
+    }
+  }
+
+  String? validatePassword(String value) {
+    if (value.isEmpty) {
+      return "* Required";
+    } else if (value.length < 6) {
+      return "Password should be atleast 6 characters";
+    } else if (value.length > 15) {
+      return "Password should not be greater than 15 characters";
+    } else {
+      return null;
+    }
+  }
+
+  static Future<bool> notificationPermissionGranted() async {
+    bool isGranted = true;
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.notification,
+    ].request();
+    statuses.forEach((key, permission) {
+      if (permission.isDenied) {
+        isGranted = false;
+      }
+    });
+    return isGranted;
   }
 }

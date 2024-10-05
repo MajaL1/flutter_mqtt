@@ -62,7 +62,7 @@ class NotificationHelper extends StatelessWidget {
           const InitializationSettings(
             iOS: DarwinInitializationSettings(),
             android: AndroidInitializationSettings(
-              'icon_navis'
+              'ic_bg_service_small'
             ),
           ),
           onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
