@@ -62,7 +62,7 @@ class NotificationHelper extends StatelessWidget {
           const InitializationSettings(
             iOS: DarwinInitializationSettings(),
             android: AndroidInitializationSettings(
-              'ic_launcher',
+              'icon_navis'
             ),
           ),
           onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
@@ -99,7 +99,7 @@ class NotificationHelper extends StatelessWidget {
           isForegroundMode: true,
           notificationChannelId: 'alarms',
           initialNotificationTitle: 'ALARM',
-          initialNotificationContent: 'Initializing',
+          initialNotificationContent: '1Initializing',
           foregroundServiceNotificationId: notificationId,
           autoStartOnBoot: true),
       iosConfiguration: IosConfiguration(
@@ -147,12 +147,14 @@ class NotificationHelper extends StatelessWidget {
 
   static Future<void> sendMessage(Alarm? alarmMessage) async {
     debugPrint("Sending alarm: NotificationHelper.sendMessage");
-    String? deviceName = alarmMessage?.deviceName.toString();
+    String? friendlyName = alarmMessage?.friendlyName;
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
     String? loAlarm = alarmMessage?.loAlarm.toString();
     String? v = alarmMessage?.v.toString();
     int? u = alarmMessage?.u;
     String? sensorAddress = alarmMessage?.sensorAddress;
+    String? deviceName = alarmMessage?.deviceName.toString();
+
     String units = UnitsConstants.getUnits(u);
     String alarmValue = "";
 
@@ -167,18 +169,12 @@ class NotificationHelper extends StatelessWidget {
     //       "**************************alarm sending message  message: $alarmMessage");
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
-
-    final bigPicture = await Utils.getImageFilePathFromAssets(
-        'assets/images/bell1.png', 'bigpicture');
-
-    /* final styleinformationDesign = BigPictureStyleInformation(
-      FilePathAndroidBitmap(smallpicture),
-      summaryText: "Alarm for $sensorAddress",
-    ); */
+   String? name = (friendlyName!= null && friendlyName!.isNotEmpty) ? friendlyName : "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
+    //debugPrint(" 4444 friendlyName: , $friendlyName, na,me: $name");
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      "deviceName: $deviceName, sensor: $sensorAddress",
+      name,
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
       icon: "icon",
@@ -229,7 +225,7 @@ class NotificationHelper extends StatelessWidget {
             UILocalNotificationDateInterpretation.absoluteTime); */
 
     await flutterLocalNotificationsPlugin.show(
-        notificationId, "Alarm from: $sensorAddress, $deviceName", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
+        notificationId, "Alarm from: $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
   }
 
   void onDidReceiveNotificationResponse(

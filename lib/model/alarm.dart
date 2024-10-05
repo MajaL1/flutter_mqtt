@@ -92,6 +92,7 @@ class Alarm {
           DateTime? ts = null;
           int t = 0;
           int l = 0;
+          String friendlyName =  "";
 
           for (String key1 in value.keys) {
             if (key1 != null) {
@@ -126,6 +127,9 @@ class Alarm {
               if (key1 == "r") {
                 r = value1;
               }
+              if (key1 == "friendlyName") {
+                friendlyName = value1 as String;
+              }
               if (key1 == "bv") {
                 bv = value1;
               }
@@ -140,6 +144,7 @@ class Alarm {
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
               sensorAddress: key,
+              friendlyName: friendlyName,
               typ: typ,
               v: v,
               u: u,

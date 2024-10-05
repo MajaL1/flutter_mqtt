@@ -59,7 +59,7 @@ class _LoginFormValidationState extends State<LoginForm> {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   String emailText = "test3";
-  String passwordText = "OTA1YzRhZDNlZjAxMjU4Zg==";
+  String passwordText = "Test@1234";
 
   //String emailText = "test1";
   //String passwordText = "Test@1234";
@@ -182,6 +182,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           });
         }
       } catch (e) {
+        debugPrint("e: $e");
         setState(() {
           loginError = true;
         });

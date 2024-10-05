@@ -206,7 +206,7 @@ class BackgroundMqtt {
         isForegroundMode: true,
         notificationChannelId: 'my_foreground',
         initialNotificationTitle: 'Alarm app',
-        initialNotificationContent: 'Initializing',
+        initialNotificationContent: 'Running in background',
         foregroundServiceNotificationId: 888,
       ),
       iosConfiguration: IosConfiguration(

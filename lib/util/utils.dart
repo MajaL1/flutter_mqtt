@@ -325,8 +325,8 @@ class Utils {
         List.generate(len, (index) => r.nextInt(33) + 89));
   }
 
-  static void setFriendlyName(Alarm alarm) {
-    SharedPreferences.getInstance().then((value) {
+  static Future setFriendlyName(Alarm alarm) async{
+    Future<String?> s = SharedPreferences.getInstance().then((value) {
       if (value.getString("parsed_current_mqtt_settings") != null) {
         List parsedMqttSettingsList = [];
 
@@ -351,9 +351,12 @@ class Utils {
             alarm.friendlyName = friendlyName;
           }
         }
-        debugPrint("utils - before sendMessage ${alarm.friendlyName}");
+        //debugPrint("utils - before sendMessage ${alarm.friendlyName}");
+        return alarm.friendlyName;
       }
+      return "";
     });
+    return s;
   }
 
   static List<UserDataSettings> diffOldAndNewSettings(

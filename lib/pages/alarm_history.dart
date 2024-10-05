@@ -215,7 +215,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                                   padding:
                                                       const EdgeInsets.all(1.0),
                                                   child: const Text(
-                                                      "device - sensor",
+                                                      "Sensor",
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -227,7 +227,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                               Container(
                                                   padding:
                                                       const EdgeInsets.all(1.0),
-                                                  child: const Text("value",
+                                                  child: const Text("Alarm",
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -239,7 +239,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                               Container(
                                                 padding:
                                                     const EdgeInsets.all(1.0),
-                                                child: const Text("date ",
+                                                child: const Text("Date ",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                         color: Color.fromRGBO(
