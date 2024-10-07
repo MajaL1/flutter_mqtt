@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mqtt_test/components/custom_app_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/drawer.dart';
 import '../model/constants.dart';
@@ -23,11 +24,27 @@ class _AboutState extends State<AboutPage> {
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
+
+
+  String username = "";
+  String email = "";
+
   @override
   void initState() {
     super.initState();
-
+    WidgetsFlutterBinding.ensureInitialized();
     debugPrint("aboutpage initState");
+    //final prefs =  SharedPreferences.getInstance().reload();
+
+    final prefs = SharedPreferences.getInstance().then((val) {
+      val.reload();
+      setState(() {
+        username = val.getString("username")!;
+      });
+      setState(() {
+        email = val.getString("email")! ?? "";
+      });
+    });
   }
 
   @override
@@ -37,7 +54,7 @@ class _AboutState extends State<AboutPage> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.ABOUT),
-      drawer: const NavDrawer.base(),
+      drawer:  NavDrawer.data(username: username, email: email,),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 15, right: 10),
         scrollDirection: Axis.vertical,

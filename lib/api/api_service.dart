@@ -154,7 +154,7 @@ class ApiService {
     return null;
   }
 
-  static void logout() {
+  static Future logout() async{
     debugPrint("logging out");
     stopService();
     _removeUserPreferences();

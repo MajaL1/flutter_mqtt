@@ -11,26 +11,38 @@ import '../pages/login_form.dart';
 //import '../pages/data_page.dart';
 
 class NavDrawer extends StatefulWidget {
-  const NavDrawer.base({Key? key}) : super(key: key);
+  //const NavDrawer.base({Key? key}) : super(key: key);
+
+   NavDrawer.data({required this.username, required this.email});
+
+  //MyHomePage({Key key, this.title}) : super(key: key);
+  final String username;
+
+  final String email;
+
+
 
   @override
   State<StatefulWidget> createState() => _NavDrawerState();
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-  String username = "";
-  String email = "";
+  //String username = "";
+  //String email = "";
   late SharedPreferences prefs;
 
   @override
   initState() {
     WidgetsFlutterBinding.ensureInitialized();
-    initial();
     super.initState();
+    //initial();
+    setState(() {
+
+    });
     debugPrint("-- navDrawer initstate");
   }
 
-  void initial() async{
+ /* void initial() async{
     //prefs = await SharedPreferences.getInstance();
     //prefs.reload();
 
@@ -45,17 +57,22 @@ class _NavDrawerState extends State<NavDrawer> {
     });
     setState((){});
 
-  }
+  }*/
 
-  Future<String> getUsername() async {
-    setState((){});
-    return prefs.getString("username")!;
-  }
+  /*Future<String> getUsername() async {
 
-  Future<String> getEmail() async {
-    setState((){});
-    return prefs.getString("email")!;
-  }
+    String user = await SharedPreferences.getInstance().then((val){
+      //val.reload();
+      setState(() {
+        //debugPrint("&&&&& username: ${val.getString('username')!}");
+        username = val.getString('username')!;
+        email = val.getString('email')!;
+      });
+      return username;
+    });
+    return user;
+  } */
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +87,7 @@ class _NavDrawerState extends State<NavDrawer> {
         child: Drawer(
             backgroundColor: Colors.black,
             shadowColor: Colors.black,
+
             //Color.fromRGBO(0, 87, 153, 60),
             child: ConstrainedBox(
                 //color: Colors.blue,
@@ -159,7 +177,7 @@ class _NavDrawerState extends State<NavDrawer> {
                           onTap: () => Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const UserSettings.base())),
+                                       UserSettings.base())),
                         ),
                     ),
                     Container(
@@ -210,8 +228,8 @@ class _NavDrawerState extends State<NavDrawer> {
                               letterSpacing: 1.8,
                             ),
                           ),
-                          onTap: () {
-                            ApiService.logout();
+                          onTap: () async {
+                            await ApiService.logout();
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) =>
@@ -250,6 +268,7 @@ class _NavDrawerState extends State<NavDrawer> {
   }
 
   Container buildDrawerMainListTile() {
+    debugPrint("44444 buildDrawerMainListTile: ${widget.username}, ${widget.email}");
     return Container(
         decoration: buildBoxDecorationMainTile(),
         child: ListTile(
@@ -269,33 +288,17 @@ class _NavDrawerState extends State<NavDrawer> {
             title: Column(children: [
               Container(
                   alignment: Alignment.topLeft,
-                  child: FutureBuilder(
-                      future: getUsername(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Text(snapshot.data.toString(), textAlign: TextAlign.left,
+                  child:  Text(widget.username, textAlign: TextAlign.left,
                             style: const TextStyle(
-                                color: Colors.white70, letterSpacing: 2, fontSize: 15),);
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      },
-                  )),
+                                color: Colors.white70, letterSpacing: 2, fontSize: 15),)
+              ),
 
               Container(
                   alignment: Alignment.topLeft,
-                  child: FutureBuilder(
-                  future: getEmail(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text(snapshot.data.toString(), textAlign: TextAlign.left,
-                style: const TextStyle(
-                    color: Colors.white70, letterSpacing: 0.8, fontSize: 12),);
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
-        )),
+                  child:  Text(widget.email, textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            color: Colors.white70, letterSpacing: 0.6, fontSize: 10),)
+                  ),
             ])));
   }
 

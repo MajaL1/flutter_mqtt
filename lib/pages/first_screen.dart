@@ -25,6 +25,8 @@ class _FirstScreenState extends State<FirstScreen> {
   @override
   initState() {
     super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+
     SharedPreferences.getInstance().then((value) {
       if (value.getBool("isLoggedIn") != null) {
         return value.getBool("isLoggedIn")!;

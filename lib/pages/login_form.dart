@@ -432,19 +432,24 @@ class _LoginFormValidationState extends State<LoginForm> {
               "loginForm, user: $user.username, $user.password, $user.topic");
           List<String> userTopicList = Utils.createTopicListFromApi(user);
           await SharedPreferences.getInstance().then((value) {
+            value.setString("email", user.email! ?? "");
             value.setString("username", username);
+            setState(() {
+              value.setString("email", user.email! ?? "");
+              value.setString("username", username);
+            });
             value.setString("pass", password);
             // value.setStringList("user_topics", userTopicList);
-            value.setString("username", user.username);
+            //value.setString("username", user.username);
 
-            if (user.email != null) {
-              value.setString("email", user.email!);
-            }
+           // if (user.email != null) {
+            //}
+            debugPrint(" 44444 setting username and email: $username ${user.email}");
 
             value.setString("mqtt_username", user.username);
             value.setString("mqtt_pass", user.mqtt_pass);
 
-            debugPrint("--- user.userTopicList: ${user.userTopicList}");
+            //debugPrint("--- user.userTopicList: ${user.userTopicList}");
 
             String userTopicListPref = jsonEncode(userTopicList);
             List<UserTopic> userTopicListRw = user.userTopicList;

@@ -44,7 +44,7 @@ class _DataState extends State<DataPage> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.DATA),
-      drawer: const NavDrawer.base(),
+      //drawer: const NavDrawer.base(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 15, right: 10),
         scrollDirection: Axis.vertical,

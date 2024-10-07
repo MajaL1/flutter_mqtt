@@ -36,11 +36,26 @@ class _UserSettingsState extends State<UserSettings> {
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
 
+  String username = "";
+  String email = "";
+
   @override
   void initState() {
     super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+
     // SmartMqtt.instance.isSaved = false;
     SmartMqtt.instance.isSaved = false;
+    SharedPreferences.getInstance().then((val) {
+      //val.reload();
+      setState(() {
+        username = val.getString("username")!;
+      });
+      //val.reload();
+      setState(() {
+        email = val.getString("email")! ?? "";
+      });
+    });
 
     debugPrint("user_settings initState");
   }
@@ -54,7 +69,7 @@ class _UserSettingsState extends State<UserSettings> {
       resizeToAvoidBottomInset: true,
       backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.SETTINGS),
-      drawer: const NavDrawer.base(),
+      drawer: NavDrawer.data(username: username, email: email),
       body: const SingleChildScrollView(
         padding: EdgeInsets.only(left: 15, right: 10, top: 10),
        // scrollDirection: Axis.vertical,

@@ -23,11 +23,38 @@ class AlarmHistory extends StatefulWidget {
 }
 
 class _AlarmHistoryState extends State<AlarmHistory> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List<Alarm> _returnAlarmList(List<Alarm> alarmList) {
     debugPrint(
         "alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     return alarmList;
   }
+
+  String username = "";
+  String email = "";
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.getInstance().then((val) {
+      setState(() {
+        username = val.getString("username") ?? val.getString("username")!;
+        email = (val.getString("email") ?? "")!;
+
+      });
+      debugPrint("44444 1 user_settings initState username: $username, email: $email");
+      val.reload();
+      debugPrint("44444 2 user_settings initState username: $username, email: $email ");
+
+      setState(() {
+      });
+
+    debugPrint("alarm_history initState");
+  });}
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +70,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
               extendBody: true,
               resizeToAvoidBottomInset: true,
               appBar: CustomAppBar(Constants.HISTORY),
-              drawer: const NavDrawer.base(),
+              drawer:  NavDrawer.data(username: username, email: email),
               body: SingleChildScrollView(
                   child: Container(
                       color: Colors.white,
