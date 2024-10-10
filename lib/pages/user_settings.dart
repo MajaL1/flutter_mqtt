@@ -114,7 +114,9 @@ class _UserSettingsState extends State<UserSettings> {
     preferences = await SharedPreferences.getInstance();
   }
 
-  void saveInterval() {
-    debugPrint("save interval...");
+  @override
+  void dispose() {
+    debugPrint("user-settings.dart - dispose");
+    super.dispose();
   }
 }

@@ -223,4 +223,10 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
   Future<void> initializePreference() async {
     preferences = await SharedPreferences.getInstance();
   }
+
+  @override
+  void dispose() {
+    debugPrint("user-personal-settings.dart - dispose");
+    super.dispose();
+  }
 }

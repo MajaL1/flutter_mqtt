@@ -94,4 +94,9 @@ class _AboutState extends State<AboutPage> {
       //FlutterLogo(size: 200),
     );
   }
+  @override
+  void dispose() {
+    debugPrint("about_page.dart - dispose");
+    super.dispose();
+  }
 }

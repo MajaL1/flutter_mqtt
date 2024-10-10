@@ -136,8 +136,8 @@ class BackgroundMqtt {
         String? clientIdentifier = val.getString("identifier");
         bool? connected = val.getBool("connected");
 
-        debugPrint(
-            "////////////////main shared prefs in background: - $currentState, $username, $password, $userTopicList $currentState");
+       // SmartMqtt.instance.ping();
+        debugPrint("////////////////background_mqtt shared prefs in background: - $currentState, $clientIdentifier, $username, $password, $userTopicList $currentState");
         if (username != null && password != null) {
           /*SmartMqtt(mqttPass: password!,
              username: username!,
@@ -145,14 +145,15 @@ class BackgroundMqtt {
              port: Constants.BROKER_PORT,
              host: Constants.BROKER_IP); */
         }
-        if (connected == null || !connected) {
-          debugPrint(
-              " recconect////////////////connected== null && !connected");
+       // if (currentState == null || currentState != "MQTTAppConnectionState.connected") {
+        if (SmartMqtt.instance.username == null && SmartMqtt.instance.mqttPass == null) {
+          debugPrint(" background_mqtt --> ce so zgornji parametri null, potem se bo reconnectal");
+          debugPrint(" background_mqtt --> reconnect username == null && password == null");
 
           List topics;
           if (userTopicList != null) {
             topics = json.decode(userTopicList!);
-            SmartMqtt(
+           /* SmartMqtt(
                 mqttPass: password!,
                 username: username!,
                 topicList: topics,
@@ -160,7 +161,9 @@ class BackgroundMqtt {
                 host: Constants.BROKER_IP);
             //_reconnectToMqtt();
             val.setBool("connected", true);
+            val.setBool("disconnected", false); */
           }
+          else {}
         }
       });
       print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;

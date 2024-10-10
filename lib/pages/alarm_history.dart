@@ -27,8 +27,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Alarm> _returnAlarmList(List<Alarm> alarmList) {
-    debugPrint(
-        "alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
+    //debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     return alarmList;
   }
 
@@ -345,7 +344,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
         String? parsedMqttSettings =
             value.getString("parsed_current_mqtt_settings");
-        debugPrint("alarm_history.... parsedMqttSettings: $parsedMqttSettings");
+        //debugPrint("alarm_history.... parsedMqttSettings: $parsedMqttSettings");
         List jsonMap1 = json.decode(parsedMqttSettings!);
         parsedMqttSettingsList =
             jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
@@ -366,8 +365,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
             }
           }
         }
-        debugPrint(
-            "alarm_history parsedMqttSettings parsedMqttSettingsList.size, ${parsedMqttSettingsList.length}, ${parsedMqttSettingsList.toString()}");
+        //debugPrint("alarm_history parsedMqttSettings parsedMqttSettingsList.size, ${parsedMqttSettingsList.length}, ${parsedMqttSettingsList.toString()}");
       }
     });
     return alarmList;
@@ -387,5 +385,11 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     setState(() {
       //
     });
+  }
+
+  @override
+  void dispose() {
+    debugPrint("alarm-history.dart - dispose");
+    super.dispose();
   }
 }

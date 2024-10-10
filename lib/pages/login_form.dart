@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+//import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/user_topic.dart';
@@ -51,9 +52,9 @@ class LoginForm extends StatefulWidget {
 } */
 
 class _LoginFormValidationState extends State<LoginForm> {
-  InternetStatus? _connectionStatus;
-  String? connectionStatusText;
-  late StreamSubscription<InternetStatus> _subscription;
+  //InternetStatus? _connectionStatus;
+  //String? connectionStatusText;
+  //late StreamSubscription<InternetStatus> _subscription;
   bool isLoading = false;
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -105,14 +106,14 @@ class _LoginFormValidationState extends State<LoginForm> {
                                       //color: Colors.amber,
                                       padding: const EdgeInsets.only(
                                           top: 0, bottom: 0),
-                                      child: Text(
+                                      /*child: Text(
                                         connectionStatusText != null
                                             ? connectionStatusText!
                                             : "",
                                         style: const TextStyle(
                                             color: Colors.redAccent,
                                             fontSize: 14),
-                                      )),
+                                      )*/),
                                   Padding(
                                       padding: const EdgeInsets.only(
                                           top: 40.0, bottom: 40),
@@ -228,43 +229,22 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                       .buildElevatedButtonLogin(),
                                                   onPressed: () async {
                                                     if (usernameVal.isEmpty &&
-                                                        passwordVal.isEmpty) {
-                                                      usernameVal = emailText;
+                                                        passwordVal.isEmpty) {usernameVal = emailText;
                                                       passwordVal =
                                                           passwordText;
                                                     }
-                                                    setState(() {
-                                                      isLoading = true;
-                                                    });
-                                                    //EasyDebounce.debounce(
-                                                    //    'debouncer3',
-                                                    //    Duration(seconds: 3),
-                                                    //        () => {
-                                                    //Utils
-                                                    //    .showCircularProgressIndicator(),
-                                                    //PermissionStatus permissionStatus;
-                                                    while (true) {
-                                                      try {
-                                                        //permissionStatus = await permission. Request();
-                                                        break;
-                                                      } catch (e) {
-                                                        await Future.delayed(
-                                                            Duration(
-                                                                milliseconds:
-                                                                    500),
-                                                            () {});
-                                                      }
-                                                    }
+
+
                                                     notificationPermissionGranted()
                                                         .then((val) async {
                                                       debugPrint(
                                                           "notificationPermissionGranted: $val");
-                                                      await login(usernameVal,
+                                                      bool loginStatus = await login(usernameVal,
                                                           passwordVal);
                                                     });
                                                     if (!mounted) return;
                                                     setState(() {
-                                                      isLoading = false;
+                                                      isLoading = true;
                                                     });
                                                   },
                                                   child: const Text(
@@ -392,7 +372,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   @override
   void dispose() {
-    _subscription.cancel();
+    //_subscription.cancel();
     super.dispose();
   }
 
@@ -406,17 +386,17 @@ class _LoginFormValidationState extends State<LoginForm> {
   initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    _subscription = InternetConnection().onStatusChange.listen((status) {
+    /*_subscription = InternetConnection().onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
         connectionStatusText =
             status == InternetStatus.connected ? "" : "No internet connection";
       });
-    });
+    });*/
     debugPrint("-- loginform initstate");
   }
 
-  Future<void> login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     //debugPrint("u, p $username, $password");
 
     //check email and password
@@ -432,24 +412,19 @@ class _LoginFormValidationState extends State<LoginForm> {
               "loginForm, user: $user.username, $user.password, $user.topic");
           List<String> userTopicList = Utils.createTopicListFromApi(user);
           await SharedPreferences.getInstance().then((value) {
-            value.setString("email", user.email! ?? "");
             value.setString("username", username);
-            setState(() {
-              value.setString("email", user.email! ?? "");
-              value.setString("username", username);
-            });
             value.setString("pass", password);
             // value.setStringList("user_topics", userTopicList);
-            //value.setString("username", user.username);
+            value.setString("username", user.username);
 
-           // if (user.email != null) {
-            //}
-            debugPrint(" 44444 setting username and email: $username ${user.email}");
+            if (user.email != null) {
+              value.setString("email", user.email!);
+            }
 
             value.setString("mqtt_username", user.username);
             value.setString("mqtt_pass", user.mqtt_pass);
 
-            //debugPrint("--- user.userTopicList: ${user.userTopicList}");
+            debugPrint("--- user.userTopicList: ${user.userTopicList}");
 
             String userTopicListPref = jsonEncode(userTopicList);
             List<UserTopic> userTopicListRw = user.userTopicList;
@@ -481,6 +456,8 @@ class _LoginFormValidationState extends State<LoginForm> {
             value.setBool("isLoggedIn", true);
           });
 
+          loginError = false;
+
           // await service.startService();
           /* await Workmanager().initialize(
               callbackDispatcher, // The top level function, aka callbackDispatcher
@@ -506,7 +483,10 @@ class _LoginFormValidationState extends State<LoginForm> {
           loginError = true;
         });
       }
+    } else {
+      return false;
     }
+    return loginError;
   }
 
   String? validatePassword(String value) {

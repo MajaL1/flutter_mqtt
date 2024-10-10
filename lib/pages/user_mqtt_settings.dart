@@ -267,8 +267,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
       userDataSettings =
           jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
-      debugPrint(
-          "=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
+      //debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
       return userDataSettings;
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
@@ -582,9 +581,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     List<UserTopic> userTopicList = [];
     // dobivanje liste topicov s settingsi rw
     // potrebujemo, da vemo, katere nastavitve prikazemo kot read only
-    debugPrint("---userTopicListRw $userTopicListRw");
+    //debugPrint("---userTopicListRw $userTopicListRw");
     List jsonMapTopic = json.decode(userTopicListRw!);
-    debugPrint("---userTopicListRw LIST $jsonMapTopic");
+    //debugPrint("---userTopicListRw LIST $jsonMapTopic");
 
     userTopicList = jsonMapTopic.map((val) => UserTopic.fromJson(val)).toList();
 
@@ -593,7 +592,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         if (setting.deviceName == userTopic.sensorName) {
           List<TopicData> userTopicList = userTopic.topicList;
           for (TopicData topicData in userTopicList) {
-            debugPrint("topicData:: $topicData");
+            //debugPrint("topicData:: $topicData");
             if (topicData.name == "settings") {
               setting.rw = topicData.rw;
               break;
@@ -836,5 +835,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         return set;
     }
     return settings;
+  }
+
+  @override
+  void dispose() {
+    debugPrint("user_mqtt_settings.dart - dispose");
+    super.dispose();
   }
 }

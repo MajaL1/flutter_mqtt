@@ -266,4 +266,10 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     // });
     debugPrint("interval saved...");
   }
+
+  @override
+  void dispose() {
+    debugPrint("user-general-settings.dart - dispose");
+    super.dispose();
+  }
 }

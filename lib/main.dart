@@ -130,9 +130,9 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     initAlarmHistoryList();
     //NotificationHelper.initializeService();
-    WidgetsBinding.instance.addObserver(this);
+    //WidgetsBinding.instance.addObserver(this);
     super.initState();
-    _state = SchedulerBinding.instance.lifecycleState;
+   /* _state = SchedulerBinding.instance.lifecycleState;
     _listener = AppLifecycleListener(
       onShow: () => _handleTransition('show'),
       onResume: () => _handleTransition('resume'),
@@ -145,16 +145,16 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
       // This fires for each state change. Callbacks above fire only for
       // specific state transitions.
       onStateChange: _handleStateChange,
-    );
+    ); */
     /*SharedPreferences.getInstance().then((val){
       val.setBool("appRunInBackground", false);
     });*/
-    if (_state != null) {
+   /* if (_state != null) {
       _states.add(_state!.name);
-    }
+    } */
   }
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  /*void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     debugPrint("&&&  didChangeAppLifecycleState");
 
@@ -164,30 +164,30 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
         setState(() {
           _inForeground = true;
         });
-        debugPrint("&&&  AppLifecycleState.resumed");
+        debugPrint("&&&&&&&&&&&&&&&  AppLifecycleState.resumed");
         break;
       case AppLifecycleState.paused:
         setState(() {
           _inForeground = false;
         });
-        debugPrint("&&&  AppLifecycleState.paused");
+        debugPrint("&&&&&&&&&&&&&&&  AppLifecycleState.paused");
         break;
       case AppLifecycleState.inactive:
         setState(() {
           _inForeground = true;
         });
-        debugPrint("&&&  AppLifecycleState.inactive");
+        debugPrint("&&&&&&&&&&&&&&&  AppLifecycleState.inactive");
         break;
       case AppLifecycleState.detached:
         setState(() {
           _inForeground = false;
         });
-        debugPrint("&&&  AppLifecycleState.detached");
+        debugPrint("&&&&&&&&&&&&&&&&  AppLifecycleState.detached");
         break;
       default:
         break;
     }
-  }
+  } */
 
   Future<AppExitResponse> _onExitRequested() async {
     final response = await showDialog<AppExitResponse>(
@@ -219,8 +219,8 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
   @override
   void dispose() {
     debugPrint("main.dart - dispose");
-    _listener.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    //_listener.dispose();
+    //WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

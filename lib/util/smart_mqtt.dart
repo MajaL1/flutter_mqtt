@@ -55,7 +55,7 @@ class SmartMqtt extends ChangeNotifier {
     //List topics = json.decode(topicList);
     _instance.topicList = topicList;
     _instance.initializeMQTTClient();
-    debugPrint("SMARTMQTT");
+    debugPrint("SMARTMQTT constructor");
     return _instance;
   }
 
@@ -68,9 +68,10 @@ class SmartMqtt extends ChangeNotifier {
 
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
-    setCurrentState(currentState);
+
     SharedPreferences.getInstance().then((value) {
       value.setBool("disconnected", true);
+      setCurrentState(instance.currentState);
     });
     print('Disconnected');
 
@@ -94,7 +95,7 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   void ping() {
-    debugPrint("---ping $mqttPass ping---");
+    debugPrint("---ping $mqttPass $currentState  ping---");
     print("-----ping");
   }
 
@@ -133,14 +134,14 @@ class SmartMqtt extends ChangeNotifier {
       print(":OnDisconnected callback is solicited, this is correct");
     }
     instance.currentState = MQTTAppConnectionState.disconnected;
-    setCurrentState(currentState);
+    setCurrentState(instance.currentState);
   }
 
   /// The successful connect callback
   void onConnected() {
     String clientID = client!.clientIdentifier;
     _instance.currentState = MQTTAppConnectionState.connected;
-    setCurrentState(currentState);
+    setCurrentState(_instance.currentState);
     SharedPreferences.getInstance().then((value) {
       value.setBool("disconnected", false);
     });
@@ -211,27 +212,11 @@ class SmartMqtt extends ChangeNotifier {
     preferences.clear(); */
 
     if (topicName!.contains("data")) {
-      //debugPrint("___________________________________________________");
-     // debugPrint("111from topic data: $decodeMessage");
-      //debugPrint("___________________________________________________");
 
-      /********************************/
       // DataSmartMqtt implementira notifierja za getNewData
        DataSmartMqtt dataSmartMqtt = DataSmartMqtt.instance;
 
        await dataSmartMqtt.dataProcessor(decodeMessage, topicName, preferences);
-
-      /********************************/
-      //Data? data = await convertMessageToData(decodeMessage, topicName);
-      //setDataListToPreferences(data!, preferences);
-      //preferences.setString("data_mqtt", decodeMessage);
-
-      /*debugPrint("___________________________________________________");
-        debugPrint("from topic data $topicName");
-        debugPrint("__________ $decodeMessage");
-        debugPrint("___________________________________________________");
-        debugPrint("data: ${data.toString()}");
-        newMqttData = data; */
     }
     /***  polnjenje objekta - settings ***/
     if (topicName.contains("settings")) {
@@ -508,7 +493,7 @@ class SmartMqtt extends ChangeNotifier {
 
     _identifier = identifier;
     _instance.client = MqttServerClient(Constants.BROKER_IP, identifier,
-        maxConnectionAttempts: 2);
+        maxConnectionAttempts: 1);
     _instance.client!.port = 1883;
     _instance.client!.keepAlivePeriod = 50;
     //client.autoReconnect = true;

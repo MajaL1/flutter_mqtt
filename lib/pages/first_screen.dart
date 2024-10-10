@@ -70,4 +70,10 @@ class _FirstScreenState extends State<FirstScreen> {
               }
             }));
   }
+
+  @override
+  void dispose() {
+    debugPrint("first_screen.dart - dispose");
+    super.dispose();
+  }
 }

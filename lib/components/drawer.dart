@@ -36,9 +36,16 @@ class _NavDrawerState extends State<NavDrawer> {
     WidgetsFlutterBinding.ensureInitialized();
     super.initState();
     //initial();
-    setState(() {
+    //setState(() {
 
-    });
+    //});
+
+    //Navigator.popAndPushNamed(context, '/');
+   /* Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) =>
+            const AlarmHistory())
+    ); */
     debugPrint("-- navDrawer initstate");
   }
 

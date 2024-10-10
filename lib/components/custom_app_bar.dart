@@ -58,7 +58,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             leading: Builder(
                 builder: (context) {
                   return IconButton(
-                    icon: Icon(Icons.abc_outlined),
+                    icon: Icon(Icons.menu),
                     onPressed: () {
                       SharedPreferences.getInstance().then((val){
                         //val.reload();
@@ -68,6 +68,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           email = val.getString('email')!;
                         });
                         return val;
+                      });
+                      setState(() {
+
                       });
                       Scaffold.of(context).openDrawer();
                     },
@@ -85,8 +88,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             foregroundColor: Colors.lightBlue,
             title: Container(
                 //decoration: //Utils.buildAppBarDecoration(),
-                child: Text(
-              "$username $email",
+                child: Text("${widget.title} $username $email",
               style: const TextStyle(
                   fontSize: 16, color: Colors.white, letterSpacing: 1),
             ))));
