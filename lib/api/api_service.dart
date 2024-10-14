@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -194,19 +195,45 @@ class ApiService {
   }
 
   static Future<bool> startService() async {
-    final result = await BackgroundMqtt.startMqttService();
-    return result;
+
+
+    if(await service.isRunning()){
+      print("----isRunning");
+      debugPrint("----isRunning");
+      return false;
+    }
+    else {
+      debugPrint("----notRunning");
+      print("----notRunning");
+      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
+          service);
+      return true;
+    }
   }
 
   static Future<void> stopService() async {
     final result = await BackgroundMqtt.stopMqttService();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("serviceStopped", true);
-    var isRunning = await service.isRunning();
-    //if (isRunning) {
-      debugPrint(" isRunning $isRunning");
-      service.invoke("stopService");
-      SmartMqtt.instance.disconnect();
+    service.invoke("stopService");
+    var isRunning;
+    int i = 5;
+    while(i > 0) {
+      isRunning = await service.isRunning();
+      if (!isRunning) {
+        break;
+      }
+     else {
+        sleep(Duration(seconds:1));
+      }
+     i--;
+    }
+    
+    if(i == 0 ){
+      debugPrint("error stop service");
+    }
+    debugPrint(" isRunning $isRunning");
+
     //} else {
      // debugPrint(" isRunning FALSE, logout service");
       //service.startService();

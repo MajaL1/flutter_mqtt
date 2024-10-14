@@ -60,7 +60,15 @@ Future<void> main() async {
     badge: true,
     sound: true,
   );
-  await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
+
+  if(await service.isRunning()){
+    debugPrint("----isRunning");
+  }
+  else {
+    print("----notRunning");
+    await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
+        service);
+  }
 
   // SharedPreferences.setMockInitialValues({});
   SharedPreferences.getInstance().then((value) {

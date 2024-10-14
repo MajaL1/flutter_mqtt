@@ -33,8 +33,11 @@ class SmartMqtt extends ChangeNotifier {
   MqttServerClient ? client;
   late MqttConnectionState connectionState;
 
-  late bool isConnected = false;
+  //late bool isConnected = false;
   late bool userIsLoggedIn = false;
+  bool connected = false;
+
+
 
   static final SmartMqtt _instance = SmartMqtt._internal();
 
@@ -52,11 +55,15 @@ class SmartMqtt extends ChangeNotifier {
     _instance.port = port;
     _instance.username = username;
     _instance.mqttPass = mqttPass;
-    //List topics = json.decode(topicList);
-    _instance.topicList = topicList;
+    List topics = json.decode(topicList);
+    _instance.topicList = topics;
     _instance.initializeMQTTClient();
     debugPrint("SMARTMQTT constructor");
     return _instance;
+  }
+
+  bool getConnectionState(){
+    return connected;
   }
 
   bool debug = true;
@@ -69,8 +76,9 @@ class SmartMqtt extends ChangeNotifier {
   void disconnect() {
     currentState = MQTTAppConnectionState.disconnected;
 
+    connected = false;
     SharedPreferences.getInstance().then((value) {
-      value.setBool("disconnected", true);
+      value.setBool("connected", false);
       setCurrentState(instance.currentState);
     });
     print('Disconnected');
@@ -113,9 +121,6 @@ class SmartMqtt extends ChangeNotifier {
   void onAutoReconnect() {
     String clientID = client!.clientIdentifier;
     instance.currentState = MQTTAppConnectionState.connected;
-    SharedPreferences.getInstance().then((value) {
-      value.setBool("disconnected", false);
-    });
     print(
         "///////////////////////////// onAutoReconnect  $clientID, $instance.currentState ///////////////////////////////////");
   }
@@ -142,8 +147,9 @@ class SmartMqtt extends ChangeNotifier {
     String clientID = client!.clientIdentifier;
     _instance.currentState = MQTTAppConnectionState.connected;
     setCurrentState(_instance.currentState);
+    connected = true;
     SharedPreferences.getInstance().then((value) {
-      value.setBool("disconnected", false);
+      value.setBool("connected", true);
     });
     print(
         "///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
@@ -661,7 +667,7 @@ class SmartMqtt extends ChangeNotifier {
   @override
   String toString() {
     return '1SmartMqtt{host: $host, port: $port, mqttPass: $mqttPass, username: $username, topicList: $topicList, currentState: $currentState,'
-        'isConnected: $isConnected, userIsLoggedIn: $userIsLoggedIn, debug: $debug, isSaved: $isSaved, newSettingsMessageLoaded: $newSettingsMessageLoaded, newUserSettings: $newUserSettings, alarmInterval: $alarmInterval}';
+        ' userIsLoggedIn: $userIsLoggedIn, debug: $debug, isSaved: $isSaved, newSettingsMessageLoaded: $newSettingsMessageLoaded, newUserSettings: $newUserSettings, alarmInterval: $alarmInterval}';
   } //        ' connectionState: $connectionState, '
 }
 

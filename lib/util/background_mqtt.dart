@@ -57,6 +57,8 @@ class BackgroundMqtt {
       value.setBool("serviceStopped", false);
     });
 
+    SmartMqtt ? smartMqtt;
+
     SmartMqtt.instance.addListener(() {});
     if (service is AndroidServiceInstance) {
       service.on('setAsForeground').listen((event) {
@@ -69,106 +71,101 @@ class BackgroundMqtt {
         debugPrint(">>>>>>> service.setAsBAckgroundService()");
       });
     }
-
     service.on('stopService').listen((event) {
       debugPrint(">>>>>>>stopped service.");
       service.invoke("stopService");
+      if(smartMqtt!.getConnectionState()){
+        smartMqtt?.disconnect();
+        smartMqtt?.dispose();
+      }
       service.stopSelf();
     });
 
     //FlutterBackgroundService().invoke("setAsBackground");
+    DateTime startTime = DateTime.now();
 
-    Timer.periodic(const Duration(seconds: 40), (timer) async {
-      if (service is AndroidServiceInstance) {
-        if (await service.isForegroundService()) {
-          /// OPTIONAL for use custom notification
-          /// the notification id must be equals with AndroidConfiguration when you call configure() method.
-          /*flutterLocalNotificationsPlugin.show(
-                888,
-                'COOL SERVICE',
-                'Awesome ${DateTime.now()}',
-                const NotificationDetails(
-                  android: AndroidNotificationDetails(
-                    'my_foreground',
-                    'MY FOREGROUND SERVICE',
-                    icon: 'ic_bg_service_small',
-                    ongoing: true,
-                  ),
-                ),
-              ); */
+    DateTime currentTime = DateTime.now();
+    debugPrint(" startTime, currentTime $startTime, $currentTime");
+    debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
 
-          // if you don't using custom notification, uncomment this
-         // service.setForegroundNotificationInfo(
-         //   title: "My App Service",
-         //   content: "Updated at ${DateTime.now()}",
-         // );
+    SharedPreferences.getInstance().then((val) {
+      val.reload();
+
+      if(val.getString("username") == null || val.getString("mqtt_pass")== null || val.getString("user_topic_list")==null) {
+        debugPrint("1 - service.stopSelf();");
+        service.stopSelf();
+        return;
+      }
+
+      if( smartMqtt != null) {
+        debugPrint(" 2 - smartMqtt?.getConnectionState() ${smartMqtt?.getConnectionState()}");
+        if(smartMqtt?.getConnectionState() == true )
+        {
+          return;
         }
       }
-      debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
-      /*Alarm alarm = Alarm(
-              sensorAddress: "start connect to client",
-              typ: 2,
-              v: 1,
-              hiAlarm: 10,
-              loAlarm: 2,
-              ts: DateTime.timestamp(),
-              lb: 1,
-              bv: 3,
-              r: 1,
-              l: 3,
-              b: 2,
-              t: 3);
-          NotificationHelper.sendMessage(alarm); */
+      else {
+        debugPrint("3 - smartMqtt == null");
+      }
+      bool? appRunInBackground = val.getBool("appRunInBackground");
+      debugPrint("main.dart appRunInBackground: $appRunInBackground");
+      String? username = val.getString("username");
+      String? password = val.getString("mqtt_pass");
+      String? userTopicList = val.getString("user_topic_list");
+      String? currentState = val.getString("current_state");
+      String? clientIdentifier = val.getString("identifier");
+      debugPrint("//////////////// 1 background_mqtt shared prefs in background: - $currentState, $clientIdentifier, $username, $password, $userTopicList $currentState");
 
-      //debugPrint("///// toString: ${instance.toString()}");
-      SharedPreferences.getInstance().then((val) {
-        //var smartMqtt = val.getString("smart_mqtt");
-        //String smartMqtt1 =json.decode(smartMqtt!);
-        //var smartMqttObj = SmartMqttConnect.fromJson(smartMqtt!);
-        //val?.setBool("appRunInBackground", true);
-        val.reload();
-        bool? appRunInBackground = val.getBool("appRunInBackground");
-        debugPrint("main.dart appRunInBackground: $appRunInBackground");
-        String? username = val.getString("username");
-        String? password = val.getString("pass");
-        String? userTopicList = val.getString("user_topic_list");
-        String? currentState = val.getString("current_state");
-        String? clientIdentifier = val.getString("identifier");
-        bool? connected = val.getBool("connected");
-
-       // SmartMqtt.instance.ping();
-        debugPrint("////////////////background_mqtt shared prefs in background: - $currentState, $clientIdentifier, $username, $password, $userTopicList $currentState");
-        if (username != null && password != null) {
-          /*SmartMqtt(mqttPass: password!,
-             username: username!,
-             topicList: userTopicList,
-             port: Constants.BROKER_PORT,
-             host: Constants.BROKER_IP); */
-        }
-       // if (currentState == null || currentState != "MQTTAppConnectionState.connected") {
-        if (SmartMqtt.instance.username == null && SmartMqtt.instance.mqttPass == null) {
-          debugPrint(" background_mqtt --> ce so zgornji parametri null, potem se bo reconnectal");
-          debugPrint(" background_mqtt --> reconnect username == null && password == null");
-
-          List topics;
-          if (userTopicList != null) {
-            topics = json.decode(userTopicList!);
-           /* SmartMqtt(
-                mqttPass: password!,
-                username: username!,
-                topicList: topics,
-                port: Constants.BROKER_PORT,
-                host: Constants.BROKER_IP);
-            //_reconnectToMqtt();
-            val.setBool("connected", true);
-            val.setBool("disconnected", false); */
-          }
-          else {}
-        }
-      });
-      print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
+      smartMqtt = SmartMqtt(mqttPass: password!,
+          username: username!,
+          topicList: userTopicList,
+          port: Constants.BROKER_PORT,
+          host: Constants.BROKER_IP);
     });
+    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
   }
+
+  /* void callMqttConnect(DateTime startTime, ServiceInstance service) {
+    DateTime currentTime = DateTime.now();
+    debugPrint(" startTime, currentTime $startTime, $currentTime");
+    debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
+
+    SharedPreferences.getInstance().then((val) {
+      val.reload();
+
+      if(val.getString("username") == null || val.getString("mqtt_pass")== null || val.getString("user_topic_list")==null) {
+        debugPrint("1 - service.stopSelf();");
+        service.stopSelf();
+        return;
+      }
+
+      if( smartMqtt != null) {
+        debugPrint(" 2 - smartMqtt?.getConnectionState() ${smartMqtt?.getConnectionState()}");
+        if(smartMqtt?.getConnectionState() == true )
+        {
+         return;
+        }
+      }
+      else {
+        debugPrint("3 - smartMqtt == null");
+      }
+      bool? appRunInBackground = val.getBool("appRunInBackground");
+      debugPrint("main.dart appRunInBackground: $appRunInBackground");
+      String? username = val.getString("username");
+      String? password = val.getString("mqtt_pass");
+      String? userTopicList = val.getString("user_topic_list");
+      String? currentState = val.getString("current_state");
+      String? clientIdentifier = val.getString("identifier");
+      debugPrint("//////////////// 1 background_mqtt shared prefs in background: - $currentState, $clientIdentifier, $username, $password, $userTopicList $currentState");
+
+      smartMqtt = SmartMqtt(mqttPass: password!,
+          username: username!,
+          topicList: userTopicList,
+          port: Constants.BROKER_PORT,
+          host: Constants.BROKER_IP);
+    });
+    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
+  } */
 
   @pragma('vm:entry-point')
   Future<void> initializeService(service) async {

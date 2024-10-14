@@ -80,6 +80,9 @@ class _LoginFormValidationState extends State<LoginForm> {
   final emailController = TextEditingController(text: "");
   final passwordController = TextEditingController(text: "");
 
+  //bool run =  SharedPreferences
+
+
   @override
   Widget build(BuildContext context) {
     //bool network = true;
@@ -439,16 +442,24 @@ class _LoginFormValidationState extends State<LoginForm> {
           String l = generateRandomString(10);
           //String identifier = "_12apxeeejjjewg";
           String identifier = l.toString();
-          SmartMqtt(
+          /*SmartMqtt(
               mqttPass: user.mqtt_pass,
               username: username,
               topicList: userTopicList,
               port: Constants.BROKER_PORT,
-              host: Constants.BROKER_IP);
+              host: Constants.BROKER_IP); */
           /** saving user data in shared prefs **/
 
-          await BackgroundMqtt(flutterLocalNotificationsPlugin)
-              .initializeService(service);
+          if(await service.isRunning()){
+            print("---- login isRunning");
+            debugPrint("---- login isRunning");
+          }
+          else {
+            debugPrint("---- login notRunning");
+            print("---- notRunning");
+            await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
+                service);
+          }
           //await smartMqtt.initializeMQTTClient();
           // inicializiraj servis za posiljanje sporocil
           await NotificationHelper.initializeService();
