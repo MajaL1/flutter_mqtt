@@ -257,17 +257,16 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       String newUserSettings) async {
     String? parsedCurrentMqttSettings =
         await SharedPreferences.getInstance().then((val) {
-      return val.getString("parsed_current_mqtt_settings");
+      return val.getString("current_mqtt_settings");
     });
     List<UserDataSettings> userDataSettings = [];
 
     // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings" iz storage
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {
-      List jsonMap1 = json.decode(parsedCurrentMqttSettings!);
-      userDataSettings =
-          jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
-      //debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
+      //Map jsonMap1 = json.decode(parsedCurrentMqttSettings!);
+      userDataSettings =  UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings);
+      debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
       return userDataSettings;
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
