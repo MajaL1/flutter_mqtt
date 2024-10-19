@@ -139,7 +139,7 @@ class ApiService {
               username: data["username"],
               date_login: DateTime.now(),
               date_register: DateTime.now(),
-              email: 'test@test.com',
+              email: data["email"],
               mqtt_pass: data["mqtt_pass"],
               userTopicList: userTopicList);
           return user;
@@ -195,8 +195,6 @@ class ApiService {
   }
 
   static Future<bool> startService() async {
-
-
     if(await service.isRunning()){
       print("----isRunning");
       debugPrint("----isRunning");
@@ -215,7 +213,7 @@ class ApiService {
     final result = await BackgroundMqtt.stopMqttService();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("serviceStopped", true);
-    service.invoke("stopService");
+    //service.invoke("stopService");
     var isRunning;
     int i = 5;
     while(i > 0) {

@@ -45,7 +45,7 @@ class SmartMqtt extends ChangeNotifier {
 
   static SmartMqtt get instance => _instance;
 
-  factory SmartMqtt(
+   factory SmartMqtt(
       {required String host,
       required int port,
       required String username,
@@ -58,9 +58,21 @@ class SmartMqtt extends ChangeNotifier {
     List topics = json.decode(topicList);
     _instance.topicList = topics;
     _instance.initializeMQTTClient();
-    debugPrint("SMARTMQTT constructor");
-    return _instance;
+    //debugPrint("SMARTMQTT constructor;, client: ${_instance.client}");
+   return _instance;
   }
+ // SmartMqtt._internal() {    // initialization logic
+     //initializeMQTTClient();
+  //}
+
+  //static SmartMqtt getInstance() {
+   // return _instance;
+ // }
+
+
+  // void setMqtt(SmartMqtt mqtt){
+   // _instance = mqtt;
+  //}
 
   bool getConnectionState(){
     return connected;
@@ -90,8 +102,13 @@ class SmartMqtt extends ChangeNotifier {
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
     // find settings topic
+   // MqttServerClient ? c = getClient();
+    //debugPrint("11:::smartmqtt: $_instance");
+    //debugPrint("11:::client: $client");
+    //debugPrint("11:::c: $c");
 
-    debugPrint("publishing to current topic: $topicName, message: $message");
+    debugPrint("1:::client:::  ${_instance.client}, ${instance.client}");
+    //debugPrint("publishing to current topic: $topicName, message: $message, 2client: ${_instance.client}");
     isSaved = true;
     client!.publishMessage(topicName, MqttQos.exactlyOnce, builder.payload!);
     //notifyListeners();
@@ -486,7 +503,16 @@ class SmartMqtt extends ChangeNotifier {
     return lastSentAlarm;
   }
 
-  Future<MqttServerClient> initializeMQTTClient() async {
+  MqttServerClient? getClient(){
+    return client;
+  }
+
+  void setClient(MqttServerClient c){
+    debugPrint("setting MqttServerClient");
+     client = c;
+  }
+
+  MqttServerClient initializeMQTTClient()  {
     debugPrint(" calling smart_mqtt.dart - initializeMQTTClient");
     String osPrefix = 'Flutter_iOS';
     // if (Platform.isAndroid()) {

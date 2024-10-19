@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,6 +44,17 @@ class BackgroundMqtt {
   static Future<void> stopMqttService() async {
      service.invoke("stopService");
     //return result;
+  }
+  @pragma('vm:entry-point')
+  static Future<bool> publish(String message, String topicName) async{
+    service.invoke("blalala", {
+      "message": message,
+      "topic": topicName,
+    },);
+
+    //debugPrint("BackgroundMqtt: publish: ${BackgroundMqtt.smartMqtt}");
+    //BackgroundMqtt.smartMqtt?.publish(message, topicName);
+    return true;
   }
 
   @pragma('vm:entry-point')
@@ -81,6 +93,27 @@ class BackgroundMqtt {
       service.stopSelf();
     });
 
+    //StreamBuilder<Map<String, dynamic>?>(
+    //  stream:
+    service.on('blalala').listen((event) {
+      if(event!= null) {
+        debugPrint("event: $event, $smartMqtt");
+        String  message = event["message"];
+        String ? topic = event["topic"];
+        smartMqtt?.publish(message!, topic!);
+      }
+    //  String ? topic = event[1];
+    //  smartMqtt?.publish(message!, topic!);
+    /*  builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          String? message = data["message"];
+          String? topic = data["topic"];
+          debugPrint("---blallala: $message, $topic");
+        }*/
+       // return Container();
+      });
+   // );
     //FlutterBackgroundService().invoke("setAsBackground");
     DateTime startTime = DateTime.now();
 
@@ -121,6 +154,10 @@ class BackgroundMqtt {
           topicList: userTopicList,
           port: Constants.BROKER_PORT,
           host: Constants.BROKER_IP);
+      //MqttServerClient ? client = smartMqtt?.initializeMQTTClient();
+      //debugPrint("::SmartMqtt.initalizeClient: $client");
+      //smartMqtt?.setClient(client!);
+
     });
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
   }

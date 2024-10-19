@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/model/user_topic.dart';
+import 'package:mqtt_test/util/background_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
 import 'package:provider/provider.dart';
@@ -107,14 +109,19 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   @override
   void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
     super.initState();
     // SmartMqtt.instance.isSaved = false;
     debugPrint("user_settings initState");
     initializePreference();
     SharedPreferences.getInstance().then((value) {
+      value.reload();
       //value.getString("data_mqtt_list");
       //  debugPrint(
       //    "###################: ${value.getString("parsed_current_mqtt_settings")}");
+    });
+    setState(() {
+
     });
 
     // debugPrint("got Mqtt Data: $dataMqtt");
@@ -184,7 +191,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       ),
       Wrap(children: [
         SizedBox(
-            width: 150,
+            width: 100,
             height: 40,
             child: TextFormField(
               inputFormatters: [
@@ -255,18 +262,36 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(
       String newUserSettings) async {
+
+    SharedPreferences.resetStatic();
     String? parsedCurrentMqttSettings =
         await SharedPreferences.getInstance().then((val) {
-      return val.getString("current_mqtt_settings");
+        return val.getString("current_mqtt_settings");
     });
+    String? parsedCurrentMqttSettings1 =
+    await SharedPreferences.getInstance().then((val) {
+      return val.getString("parsed_current_mqtt_settings");
+    });
+    //debugPrint("#### 2parsedCurrentMqttSettings ${parsedCurrentMqttSettings}");
+    //debugPrint("#### parsedCurrentMqttSettings1 ${parsedCurrentMqttSettings1}");
+
     List<UserDataSettings> userDataSettings = [];
 
     // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings" iz storage
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {
       //Map jsonMap1 = json.decode(parsedCurrentMqttSettings!);
-      userDataSettings =  UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings);
-      debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
+      if(parsedCurrentMqttSettings != null) {
+        try {
+          userDataSettings =
+              UserDataSettings.getUserDataSettingsList(
+                  parsedCurrentMqttSettings);
+        }
+        catch (e) {
+          debugPrint("error:::: ${e}");
+        }
+      }
+      //debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
       return userDataSettings;
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
@@ -280,8 +305,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         List<UserDataSettings> parsedUserDataSettingsList =
             settings.cast<UserDataSettings>();
 
-        debugPrint(
-            "===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
+       // debugPrint("===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
 
         // ce trenutni settingi niso prazni in ce novi settingi niso prazni
         if (newUserSettings != null) {
@@ -316,8 +340,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           value.setString("parsed_current_mqtt_settings", json0);
         });
       }
-      debugPrint(
-          "=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
+      //debugPrint("=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
 
       return userDataSettings;
     }
@@ -349,9 +372,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: //Provider.of<SmartMqtt>(context, listen: true)
-          //.getNewUserSettingsList()
-          _getNewUserSettingsList()
+      future: Provider.of<SmartMqtt>(context, listen: true)
+          .getNewUserSettingsList()
+         // _getNewUserSettingsList()
               //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
               .then((dataSettingsList) =>
                   _checkAndPairOldSettingsWithNew(dataSettingsList))
@@ -564,7 +587,11 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           //return const CircularProgressIndicator();
 
         } */
-        return const CircularProgressIndicator();
+        else{
+          debugPrint("00000 snapshot no data");
+
+        }
+        return const CircularProgressIndicator(color: Colors.green,);
       },
     );
   }
@@ -580,7 +607,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     List<UserTopic> userTopicList = [];
     // dobivanje liste topicov s settingsi rw
     // potrebujemo, da vemo, katere nastavitve prikazemo kot read only
-    //debugPrint("---userTopicListRw $userTopicListRw");
+    debugPrint("---userTopicListRw $userTopicListRw");
     List jsonMapTopic = json.decode(userTopicListRw!);
     //debugPrint("---userTopicListRw LIST $jsonMapTopic");
 
@@ -765,13 +792,16 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       String settingToChange) {
     String value = controller.text;
 
-    //debugPrint(
-    //   "saveMqttSettings: deviceName: ${deviceAddress}, sensorName: $sensorName, ${controller.text}, $sensorName, $settingToChange");
+    debugPrint("saveMqttSettings: deviceName: ${deviceAddress}, sensorName: $sensorName, ${controller.text}, $sensorName, $settingToChange");
     //var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
-    //debugPrint("concatenated text: $publishText");
+    debugPrint("concatenated text: $publishText");
 
-    SmartMqtt.instance.publish(publishText, "$deviceAddress/settings");
+    //debugPrint("22::::smartmqtt: ${SmartMqtt.instance}");
+    //debugPrint("22:::client: ${.SmartMqtt.instance}");
+    //SmartMqtt.instance.publish(publishText, "$deviceAddress/settings");
+    BackgroundMqtt.publish(publishText, "$deviceAddress/settings");
+    // SmartMqtt.instance.publish(publishText, "$deviceAddress/settings");
 
     /*Future.delayed(const Duration(milliseconds: 2000), () {
       setState(() {});

@@ -35,6 +35,8 @@ class _NavDrawerState extends State<NavDrawer> {
   initState() {
     WidgetsFlutterBinding.ensureInitialized();
     super.initState();
+    SharedPreferences.resetStatic();
+
     //initial();
     //setState(() {
 

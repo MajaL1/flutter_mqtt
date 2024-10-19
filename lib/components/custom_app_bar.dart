@@ -60,6 +60,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   return IconButton(
                     icon: Icon(Icons.menu),
                     onPressed: () {
+                      SharedPreferences.resetStatic();
                       SharedPreferences.getInstance().then((val){
                         //val.reload();
                         setState(() {
@@ -88,9 +89,17 @@ class _CustomAppBarState extends State<CustomAppBar> {
             foregroundColor: Colors.lightBlue,
             title: Container(
                 //decoration: //Utils.buildAppBarDecoration(),
-                child: Text("${widget.title} $username $email",
-              style: const TextStyle(
-                  fontSize: 16, color: Colors.white, letterSpacing: 1),
-            ))));
+                child: Row( children: [
+                Text("${widget.title}",
+                    style: const TextStyle(
+                  fontSize: 16, color: Colors.white, letterSpacing: 1)),
+                  Text("  $username $email",
+                      style: const TextStyle(
+                          fontSize: 12, color: Colors.white, letterSpacing: 1)),
+                  const Text("            v_2024-16-10",
+                        style: TextStyle(
+                            fontSize: 8, color: Colors.white )
+            )]))
+    ));
   }
 }

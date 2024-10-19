@@ -38,7 +38,7 @@ class Utils {
 
   static int compareDatesInMinutes(DateTime oldDate, DateTime newDate) {
     var diff = newDate.difference(oldDate).inMinutes;
-    debugPrint("diff: $diff");
+    //debugPrint("diff: $diff");
     return diff;
   }
 

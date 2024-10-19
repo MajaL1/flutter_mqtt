@@ -201,7 +201,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
           isEnabledSave = true;
           notifier.value = isEnabledSave;
         }
-        debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
+        //debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
         setState(() {
           dropdownValue = val!;
         });
