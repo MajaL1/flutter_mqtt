@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-//import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/user_topic.dart';
@@ -23,10 +23,11 @@ import '../util/gui_utils.dart';
 import '../util/utils.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm.base({Key? key}) : super(key: key);
+  LoginForm.base({Key? key}) : super(key: key);
 
   @override
   State<LoginForm> createState() => _LoginFormValidationState();
+  late String? connectionStatusText = "";
 
 // final VoidCallback _onPressed;
 }
@@ -52,9 +53,8 @@ class LoginForm extends StatefulWidget {
 } */
 
 class _LoginFormValidationState extends State<LoginForm> {
-  //InternetStatus? _connectionStatus;
-  //String? connectionStatusText;
-  //late StreamSubscription<InternetStatus> _subscription;
+  InternetStatus? _connectionStatus;
+  late StreamSubscription<InternetStatus> _subscription;
   bool isLoading = false;
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -108,15 +108,15 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   Container(
                                       //color: Colors.amber,
                                       padding: const EdgeInsets.only(
-                                          top: 0, bottom: 0),
-                                      /*child: Text(
-                                        connectionStatusText != null
-                                            ? connectionStatusText!
+                                          top: 40, bottom: 0),
+                                      child: Text(
+                                        widget.connectionStatusText != null
+                                            ? widget.connectionStatusText!
                                             : "",
                                         style: const TextStyle(
                                             color: Colors.redAccent,
                                             fontSize: 14),
-                                      )*/),
+                                      )),
                                   Padding(
                                       padding: const EdgeInsets.only(
                                           top: 40.0, bottom: 40),
@@ -171,9 +171,8 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               //controller: emailController,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  usernameVal =
-                                                      value; // Update the _inputText whenever the user types
-                                                });
+                                                  usernameVal =value; // Update the _inputText whenever the user types
+                                                  });
                                               },
                                               validator: MultiValidator([
                                                 RequiredValidator(
@@ -231,24 +230,31 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                   style: GuiUtils
                                                       .buildElevatedButtonLogin(),
                                                   onPressed: () async {
-                                                    if (usernameVal.isEmpty &&
-                                                        passwordVal.isEmpty) {usernameVal = emailText;
-                                                      passwordVal =
-                                                          passwordText;
+                                                    if (usernameVal.isEmpty){
+                                                        usernameVal = emailText;
                                                     }
-
-
+                                                    if (passwordVal.isEmpty){
+                                                      passwordVal = passwordText;
+                                                    }
                                                     notificationPermissionGranted()
                                                         .then((val) async {
                                                       debugPrint(
                                                           "notificationPermissionGranted: $val");
-                                                      bool loginStatus = await login(usernameVal,
+                                                      bool isError = await login(usernameVal,
                                                           passwordVal);
+                                                      debugPrint("loginStatus $isError");
+                                                      if(isError) {
+                                                        setState(() {
+                                                          isLoading = false;
+                                                        });
+                                                      }
+
                                                     });
                                                     if (!mounted) return;
                                                     setState(() {
                                                       isLoading = true;
                                                     });
+
                                                   },
                                                   child: const Text(
                                                     'Login',
@@ -389,13 +395,13 @@ class _LoginFormValidationState extends State<LoginForm> {
   initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    /*_subscription = InternetConnection().onStatusChange.listen((status) {
+    _subscription = InternetConnection().onStatusChange.listen((status) {
       setState(() {
         _connectionStatus = status;
-        connectionStatusText =
+        widget.connectionStatusText =
             status == InternetStatus.connected ? "" : "No internet connection";
       });
-    });*/
+    });
     debugPrint("-- loginform initstate");
   }
 
@@ -497,6 +503,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     } else {
       return false;
     }
+    debugPrint("loginError: $loginError");
     return loginError;
   }
 
