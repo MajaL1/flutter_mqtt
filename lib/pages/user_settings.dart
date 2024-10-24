@@ -53,7 +53,9 @@ class _UserSettingsState extends State<UserSettings> {
       });
       //val.reload();
       setState(() {
-        email = val.getString("email")! ?? "";
+        if(email!= null) {
+          email = val.getString("email")! ?? "";
+        }
       });
     });
 

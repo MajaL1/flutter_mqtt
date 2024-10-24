@@ -47,7 +47,7 @@ class BackgroundMqtt {
   }
   @pragma('vm:entry-point')
   static Future<bool> publish(String message, String topicName) async{
-    service.invoke("blalala", {
+    service.invoke("invokeOnPublish", {
       "message": message,
       "topic": topicName,
     },);
@@ -95,7 +95,7 @@ class BackgroundMqtt {
 
     //StreamBuilder<Map<String, dynamic>?>(
     //  stream:
-    service.on('blalala').listen((event) {
+    service.on('invokeOnPublish').listen((event) {
       if(event!= null) {
         debugPrint("event: $event, $smartMqtt");
         String  message = event["message"];

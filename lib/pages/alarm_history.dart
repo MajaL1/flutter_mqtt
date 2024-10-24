@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mqtt_test/api/api_service.dart';
+import 'package:mqtt_test/api/notification_helper.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/custom_app_bar.dart';
@@ -27,7 +29,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Alarm> _returnAlarmList(List<Alarm> alarmList) {
-    //debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
+    debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
+    //alarm history - getRefreshedAlarmList()
     return alarmList;
   }
 
@@ -59,9 +62,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarmsHistory()
-          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList))
-          .then((alarmHistoryList) =>
-              _pairAlarmListWithSettings(alarmHistoryList)),
+          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)),
+        //  .then((alarmHistoryList) => getRefreshedAlarmList())
+          //.then((alarmHistoryList) =>
+          //    _pairAlarmListWithSettings(alarmHistoryList!)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -334,6 +338,35 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         return const CircularProgressIndicator();
       },
     );
+  }
+
+  // pridobi novo listo alarmov, iz preferenc
+  Future<List<Alarm>?> getRefreshedAlarmList() async {
+    debugPrint("alarm history - getRefreshedAlarmList::");
+    //List refreshedAlarms = [];
+    List<Alarm>? alarmList = [];
+
+    alarmList = await Provider.of<NotificationHelper>(context, listen: true).getRefreshedAlarmList();
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.reload();
+    if (preferences.containsKey("alarm_list_mqtt")) {
+      String alarmListData = preferences.get("alarm_list_mqtt") as String;
+      if (alarmListData.isNotEmpty) {
+        List alarmMessageJson = json.decode(alarmListData);
+        alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
+        debugPrint("1alarm history - alarmList: ${alarmList}");
+
+      }
+      //debugPrint("alarmList-:: $alarmList");
+    }
+   /* if (refreshedAlarms != null) {
+      return refreshedAlarms;
+    }
+    return refreshedAlarms; */
+    debugPrint("2alarm history - alarmList: ${alarmList}");
+
+    return alarmList;
   }
 
   // nastavi friendly name v listi history alarmov

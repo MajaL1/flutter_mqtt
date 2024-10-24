@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:mqtt_test/util/background_mqtt.dart';
 
+import 'api/notification_helper.dart';
 import 'model/alarm.dart';
 import 'model/constants.dart';
 import 'pages/first_screen.dart';
@@ -279,7 +280,9 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
           //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
           ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
           ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
-         // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
+          ChangeNotifierProvider(create: (context) => NotificationHelper.instance),
+
+          // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
         ],
         builder: (context, child) => Builder(builder: (context) {
               //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);

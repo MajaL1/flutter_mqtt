@@ -39,7 +39,7 @@ class ApiService {
         List alarmMessageJson = json.decode(alarmListData);
         alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
       }
-      //debugPrint("alarmList-:: $alarmList");
+      debugPrint("alarmList-:: $alarmList");
     }
     alarmList.add(Alarm());
     alarmList = alarmList.reversed.toList();
@@ -109,12 +109,14 @@ class ApiService {
     }
   } */
 
-  static Future<User?> login(String email, password) async {
+  static Future<User?> login(String username, password) async {
     try {
+      debugPrint('=====Logging in ... $username, $password');
+
       Response response = await post(
           Uri.parse('http://test.navis-livedata.com:1002/api/auth.php'),
           body: {
-            'login_username': email,
+            'login_username': username,
             'login_password': password,
             'login': '123'
           },
@@ -145,13 +147,17 @@ class ApiService {
           return user;
         }
       } else {
-        debugPrint('=====Login failed');
+        debugPrint('=====Login failed $username, $password');
         return null;
       }
     } catch (e) {
+      debugPrint('=====Login failed exception $username, $password');
+
       debugPrint(e.toString());
       return null;
     }
+    debugPrint('=====Login failed returning null $username, $password');
+
     return null;
   }
 

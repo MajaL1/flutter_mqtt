@@ -21,9 +21,15 @@ import '../model/alarm.dart';
 import '../util/utils.dart';
 import '../widgets/units.dart';
 
-class NotificationHelper extends StatelessWidget {
-  const NotificationHelper({Key? key}) : super(key: key);
+class NotificationHelper extends ChangeNotifier {
+  //const NotificationHelper; //: super();
   static FlutterBackgroundService service = FlutterBackgroundService();
+
+
+  static final NotificationHelper _instance = NotificationHelper._internal();
+
+  NotificationHelper._internal();
+  static NotificationHelper get instance => _instance;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +37,8 @@ class NotificationHelper extends StatelessWidget {
   }
 
   static Future<void> initializeService() async {
+
+
     //service = FlutterBackgroundService();
 
     String eventID = "as432445GFCLbd2in1en21093";
@@ -145,7 +153,7 @@ class NotificationHelper extends StatelessWidget {
     return true;
   }
 
-  static Future<void> sendMessage(Alarm? alarmMessage) async {
+   Future<void> sendMessage(Alarm? alarmMessage) async {
     debugPrint("Sending alarm: NotificationHelper.sendMessage");
     String? friendlyName = alarmMessage?.friendlyName;
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
@@ -169,7 +177,12 @@ class NotificationHelper extends StatelessWidget {
     //       "**************************alarm sending message  message: $alarmMessage");
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
-   String? name = (friendlyName!= null && friendlyName!.isNotEmpty) ? friendlyName : "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
+   String? name = (friendlyName!= null && friendlyName!.isNotEmpty) ? friendlyName : "";
+   if(name.isEmpty) {
+     name = "device: ${deviceName}, sensor:  ${sensorAddress}";
+   }
+
+       //: "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
     //debugPrint(" 4444 friendlyName: , $friendlyName, na,me: $name");
 
     AndroidNotificationDetails androidNotificationDetails =
@@ -201,32 +214,14 @@ class NotificationHelper extends StatelessWidget {
 
     String eventID = "as432445GFCLbd2in1en2103";
     int notificationId = eventID.hashCode;
-    //Text text1 = Text("Alarm value: $v", style: TextStyle(fontWeight: FontWeight.bold));
-    // Text text2 = Text("$alarmValue", style: TextStyle(fontWeight: FontWeight.bold));
-    //Text text3 = Text("$sensorAddress", style: TextStyle(fontWeight: FontWeight.bold));
 
-    //String ?t1 = text1.data;
-    //String ?t2 = text2.data;
-    //String ?t3 = text3.data;
-
-    //final int minutes = timeIntervalMinutes;
-
-    debugPrint("showing alarm...");
-
-    /*await flutterLocalNotificationsPlugin.zonedSchedule(
-        notificationId,
-        "Alarm from: $sensorAddress, $deviceName",
-        //"$t1 \n $t2 \n$t3",
-        "v: $v $units, $alarmValue \n$formattedDate",
-        //DateTime.now(),
-        tz.TZDateTime.now(slovenia).add(Duration(seconds: 5)),
-        notificationDetails,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime); */
+    debugPrint("showing alarm... ${alarmMessage}");
 
     await flutterLocalNotificationsPlugin.show(
-        notificationId, "Alarm from: $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
+        notificationId, "Alarm from $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
+      notifyListeners();
   }
+
 
   void onDidReceiveNotificationResponse(
       NotificationResponse notificationResponse) async {
@@ -275,5 +270,21 @@ class NotificationHelper extends StatelessWidget {
     });
 
     tzl.initializeTimeZones();
+  }
+
+  @override
+  void addListener(VoidCallback listener) {
+    // TODO: implement addListener
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+  }
+
+  Future<List<Alarm>?> getRefreshedAlarmList() async {
+    List<Alarm> refreshedAlarmList = [];
+    // return shared prefs
+    return refreshedAlarmList;
   }
 }

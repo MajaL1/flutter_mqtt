@@ -198,7 +198,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
                       ApiService.logout();
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (context) => const LoginForm.base()),
+                              builder: (context) => LoginForm.base()),
                           (route) => false);
                     },
                     child: const Text('OK'),
