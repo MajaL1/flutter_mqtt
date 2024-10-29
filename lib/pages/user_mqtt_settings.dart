@@ -379,9 +379,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: Provider.of<SmartMqtt>(context, listen: true)
-          .getNewUserSettingsList()
-         // _getNewUserSettingsList()
+      future:// Provider.of<SmartMqtt>(context, listen: true)
+          //.getNewUserSettingsList()
+          _getNewUserSettingsList()
               //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
               .then((dataSettingsList) =>
                   _checkAndPairOldSettingsWithNew(dataSettingsList))
@@ -827,37 +827,34 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     debugPrint("saving friendly name...$friendlyName");
 
     String? mqttSettings =
-        preferences?.getString("current_mqtt_settings");
+        preferences?.getString("parsed_current_mqtt_settings");
     List<UserDataSettings> userDataSettingsList;
     bool isDecode = true;
-    if (mqttSettings?.compareTo("[]") != 0) {
-      mqttSettings = preferences?.getString("current_mqtt_settings");
-      //debugPrint("saving friendly name...mqttSettings oldSettings: $mqttSettings");
-      if (mqttSettings!.contains("\\")) {
-        isDecode = false;
-      }
-      Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
-      userDataSettingsList = UserDataSettings.getUserDataSettings(jsonMap);
-      //List jsonMap1 = json.decode(mqttSettings!);
-      //userDataSettingsList =  jsonMap.map(convert`)UserDataSettings.fromJson(jsonMap);
-         // jsonMap.map((val) => UserDataSettings.fromJson(val));
-    } else {
-      mqttSettings = preferences?.getString("current_mqtt_settings");
-      Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
-      // debugPrint("get user data from json decode message");
 
-      userDataSettingsList =
-          await UserDataSettings.getUserDataSettings(jsonMap);
-    }
+      mqttSettings = preferences?.getString("parsed_current_mqtt_settings");
+      if (mqttSettings == null){
+         mqttSettings = preferences?.getString("current_mqtt_settings");
+         Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
+         userDataSettingsList = UserDataSettings.getUserDataSettings(jsonMap);
+      }
+      else {
+        var jsonMap1 = json.decode(mqttSettings!); //jsonMap.runtimeType
+
+        List settings = jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+        userDataSettingsList = settings.cast<UserDataSettings>();
+      }
+      //debugPrint("saving friendly name...mqttSettings oldSettings: $mqttSettings");
+
+
+
+    debugPrint("===1  userDataSettingsList: $userDataSettingsList");
     //debugPrint("get json from preferences $userDataSettingsList");
 
-    UserDataSettings currentSensor =
-        getSensorChange(userDataSettingsList, deviceName, sensorAddress);
+    UserDataSettings currentSensor = getSensorChange(userDataSettingsList, deviceName, sensorAddress);
     currentSensor.friendlyName = friendlyName;
     debugPrint("friendlyName, changed, lise $userDataSettingsList");
 
-    var json0 = json.encode(
-        List<dynamic>.from(userDataSettingsList.map((x) => x.toJson())));
+    var json0 = json.encode(List<dynamic>.from(userDataSettingsList.map((x) => x.toJson())));
 
     preferences?.remove("parsed_current_mqtt_settings");
     preferences?.setString("parsed_current_mqtt_settings", json0);
