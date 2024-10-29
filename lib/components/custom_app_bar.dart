@@ -74,7 +74,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   return IconButton(
                     icon: Icon(Icons.menu),
                     onPressed: () {
-                      SharedPreferences.resetStatic();
+                      //SharedPreferences.resetStatic();
                       SharedPreferences.getInstance().then((val){
                         //val.reload();
                         setState(() {

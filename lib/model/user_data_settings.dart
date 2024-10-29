@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 class UserDataSettings {
   String? deviceName;
   String? sensorAddress;
@@ -149,7 +151,7 @@ class UserDataSettings {
     List<UserDataSettings> userSettingsList = [];
     for (String key in json.keys) {
       //print("key:  $key");
-      if (key.isNotEmpty) {
+      if (key.isNotEmpty && key != "ts") {
         Map value = json[key];
         //print("value:  $value");
         if (key.isNotEmpty) {
@@ -303,7 +305,7 @@ class UserDataSettings {
       );
       userDataSettingsList.add(userDataSet);
     }
-    //debugPrint("### $userDataSettingsList");
+    debugPrint("### returning userDataSettingsList $userDataSettingsList");
     return userDataSettingsList;
   }
 }

@@ -199,7 +199,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               String formattedDate = "";
 
                               if (snapshot.data![index].ts != null) {
-                                formattedDate = DateFormat('yyyy-MM-dd – kk:mm')
+                                formattedDate = DateFormat('yyyy-MM-dd – hh:mm')
                                     .format(snapshot.data![index].ts!);
                               }
                               //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);

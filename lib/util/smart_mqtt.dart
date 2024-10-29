@@ -440,8 +440,9 @@ class SmartMqtt extends ChangeNotifier {
       };
       if (newUserSettings != null || newUserSettings.isNotEmpty) {
         newUserSettings = json.encode(concatenatedSettings);
-        debugPrint("notifying listeners.. $newUserSettings");
+        debugPrint("notifying listeners 0.. $newUserSettings");
         preferences.setString("current_mqtt_settings", newUserSettings);
+        await setNewUserSettings(newSettings);
         notifyListeners();
       }
 
@@ -607,7 +608,7 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<void> setNewUserSettings(Map concatenatedSettings) async {
     newUserSettings = json.encode(concatenatedSettings);
-    debugPrint("map: ${concatenatedSettings}");
+    debugPrint("setting new user settings: ${concatenatedSettings}");
   }
 
   Future<void> setAlarmIntervalSettings(String interval) async {

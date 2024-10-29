@@ -262,37 +262,40 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(
       String newUserSettings) async {
-
-    SharedPreferences.resetStatic();
     String? parsedCurrentMqttSettings =
         await SharedPreferences.getInstance().then((val) {
-        return val.getString("current_mqtt_settings");
+      return val.getString("current_mqtt_settings");
     });
     String? parsedCurrentMqttSettings1 =
     await SharedPreferences.getInstance().then((val) {
       return val.getString("parsed_current_mqtt_settings");
     });
-    //debugPrint("#### 2parsedCurrentMqttSettings ${parsedCurrentMqttSettings}");
-    //debugPrint("#### parsedCurrentMqttSettings1 ${parsedCurrentMqttSettings1}");
-
     List<UserDataSettings> userDataSettings = [];
 
     // 1. ce so newUserSettings null, vrni "parsed_current_mqtt_settings" iz storage
     // to se zgodi, ko drugic, tretjic odpremo aplikacijo
     if (newUserSettings == null || newUserSettings.isEmpty) {
       //Map jsonMap1 = json.decode(parsedCurrentMqttSettings!);
-      if(parsedCurrentMqttSettings != null) {
-        try {
-          userDataSettings =
-              UserDataSettings.getUserDataSettingsList(
-                  parsedCurrentMqttSettings);
+      try {
+        debugPrint("===0 _checkAndPairOldSettingsWithNew ?? NULL ??");
+        debugPrint("===0 _checkAndPairOldSettingsWithNew userDataSettings $userDataSettings, new is empty: ${newUserSettings.isEmpty}");
+        debugPrint("===0 parsedCurrentMqttSettings:$parsedCurrentMqttSettings, parsedCurrentMqttSettings1: $parsedCurrentMqttSettings1");
+
+        if(parsedCurrentMqttSettings1 == null){
+          userDataSettings = UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings);
+          return userDataSettings;
         }
-        catch (e) {
-          debugPrint("error:::: ${e}");
-        }
+
+        var jsonMap = json.decode(parsedCurrentMqttSettings1!); //jsonMap.runtimeType
+
+        List settings = jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
+        userDataSettings = settings.cast<UserDataSettings>();
+        debugPrint("===0 _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
+        return userDataSettings;
+      }catch (e, stacktrace) {
+        debugPrint("error:::: ${e},:: $stacktrace ");
+        return [];
       }
-      //debugPrint("=== _checkAndPairOldSettingsWithNew === newUserSettings == null, userDataSettings $userDataSettings");
-      return userDataSettings;
     } else {
       // preveri, al je vsebina newUserSettings in parsedCurrentMqttSettings enaka!
       // ce je vsebina enaka, vrni dekodirane parsedCurrentMqttSettings
@@ -305,7 +308,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         List<UserDataSettings> parsedUserDataSettingsList =
             settings.cast<UserDataSettings>();
 
-       // debugPrint("===  parsedUserDataSettingsList: $parsedUserDataSettingsList");
+        debugPrint("===1  parsedUserDataSettingsList: $parsedUserDataSettingsList");
 
         // ce trenutni settingi niso prazni in ce novi settingi niso prazni
         if (newUserSettings != null) {
@@ -320,27 +323,31 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         userDataSettings =
             UserDataSettings.getUserDataSettingsList(newUserSettings);
         SharedPreferences.getInstance().then((value) {
-          var json1 = json.encode(
-              List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
+          var json1 = json.encode(List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
 
           value.setString("parsed_current_mqtt_settings", json1);
+         // value.setString("current_mqtt_settings", json1);
+          debugPrint("===1-1 userDataSettings!=null, vzame diff - userDataSettings: $parsedUserDataSettingsList");
         });
         // }
       } else {
         // ce vsebina ni enaka, vzemi  newUserSettings,
         // naredi objekt UserDataSettings in klici pairOldSettingsWithNew(zaradi friendly name)
         // ne rabimo klicati pairOldSettingsWithNew, to naredimo v
-        userDataSettings =
-            UserDataSettings.getUserDataSettingsList(newUserSettings);
+        userDataSettings = UserDataSettings.getUserDataSettingsList(newUserSettings);
         SharedPreferences.getInstance().then((value) {
           String str = json.encode(userDataSettings);
           var json0 = json.encode(
               List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
 
           value.setString("parsed_current_mqtt_settings", json0);
+          //value.setString("current_mqtt_settings", json0);
+
+          debugPrint("===1-2 parsedUserSettings ==null, vzame samo newUserSettings: $json0");
+
         });
       }
-      //debugPrint("=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
+      debugPrint("=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
 
       return userDataSettings;
     }
@@ -589,6 +596,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         } */
         else{
           debugPrint("00000 snapshot no data");
+          return const CircularProgressIndicator(color: Colors.yellow,);
 
         }
         return const CircularProgressIndicator(color: Colors.green,);
@@ -819,20 +827,20 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     debugPrint("saving friendly name...$friendlyName");
 
     String? mqttSettings =
-        preferences?.getString("parsed_current_mqtt_settings");
+        preferences?.getString("current_mqtt_settings");
     List<UserDataSettings> userDataSettingsList;
     bool isDecode = true;
     if (mqttSettings?.compareTo("[]") != 0) {
-      mqttSettings = preferences?.getString("parsed_current_mqtt_settings");
+      mqttSettings = preferences?.getString("current_mqtt_settings");
       //debugPrint("saving friendly name...mqttSettings oldSettings: $mqttSettings");
       if (mqttSettings!.contains("\\")) {
         isDecode = false;
       }
-      //Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
-      //userDataSettingsList = UserDataSettings.getUserDataSettings(jsonMap);
-      List jsonMap1 = json.decode(mqttSettings!);
-      userDataSettingsList =
-          jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+      Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
+      userDataSettingsList = UserDataSettings.getUserDataSettings(jsonMap);
+      //List jsonMap1 = json.decode(mqttSettings!);
+      //userDataSettingsList =  jsonMap.map(convert`)UserDataSettings.fromJson(jsonMap);
+         // jsonMap.map((val) => UserDataSettings.fromJson(val));
     } else {
       mqttSettings = preferences?.getString("current_mqtt_settings");
       Map<String, dynamic> jsonMap = json.decode(mqttSettings!);
@@ -853,6 +861,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
     preferences?.remove("parsed_current_mqtt_settings");
     preferences?.setString("parsed_current_mqtt_settings", json0);
+    //preferences?.setString("current_mqtt_settings", json0);
+
+
+    debugPrint("friendlyName,after saving $json0");
+
+
   }
 
   // vrne trenutni device objekt, ki ga spreminjamo
