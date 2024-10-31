@@ -359,9 +359,7 @@ class Utils {
     return s;
   }
 
-  static List<UserDataSettings> diffOldAndNewSettings(
-      List<UserDataSettings> newUserSettings,
-      List<UserDataSettings> currentUserSettings) {
+  static List<UserDataSettings> diffOldAndNewSettings(List<UserDataSettings> newUserSettings, List<UserDataSettings> currentUserSettings) {
     /* RegExp regex = RegExp(
         "\s*\"friendlyName\" *: *(\"(.*?)\"(,|\s|)|\s*\{(.*?)\}(,|\s|))");
 
@@ -376,6 +374,11 @@ class Utils {
       debugPrint("withoutFriendlyName: $withoutFriendlyName");
     } */
 
+    debugPrint("\n\t\t=== 1010  primerjamo NOVE SETTINGE: $newUserSettings");
+    debugPrint("\n\t\t=== 1010  primerjamo TRENUTNE SETTINGE SETTINGE: $currentUserSettings");
+
+
+
     // preveri vsebino userdatasettingsov
     // preveri, ali so parametri v obeh listah enake, oz. novi listi pripni friendlyName
 
@@ -383,14 +386,14 @@ class Utils {
       for (UserDataSettings setNew in newUserSettings) {
         if (setOld.deviceName == setNew.deviceName &&
             setOld.sensorAddress == setNew.sensorAddress) {
-          setNew.friendlyName = setOld.friendlyName;
+          setOld.friendlyName = setNew.friendlyName;
         }
       }
     }
 
-    debugPrint("diffOldAndNewSettings:  newUserSettings: $newUserSettings");
+    debugPrint("diffOldAndNewSettings:  currentUserSettings - dodan hi alarm: $currentUserSettings");
 
-    return newUserSettings;
+    return currentUserSettings;
   }
 
   static int getIntervalFromPreferences(String? showInterval) {
