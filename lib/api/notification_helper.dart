@@ -207,8 +207,7 @@ class NotificationHelper extends ChangeNotifier {
       category: AndroidNotificationCategory.alarm,
     );
 
-    NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+    NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
 
 
 
@@ -216,15 +215,14 @@ class NotificationHelper extends ChangeNotifier {
     int notificationId = eventID.hashCode;
 
     debugPrint("showing alarm... ${alarmMessage}");
+    await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name \n alarm level","$v $units, $alarmValue \n$formattedDate", notificationDetails);
 
-    await flutterLocalNotificationsPlugin.show(
-        notificationId, "Alarm from $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
+    //await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on device $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
       notifyListeners();
   }
 
 
-  void onDidReceiveNotificationResponse(
-      NotificationResponse notificationResponse) async {
+  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
       debugPrint('notification payload: $payload');
@@ -272,17 +270,7 @@ class NotificationHelper extends ChangeNotifier {
     tzl.initializeTimeZones();
   }
 
-  @override
-  void addListener(VoidCallback listener) {
-    // TODO: implement addListener
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-  }
-
-  Future<List<Alarm>?> getRefreshedAlarmList() async {
+  Future<List<Alarm>> getRefreshedAlarmList() async {
     List<Alarm> refreshedAlarmList = [];
     // return shared prefs
     return refreshedAlarmList;

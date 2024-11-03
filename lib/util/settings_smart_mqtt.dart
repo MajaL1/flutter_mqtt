@@ -66,7 +66,7 @@ class SettingsSmartMqtt extends ChangeNotifier {
     //String oldUserSettings = newUserSettings;
     Map newSettings = <String, String>{};
     if (newUserSettings.isEmpty) {
-       debugPrint("1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
+      // debugPrint("1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
       newUserSettings = decodeMessage;
       newSettings = json.decode(newUserSettings);
       //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
@@ -75,14 +75,14 @@ class SettingsSmartMqtt extends ChangeNotifier {
           newSettings, topicName
           .split("/settings")
           .first);
-      debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
+      //debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
 
       await setNewUserSettings(newSettings);
       notifyListeners();
       debugPrint("notifying listeners 1.. $newSettings");
     } else if (newUserSettings.isNotEmpty &&
         !newUserSettings.contains(decodeMessage)) {
-      debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
+      // debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
       //debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
 
       //debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}");

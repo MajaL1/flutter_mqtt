@@ -58,11 +58,11 @@ class Utils {
             userTopicList.add(deviceName + "/settings");
           }
         }
-        /*if (topicData.name.contains("alarm")) {
+        if (topicData.name.contains("alarm")) {
           if (!userTopicList.contains(deviceName + "/alarm")) {
             userTopicList.add(deviceName + "/alarm");
           }
-        } */
+        }
        /* if (topicData.name.contains("data")) {
           if (!userTopicList.contains(deviceName + "/data")) {
             userTopicList.add(deviceName + "/data");
@@ -374,8 +374,8 @@ class Utils {
       debugPrint("withoutFriendlyName: $withoutFriendlyName");
     } */
 
-    debugPrint("\n\t\t=== 1010  primerjamo NOVE SETTINGE: $newUserSettings");
-    debugPrint("\n\t\t=== 1010  primerjamo TRENUTNE SETTINGE SETTINGE: $currentUserSettings");
+   // debugPrint("\n\t\t=== 1010  primerjamo NOVE SETTINGE: $newUserSettings");
+   // debugPrint("\n\t\t=== 1010  primerjamo TRENUTNE SETTINGE SETTINGE: $currentUserSettings");
 
 
 

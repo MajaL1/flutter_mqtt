@@ -309,8 +309,7 @@ class SmartMqtt extends ChangeNotifier {
         alarmInterval = preferences.getString("alarm_interval_setting");
         //}
         //debugPrint("+++++got alarmInterval: $alarmInterval");
-        timeIntervalMinutes =
-            await Utils.getIntervalFromPreferences(alarmInterval);
+        timeIntervalMinutes = await Utils.getIntervalFromPreferences(alarmInterval);
         if (timeIntervalMinutes == 100000) {
           noAlarm = true;
         }
@@ -366,11 +365,10 @@ class SmartMqtt extends ChangeNotifier {
               showAlarm = true;
             }
             if (showAlarm) {
-              debugPrint(
-                  " WILL SHOW ALARM +++++ from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
+              debugPrint(" WILL SHOW ALARM +++++ from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
               oldAlarmList.addAll(currentAlarmList);
               String alarmListMqtt = jsonEncode(oldAlarmList);
-              preferences.setString("alarm_list_mqtt", alarmListMqtt);
+              await preferences.setString("alarm_list_mqtt", alarmListMqtt);
               debugPrint("smartmqtt - alarmList---: $alarmListMqtt");
               messageCount++;
 
@@ -381,8 +379,7 @@ class SmartMqtt extends ChangeNotifier {
 
               // prikaze sporocilo z alarmom
               if (!noAlarm) {
-                await NotificationHelper.instance
-                    .sendMessage(currentAlarmList.first);
+                await NotificationHelper.instance.sendMessage(currentAlarmList.first);
               }
             }
           });

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -28,9 +29,12 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List<Alarm> _returnAlarmList(List<Alarm> alarmList) {
+  Future<List<Alarm>> _returnAlarmList(List<Alarm> alarmList) async {
     debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     //alarm history - getRefreshedAlarmList()
+    await Provider.of<NotificationHelper>(context, listen: false).getRefreshedAlarmList().then((val) => {  val} );
+    //setState(() {
+    //});
     return alarmList;
   }
 
@@ -62,10 +66,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
       future: ApiService.getAlarmsHistory()
-          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList)),
-        //  .then((alarmHistoryList) => getRefreshedAlarmList())
+          .then((alarmHistoryList) => _returnAlarmList(alarmHistoryList))
+          //.then((alarmHistoryList) => getRefreshedAlarmList(alarmHistoryList)),
           //.then((alarmHistoryList) =>
-          //    _pairAlarmListWithSettings(alarmHistoryList!)),
+          .then((alarmHistoryList) => _pairAlarmListWithSettings(alarmHistoryList)),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -164,14 +168,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               /*if(index>=1){
                         index--;
                       } */
-                              String deviceName =
-                                  snapshot.data![index].deviceName.toString();
-                              String friendlyName =
-                                  snapshot.data![index].friendlyName.toString();
-                              String hiAlarm =
-                                  snapshot.data![index].hiAlarm.toString();
-                              String loAlarm =
-                                  snapshot.data![index].loAlarm.toString();
+                              String deviceName = snapshot.data![index].deviceName.toString();
+                              String friendlyName = snapshot.data![index].friendlyName.toString();
+                              String hiAlarm = snapshot.data![index].hiAlarm.toString();
+                              String loAlarm = snapshot.data![index].loAlarm.toString();
                               String v = snapshot.data![index].v.toString();
                               int? u = snapshot.data![index].u;
                               String sensorAddress = snapshot
@@ -341,12 +341,12 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   }
 
   // pridobi novo listo alarmov, iz preferenc
-  Future<List<Alarm>?> getRefreshedAlarmList() async {
+  Future<List<Alarm>> getRefreshedAlarmList(List<Alarm> alarmHistoryList) async {
     debugPrint("alarm history - getRefreshedAlarmList::");
     //List refreshedAlarms = [];
-    List<Alarm>? alarmList = [];
+    List<Alarm> alarmList = [];
 
-    alarmList = await Provider.of<NotificationHelper>(context, listen: true).getRefreshedAlarmList();
+    alarmList = await Provider.of<NotificationHelper>(context, listen: false).getRefreshedAlarmList();
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.reload();

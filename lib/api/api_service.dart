@@ -33,6 +33,7 @@ class ApiService {
   static Future<List<Alarm>> getAlarmsHistory() async {
     List<Alarm> alarmList = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.reload();
     if (preferences.containsKey("alarm_list_mqtt")) {
       String alarmListData = preferences.get("alarm_list_mqtt") as String;
       if (alarmListData.isNotEmpty) {
