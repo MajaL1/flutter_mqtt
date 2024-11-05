@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -164,11 +165,14 @@ class ApiService {
 
   static Future logout() async{
     debugPrint("logging out");
-    stopService();
-    _removeUserPreferences();
+    await stopService();
+    await _removeUserPreferences();
+    Timer(Duration(seconds: 2), () {
+      debugPrint("logout delay");
+    });
   }
 
-  static void _removeUserPreferences() {
+  static Future _removeUserPreferences() async{
     SharedPreferences.getInstance().then((value) {
       if (value.getString("username") != null) {
         value.remove("username");
@@ -273,8 +277,7 @@ class ApiService {
         topicList.add(topicData);
         //debugPrint("-- adding new topicData: to topicList: length: ${topicList.length} ${topicData}");
       }
-      userTopicList
-          .add(UserTopic(sensorName: deviceName, topicList: topicList));
+      userTopicList.add(UserTopic(sensorName: deviceName, topicList: topicList));
       topicList = [];
     }
     return userTopicList;
