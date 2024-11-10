@@ -79,7 +79,7 @@ class SettingsSmartMqtt extends ChangeNotifier {
 
       await setNewUserSettings(newSettings);
       notifyListeners();
-      debugPrint("notifying listeners 1.. $newSettings");
+      //debugPrint("notifying listeners 1.. $newSettings");
     } else if (newUserSettings.isNotEmpty &&
         !newUserSettings.contains(decodeMessage)) {
       // debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
@@ -96,7 +96,7 @@ class SettingsSmartMqtt extends ChangeNotifier {
       };
       setNewUserSettings(concatenatedSettings);
       notifyListeners();
-      debugPrint("notifying listeners 2.. $newUserSettings");
+      //debugPrint("notifying listeners 2.. $newUserSettings");
 
       if (newUserSettings != null || newUserSettings.isNotEmpty) {
         newUserSettings = json.encode(concatenatedSettings);

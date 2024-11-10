@@ -167,10 +167,10 @@ class NotificationHelper extends ChangeNotifier {
     String alarmValue = "";
 
     if (alarmMessage?.hiAlarm != 0 && alarmMessage?.hiAlarm != null) {
-      alarmValue = "Hi alarm: $hiAlarm";
+      alarmValue = "$hiAlarm";
     }
     if (alarmMessage?.loAlarm != 0 && alarmMessage?.loAlarm != null) {
-      alarmValue += " Lo alarm: $loAlarm";
+      alarmValue += "$loAlarm";
     }
 
     //   debugPrint(
@@ -179,7 +179,7 @@ class NotificationHelper extends ChangeNotifier {
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
    String? name = (friendlyName!= null && friendlyName!.isNotEmpty) ? friendlyName : "";
    if(name.isEmpty) {
-     name = "device: ${deviceName}, sensor:  ${sensorAddress}";
+     name = "${deviceName} ${sensorAddress}";
    }
 
        //: "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
@@ -215,7 +215,7 @@ class NotificationHelper extends ChangeNotifier {
     int notificationId = eventID.hashCode;
 
     debugPrint("showing alarm... ${alarmMessage}");
-    await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","alarm level $v $units, $alarmValue \n$formattedDate", notificationDetails);
+    await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units \n$formattedDate", notificationDetails);
 
     //await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on device $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
       notifyListeners();

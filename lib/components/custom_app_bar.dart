@@ -99,41 +99,44 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 //decoration: //Utils.buildAppBarDecoration(),
                 child: Table(
                     columnWidths: const {
-                  0: FixedColumnWidth(120.0),
+                  0: FixedColumnWidth(150.0),
                  // 1: FixedColumnWidth(100.0),
                 },
                     children: [
                   TableRow(children: [
-                    Column(),
                     Column(children: [
                       Text(
                         widget.connectionStatusText != null
                             ? widget.connectionStatusText!
                             : "    ",
                         style: const TextStyle(
-                            color: Colors.redAccent, fontSize: 14),
+                            color: Colors.redAccent, fontSize: 10),
                       )
                     ]),
+                    Column(),
                   ]),
                   TableRow(children: [
                     // Text("${widget.title}",
                     //     style: const TextStyle(
                     //   fontSize: 16, color: Colors.white, letterSpacing: 1)),
                     Column(children: [
-                      Text("  $username $email",
-                          style: const TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                              letterSpacing: 1)),
+                      Text(widget.title,
+                      style: const TextStyle(fontSize: 16, color: Colors.white, letterSpacing: 1)),
+                      //Text("  $username $email",
+                      //    style: const TextStyle(
+                      //        fontSize: 15,
+                      //        color: Colors.white,
+                      //        letterSpacing: 1)),
                     ]),
                     const Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("            v_2024-16-10",
+                          Text("            v_2024-06-11",
                               style:
                                   TextStyle(fontSize: 9, color: Colors.white))
                         ])
-                  ])
+                  ]), TableRow(children: [
+                  Column(), Column()]),
                 ]))));
   }
 }

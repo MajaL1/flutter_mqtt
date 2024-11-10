@@ -143,7 +143,7 @@ class ApiService {
               username: data["username"],
               date_login: DateTime.now(),
               date_register: DateTime.now(),
-              email: data["email"],
+              email: data["email"] ?? "test@test.com",
               mqtt_pass: data["mqtt_pass"],
               userTopicList: userTopicList);
           return user;
