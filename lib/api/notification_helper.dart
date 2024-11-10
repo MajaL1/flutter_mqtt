@@ -215,7 +215,7 @@ class NotificationHelper extends ChangeNotifier {
     int notificationId = eventID.hashCode;
 
     debugPrint("showing alarm... ${alarmMessage}");
-    await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units \n$formattedDate", notificationDetails);
+    await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units $formattedDate", notificationDetails);
 
     //await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on device $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
       notifyListeners();
