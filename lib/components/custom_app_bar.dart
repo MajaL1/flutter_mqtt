@@ -45,7 +45,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     SharedPreferences.getInstance().then((val) {
       setState(() {
         username = val.getString("username")!;
-        email = (val.getString("email") ?? "")!;
+        email = val.getString("email")!;
       });
       val.reload();
 
@@ -131,7 +131,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     const Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("            v_2024-06-11",
+                          Text("            v_2024-10-11",
                               style:
                                   TextStyle(fontSize: 9, color: Colors.white))
                         ])
