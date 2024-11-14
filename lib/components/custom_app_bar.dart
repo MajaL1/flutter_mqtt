@@ -45,7 +45,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     SharedPreferences.getInstance().then((val) {
       setState(() {
         username = val.getString("username")!;
-        email = val.getString("email")!;
+        email = "";//val.getString("email")!;
       });
       val.reload();
 

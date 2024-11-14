@@ -72,24 +72,24 @@ class _UserSettingsState extends State<UserSettings> {
       backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.SETTINGS),
       drawer: NavDrawer.data(username: username, email: email),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.only(left: 15, right: 10, top: 10),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 15, right: 10, top: 10),
        // scrollDirection: Axis.vertical,
       //  resizeToAvoidBottomInset: true,
 
         child: Column(children: <Widget>[
           // Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-          UserGeneralSettings.base(),
+          const UserGeneralSettings.base(),
           //Divider(height: 4, color: Colors.black12, thickness: 5),
-          Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
 
           UserMqttSettings.base(),
           //Divider(height: 4, color: Colors.black12, thickness: 5),
 
           //Divider(height: 1, color: Colors.black12, thickness: 5),
-          Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
 
-          UserPersonalSettings.base(),
+          const UserPersonalSettings.base(),
         ]),
       ),
     );

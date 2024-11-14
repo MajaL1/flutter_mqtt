@@ -11,6 +11,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 import 'package:mqtt_test/util/data_smart_mqtt.dart';
+import 'package:mqtt_test/util/settings_smart_mqtt.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/constants.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +24,7 @@ import 'model/alarm.dart';
 import 'model/constants.dart';
 import 'pages/first_screen.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 final service = FlutterBackgroundService();
 
@@ -279,7 +279,11 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
         providers: [
           //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
           ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
-          ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
+          //ChangeNotifierProvider(create: (context) => SharedPreferencesProvider()),
+
+          //ChangeNotifierProvider(create: (_) => SmartMqtt.instance),
+
+          //ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
           ChangeNotifierProvider(create: (context) => NotificationHelper.instance),
 
           // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),

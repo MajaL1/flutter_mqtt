@@ -254,14 +254,13 @@ class SmartMqtt extends ChangeNotifier {
         // ali ce so v zacetku prazni
         if (newUserSettings.compareTo(decodeMessage) != 0 &&
             decodeMessage.isNotEmpty) {
-          await _parseMqttSettingsForTopic(
-              preferences, decodeMessage, topicName);
+          await _parseMqttSettingsForTopic(preferences, decodeMessage, topicName);
           //{\"57\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455},\"84\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455}}
         }
       }
     }
     if (topicName.contains("alarm")) {
-      debugPrint("+++++alarm!!!!!, isRetain $isRetain");
+      //debugPrint("+++++alarm!!!!!, isRetain $isRetain");
       if (!isRetain!) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.reload();
@@ -269,15 +268,13 @@ class SmartMqtt extends ChangeNotifier {
         List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
         currentAlarmList.first.deviceName = topicName.split("/alarm").first;
 
-        debugPrint(
-            "+++++ALARM ? check below if show ${currentAlarmList.first.toString()},: ${messageCount}");
+       //debugPrint("+++++ALARM ? check below if show ${currentAlarmList.first.toString()},: ${messageCount}");
 
         //prebere listo alarmov iz preferenc in jim doda nov alarm
         SharedPreferences preferences = await SharedPreferences.getInstance();
 
         // 1. dobi listo prejsnjih alarmov
-        String? alarmListOldData =
-            preferences.get("alarm_list_mqtt") as String?;
+        String? alarmListOldData = preferences.get("alarm_list_mqtt") as String?;
         List oldAlarmList = [];
         if (alarmListOldData != null) {
           oldAlarmList = json.decode(alarmListOldData);
@@ -292,8 +289,7 @@ class SmartMqtt extends ChangeNotifier {
         String? alarmInterval; //= getAlarmInterval();
         //if(alarmInterval.isEmpty){
 
-        String? alarmInterval1 =
-            preferences.getString("alarm_interval_setting");
+        String? alarmInterval1 = preferences.getString("alarm_interval_setting");
 
         //debugPrint("+++++got alarmInterval1: $alarmInterval1");
         /*String? a = await SharedPreferences.getInstance().then((value) {
@@ -334,8 +330,7 @@ class SmartMqtt extends ChangeNotifier {
           }
 
           // dobi zadnji datum od alarma iz naprave iz historija
-          _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName,
-                  currentAlarmList.first.sensorAddress)
+          _getLastAlarmDateFromHistory(currentAlarmList.first.deviceName, currentAlarmList.first.sensorAddress)
               .then((value) async {
             // primerjaj zadnji alarm s trenutnim casom
             // trenutni cas - zadnji alarm
@@ -347,15 +342,13 @@ class SmartMqtt extends ChangeNotifier {
               //debugPrint("+++++ got minutes from compare: $minutes, timeIntervalInMinutes: ${minutes}");
               // primerjaj s shranjenim intervalom
               if (minutes >= timeIntervalMinutes! || timeIntervalMinutes == 1) {
-                debugPrint(
-                    "+++++ minutes > timeIntervalMinutes, will show alarm");
+                //debugPrint("+++++ minutes > timeIntervalMinutes, will show alarm");
 
                 showAlarm = true;
                 // ce je minilo vec minut od prejsnjega alarma
                 // prikazi alarm
               } else {
-                debugPrint(
-                    "+++++ minutes < timeIntervalMinutes, NOT show alarm");
+                //debugPrint("+++++ minutes < timeIntervalMinutes, NOT show alarm");
               }
               // }
               // else {
@@ -365,17 +358,22 @@ class SmartMqtt extends ChangeNotifier {
               showAlarm = true;
             }
             if (showAlarm) {
-              debugPrint(" WILL SHOW ALARM +++++ from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
+              //debugPrint(" WILL SHOW ALARM +++++ from topic-alarm $topicName, $decodeMessage, message count: $messageCount ");
               oldAlarmList.addAll(currentAlarmList);
               String alarmListMqtt = jsonEncode(oldAlarmList);
               await preferences.setString("alarm_list_mqtt", alarmListMqtt);
               debugPrint("smartmqtt - alarmList---: $alarmListMqtt");
               messageCount++;
 
-              String friendlyName =
-                  await Utils.setFriendlyName(currentAlarmList.first);
-              //debugPrint("utils - setFriendlyName after: $friendlyName");
-              currentAlarmList.first.friendlyName = friendlyName;
+              if(currentAlarmList != null) {
+                if (currentAlarmList.first != null){
+                  String friendlyName = await Utils.setFriendlyName(currentAlarmList.first);
+                  //debugPrint("utils - setFriendlyName after: $friendlyName");
+                  if(friendlyName != null) {
+                    currentAlarmList.first.friendlyName = friendlyName;
+                  }
+                }
+              }
 
               // prikaze sporocilo z alarmom
               if (!noAlarm) {
@@ -388,64 +386,61 @@ class SmartMqtt extends ChangeNotifier {
     }
   }
 
-  Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences,
-      String decodeMessage, String topicName) async {
-    debugPrint("new user settings");
-    preferences.setString("current_mqtt_settings", decodeMessage);
-    // parse trenutno sporocilo
-    Map decodeMessageSettings = <String, String>{};
-    decodeMessageSettings = json.decode(decodeMessage);
-    //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
-    await setDeviceNameToSettings(
-        decodeMessageSettings, topicName.split("/settings").first);
-    //-----
-    //String oldUserSettings = newUserSettings;
-    Map newSettings = <String, String>{};
-    if (newUserSettings.isEmpty) {
-      debugPrint(
-          "1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
-      newUserSettings = decodeMessage;
-      newSettings = json.decode(newUserSettings);
-      //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
+  Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences, String decodeMessage, String topicName) async {
+    try {
+      debugPrint("new user settings");
+      preferences.setString("current_mqtt_settings", decodeMessage);
+      // parse trenutno sporocilo
+      Map decodeMessageSettings = <String, String>{};
+      decodeMessageSettings = json.decode(decodeMessage);
+      //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
+      await setDeviceNameToSettings(decodeMessageSettings, topicName
+          .split("/settings")
+          .first);
+      //-----
+      //String oldUserSettings = newUserSettings;
+      Map newSettings = <String, String>{};
+      if (newUserSettings.isEmpty) {
+        debugPrint("1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
+        newUserSettings = decodeMessage;
+        newSettings = json.decode(newUserSettings);
+        //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
 
-      await setDeviceNameToSettings(newSettings, topicName.split("/settings").first);
-      //debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
+        await setDeviceNameToSettings(newSettings, topicName.split("/settings").first);
+        //debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
 
-      await setNewUserSettings(newSettings);
-      notifyListeners();
-      debugPrint("notifying listeners 0.. $newSettings");
-    } else if (newUserSettings.isNotEmpty && !newUserSettings.contains(decodeMessage)) {
-      debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
-      //debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
-
-      //debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}");
-      newSettings = json.decode(newUserSettings);
-
-      //  stare settinge za doloceno napravo zamenja za nove
-      // ... je concatenate, iz mapa nadomesti key-e z decodemessagesettings
-      final concatenatedSettings = {
-        ...newSettings,
-        ...decodeMessageSettings,
-      };
-      if (newUserSettings != null || newUserSettings.isNotEmpty) {
-        newUserSettings = json.encode(concatenatedSettings);
-        debugPrint("notifying listeners 1.. $newUserSettings");
-        preferences.setString("current_mqtt_settings", newUserSettings);
-        await setNewUserSettings(concatenatedSettings);
+        await setNewUserSettings(newSettings);
         notifyListeners();
+        debugPrint("notifying listeners 0.. $newSettings");
+      } else if (newUserSettings.isNotEmpty && !newUserSettings.contains(decodeMessage)) {
+        debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
+        //debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
+
+        //debugPrint("4 AAAAAAAA: newSettings ${newUserSettings}");
+        newSettings = json.decode(newUserSettings);
+
+        //  stare settinge za doloceno napravo zamenja za nove
+        // ... je concatenate, iz mapa nadomesti key-e z decodemessagesettings
+        final concatenatedSettings = {
+          ...newSettings,
+          ...decodeMessageSettings,
+        };
+        if (newUserSettings != null || newUserSettings.isNotEmpty) {
+          newUserSettings = json.encode(concatenatedSettings);
+          debugPrint("notifying listeners 1.. $newUserSettings");
+          preferences.setString("current_mqtt_settings", newUserSettings);
+          // await setNewUserSettings(concatenatedSettings);
+
+          preferences.setBool("settingsChanged", true);
+          notifyListeners();
+        }
+
+        //print("map: ${concatenatedSettings}");
+        //debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
       }
-
-      //print("map: ${concatenatedSettings}");
-      //debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
+    } catch(e){
+      debugPrint("!!!Exception:: $e");
     }
-
-    // na koncu v objekt USerDataSerrings dodaj se rw za vsak topic
-
-    //String? userTopicList = preferences.getString("user_topic_list");
-
-    //String? userTopicListRw = preferences.getString("user_topic_list_rw");
-
-    //debugPrint("--- userTopicList:: ${userTopicListRw.toString()}");
   }
 
   // iz historija dobi zadnji alarm za napravo in vrne njen datum
@@ -569,12 +564,17 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   Future<String> getNewUserSettingsList() async {
-    // if(newUserSettings != null) {
-    debugPrint(
-        "1111111111111 new User settings - smart mqtt: $newUserSettings");
 
-    return newUserSettings;
-    //}
+    debugPrint("getNewUserSettingsList 222222222222 new User settings - smart mqtt:");
+    String  settings =  "";
+    await SharedPreferences.getInstance().then((value) {
+      String set = value.getString("current_mqtt_settings")!;
+      debugPrint("2222222222222 new User settings - smart mqtt: $set");
+      settings = set;
+      //return set;
+    });
+    debugPrint("1111111111111 new User settings - smart mqtt: $settings");
+    return settings;
   }
 
   Future<void> setDeviceNameToSettings(Map settings, String deviceName) async {

@@ -6,20 +6,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/alarm.dart';
 import '../model/data.dart';
 
-class SettingsSmartMqtt extends ChangeNotifier {
+class SettingsSmartMqtt1 with ChangeNotifier {
 
   Data ?newMqttData;
 
 
-  static final SettingsSmartMqtt _instance = SettingsSmartMqtt._internal();
+  static final SettingsSmartMqtt1 _instance = SettingsSmartMqtt1._internal();
 
-  SettingsSmartMqtt._internal();
+  SettingsSmartMqtt1._internal();
 
-  static SettingsSmartMqtt get instance => _instance;
+  static SettingsSmartMqtt1 get instance => _instance;
   String newUserSettings = "";
 
 
-  factory SettingsSmartMqtt() {
+  factory SettingsSmartMqtt1() {
     debugPrint("SETTINGS_SMARTMQTT");
     return _instance;
   }

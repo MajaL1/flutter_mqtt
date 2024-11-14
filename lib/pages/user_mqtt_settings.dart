@@ -8,9 +8,7 @@ import 'package:flutter_debouncer/flutter_debouncer.dart';
 import 'package:mqtt_test/model/user_data_settings.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/util/background_mqtt.dart';
-import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:mqtt_test/widgets/units.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/constants.dart';
@@ -20,7 +18,7 @@ import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
 class UserMqttSettings extends StatefulWidget {
-  const UserMqttSettings.base({Key? key}) : super(key: key);
+   UserMqttSettings.base({Key? key}) : super(key: key);
 
   @override
   State<UserMqttSettings> createState() => _UserMqttSettingsState();
@@ -87,6 +85,7 @@ List<UserDataSettings> _parseUserDataSettingsToList(
         u: setting.u,
         editableSetting: Constants.U_JSON)); */
   }
+  debugPrint("nevem: ${dataSettingsListNew.toString()}");
   return dataSettingsListNew;
 }
 
@@ -98,6 +97,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
   bool changePassSwitchVal = true;
+  bool refresh = false;
 
   TextStyle headingStyleIOS = const TextStyle(
     fontWeight: FontWeight.w600,
@@ -257,18 +257,17 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     ]);
   }
 
-  Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(
-      String newUserSettings) async {
-    String? parsedCurrentMqttSettings =
-        await SharedPreferences.getInstance().then((val) {
+  Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(String newUserSettings) async {
+    debugPrint("===11 _checkAndPairOldSettingsWithNew newUserSettings:$newUserSettings");
+
+    String? parsedCurrentMqttSettings = await SharedPreferences.getInstance().then((val) {
       return val.getString("current_mqtt_settings");
     });
     String? parsedCurrentMqttSettings1 =
         await SharedPreferences.getInstance().then((val) {
       return val.getString("parsed_current_mqtt_settings");
     });
-    debugPrint(
-        "===before parsedCurrentMqttSettings:$parsedCurrentMqttSettings, \n ===parsedCurrentMqttSettings1: $parsedCurrentMqttSettings1");
+    debugPrint("===before parsedCurrentMqttSettings:$parsedCurrentMqttSettings, \n ===parsedCurrentMqttSettings1: $parsedCurrentMqttSettings1");
 
     List<UserDataSettings> userDataSettings = [];
 
@@ -379,14 +378,44 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     //}
   }
 
-  Future<String> _getNewUserSettingsList() async {
+/*  Future<String> _getNewUserSettingsListOld() async {
     String settings = "";
-    settings = await Provider.of<SmartMqtt>(context, listen: true)
-        .getNewUserSettingsList();
+    debugPrint("333 _getNewUserSettingsList SMARTMQTT: ${SmartMqtt.instance}");
+    //settings = context.watch<SmartMqtt>().newUserSettings;
+    debugPrint("333 _getNewUserSettingsList, $settings");
+    settings = await Provider.of<SmartMqtt>(context, listen: true).getNewUserSettingsList();
+    // await Provider.of<SharedPreferencesProvider>(context, listen: true).getNewUserSettings();
+
+    //SharedPreferencesProvider().dcba();
     if (settings != null) {
       return settings;
     }
     return "";
+  } */
+
+  Future<String> _getNewUserSettingsList() async {
+
+    String newSettings = "";
+    Timer.periodic(Duration(seconds: 2), (Timer timer) {
+
+      SharedPreferences.getInstance().then((value) {
+        value.reload();
+        //debugPrint("1settingsChanged, ${value.getBool('settingsChanged')}, ${value.getString('current_mqtt_settings')}");
+
+        if(value.getBool("settingsChanged") == true){
+          //debugPrint("2settingsChanged, ${value.getBool('settingsChanged')}");
+          setState(() {
+            refresh = true;
+          });
+          newSettings = value.getString("current_mqtt_settings") ?? "";
+          value.setBool("settingsChanged", false);
+        }
+      });
+    });
+
+    return newSettings;
+
+    debugPrint("new settings: ");
   }
 
   //(sensorAddress, snapshot.data!, index)
@@ -405,7 +434,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
   Widget _buildMqttSettingsView() {
     return FutureBuilder<List<UserDataSettings>>(
-      future: // Provider.of<SmartMqtt>(context, listen: true)
+      future:
+      //Provider.of<SmartMqtt>(context, listen: true)
           //.getNewUserSettingsList()
           _getNewUserSettingsList()
               //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
@@ -632,8 +662,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     );
   }
 
-  Future<List<UserDataSettings>> _pairDevicesWithRw(
-      List<UserDataSettings> dataSettingsList) async {
+  Future<List<UserDataSettings>> _pairDevicesWithRw(List<UserDataSettings> dataSettingsList) async {
     //List<UserDataSettings> settingsList = [];
 
     String? userTopicListRw = await SharedPreferences.getInstance().then((val) {
