@@ -32,7 +32,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
   Future<List<Alarm>> _returnAlarmList(List<Alarm> alarmList) async {
     debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     //alarm history - getRefreshedAlarmList()
-    await Provider.of<NotificationHelper>(context, listen: false).getRefreshedAlarmList().then((val) => {  val} );
+    //await Provider.of<NotificationHelper>(context, listen: false).getRefreshedAlarmList().then((val) => {  val} );
     //setState(() {
     //});
     return alarmList;

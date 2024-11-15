@@ -10,18 +10,11 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
-import 'package:mqtt_test/util/data_smart_mqtt.dart';
-import 'package:mqtt_test/util/settings_smart_mqtt.dart';
-import 'package:mqtt_test/util/smart_mqtt.dart';
-import 'package:mqtt_test/widgets/constants.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 import 'package:mqtt_test/util/background_mqtt.dart';
 
-import 'api/notification_helper.dart';
 import 'model/alarm.dart';
-import 'model/constants.dart';
 import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -274,24 +267,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
 
     debugPrint("00000000000 main.dart build");
 
-
-    return MultiProvider(
-        providers: [
-          //ChangeNotifierProvider<MQTTAppState>(create: (_) => MQTTAppState()),
-          ChangeNotifierProvider(create: (context) => SmartMqtt.instance),
-          //ChangeNotifierProvider(create: (context) => SharedPreferencesProvider()),
-
-          //ChangeNotifierProvider(create: (_) => SmartMqtt.instance),
-
-          //ChangeNotifierProvider(create: (context) => DataSmartMqtt.instance),
-          ChangeNotifierProvider(create: (context) => NotificationHelper.instance),
-
-          // ChangeNotifierProvider(create: (context) => SettingsSmartMqtt.instance),
-        ],
-        builder: (context, child) => Builder(builder: (context) {
-              //  final MQTTAppState appState = Provider.of<MQTTAppState>(context, listen: false);
-              debugPrint("build main.dart");
-              return GetMaterialApp(home: FirstScreen.base());
-            }));
+    debugPrint("build main.dart");
+    return GetMaterialApp(home: FirstScreen.base());
   }
 }
