@@ -45,6 +45,7 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:showWhenLocked="false"
+            android:showOnLockScreen="false"
             android:theme="@style/LaunchTheme"
             android:turnScreenOn="true"
             android:windowSoftInputMode="adjustResize">

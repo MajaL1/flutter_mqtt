@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io' show Platform;
 import 'dart:ui';
 
@@ -18,20 +17,15 @@ import 'package:timezone/data/latest.dart' as tzl;
 
 
 import '../model/alarm.dart';
-import '../util/utils.dart';
 import '../widgets/units.dart';
 
 class NotificationHelper extends ChangeNotifier {
-  //const NotificationHelper; //: super();
   static FlutterBackgroundService service = FlutterBackgroundService();
-
-
   static final NotificationHelper _instance = NotificationHelper._internal();
 
   NotificationHelper._internal();
   static NotificationHelper get instance => _instance;
 
-  @override
   Widget build(BuildContext context) {
     return Container();
   }
@@ -209,15 +203,17 @@ class NotificationHelper extends ChangeNotifier {
 
     NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
 
-
-
     String eventID = "as432445GFCLbd2in1en2103";
     int notificationId = eventID.hashCode;
 
     debugPrint("showing alarm... ${alarmMessage}");
     await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate", notificationDetails);
 
-    //await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on device $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
+    SharedPreferences.getInstance().then((value) {
+      value.setBool("historyChanged", true);
+    });
+
+     //await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on device $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
     //  notifyListeners();
   }
 
@@ -244,7 +240,7 @@ class NotificationHelper extends ChangeNotifier {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? data = preferences.get("settings_mqtt").toString();
-    String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
+    //String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** preferences settings_mqtt $data");
 
     /// OPTIONAL when use custom notification

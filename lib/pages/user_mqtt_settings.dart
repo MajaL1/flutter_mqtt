@@ -396,8 +396,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   Future<String> _getNewUserSettingsList() async {
 
     String newSettings = "";
-    Timer.periodic(Duration(seconds: 2), (Timer timer) {
-
+    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       SharedPreferences.getInstance().then((value) {
         value.reload();
         //debugPrint("1settingsChanged, ${value.getBool('settingsChanged')}, ${value.getString('current_mqtt_settings')}");

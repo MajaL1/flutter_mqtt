@@ -27,8 +27,6 @@ class AlarmHistory extends StatefulWidget {
 
 class _AlarmHistoryState extends State<AlarmHistory> {
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   Future<List<Alarm>> _returnAlarmList(List<Alarm> alarmList) async {
     debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     //alarm history - getRefreshedAlarmList()
@@ -371,6 +369,20 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
   // nastavi friendly name v listi history alarmov
   Future<List<Alarm>> _pairAlarmListWithSettings(List<Alarm> alarmList) async {
+
+    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      SharedPreferences.getInstance().then((value) {
+        value.reload();
+        //debugPrint("1settingsChanged, ${value.getBool('settingsChanged')}, ${value.getString('current_mqtt_settings')}");
+        if(value.getBool("historyChanged") == true){
+          //debugPrint("historyChanged, ${value.getBool('settingsChanged')}");
+          setState(() {
+
+          });
+          value.setBool("historyChanged", false);
+        }
+      });
+    });
     await SharedPreferences.getInstance().then((value) {
       if (value.getString("parsed_current_mqtt_settings") != null) {
         List<UserDataSettings> parsedMqttSettingsList = [];
