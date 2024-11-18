@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -10,7 +9,6 @@ import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
-import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -53,8 +51,8 @@ class LoginForm extends StatefulWidget {
 } */
 
 class _LoginFormValidationState extends State<LoginForm> {
-  InternetStatus? _connectionStatus;
-  late StreamSubscription<InternetStatus> _subscription;
+  //InternetStatus? _connectionStatus;
+  //late StreamSubscription<InternetStatus> _subscription;
   bool isLoading = false;
   bool loginError = false;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -395,13 +393,13 @@ class _LoginFormValidationState extends State<LoginForm> {
   initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    _subscription = InternetConnection().onStatusChange.listen((status) {
+    /*_subscription = InternetConnection().onStatusChange.listen((status) {
       setState(() {
-        _connectionStatus = status;
+        //_connectionStatus = status;
         widget.connectionStatusText =
             status == InternetStatus.connected ? "" : "No internet connection";
       });
-    });
+    }); */
     debugPrint("-- loginform initstate");
   }
 
@@ -444,17 +442,6 @@ class _LoginFormValidationState extends State<LoginForm> {
 
             value.reload();
           });
-
-          String l = generateRandomString(10);
-          //String identifier = "_12apxeeejjjewg";
-          String identifier = l.toString();
-          /*SmartMqtt(
-              mqttPass: user.mqtt_pass,
-              username: username,
-              topicList: userTopicList,
-              port: Constants.BROKER_PORT,
-              host: Constants.BROKER_IP); */
-          /** saving user data in shared prefs **/
 
           if(await service.isRunning()){
             print("---- login isRunning");

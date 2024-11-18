@@ -46,7 +46,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     SharedPreferences.getInstance().then((val) {
       setState(() {
         username = val.getString("username") ?? val.getString("username")!;
-        email = (val.getString("email") ?? "")!;
+        email = (val.getString("email") ?? "");
 
       });
       debugPrint("44444 1 user_settings initState username: $username, email: $email");
@@ -373,9 +373,9 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       SharedPreferences.getInstance().then((value) {
         value.reload();
-        //debugPrint("1settingsChanged, ${value.getBool('settingsChanged')}, ${value.getString('current_mqtt_settings')}");
+        debugPrint("historyChanged, ${value.getBool('historyChanged')}, ${value.getString('current_mqtt_settings')}");
         if(value.getBool("historyChanged") == true){
-          //debugPrint("historyChanged, ${value.getBool('settingsChanged')}");
+          debugPrint("2historyChanged, ${value.getBool('historyChanged')}");
           setState(() {
 
           });
@@ -402,7 +402,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
           for (Alarm alarm in alarmList) {
             if (alarm.sensorAddress == sensorAddress &&
                 alarm.deviceName == deviceName) {
-              if (friendlyName != null && friendlyName!.isNotEmpty) {
+              if (friendlyName != null && friendlyName.isNotEmpty) {
                 alarm.friendlyName = friendlyName;
                 //debugPrint(
                 //  "alarm_history found friendly name... ${alarm.sensorAddress}, ${alarm.deviceName}");

@@ -289,7 +289,7 @@ class SmartMqtt extends ChangeNotifier {
         String? alarmInterval; //= getAlarmInterval();
         //if(alarmInterval.isEmpty){
 
-        String? alarmInterval1 = preferences.getString("alarm_interval_setting");
+        //String? alarmInterval1 = preferences.getString("alarm_interval_setting");
 
         //debugPrint("+++++got alarmInterval1: $alarmInterval1");
         /*String? a = await SharedPreferences.getInstance().then((value) {
@@ -338,10 +338,10 @@ class SmartMqtt extends ChangeNotifier {
             //debugPrint("+++++ value: $value for device ${currentAlarmList.first.deviceName} ${currentAlarmList.first.sensorAddress}");
             if (value != null) {
               // if(!value.isBefore(DateTime.now())) {
-              minutes = Utils.compareDatesInMinutes(value!, DateTime.now());
+              minutes = Utils.compareDatesInMinutes(value, DateTime.now());
               //debugPrint("+++++ got minutes from compare: $minutes, timeIntervalInMinutes: ${minutes}");
               // primerjaj s shranjenim intervalom
-              if (minutes >= timeIntervalMinutes! || timeIntervalMinutes == 1) {
+              if (minutes >= timeIntervalMinutes || timeIntervalMinutes == 1) {
                 //debugPrint("+++++ minutes > timeIntervalMinutes, will show alarm");
 
                 showAlarm = true;
@@ -457,14 +457,14 @@ class SmartMqtt extends ChangeNotifier {
       }
     }
 
-    bool found = true;
+    //bool found = true;
     DateTime? lastSentAlarm;
     for (Alarm alarm in alarmList) {
       String? alarmDeviceName = alarm.deviceName;
       String? alarmSensorAddress = alarm.sensorAddress;
       // zadnji datum
       if (alarmDeviceName == deviceName && alarmSensorAddress == sensorName) {
-        found = true;
+        //found = true;
         lastSentAlarm = alarm.ts;
         if (lastSentAlarm!.isAfter(alarm.ts!)) {
           lastSentAlarm = alarm.ts;
@@ -496,9 +496,9 @@ class SmartMqtt extends ChangeNotifier {
 
   MqttServerClient initializeMQTTClient() {
     debugPrint(" calling smart_mqtt.dart - initializeMQTTClient");
-    String osPrefix = 'Flutter_iOS';
+    //String osPrefix = 'Flutter_iOS';
     // if (Platform.isAndroid()) {
-    osPrefix = 'Flutter_Android';
+    //osPrefix = 'Flutter_Android';
     topicList = topicList;
 
     String l = Utils.generateRandomString(10);
@@ -582,9 +582,9 @@ class SmartMqtt extends ChangeNotifier {
       if (settings[key] != null && (key != "ts")) {
         Map val = settings[key];
 
-        for (String key1 in val.keys) {
+        //for (String key1 in val.keys) {
           //print("key1: $key1");
-        }
+        //}
         final Map<String, String> deviceNameMap = {"device_name": deviceName};
         val.addAll(deviceNameMap);
       }
@@ -619,7 +619,7 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   void setDataListToPreferences(Data newData, SharedPreferences preferences) {
-    String? dataListStr = preferences.getString("data_mqtt_list");
+    //String? dataListStr = preferences.getString("data_mqtt_list");
     List? dataList;
 
     // zaenkrat dodamo samo eno element na listo

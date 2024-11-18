@@ -52,36 +52,32 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     //super.initState();
 
     return Container(
-        //color: Colors.white,
-
-        //body: SingleChildScrollView(
-        child: Container(
+          color: Colors.white,
+          child: Column(children: <Widget>[
+    const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15),
+    ),
+    // const Divider(height: 1, color: Colors.black12, thickness: 5),
+    Container(
+      height: 30,
       color: Colors.white,
-      child: Column(children: <Widget>[
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-        ),
-        // const Divider(height: 1, color: Colors.black12, thickness: 5),
-        Container(
-          height: 30,
-          color: Colors.white,
-        ),
-        Container(
-          //height: 30,
-          color: Colors.white,
-          child: const Text("General settings ",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20)),
-        ),
-        const Divider(height: 14, color: Colors.white, thickness: 5),
+    ),
+    Container(
+      //height: 30,
+      color: Colors.white,
+      child: const Text("General settings ",
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 20)),
+    ),
+    const Divider(height: 14, color: Colors.white, thickness: 5),
 
-        //const Divider(height: 4, color: Colors.black12, thickness: 5),
-        _buildUserGeneralSettings(),
-      ]),
-      // ),
-    ));
+    //const Divider(height: 4, color: Colors.black12, thickness: 5),
+    _buildUserGeneralSettings(),
+          ]),
+          // ),
+        );
   }
 
   BoxDecoration buildBoxDecoration() {
@@ -115,10 +111,9 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
             // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-              Row(children: [
-                Container(
-                    child: const Text("Alarm interval:",
-                        style: TextStyle(fontSize: 14)))
+              const Row(children: [
+                Text("Alarm interval:",
+                    style: TextStyle(fontSize: 14))
               ]),
               Row(
                 children: [
@@ -133,7 +128,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                               Icons.check,
                               size: 35,
                             )
-                          : Icon(null),
+                          : const Icon(null),
                       onPressed: notifier.value == dropdownValue
                           ? null
                           : () {
@@ -156,7 +151,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
     SharedPreferences.getInstance().then((pref) {
       if (dropdownValue!.isEmpty) {
-        String? val = pref?.getString("alarm_interval_setting");
+        String? val = pref.getString("alarm_interval_setting");
         debugPrint("initState user_general_settings, val $val");
         if (val == null || val.isEmpty) {
           dropdownValue = ShowAlarmTimeSettings.minutes10;
@@ -177,7 +172,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
     return DropdownMenu<String>(
       menuStyle: MenuStyle(
-        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.all(0)),
 
         //visualDensity: const VisualDensity(vertical: 0, horizontal: 3)
@@ -220,9 +215,9 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
             value: value,
             label: value,
             style: ButtonStyle(
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                   const EdgeInsets.only(left: 13)),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.white54),
+              backgroundColor: WidgetStateProperty.all<Color>(Colors.white54),
               //overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
               // surfaceTintColor:
               //   MaterialStateProperty.all<Color>(Colors.green),

@@ -90,7 +90,7 @@ class Utils {
                   ),
                 ),
               ),
-              Center(child: Text("Getting user settings...")),
+              const Center(child: Text("Getting user settings...")),
             ],
           ),
         ),
@@ -108,8 +108,7 @@ class Utils {
     if (parsedMqttSettings == null) {
       return false;
     }
-    if (parsedMqttSettings.contains(decodeMessage) ||
-        (parsedMqttSettings == null || parsedMqttSettings.isEmpty)) {
+    if (parsedMqttSettings.contains(decodeMessage) || parsedMqttSettings.isEmpty) {
       return true;
     } else {
       List<UserDataSettings> parsedMqttSettingsList =
@@ -184,7 +183,7 @@ class Utils {
     return test;
   }
 
-  /** Pride v postev za nastavitve za vsak alarm posebej **/
+  /** Pride v postev za nastavitve za vsak alarm posebej **///
   static Future<List<AlarmIntervalSetting>>
       getAlarmIntervalSettingsList() async {
     List<AlarmIntervalSetting> alarmIntervalSettingList = [];

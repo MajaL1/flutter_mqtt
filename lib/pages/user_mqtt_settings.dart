@@ -18,7 +18,7 @@ import '../util/utils.dart';
 import '../widgets/sensor_type.dart';
 
 class UserMqttSettings extends StatefulWidget {
-   UserMqttSettings.base({Key? key}) : super(key: key);
+   const UserMqttSettings.base({Key? key}) : super(key: key);
 
   @override
   State<UserMqttSettings> createState() => _UserMqttSettingsState();
@@ -129,29 +129,26 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     debugPrint("calling build method user_settings.dart");
 
     return Container(
-      //scrollDirection: Axis.vertical,
-      child: Container(
-        color: Colors.white,
-        child: Column(children: <Widget>[
-          const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-          const Text("Device settings ",
-              style: TextStyle(
-                  color: Colors.black,
-                  decorationColor: Colors.blueAccent,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-          //const Divider(height: 4, color: Colors.black12, thickness: 5),
+      color: Colors.white,
+      child: Column(children: <Widget>[
+        const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
+        const Text("Device settings ",
+            style: TextStyle(
+                color: Colors.black,
+                decorationColor: Colors.blueAccent,
+                fontSize: 20,
+                fontWeight: FontWeight.bold)),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+        //const Divider(height: 4, color: Colors.black12, thickness: 5),
 
-          _buildMqttSettingsView(),
-          //_buildIntervalSpinBox(context),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 15),
-          ),
-          const Divider(height: 1, color: Colors.black12, thickness: 5),
-          Container(height: 30),
-        ]),
-      ),
+        _buildMqttSettingsView(),
+        //_buildIntervalSpinBox(context),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 15),
+        ),
+        const Divider(height: 1, color: Colors.black12, thickness: 5),
+        Container(height: 30),
+      ]),
     );
   }
 
@@ -251,7 +248,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                           Icons.check,
                           size: 35,
                         )
-                      : Icon(null),
+                      : const Icon(null),
                 ))
       ])
     ]);
@@ -298,7 +295,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       }
     } else { */
 
-      if ((newUserSettings == null || newUserSettings.isEmpty)) {
+      if (newUserSettings.isEmpty){
         debugPrint("NEW USER SETINGS EMPTY");
       }
       else {
@@ -309,7 +306,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       debugPrint("=== 2 ");
 
       if (parsedCurrentMqttSettings != null) {
-        var jsonMap = json.decode(parsedCurrentMqttSettings!); //jsonMap.runtimeType
         debugPrint("=== 99 ");
 
         try {
@@ -321,7 +317,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
         // ce trenutni settingi niso prazni in ce novi settingi niso prazni
         //if (newUserSettings != null && newUserSettings.is) {
           if( parsedCurrentMqttSettings1!=null && parsedCurrentMqttSettings1.isNotEmpty) {
-            var jsonMap1 = json.decode(parsedCurrentMqttSettings1!);
+            var jsonMap1 = json.decode(parsedCurrentMqttSettings1);
             List parsed = jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
             List<UserDataSettings> newUserDataSettings = parsed.cast<UserDataSettings>();
             //List<UserDataSettings> newUserDataSettings = UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings1);
@@ -331,7 +327,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             List<UserDataSettings> diffSettings = Utils.diffOldAndNewSettings(newUserDataSettings, parsedUserDataSettingsList);
 
             SharedPreferences.getInstance().then((value) {
-              String str = json.encode(diffSettings);
               var json0 = json.encode(List<dynamic>.from(diffSettings.map((x) => x.toJson())));
               value.setString("parsed_current_mqtt_settings", json0);
               //value.setString("current_mqtt_settings", json0);
@@ -341,7 +336,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           }
           else {
             SharedPreferences.getInstance().then((value) {
-              String str = json.encode(parsedUserDataSettingsList);
+             // String str = json.encode(parsedUserDataSettingsList);
               var json0 = json.encode(List<dynamic>.from(parsedUserDataSettingsList.map((x) => x.toJson())));
               value.setString("parsed_current_mqtt_settings", json0);
               //value.setString("current_mqtt_settings", json0);
@@ -349,17 +344,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             });
             return parsedUserDataSettingsList;
           }
-        //}
-        userDataSettings = UserDataSettings.getUserDataSettingsList(newUserSettings);
-        SharedPreferences.getInstance().then((value) {
-          var json1 = json.encode(
-              List<dynamic>.from(userDataSettings.map((x) => x.toJson())));
-
-          value.setString("parsed_current_mqtt_settings", json1);
-          // value.setString("current_mqtt_settings", json1);
-          debugPrint(
-              "===1-1 userDataSettings!=null, vzame diff - userDataSettings: $parsedUserDataSettingsList");
-        });
         }
         catch(e, stacktrace){
           debugPrint("stackTrace: $e, $stacktrace");
@@ -413,8 +397,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     });
 
     return newSettings;
-
-    debugPrint("new settings: ");
   }
 
   //(sensorAddress, snapshot.data!, index)
@@ -442,7 +424,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                   _checkAndPairOldSettingsWithNew(dataSettingsList))
               .then((dataSettingsList) => _pairDevicesWithRw(dataSettingsList))
               .then((dataSettingsList) =>
-                  _parseUserDataSettingsToList(dataSettingsList!)),
+                  _parseUserDataSettingsToList(dataSettingsList)),
       builder: (context, snapshot) {
         debugPrint(
             "00000 snapshot.connectionState: ${snapshot.connectionState}");
@@ -529,99 +511,96 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                                                       const EdgeInsets.only(
                                                           top: 15),
                                                   child: Wrap(children: [
-                                                    Container(
-                                                        // color:  const Color.fromRGBO(108, 165, 22, 60),
-                                                        // padding: EdgeInsets.all(5),
-                                                        child: Wrap(children: [
-                                                      if (index > 0)
-                                                        const Divider(
-                                                          height: 45,
-                                                          color: Colors.grey,
-                                                        )
-                                                      else
-                                                        Container(),
-                                                      const Text(
-                                                        "Device:  ",
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              "Roboto Regular",
-                                                          fontSize: 16,
-                                                          letterSpacing: 0.3,
-                                                        ),
+                                                    Wrap(children: [
+                                                                                                          if (index > 0)
+                                                    const Divider(
+                                                      height: 45,
+                                                      color: Colors.grey,
+                                                    )
+                                                                                                          else
+                                                    Container(),
+                                                                                                          const Text(
+                                                    "Device:  ",
+                                                    style: TextStyle(
+                                                      fontFamily:
+                                                          "Roboto Regular",
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.3,
+                                                    ),
+                                                                                                          ),
+                                                                                                          Text(
+                                                    "$deviceName",
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.3,
+                                                      //217,334, 243
+                                                      backgroundColor:
+                                                          Color.fromRGBO(
+                                                              226,
+                                                              239,
+                                                              250,
+                                                              95),
+                                                    ),
+                                                                                                          ),
+                                                                                                          Row(children: [
+                                                    const SizedBox(
+                                                        child: Text(
+                                                            "Sensor address:  ",
+                                                            style: TextStyle(
+                                                                letterSpacing:
+                                                                    0.3,
+                                                                fontSize:
+                                                                    16))),
+                                                    SizedBox(
+                                                        child: Text(
+                                                            sensorAddress,
+                                                            style:
+                                                                const TextStyle(
+                                                              letterSpacing:
+                                                                  0.3,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                              backgroundColor:
+                                                                  Color.fromRGBO(
+                                                                      226,
+                                                                      239,
+                                                                      250,
+                                                                      95),
+                                                            )))
+                                                                                                          ]),
+                                                                                                          Row(children: [
+                                                    const SizedBox(
+                                                        child: Text(
+                                                      "units:  ",
+                                                      style: TextStyle(
+                                                          fontSize: 16),
+                                                    )),
+                                                    SizedBox(
+                                                        child: Text(
+                                                      unitText,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 16,
+                                                        letterSpacing: 0.3,
                                                       ),
-                                                      Text(
-                                                        "$deviceName",
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                          fontSize: 16,
-                                                          letterSpacing: 0.3,
-                                                          //217,334, 243
-                                                          backgroundColor:
-                                                              Color.fromRGBO(
-                                                                  226,
-                                                                  239,
-                                                                  250,
-                                                                  95),
-                                                        ),
-                                                      ),
-                                                      Row(children: [
-                                                        const SizedBox(
-                                                            child: Text(
-                                                                "Sensor address:  ",
-                                                                style: TextStyle(
-                                                                    letterSpacing:
-                                                                        0.3,
-                                                                    fontSize:
-                                                                        16))),
-                                                        SizedBox(
-                                                            child: Text(
-                                                                sensorAddress,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  letterSpacing:
-                                                                      0.3,
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  backgroundColor:
-                                                                      Color.fromRGBO(
-                                                                          226,
-                                                                          239,
-                                                                          250,
-                                                                          95),
-                                                                )))
-                                                      ]),
-                                                      Row(children: [
-                                                        const SizedBox(
-                                                            child: Text(
-                                                          "units:  ",
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        )),
-                                                        SizedBox(
-                                                            child: Text(
-                                                          unitText,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                            fontSize: 16,
-                                                            letterSpacing: 0.3,
-                                                          ),
-                                                        ))
-                                                      ]),
-                                                      _buildFriendlyNameView(
-                                                          friendlyName,
-                                                          deviceName,
-                                                          sensorAddress),
-                                                    ]))
+                                                    ))
+                                                                                                          ]),
+                                                                                                          _buildFriendlyNameView(
+                                                      friendlyName,
+                                                      deviceName,
+                                                      sensorAddress),
+                                                                                                        ])
                                                   ]))
                                               //:  Text(""),
                                             ])
-                                          : Text(""))
-                                  : Text(""),
+                                          : const Text(""))
+                                  : const Text(""),
                               Container(
                                   padding: const EdgeInsets.only(left: 15),
                                   child: Wrap(children: [
@@ -654,9 +633,6 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
             color: Colors.yellow,
           );
         }
-        return const CircularProgressIndicator(
-          color: Colors.green,
-        );
       },
     );
   }
@@ -721,108 +697,105 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
     return Wrap(
       children: [
-        Container(
-          //color: Colors.red,
-          child: Row(children: [
-            SizedBox(
-                // padding:
-                // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
-                //  height: 40,
-                //alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width / 3,
-                child: Text(
-                  settingText,
-                  maxLines: 1,
-                  softWrap: false,
-                  style: const TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(00, 20, 20, 80),
-                      fontSize: 14),
-                )),
-            //Container(alignment: Alignment.center, child: Text(unitText)),
-            //Container(width: 5),
-            SizedBox(
-                //height: 50,
-                width: MediaQuery.of(context).size.width / 5,
-                child: TextFormField(
-                    enabled: rw == true ? true : false,
-                    decoration: GuiUtils.setInputDecorationFriendlyName(),
-                    // decoration: GuiUtils.setInputDecoration(value),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
-                    ],
-                    //enableInteractiveSelection: false,
-                    showCursor: false,
-                    controller: textController,
-                    //autovalidateMode: AutovalidateMode.always,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        isEnabledSave = false;
-                        notifier.value = isEnabledSave;
-                        return '';
-                      }
-                      if (value.length > 4) {
-                        isEnabledSave = false;
-                        notifier.value = isEnabledSave;
-                        // notifier.notifyListeners();
-                        return '';
-                      }
-                      return null;
-                    },
-                    onChanged: (val) {
-                      //debugPrint(
-                      //    "on changed, textController.text: ${textController.text}, val: ${val}");
-                      if (val == "") {
-                        isEnabledSave = false;
-                        notifier.value = isEnabledSave;
-                      } else if (val == value) {
-                        isEnabledSave = false;
-                        notifier.value = isEnabledSave;
-                      } else if (val.length > 4) {
-                        isEnabledSave = false;
-                        notifier.value = isEnabledSave;
-                        //notifier.notifyListeners();
-                      } else {
-                        isEnabledSave = true;
-                        notifier.value = isEnabledSave;
-                      }
-                      debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
-                    })),
-
-            SizedBox(
-              // height: 50,
-              width: 100,
-              child: Row(children: [
-                //  _notifier.value ?
-                ValueListenableBuilder(
-                  valueListenable: notifier,
-                  builder: (BuildContext context, bool val, Widget? child) {
-                    return IconButton(
-                        //style: isEnabledSave
-                        //? GuiUtils.buildElevatedButtonSettings()
-                        //: null,
-                        icon: isEnabledSave
-                            ? const Icon(
-                                Icons.check,
-                                size: 35,
-                              )
-                            : Icon(null),
-                        onPressed: !notifier.value
-                            ? null
-                            : () {
-                                saveMqttSettings(deviceName!, sensorAddress,
-                                    item, textController, settingToChange);
-                                isEnabledSave = false;
-                                notifier.value = false;
-                              });
+        Row(children: [
+          SizedBox(
+              // padding:
+              // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
+              //  height: 40,
+              //alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width / 3,
+              child: Text(
+                settingText,
+                maxLines: 1,
+                softWrap: false,
+                style: const TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(00, 20, 20, 80),
+                    fontSize: 14),
+              )),
+          //Container(alignment: Alignment.center, child: Text(unitText)),
+          //Container(width: 5),
+          SizedBox(
+              //height: 50,
+              width: MediaQuery.of(context).size.width / 5,
+              child: TextFormField(
+                  enabled: rw == true ? true : false,
+                  decoration: GuiUtils.setInputDecorationFriendlyName(),
+                  // decoration: GuiUtils.setInputDecoration(value),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(4),
+                  ],
+                  //enableInteractiveSelection: false,
+                  showCursor: false,
+                  controller: textController,
+                  //autovalidateMode: AutovalidateMode.always,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      isEnabledSave = false;
+                      notifier.value = isEnabledSave;
+                      return '';
+                    }
+                    if (value.length > 4) {
+                      isEnabledSave = false;
+                      notifier.value = isEnabledSave;
+                      // notifier.notifyListeners();
+                      return '';
+                    }
+                    return null;
                   },
-                ),
-              ]),
-            ),
-          ]),
-        )
+                  onChanged: (val) {
+                    //debugPrint(
+                    //    "on changed, textController.text: ${textController.text}, val: ${val}");
+                    if (val == "") {
+                      isEnabledSave = false;
+                      notifier.value = isEnabledSave;
+                    } else if (val == value) {
+                      isEnabledSave = false;
+                      notifier.value = isEnabledSave;
+                    } else if (val.length > 4) {
+                      isEnabledSave = false;
+                      notifier.value = isEnabledSave;
+                      //notifier.notifyListeners();
+                    } else {
+                      isEnabledSave = true;
+                      notifier.value = isEnabledSave;
+                    }
+                    debugPrint("on changed, isEnabledSave: $isEnabledSave");
+                  })),
+
+          SizedBox(
+            // height: 50,
+            width: 100,
+            child: Row(children: [
+              //  _notifier.value ?
+              ValueListenableBuilder(
+                valueListenable: notifier,
+                builder: (BuildContext context, bool val, Widget? child) {
+                  return IconButton(
+                      //style: isEnabledSave
+                      //? GuiUtils.buildElevatedButtonSettings()
+                      //: null,
+                      icon: isEnabledSave
+                          ? const Icon(
+                              Icons.check,
+                              size: 35,
+                            )
+                          : const Icon(null),
+                      onPressed: !notifier.value
+                          ? null
+                          : () {
+                              saveMqttSettings(deviceName!, sensorAddress,
+                                  item, textController, settingToChange);
+                              isEnabledSave = false;
+                              notifier.value = false;
+                            });
+                },
+              ),
+            ]),
+          ),
+        ])
       ],
     );
   }
@@ -855,7 +828,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     String value = controller.text;
 
     debugPrint(
-        "saveMqttSettings: deviceName: ${deviceAddress}, sensorName: $sensorName, ${controller.text}, $sensorName, $settingToChange");
+        "saveMqttSettings: deviceName: $deviceAddress, sensorName: $sensorName, ${controller.text}, $sensorName, $settingToChange");
     //var testText1 = "{\"135\":{\"hi_alarm\":111}}";
     var publishText = "{\"$sensorName\":{\"$settingToChange\":$value}}";
     debugPrint("concatenated text: $publishText");
@@ -885,19 +858,18 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     String? currentSettings = preferences?.getString("current_mqtt_settings");
 
     List<UserDataSettings> userDataSettingsList;
-    bool isDecode = true;
     //if (mqttSettings?.compareTo("[]") != 0) {
     //debugPrint("saving friendly name...mqttSettings oldSettings: $mqttSettings");
     if (mqttSettings != null) {
       var jsonMap =
-      json.decode(mqttSettings!); //jsonMap.runtimeType
+      json.decode(mqttSettings); //jsonMap.runtimeType
 
       List settings = jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
       userDataSettingsList = settings.cast<UserDataSettings>();
     } else {
       Map<String, dynamic> jsonMap = json.decode(currentSettings!);
       debugPrint("2get user data from json decode message");
-      userDataSettingsList = await UserDataSettings.getUserDataSettings(jsonMap);
+      userDataSettingsList = UserDataSettings.getUserDataSettings(jsonMap);
     }
 
     //debugPrint("get json from preferences $userDataSettingsList");
@@ -922,8 +894,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       String sensorName, String deviceName) {
     UserDataSettings settings = UserDataSettings();
     for (UserDataSettings set in userDataSettingsList) {
-      if (set.sensorAddress == deviceName && set.deviceName == sensorName)
+      if (set.sensorAddress == deviceName && set.deviceName == sensorName) {
         return set;
+      }
     }
     return settings;
   }

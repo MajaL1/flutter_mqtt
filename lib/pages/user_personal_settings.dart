@@ -57,24 +57,23 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
 
   Container buildUserPersonalSettings() {
     return Container(
-        child: Container(
-      color: Colors.white,
-      child: Column(children: <Widget>[
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25),
-        ),
-        Container(height: 20),
-        const Text("Personal settings ",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold)),
-        Container(height: 20),
-        //const Divider(height: 1, color: Colors.black12, thickness: 5),
-        _buildUserPersonalSettings(),
-      ]),
-      // ),
-    ));
+          color: Colors.white,
+          child: Column(children: <Widget>[
+    const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 25),
+    ),
+    Container(height: 20),
+    const Text("Personal settings ",
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold)),
+    Container(height: 20),
+    //const Divider(height: 1, color: Colors.black12, thickness: 5),
+    _buildUserPersonalSettings(),
+          ]),
+          // ),
+        );
   }
 
   BoxDecoration buildBoxDecoration() {

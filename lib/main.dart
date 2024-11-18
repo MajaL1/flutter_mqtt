@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -74,14 +73,13 @@ Future<void> main() async {
   });
   debugPrint("main method:: ");
 
-  var initialNotification =
-  await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  //var initialNotification = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   //if (initialNotification?.didNotificationLaunchApp == true) {
     // LocalNotifications.onClickNotification.stream.listen((event) {
 
   //}
   runApp(
-     NotificationsApp(),
+     const NotificationsApp(),
   );
 }
 
@@ -94,7 +92,7 @@ Future<void> main() async {
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   //static FlutterBackgroundService service = FlutterBackgroundService();
-    NotificationsApp({Key? key}) : super(key: key);
+    const NotificationsApp({Key? key}) : super(key: key);
 
 
 
@@ -107,12 +105,12 @@ class NotificationsApp extends StatefulWidget {
 
 class _NotificationsAppState extends State<NotificationsApp> with WidgetsBindingObserver{
   var prefs = 1;
-  late final AppLifecycleListener _listener;
-  final List<String> _states = <String>[];
-  late AppLifecycleState? _state;
-  SendPort? _sendPort;
+  //late final AppLifecycleListener _listener;
+  //final List<String> _states = <String>[];
+  //late AppLifecycleState? _state;
+  //SendPort? _sendPort;
 
-  bool _inForeground = true;
+  //bool _inForeground = true;
  // late FlutterBackgroundService service;
   //static SendPort? uiSendPort;
 
@@ -191,7 +189,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     }
   } */
 
-  Future<AppExitResponse> _onExitRequested() async {
+  /*Future<AppExitResponse> _onExitRequested() async {
     final response = await showDialog<AppExitResponse>(
       context: context,
       barrierDismissible: false,
@@ -216,7 +214,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     );
 
     return response ?? AppExitResponse.exit;
-  }
+  } */
 
   @override
   void dispose() {
@@ -226,7 +224,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     super.dispose();
   }
 
-  Future<void> _handleTransition(String name) async {
+  /*Future<void> _handleTransition(String name) async {
     setState(() {
       _states.add(name);
     });
@@ -238,13 +236,13 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
       preferences.setBool("appRunInBackground", true);
       preferences.reload();
     }
-  }
+  } */
 
-  void _handleStateChange(AppLifecycleState state) {
+  /*void _handleStateChange(AppLifecycleState state) {
     setState(() {
       _state = state;
     });
-  }
+  } */
 
   Future<void> initAlarmHistoryList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

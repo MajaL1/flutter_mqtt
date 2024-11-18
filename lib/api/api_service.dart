@@ -12,12 +12,10 @@ import 'package:mqtt_test/model/notification_message.dart';
 import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/model/user.dart';
 import 'package:mqtt_test/model/user_topic.dart';
-import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../util/background_mqtt.dart';
 
-//import 'package:mqtt_test/assets/alarms.json' show rootBundle;
 
 class ApiService {
   static Client client = Client();
@@ -167,7 +165,7 @@ class ApiService {
     debugPrint("logging out");
     await stopService();
     await _removeUserPreferences();
-    Timer(Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () {
       debugPrint("logout delay");
     });
   }
@@ -371,7 +369,7 @@ class ApiService {
   static Future<List<NotificationMessage>> getNotificationMessage() async {
     var data =
         await rootBundle.loadString("assets/test_notifications_list.json");
-    final jsonResult = jsonDecode(data);
+    //final jsonResult = jsonDecode(data);
     //debugPrint("jsonResult: $jsonResult");
 
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();

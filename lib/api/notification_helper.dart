@@ -209,7 +209,7 @@ class NotificationHelper extends ChangeNotifier {
     debugPrint("showing alarm... ${alarmMessage}");
     await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate", notificationDetails);
 
-    SharedPreferences.getInstance().then((value) {
+    await SharedPreferences.getInstance().then((value) {
       value.setBool("historyChanged", true);
     });
 

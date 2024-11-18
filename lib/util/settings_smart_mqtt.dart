@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/alarm.dart';
 import '../model/data.dart';
 
 class SettingsSmartMqtt1 with ChangeNotifier {
@@ -98,7 +97,7 @@ class SettingsSmartMqtt1 with ChangeNotifier {
       notifyListeners();
       //debugPrint("notifying listeners 2.. $newUserSettings");
 
-      if (newUserSettings != null || newUserSettings.isNotEmpty) {
+      if (newUserSettings.isNotEmpty) {
         newUserSettings = json.encode(concatenatedSettings);
         debugPrint("notifying listeners 3.. $newUserSettings");
         preferences.setString("current_mqtt_settings", newUserSettings);
@@ -122,11 +121,11 @@ class SettingsSmartMqtt1 with ChangeNotifier {
 
   Future<void> setNewUserSettings(Map concatenatedSettings) async {
     newUserSettings = json.encode(concatenatedSettings);
-    debugPrint("map: ${concatenatedSettings}");
+    debugPrint("map: $concatenatedSettings");
   }
 
   // iz historija dobi zadnji alarm za napravo in vrne njen datum
-  Future<DateTime?> _getLastAlarmDateFromHistory(String? deviceName,
+  /*Future<DateTime?> _getLastAlarmDateFromHistory(String? deviceName,
       String? sensorName) async {
     List<Alarm> alarmList = [];
 
@@ -142,14 +141,14 @@ class SettingsSmartMqtt1 with ChangeNotifier {
     /**
      * Todo: najdi zadnji alarm za napravo
      * ***/
-    bool found = true;
+    //bool found = true;
     DateTime? lastSentAlarm;
     for (Alarm alarm in alarmList) {
       String? alarmDeviceName = alarm.deviceName;
       String? alarmSensorAddress = alarm.sensorAddress;
       // zadnji datum
       if (alarmDeviceName == deviceName && alarmSensorAddress == sensorName) {
-        found = true;
+       // found = true;
         lastSentAlarm = alarm.ts;
         if (lastSentAlarm!.isAfter(alarm.ts!)) {
           lastSentAlarm = alarm.ts;
@@ -157,7 +156,7 @@ class SettingsSmartMqtt1 with ChangeNotifier {
         }
       }
     }
-  }
+  } */
 
   Data? convertMessageToData(String message, String deviceName) {
     String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
@@ -181,9 +180,9 @@ class SettingsSmartMqtt1 with ChangeNotifier {
       if (settings[key] != null) {
         Map val = settings[key];
 
-        for (String key1 in val.keys) {
+        //for (String key1 in val.keys) {
           //print("key1: $key1");
-        }
+        //}
         final Map<String, String> deviceNameMap = {"device_name": deviceName};
         val.addAll(deviceNameMap);
       }
@@ -191,7 +190,7 @@ class SettingsSmartMqtt1 with ChangeNotifier {
   }
 
   void setDataListToPreferences(Data newData, SharedPreferences preferences) {
-    String? dataListStr = preferences.getString("data_mqtt_list");
+    //String? dataListStr = preferences.getString("data_mqtt_list");
     List? dataList;
 
     // zaenkrat dodamo samo eno element na listo

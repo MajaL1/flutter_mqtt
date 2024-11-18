@@ -40,7 +40,7 @@ class DataSmartMqtt extends ChangeNotifier {
 
     }
     else{
-      debugPrint("data is weird: ${decodeMessage}");
+      debugPrint("data is weird: $decodeMessage");
 
     }//newMqttData = data;
   }
@@ -68,7 +68,7 @@ class DataSmartMqtt extends ChangeNotifier {
 
     if(dataListStr != null) {
       if (dataListStr.isNotEmpty) {
-        jsonMap1 = json.decode(dataListStr!);
+        jsonMap1 = json.decode(dataListStr);
         //debugPrint("!!!1 jsonMap1 $jsonMap1");
 
        // List dataList1 = jsonMap1.map((val) => Data.fromJsonList(val)).toList();
@@ -123,9 +123,7 @@ class DataSmartMqtt extends ChangeNotifier {
   Future setNewMqttData(List<Data> dataList) async{
     debugPrint("setting new mqtt data: $dataList");
     newMqttData = dataList;
-    if(dataList != null) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   Future<List<Data>?> getNewDataList() async {

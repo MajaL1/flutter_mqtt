@@ -190,30 +190,30 @@ class GuiUtils {
 
   static buildSaveMqttSettingsButtonDecoration1() {
     return ButtonStyle(
-      backgroundColor: MaterialStateColor.resolveWith((states) =>
+      backgroundColor: WidgetStateColor.resolveWith((states) =>
           const Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
       //borderRadius: BorderRadius.circular(12),
     );
   }
 
-  static MaterialStateProperty<Color> getColor(
+  static WidgetStateProperty<Color> getColor(
       Color color, Color colorPressed) {
-    getColor(Set<MaterialState> states) {
-      if (states.contains(MaterialState.pressed)) {
+    getColor(Set<WidgetState> states) {
+      if (states.contains(WidgetState.pressed)) {
         return colorPressed;
       } else {
         return color;
       }
     }
 
-    return MaterialStateProperty.resolveWith(getColor);
+    return WidgetStateProperty.resolveWith(getColor);
   }
 
 
   static ButtonStyle buildElevatedButtonSettings() {
     return ButtonStyle(
         //side: MaterialStateProperty.BorderSide(color: Colors.red),
-        shape:MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape:WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6.0),
           //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
@@ -229,7 +229,7 @@ class GuiUtils {
   static ButtonStyle buildElevatedButtonFriendlyName() {
     return ButtonStyle(
         //side: MaterialStateProperty.BorderSide(color: Colors.red),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
@@ -245,7 +245,7 @@ class GuiUtils {
   static ButtonStyle buildElevatedButtonLogin() {
     return ButtonStyle(
 //side: MaterialStateProperty.BorderSide(color: Colors.red),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
           //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
