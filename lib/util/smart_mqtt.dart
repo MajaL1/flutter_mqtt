@@ -367,7 +367,7 @@ class SmartMqtt extends ChangeNotifier {
 
               if(currentAlarmList != null) {
                 if (currentAlarmList.first != null){
-                  String friendlyName = await Utils.setFriendlyName(currentAlarmList.first);
+                  String ? friendlyName = await Utils.setFriendlyName(currentAlarmList.first);
                   //debugPrint("utils - setFriendlyName after: $friendlyName");
                   if(friendlyName != null) {
                     currentAlarmList.first.friendlyName = friendlyName;
