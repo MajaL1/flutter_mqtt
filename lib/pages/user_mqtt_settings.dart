@@ -93,6 +93,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
   final debouncer = Debouncer();
+  late Timer timer;
   int countTest = 0;
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
@@ -380,7 +381,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   Future<String> _getNewUserSettingsList() async {
 
     String newSettings = "";
-    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+    timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       SharedPreferences.getInstance().then((value) {
         value.reload();
         //debugPrint("1settingsChanged, ${value.getBool('settingsChanged')}, ${value.getString('current_mqtt_settings')}");
@@ -904,6 +905,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
   @override
   void dispose() {
     debugPrint("user_mqtt_settings.dart - dispose");
+    timer.cancel();
     super.dispose();
   }
 }
