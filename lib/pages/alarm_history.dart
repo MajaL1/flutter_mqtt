@@ -373,7 +373,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
     timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       SharedPreferences.getInstance().then((value) {
         value.reload();
-        debugPrint("historyChanged, ${value.getBool('historyChanged')} ");
+        //debugPrint("historyChanged, ${value.getBool('historyChanged')} ");
         if(value.getBool("historyChanged") == true){
           debugPrint("2historyChanged, ${value.getBool('historyChanged')}");
           setState(() {
