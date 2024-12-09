@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'dart:isolate';
 
@@ -8,6 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:logger/logger.dart';
+import 'package:mqtt_test/util/file_download_helper.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
@@ -36,11 +41,27 @@ ReceivePort port = ReceivePort();
 SharedPreferences? prefs;
 
 
-Future<void> main() async {
+//var logger = Logger(output: FileOutput(file: File(fullPath));
 
-  tzl.initializeTimeZones();
+var logger;
+
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
+  tzl.initializeTimeZones();
+
+  var status = await Permission.storage.status;
+  if (status.isDenied) {
+    Map<Permission, PermissionStatus> statuses = await [
+      //Permission.location,
+      Permission.storage,
+    ].request();
+  } else {
+
+  }
+  logger = await FileDownloaderHelper.createLogger();
+  //await FileDownloaderHelper.saveFileOnDevice();
 
   final service = FlutterBackgroundService();
 
@@ -56,11 +77,13 @@ Future<void> main() async {
 
   if(await service.isRunning()){
     debugPrint("----isRunning");
+    logger.log(Level.info, "---- service is running: isRunning");
   }
   else {
     print("----notRunning");
-    await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
-        service);
+    logger.log(Level.info, "---- service NOT running: notRunning");
+
+    await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
   }
 
   // SharedPreferences.setMockInitialValues({});
@@ -82,6 +105,8 @@ Future<void> main() async {
      const NotificationsApp(),
   );
 }
+
+
 
 
 // to ensure this is executed

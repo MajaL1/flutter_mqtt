@@ -64,7 +64,7 @@ class NotificationHelper extends ChangeNotifier {
           const InitializationSettings(
             iOS: DarwinInitializationSettings(),
             android: AndroidInitializationSettings(
-              'ic_bg_service_small'
+              'icon'
             ),
           ),
           onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
