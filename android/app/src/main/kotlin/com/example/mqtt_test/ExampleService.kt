@@ -1,4 +1,4 @@
-package com.example.mqtt_test/*
+package com.navis.alarmApp/*
 // change 'flutter_foreground_example' to your app name
 package com.example.mqtt_test
 

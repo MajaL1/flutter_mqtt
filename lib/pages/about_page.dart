@@ -65,7 +65,7 @@ class _AboutState extends State<AboutPage> {
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
           ),
-          _buildDataView(),
+          _buildAboutView(),
 
           //Divider(height: 1, color: Colors.black12, thickness: 5),
         ]),
@@ -88,11 +88,36 @@ class _AboutState extends State<AboutPage> {
     );
   }
 
-  Widget _buildDataView() {
-    return SizedBox(
-      width: 70,
-      height: 70,
-      child: Image.asset('assets/images/LOGO_NEW_ORIG.png'),
+  Widget _buildAboutView() {
+    return
+      Center(child:
+          Column(children: [
+            const Padding(padding: EdgeInsets.only(top: 30)),
+            const Text("ALARM APP", style: TextStyle(
+              color: Colors.black45,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2.5,
+            fontSize: 30)),
+            const Padding(padding: EdgeInsets.only(top: 30)),
+
+            const Text("v.10.10.0", style: TextStyle(
+                color: Colors.black45,
+                fontWeight: FontWeight.bold,
+                fontSize: 22)),
+            const Padding(padding: EdgeInsets.only(top: 50)),
+            SizedBox(
+          width: 200,
+          height: 200,
+          child: Image.asset('assets/images/LOGO_NEW_ORIG.png'),
+
+      ),
+            const Padding(padding: EdgeInsets.only(top: 50)),
+            const Text("www.navis-elektronika.com", style: TextStyle(
+              color: Colors.black45,
+              fontWeight: FontWeight.bold,
+              fontSize: 16)),
+
+          ])
 
       //FlutterLogo(size: 200),
     );

@@ -10,7 +10,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:logger/logger.dart';
-import 'package:mqtt_test/util/file_download_helper.dart';
+import 'package:mqtt_test/util/log_file_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -40,9 +40,6 @@ ReceivePort port = ReceivePort();
 /// Global [SharedPreferences] object.
 SharedPreferences? prefs;
 
-
-//var logger = Logger(output: FileOutput(file: File(fullPath));
-
 var logger;
 
 
@@ -60,7 +57,7 @@ Future<void> main() async {
   } else {
 
   }
-  logger = await FileDownloaderHelper.createLogger();
+  logger = await LogFileHelper.createLogger();
   //await FileDownloaderHelper.saveFileOnDevice();
 
   final service = FlutterBackgroundService();

@@ -5,11 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 //mport 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:logger/logger.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/constants.dart';
+import 'log_file_helper.dart';
 
 class BackgroundMqtt {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -66,6 +69,13 @@ class BackgroundMqtt {
       value.setBool("serviceStopped", false);
     });
 
+    if(logger == null) {
+      logger = await LogFileHelper.createLogger();
+    }
+    logger.log(Level.info, "background_mqtt start onStart()");
+
+
+
     SmartMqtt ? smartMqtt;
 
     SmartMqtt.instance.addListener(() {});
@@ -73,15 +83,19 @@ class BackgroundMqtt {
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
         debugPrint(">>>>>>> service.setAsForegroundService()");
+        logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
+
       });
 
       service.on('setAsBackground').listen((event) {
         service.setAsBackgroundService();
-        debugPrint(">>>>>>> service.setAsBAckgroundService()");
+        debugPrint(">>>>>>> service.setAsBackgroundService()");
+        logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
       });
     }
     service.on('stopService').listen((event) {
       debugPrint(">>>>>>>stopped service.");
+      logger.log(Level.info, ">>>>>>>stopped service.");
       service.invoke("stopService");
       if(smartMqtt!.getConnectionState()){
         smartMqtt?.disconnect();
@@ -118,11 +132,13 @@ class BackgroundMqtt {
     debugPrint(" startTime, currentTime $startTime, $currentTime");
     debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
 
+
     SharedPreferences.getInstance().then((val) {
       val.reload();
 
       if(val.getString("username") == null || val.getString("mqtt_pass")== null || val.getString("user_topic_list")==null) {
         debugPrint("1 - service.stopSelf();");
+        logger.log(Level.info, "1 - service.stopSelf();");
         service.stopSelf();
         return;
       }
@@ -156,6 +172,7 @@ class BackgroundMqtt {
       //smartMqtt?.setClient(client!);
 
     });
+    logger.log(Level.info, "FLUTTER BACKGROUND SERVICE: ${DateTime.now()}'");
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
   }
 
@@ -255,5 +272,7 @@ class BackgroundMqtt {
       ),
     );
     debugPrint("main.dart end initializing background service");
+    logger.log(Level.info, "main.dart end initializing background service");
+
   }
 }
