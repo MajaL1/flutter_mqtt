@@ -55,6 +55,8 @@ class _LoginFormValidationState extends State<LoginForm> {
   //late StreamSubscription<InternetStatus> _subscription;
   bool isLoading = false;
   bool loginError = false;
+  bool licenseError = false;
+
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   String emailText = "test3";
@@ -281,7 +283,22 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                 )
                                               : const Text(""),
                                         ),
-                                        const Padding(
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 15.0,
+                                              right: 15.0,
+                                              top: 0,
+                                              bottom: 0),
+                                          child: licenseError == true
+                                              ? const Text(
+                                            "License expired",
+                                            style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontFamily: 'Roboto'),
+                                          )
+                                              : const Text(""),
+                                        ),
+                                        (!loginError && !licenseError) ? const Padding(
                                           padding: EdgeInsets.only(
                                               left: 15.0,
                                               right: 15.0,
@@ -294,7 +311,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                   74, 96, 128, 1.0),
                                             ),
                                           ),
-                                        ),
+                                        ): Container(),
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               left: 15.0,
@@ -414,7 +431,12 @@ class _LoginFormValidationState extends State<LoginForm> {
 
       try {
         User? user = await ApiService.login(username, password);
-        if (user != null) {
+        if(user!.licenceExpired){
+         licenseError = true;
+         debugPrint("====licenceError:: $licenseError");
+          return true;
+        }
+        else if (user != null) {
           debugPrint(
               "loginForm, user: $user.username, $user.password, $user.topic");
           List<String> userTopicList = Utils.createTopicListFromApi(user);
@@ -461,6 +483,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           });
 
           loginError = false;
+          licenseError = false;
 
           // await service.startService();
           /* await Workmanager().initialize(

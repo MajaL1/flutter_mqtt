@@ -125,6 +125,17 @@ class ApiService {
             "Accept": "text/html,application/xhtml+xml,application/xml"
           });
 
+      //User user = User.base();
+      //user.licenceExpired = true;
+      //return user;
+      debugPrint("===RESPONSE status code:: ${response.statusCode}");
+
+      if(response.statusCode == 403){
+        debugPrint("===Api service login status code 403: ");
+          User user = User.base();
+          user.licenceExpired = true;
+          return user;
+      }
       if (response.statusCode == 200) {
         var data = await jsonDecode(response.body.toString());
         // debugPrint(data['token']);

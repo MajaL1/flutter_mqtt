@@ -3,13 +3,16 @@ import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 
 class User {
-  String username;
-  int id;
-  String? email;
-  String mqtt_pass;
-  DateTime date_register;
-  DateTime? date_login;
-  List<UserTopic> userTopicList;
+  late String username;
+  late int id;
+  late String? email;
+  late String mqtt_pass;
+  late DateTime date_register;
+  late DateTime? date_login;
+  late List<UserTopic> userTopicList;
+  bool licenceExpired = false;
+
+  User.base();
 
   User(
       {required this.id,

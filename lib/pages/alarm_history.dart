@@ -27,6 +27,7 @@ class AlarmHistory extends StatefulWidget {
 
 class _AlarmHistoryState extends State<AlarmHistory> {
   late Timer timer;
+  bool refresh = false;
   Future<List<Alarm>> _returnAlarmList(List<Alarm> alarmList) async {
     debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     //alarm history - getRefreshedAlarmList()
@@ -377,7 +378,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         if(value.getBool("historyChanged") == true){
           debugPrint("2historyChanged, ${value.getBool('historyChanged')}");
           setState(() {
-
+            refresh = true;
           });
           value.setBool("historyChanged", false);
         }
