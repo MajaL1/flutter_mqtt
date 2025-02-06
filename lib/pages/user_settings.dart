@@ -50,13 +50,15 @@ class _UserSettingsState extends State<UserSettings> {
       //val.reload();
       setState(() {
         username = val.getString("username")!;
+        email = (val.getString("email") ?? "");
+
       });
       //val.reload();
-      setState(() {
-        if(val.getString("email")!= null) {
-          email = val.getString("email")!;
-        }
-      });
+     // setState(() {
+     //   if(val.getString("email")!= null) {
+     //     email = val.getString("email")!;
+     //   }
+     // });
     });
 
     debugPrint("user_settings initState");

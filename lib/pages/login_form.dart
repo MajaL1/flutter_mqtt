@@ -433,21 +433,21 @@ class _LoginFormValidationState extends State<LoginForm> {
         User? user = await ApiService.login(username, password);
         if(user!.licenceExpired){
          licenseError = true;
-         debugPrint("====licenceError:: $licenseError");
+         //debugPrint("====licenceError:: $licenseError");
           return true;
         }
         else if (user != null) {
           debugPrint(
-              "loginForm, user: $user.username, $user.password, $user.topic");
+              "loginForm, user: $user.username, ${user.email}, $user.password, $user.topic");
           List<String> userTopicList = Utils.createTopicListFromApi(user);
-          await SharedPreferences.getInstance().then((value) {
+          await SharedPreferences.getInstance().then((value) async {
             value.setString("username", username);
             value.setString("pass", password);
             // value.setStringList("user_topics", userTopicList);
             value.setString("username", user.username);
 
             if (user.email != null) {
-              value.setString("email", user.email!);
+              await value.setString("email", user.email);
             }
 
             value.setString("mqtt_username", user.username);

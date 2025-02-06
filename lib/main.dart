@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:ui';
 import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,13 +9,11 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:logger/logger.dart';
+import 'package:mqtt_test/util/background_mqtt.dart';
 import 'package:mqtt_test/util/log_file_helper.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
-import 'package:mqtt_test/util/background_mqtt.dart';
 
 import 'model/alarm.dart';
 import 'pages/first_screen.dart';
@@ -33,7 +30,6 @@ const String countKey = 'count';
 /// The name associated with the UI isolate's [SendPort].
 const String isolateName = 'isolate';
 
-
 /// A port used to communicate from a background isolate to the UI isolate.
 ReceivePort port = ReceivePort();
 
@@ -41,7 +37,6 @@ ReceivePort port = ReceivePort();
 SharedPreferences? prefs;
 
 var logger;
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,29 +49,25 @@ Future<void> main() async {
       //Permission.location,
       Permission.storage,
     ].request();
-  } else {
-
-  }
+  } else {}
   logger = await LogFileHelper.createLogger();
   //await FileDownloaderHelper.saveFileOnDevice();
 
   final service = FlutterBackgroundService();
 
   //dodamo ios permission za plugin
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      IOSFlutterLocalNotificationsPlugin>()
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
-  if(await service.isRunning()){
+  if (await service.isRunning()) {
     debugPrint("----isRunning");
     logger.log(Level.info, "---- service is running: isRunning");
-  }
-  else {
+  } else {
     print("----notRunning");
     logger.log(Level.info, "---- service NOT running: notRunning");
 
@@ -84,7 +75,7 @@ Future<void> main() async {
   }
 
   // SharedPreferences.setMockInitialValues({});
-  SharedPreferences.getInstance().then((value) {
+  await SharedPreferences.getInstance().then((value) {
     if (value.getBool("isLoggedIn") != null) {
       if (!value.getBool("isLoggedIn")!) {
         value.setBool("isLoggedIn", false);
@@ -95,45 +86,37 @@ Future<void> main() async {
 
   //var initialNotification = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   //if (initialNotification?.didNotificationLaunchApp == true) {
-    // LocalNotifications.onClickNotification.stream.listen((event) {
+  // LocalNotifications.onClickNotification.stream.listen((event) {
 
   //}
   runApp(
-     const NotificationsApp(),
+    const NotificationsApp(),
   );
 }
-
-
-
 
 // to ensure this is executed
 // run app from xcode, then from xcode menu, select Simulate Background Fetch
 
-
-
 class NotificationsApp extends StatefulWidget {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   //static FlutterBackgroundService service = FlutterBackgroundService();
-    const NotificationsApp({Key? key}) : super(key: key);
-
-
+  const NotificationsApp({Key? key}) : super(key: key);
 
   @override
   State<NotificationsApp> createState() => _NotificationsAppState();
 }
 
-
-
-
-class _NotificationsAppState extends State<NotificationsApp> with WidgetsBindingObserver{
+class _NotificationsAppState extends State<NotificationsApp> with WidgetsBindingObserver {
   var prefs = 1;
+
   //late final AppLifecycleListener _listener;
   //final List<String> _states = <String>[];
   //late AppLifecycleState? _state;
   //SendPort? _sendPort;
 
   //bool _inForeground = true;
- // late FlutterBackgroundService service;
+  // late FlutterBackgroundService service;
   //static SendPort? uiSendPort;
 
   // static MethodChannel methodChannel = const MethodChannel('com.tarazgroup');
@@ -145,6 +128,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
       return Future(() => call);
     }); */
   }
+
   @override
   void initState() {
     // ce shared preferences se nimajo objekta za alarme, ustvari novega
@@ -154,7 +138,7 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     //NotificationHelper.initializeService();
     //WidgetsBinding.instance.addObserver(this);
     super.initState();
-   /* _state = SchedulerBinding.instance.lifecycleState;
+    /* _state = SchedulerBinding.instance.lifecycleState;
     _listener = AppLifecycleListener(
       onShow: () => _handleTransition('show'),
       onResume: () => _handleTransition('resume'),
@@ -171,10 +155,11 @@ class _NotificationsAppState extends State<NotificationsApp> with WidgetsBinding
     /*SharedPreferences.getInstance().then((val){
       val.setBool("appRunInBackground", false);
     });*/
-   /* if (_state != null) {
+    /* if (_state != null) {
       _states.add(_state!.name);
     } */
   }
+
   @override
   /*void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);

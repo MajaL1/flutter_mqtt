@@ -40,11 +40,12 @@ class _AboutState extends State<AboutPage> {
       val.reload();
       setState(() {
         username = val.getString("username")!;
+        email = (val.getString("email") ?? "");
       });
       setState(() {
         //if(val.getString("email") != null) {
-        String ? email = val.getString("email");
-          email ??= "";
+        //String ? email = val.getString("email");
+        //  email ??= "";
        // }
       });
     });

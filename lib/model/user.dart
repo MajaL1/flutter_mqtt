@@ -5,7 +5,7 @@ import 'package:mqtt_test/model/user_topic.dart';
 class User {
   late String username;
   late int id;
-  late String? email;
+  late String email;
   late String mqtt_pass;
   late DateTime date_register;
   late DateTime? date_login;

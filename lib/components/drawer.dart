@@ -13,7 +13,7 @@ import '../pages/login_form.dart';
 class NavDrawer extends StatefulWidget {
   //const NavDrawer.base({Key? key}) : super(key: key);
 
-   NavDrawer.data({required this.username, required this.email});
+   const NavDrawer.data({required this.username, required this.email});
 
   //MyHomePage({Key key, this.title}) : super(key: key);
   final String username;

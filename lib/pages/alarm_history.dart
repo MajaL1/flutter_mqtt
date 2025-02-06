@@ -28,6 +28,7 @@ class AlarmHistory extends StatefulWidget {
 class _AlarmHistoryState extends State<AlarmHistory> {
   late Timer timer;
   bool refresh = false;
+
   Future<List<Alarm>> _returnAlarmList(List<Alarm> alarmList) async {
     debugPrint("alarm_history alarmList ${alarmList.length}, ${alarmList.toString()}");
     //alarm history - getRefreshedAlarmList()
@@ -48,18 +49,16 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       setState(() {
         username = val.getString("username") ?? val.getString("username")!;
         email = (val.getString("email") ?? "");
-
       });
       debugPrint("44444 1 user_settings initState username: $username, email: $email");
       val.reload();
       debugPrint("44444 2 user_settings initState username: $username, email: $email ");
 
-      setState(() {
-      });
+      setState(() {});
 
-    debugPrint("alarm_history initState");
-  });}
-
+      debugPrint("alarm_history initState");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,16 +75,14 @@ class _AlarmHistoryState extends State<AlarmHistory> {
               extendBody: true,
               resizeToAvoidBottomInset: true,
               appBar: CustomAppBar(Constants.HISTORY),
-              drawer:  NavDrawer.data(username: username, email: email),
+              drawer: NavDrawer.data(username: username, email: email),
               body: SingleChildScrollView(
                   child: Container(
                       color: Colors.white,
-                      constraints:
-                          const BoxConstraints(maxWidth: 1000, minHeight: 1000),
+                      constraints: const BoxConstraints(maxWidth: 1000, minHeight: 1000),
                       child: Column(children: [
                         const Padding(
-                          padding: EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 7, bottom: 15.0),
+                          padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 7, bottom: 15.0),
                         ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -94,16 +91,13 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               Container(
                                 height: 30,
                                 width: 150,
-                                decoration:
-                                    GuiUtils.buildHistoryButtonDecoration(),
+                                decoration: GuiUtils.buildHistoryButtonDecoration(),
                                 child: ElevatedButton.icon(
-                                    style:
-                                        GuiUtils.buildElevatedButtonSettings(),
+                                    style: GuiUtils.buildElevatedButtonSettings(),
                                     onPressed: () {
                                       showDialog<String>(
                                         context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
+                                        builder: (BuildContext context) => AlertDialog(
                                           title: const Text('Clear history'),
                                           content: const Text(
                                             'Are you sure you want to clear history?',
@@ -111,8 +105,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                           ),
                                           actions: <Widget>[
                                             TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  context, 'Cancel'),
+                                              onPressed: () => Navigator.pop(context, 'Cancel'),
                                               child: const Text('Cancel'),
                                             ),
                                             TextButton(
@@ -128,35 +121,28 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                     },
                                     label: const Text(
                                       'Clear history',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
+                                      style: TextStyle(color: Colors.white, fontSize: 12),
                                     ),
-                                    icon: const Icon(Icons.clear,
-                                        color: Colors.white, size: 18)),
+                                    icon: const Icon(Icons.clear, color: Colors.white, size: 18)),
                               ),
                               Container(width: 40),
                               Container(
                                 height: 30,
                                 width: 130,
-                                decoration:
-                                    GuiUtils.buildHistoryButtonDecoration(),
+                                decoration: GuiUtils.buildHistoryButtonDecoration(),
                                 child: ElevatedButton.icon(
-                                    style:
-                                        GuiUtils.buildElevatedButtonSettings(),
+                                    style: GuiUtils.buildElevatedButtonSettings(),
                                     onPressed: () {
                                       _refreshHistoryList();
                                     },
                                     label: const Text(
                                       'Refresh',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
+                                      style: TextStyle(color: Colors.white, fontSize: 12),
                                     ),
-                                    icon: const Icon(Icons.refresh,
-                                        color: Colors.white, size: 18)),
+                                    icon: const Icon(Icons.refresh, color: Colors.white, size: 18)),
                               )
                             ]),
-                        const Divider(
-                            height: 40, color: Colors.transparent, thickness: 0),
+                        const Divider(height: 40, color: Colors.transparent, thickness: 0),
                         ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
@@ -173,9 +159,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                               String loAlarm = snapshot.data![index].loAlarm.toString();
                               String v = snapshot.data![index].v.toString();
                               int? u = snapshot.data![index].u;
-                              String sensorAddress = snapshot
-                                  .data![index].sensorAddress
-                                  .toString();
+                              String sensorAddress = snapshot.data![index].sensorAddress.toString();
                               String alarmValue = "";
                               String units = UnitsConstants.getUnits(u);
 
@@ -187,35 +171,27 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
                               //     DateTime ts = snapshot.data![index].ts!;
 
-                              if (snapshot.data![index].hiAlarm != 0 &&
-                                  snapshot.data![index].hiAlarm != null) {
+                              if (snapshot.data![index].hiAlarm != 0 && snapshot.data![index].hiAlarm != null) {
                                 alarmValue = "Hi alarm: $hiAlarm";
                               }
-                              if (snapshot.data![index].loAlarm != 0 &&
-                                  snapshot.data![index].loAlarm != null) {
+                              if (snapshot.data![index].loAlarm != 0 && snapshot.data![index].loAlarm != null) {
                                 alarmValue += " Lo alarm: $loAlarm";
                               }
                               String formattedDate = "";
 
                               if (snapshot.data![index].ts != null) {
-                                formattedDate = DateFormat('yyyy-MM-dd – HH:mm')
-                                    .format(snapshot.data![index].ts!);
+                                formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(snapshot.data![index].ts!);
                               }
                               //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
                               return Container(
                                 //color: Colors.white,
                                 decoration: const BoxDecoration(
                                     color: Colors.white,
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.blueGrey,
-                                            width: 0.0))),
+                                    border: Border(bottom: BorderSide(color: Colors.blueGrey, width: 0.0))),
                                 child: Table(
                                     border: const TableBorder(
-                                        horizontalInside: BorderSide(
-                                            width: 0.0,
-                                            color: Colors.blue,
-                                            style: BorderStyle.solid)),
+                                        horizontalInside:
+                                            BorderSide(width: 0.0, color: Colors.blue, style: BorderStyle.solid)),
                                     columnWidths: const {
                                       0: FixedColumnWidth(0.5),
                                       1: FixedColumnWidth(70.0),
@@ -226,101 +202,65 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                       isHeader
                                           ? TableRow(children: [
                                               Container(
-                                                padding: const EdgeInsets.only(
-                                                    top: 1.0,
-                                                    left: 1,
-                                                    right: 1,
-                                                    bottom: 1.0),
+                                                padding:
+                                                    const EdgeInsets.only(top: 1.0, left: 1, right: 1, bottom: 1.0),
                                                 child: const Text("",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                        color: Color.fromRGBO(
-                                                            32, 52, 86, 0.6),
+                                                        fontWeight: FontWeight.w800,
+                                                        color: Color.fromRGBO(32, 52, 86, 0.6),
                                                         fontSize: 15)),
                                               ),
                                               Container(
-                                                  padding:
-                                                      const EdgeInsets.all(1.0),
-                                                  child: const Text(
-                                                      "Sensor",
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                  padding: const EdgeInsets.all(1.0),
+                                                  child: const Text("Sensor",
+                                                      textAlign: TextAlign.center,
                                                       style: TextStyle(
-                                                          color: Color.fromRGBO(
-                                                              32, 52, 86, 0.8),
-                                                          fontWeight:
-                                                              FontWeight.w800,
+                                                          color: Color.fromRGBO(32, 52, 86, 0.8),
+                                                          fontWeight: FontWeight.w800,
                                                           fontSize: 15))),
                                               Container(
-                                                  padding:
-                                                      const EdgeInsets.all(1.0),
+                                                  padding: const EdgeInsets.all(1.0),
                                                   child: const Text("Alarm",
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                      textAlign: TextAlign.center,
                                                       style: TextStyle(
-                                                          color: Color.fromRGBO(
-                                                              32, 52, 86, 0.8),
-                                                          fontWeight:
-                                                              FontWeight.w800,
+                                                          color: Color.fromRGBO(32, 52, 86, 0.8),
+                                                          fontWeight: FontWeight.w800,
                                                           fontSize: 15))),
                                               Container(
-                                                padding:
-                                                    const EdgeInsets.all(1.0),
+                                                padding: const EdgeInsets.all(1.0),
                                                 child: const Text("Date ",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        color: Color.fromRGBO(
-                                                            32, 52, 86, 0.8),
-                                                        fontWeight:
-                                                            FontWeight.w800,
+                                                        color: Color.fromRGBO(32, 52, 86, 0.8),
+                                                        fontWeight: FontWeight.w800,
                                                         fontSize: 15)),
                                               )
                                             ])
                                           : TableRow(children: [
                                               Container(
                                                   padding:
-                                                      const EdgeInsets.only(
-                                                          top: 1.0,
-                                                          left: 1,
-                                                          right: 1,
-                                                          bottom: 1.0),
+                                                      const EdgeInsets.only(top: 1.0, left: 1, right: 1, bottom: 1.0),
                                                   child: Text(
                                                     index.toString(),
                                                     textAlign: TextAlign.center,
-                                                    style: const TextStyle(
-                                                        color: Color.fromRGBO(
-                                                            55, 55, 58, 0.9)),
+                                                    style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
                                                   )),
                                               Container(
-                                                  padding:
-                                                      const EdgeInsets.all(1.0),
+                                                  padding: const EdgeInsets.all(1.0),
                                                   child: Text(deviceName,
-                                                      style: const TextStyle(
-                                                          color: Color.fromRGBO(
-                                                              55, 55, 58, 0.9)),
-                                                      textAlign:
-                                                          TextAlign.center)),
+                                                      style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
+                                                      textAlign: TextAlign.center)),
                                               Container(
-                                                  padding:
-                                                      const EdgeInsets.all(1.0),
-                                                  child: Text(
-                                                      "Value: $v \n$alarmValue $units",
-                                                      style: const TextStyle(
-                                                          color: Color.fromRGBO(
-                                                              55, 55, 58, 0.9)),
-                                                      textAlign:
-                                                          TextAlign.center)),
+                                                  padding: const EdgeInsets.all(1.0),
+                                                  child: Text("Value: $v \n$alarmValue $units",
+                                                      style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
+                                                      textAlign: TextAlign.center)),
                                               Container(
-                                                padding:
-                                                    const EdgeInsets.all(1.0),
+                                                padding: const EdgeInsets.all(1.0),
                                                 child: Text("$formattedDate ",
-                                                    style: const TextStyle(
-                                                        color: Color.fromRGBO(
-                                                            55, 55, 58, 0.9)),
-                                                    textAlign:
-                                                        TextAlign.center),
+                                                    style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
+                                                    textAlign: TextAlign.center),
                                               )
                                             ])
                                     ]),
@@ -355,11 +295,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         List alarmMessageJson = json.decode(alarmListData);
         alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
         debugPrint("1alarm history - alarmList: ${alarmList}");
-
       }
       //debugPrint("alarmList-:: $alarmList");
     }
-   /* if (refreshedAlarms != null) {
+    /* if (refreshedAlarms != null) {
       return refreshedAlarms;
     }
     return refreshedAlarms; */
@@ -370,12 +309,11 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
   // nastavi friendly name v listi history alarmov
   Future<List<Alarm>> _pairAlarmListWithSettings(List<Alarm> alarmList) async {
-
     timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       SharedPreferences.getInstance().then((value) {
         value.reload();
         //debugPrint("historyChanged, ${value.getBool('historyChanged')} ");
-        if(value.getBool("historyChanged") == true){
+        if (value.getBool("historyChanged") == true) {
           debugPrint("2historyChanged, ${value.getBool('historyChanged')}");
           setState(() {
             refresh = true;
@@ -388,12 +326,10 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       if (value.getString("parsed_current_mqtt_settings") != null) {
         List<UserDataSettings> parsedMqttSettingsList = [];
 
-        String? parsedMqttSettings =
-            value.getString("parsed_current_mqtt_settings");
+        String? parsedMqttSettings = value.getString("parsed_current_mqtt_settings");
         //debugPrint("alarm_history.... parsedMqttSettings: $parsedMqttSettings");
         List jsonMap1 = json.decode(parsedMqttSettings!);
-        parsedMqttSettingsList =
-            jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+        parsedMqttSettingsList = jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
 
         for (UserDataSettings setting in parsedMqttSettingsList) {
           String? deviceName = setting.deviceName;
@@ -401,8 +337,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
           String? friendlyName = setting.friendlyName;
 
           for (Alarm alarm in alarmList) {
-            if (alarm.sensorAddress == sensorAddress &&
-                alarm.deviceName == deviceName) {
+            if (alarm.sensorAddress == sensorAddress && alarm.deviceName == deviceName) {
               if (friendlyName != null && friendlyName.isNotEmpty) {
                 alarm.friendlyName = friendlyName;
                 //debugPrint(
