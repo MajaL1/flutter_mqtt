@@ -107,6 +107,7 @@ class NotificationHelper extends ChangeNotifier {
         // auto start service
         autoStart: true,
 
+
         // this will be executed when app is in foreground in separated isolate
         onForeground: onStart,
         // you have to enable background fetch capability on xcode project
@@ -200,7 +201,11 @@ class NotificationHelper extends ChangeNotifier {
       category: AndroidNotificationCategory.alarm,
     );
 
-    NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
+    NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails,
+      iOS: const DarwinNotificationDetails()
+
+    );
 
     String eventID = "as432445GFCLbd2in1en2103";
     int notificationId = eventID.hashCode;

@@ -82,7 +82,6 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   //bool run =  SharedPreferences
 
-
   @override
   Widget build(BuildContext context) {
     //bool network = true;
@@ -107,26 +106,19 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 child: Column(children: <Widget>[
                                   Container(
                                       //color: Colors.amber,
-                                      padding: const EdgeInsets.only(
-                                          top: 40, bottom: 0),
+                                      padding: const EdgeInsets.only(top: 40, bottom: 0),
                                       child: Text(
-                                        widget.connectionStatusText != null
-                                            ? widget.connectionStatusText!
-                                            : "",
-                                        style: const TextStyle(
-                                            color: Colors.redAccent,
-                                            fontSize: 14),
+                                        widget.connectionStatusText != null ? widget.connectionStatusText! : "",
+                                        style: const TextStyle(color: Colors.redAccent, fontSize: 14),
                                       )),
                                   Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 40.0, bottom: 40),
+                                      padding: const EdgeInsets.only(top: 40.0, bottom: 40),
                                       child: Center(
                                         child: SizedBox(
                                             width: 100,
                                             height: 100,
                                             child: Container(
-                                              child: Image.asset(
-                                                  'assets/images/LOGO_NEW_ORIG.png'),
+                                              child: Image.asset('assets/images/LOGO_NEW_ORIG.png'),
 
                                               // color: Color(0xFF3A5A98),
                                             )
@@ -134,8 +126,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                             ),
                                       )),
                                   Container(
-                                    padding: const EdgeInsets.only(
-                                        top: 30.0, bottom: 0),
+                                    padding: const EdgeInsets.only(top: 30.0, bottom: 0),
                                     width: 350,
                                     // color: Color.fromRGBO(24, 125, 255, 0.05),
                                     decoration: buildLoginBoxDecoration(),
@@ -145,8 +136,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                         const Text(
                                           Constants.LOGIN_TO_NAVIS,
                                           style: TextStyle(
-                                              color:
-                                                  Color.fromRGBO(0, 0, 102, 1),
+                                              color: Color.fromRGBO(0, 0, 102, 1),
                                               wordSpacing: 5.9,
                                               fontWeight: FontWeight.w900,
                                               fontStyle: FontStyle.normal,
@@ -154,29 +144,22 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               fontSize: 20),
                                         ),
                                         Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 65.0,
-                                              right: 65.0,
-                                              top: 40,
-                                              bottom: 15),
+                                          margin: const EdgeInsets.only(left: 65.0, right: 65.0, top: 40, bottom: 15),
                                           child: TextFormField(
                                               initialValue: emailText,
                                               style: const TextStyle(
                                                   fontFamily: 'Roboto',
-                                                  color: Color.fromRGBO(
-                                                      00, 20, 20, 80),
+                                                  color: Color.fromRGBO(00, 20, 20, 80),
                                                   fontSize: 16),
-                                              decoration: GuiUtils
-                                                  .buildInputUsernameLoginDecoration(),
+                                              decoration: GuiUtils.buildInputUsernameLoginDecoration(),
                                               //controller: emailController,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  usernameVal =value; // Update the _inputText whenever the user types
-                                                  });
+                                                  usernameVal = value; // Update the _inputText whenever the user types
+                                                });
                                               },
                                               validator: MultiValidator([
-                                                RequiredValidator(
-                                                    errorText: "Required")
+                                                RequiredValidator(errorText: "Required")
                                                 // EmailValidator(errorText: "Enter valid username")
                                               ])),
                                         ),
@@ -194,31 +177,23 @@ class _LoginFormValidationState extends State<LoginForm> {
                                               autocorrect: false,
                                               style: const TextStyle(
                                                   fontFamily: 'Roboto',
-                                                  color: Color.fromRGBO(
-                                                      00, 20, 20, 80),
+                                                  color: Color.fromRGBO(00, 20, 20, 80),
                                                   fontSize: 16),
-                                              decoration:
-                                                  buildInputUsernamePasswordDecoration(),
+                                              decoration: buildInputUsernamePasswordDecoration(),
                                               onChanged: (value) {
                                                 setState(() {
-                                                  passwordVal =
-                                                      value; // Update the _inputText whenever the user types
+                                                  passwordVal = value; // Update the _inputText whenever the user types
                                                 });
                                               },
                                               //controller: passwordController,
                                               validator: MultiValidator([
-                                                RequiredValidator(
-                                                    errorText: "* Required"),
+                                                RequiredValidator(errorText: "* Required"),
                                               ])
                                               //validatePassword,        //Function to check validation
                                               ),
                                         ),
                                         const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 15,
-                                              bottom: 10),
+                                          padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 10),
                                         ),
                                         SizedBox(
                                           // height: 50,
@@ -227,34 +202,28 @@ class _LoginFormValidationState extends State<LoginForm> {
                                           //   .buildLoginButtonBoxDecoration(),
                                           child: !isLoading
                                               ? TextButton(
-                                                  style: GuiUtils
-                                                      .buildElevatedButtonLogin(),
+                                                  style: GuiUtils.buildElevatedButtonLogin(),
                                                   onPressed: () async {
-                                                    if (usernameVal.isEmpty){
-                                                        usernameVal = emailText;
+                                                    if (usernameVal.isEmpty) {
+                                                      usernameVal = emailText;
                                                     }
-                                                    if (passwordVal.isEmpty){
+                                                    if (passwordVal.isEmpty) {
                                                       passwordVal = passwordText;
                                                     }
-                                                    notificationPermissionGranted()
-                                                        .then((val) async {
-                                                      debugPrint(
-                                                          "notificationPermissionGranted: $val");
-                                                      bool isError = await login(usernameVal,
-                                                          passwordVal);
+                                                    notificationPermissionGranted().then((val) async {
+                                                      debugPrint("notificationPermissionGranted: $val");
+                                                      bool isError = await login(usernameVal, passwordVal);
                                                       debugPrint("loginStatus $isError");
-                                                      if(isError) {
+                                                      if (isError) {
                                                         setState(() {
                                                           isLoading = false;
                                                         });
                                                       }
-
                                                     });
                                                     if (!mounted) return;
                                                     setState(() {
                                                       isLoading = true;
                                                     });
-
                                                   },
                                                   child: const Text(
                                                     'Login',
@@ -264,72 +233,49 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                         fontFamily: 'Roboto',
                                                         letterSpacing: 1.5),
                                                   ))
-                                              : const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
+                                              : const Center(child: CircularProgressIndicator()),
                                         ),
-                                       Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 0,
-                                              bottom: 0),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 0, bottom: 0),
                                           child: loginError == true
                                               ? const Text(
                                                   "Login error",
-                                                  style: TextStyle(
-                                                      color: Colors.redAccent,
-                                                      fontFamily: 'Roboto'),
+                                                  style: TextStyle(color: Colors.redAccent, fontFamily: 'Roboto'),
                                                 )
                                               : const Text(""),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 0,
-                                              bottom: 0),
+                                          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 0, bottom: 0),
                                           child: licenseError == true
                                               ? const Text(
-                                            "License expired",
-                                            style: TextStyle(
-                                                color: Colors.redAccent,
-                                                fontFamily: 'Roboto'),
-                                          )
+                                                  "License expired",
+                                                  style: TextStyle(color: Colors.redAccent, fontFamily: 'Roboto'),
+                                                )
                                               : const Text(""),
                                         ),
-                                        (!loginError && !licenseError) ? const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 5,
-                                              bottom: 5),
-                                          child: Text(
-                                            "or",
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  74, 96, 128, 1.0),
-                                            ),
-                                          ),
-                                        ): Container(),
+                                        (!loginError && !licenseError)
+                                            ? const Padding(
+                                                padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 5, bottom: 5),
+                                                child: Text(
+                                                  "or",
+                                                  style: TextStyle(
+                                                    color: Color.fromRGBO(74, 96, 128, 1.0),
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(),
                                         Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 5,
-                                              bottom: 0),
+                                          padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 5, bottom: 0),
                                           child: TextButton(
                                             onPressed: () {},
                                             child: InkWell(
                                                 child: const Text(
                                                   Constants.CREATE_ACCOUNT,
                                                   style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 220, 1),
+                                                    color: Color.fromRGBO(0, 0, 220, 1),
                                                   ),
                                                 ),
-                                                onTap: () => launchUrl(
-                                                    Constants.REGISTER_URL)),
+                                                onTap: () => launchUrl(Constants.REGISTER_URL)),
                                           ),
                                         ),
                                       ],
@@ -348,14 +294,12 @@ class _LoginFormValidationState extends State<LoginForm> {
           borderSide: const BorderSide(color: Colors.black12, width: 8.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-              width: 0.75, color: Color.fromRGBO(108, 165, 222, 60)),
+          borderSide: const BorderSide(width: 0.75, color: Color.fromRGBO(108, 165, 222, 60)),
           borderRadius: BorderRadius.circular(16),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-              color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+          borderSide: const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -372,12 +316,10 @@ class _LoginFormValidationState extends State<LoginForm> {
       //color: Colors.,
       color: Color.fromRGBO(24, 125, 255, 0.10),
       border: Border(
-          bottom:
-              BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5),
+          bottom: BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5),
           top: BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5),
           left: BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5),
-          right:
-              BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5)),
+          right: BorderSide(color: Color.fromRGBO(0, 87, 153, 0.2), width: 0.5)),
       boxShadow: [
         BoxShadow(
           color: Colors.black12,
@@ -391,8 +333,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     );
   }
 
-  @pragma(
-      'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+  @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 
   @override
   void dispose() {
@@ -402,8 +343,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   String generateRandomString(int len) {
     var r = Random();
-    return String.fromCharCodes(
-        List.generate(len, (index) => r.nextInt(33) + 89));
+    return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
   }
 
   @override
@@ -431,14 +371,12 @@ class _LoginFormValidationState extends State<LoginForm> {
 
       try {
         User? user = await ApiService.login(username, password);
-        if(user!.licenceExpired){
-         licenseError = true;
-         //debugPrint("====licenceError:: $licenseError");
+        if (user!.licenceExpired) {
+          licenseError = true;
+          //debugPrint("====licenceError:: $licenseError");
           return true;
-        }
-        else {
-          debugPrint(
-            "loginForm, user: $user.username, ${user.email}, $user.password, $user.topic");
+        } else {
+          debugPrint("loginForm, user: $user.username, ${user.email}, $user.password, $user.topic");
         }
         List<String> userTopicList = Utils.createTopicListFromApi(user);
         await SharedPreferences.getInstance().then((value) async {
@@ -448,7 +386,7 @@ class _LoginFormValidationState extends State<LoginForm> {
           value.setString("username", user.username);
 
           await value.setString("email", user.email);
-        
+
           value.setString("mqtt_username", user.username);
           value.setString("mqtt_pass", user.mqtt_pass);
 
@@ -464,15 +402,13 @@ class _LoginFormValidationState extends State<LoginForm> {
           value.reload();
         });
 
-        if(await service.isRunning()){
+        if (await service.isRunning()) {
           print("---- login isRunning");
           debugPrint("---- login isRunning");
-        }
-        else {
+        } else {
           debugPrint("---- login notRunning");
           print("---- notRunning");
-          await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
-              service);
+          await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
         }
         //await smartMqtt.initializeMQTTClient();
         // inicializiraj servis za posiljanje sporocil
@@ -494,11 +430,9 @@ class _LoginFormValidationState extends State<LoginForm> {
         , existingWorkPolicy: ExistingWorkPolicy.append);
 */
         //FlutterBackgroundService().startService();
-        await Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
+        await Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
 
         debugPrint("Validated");
-      
       } catch (e) {
         debugPrint("e: $e");
         setState(() {
@@ -526,16 +460,16 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   static Future<bool> notificationPermissionGranted() async {
     bool isGranted = true;
-    if(Platform.isAndroid){
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.notification,
-    ].request();
-    statuses.forEach((key, permission) {
-      if (permission.isDenied) {
-        isGranted = false;
-      }
-    }); 
-    return isGranted;
+    if (Platform.isAndroid) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.notification,
+      ].request();
+      statuses.forEach((key, permission) {
+        if (permission.isDenied) {
+          isGranted = false;
+        }
+      });
+      return isGranted;
     }
     return true;
   }

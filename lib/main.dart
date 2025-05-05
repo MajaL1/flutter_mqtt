@@ -21,7 +21,8 @@ import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-final service = FlutterBackgroundService();
+final serviceAndroid = FlutterBackgroundService();
+final FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
 
 //final service = FlutterBackgroundService();
 
@@ -44,22 +45,22 @@ Future<void> main() async {
   DartPluginRegistrant.ensureInitialized();
   tzl.initializeTimeZones();
 
-if(Platform.isAndroid){
-      var status = await Permission.storage.status;
-      if (status.isDenied) {
-        Map<Permission, PermissionStatus> statuses = await [
-          //Permission.location,
-          Permission.storage,
-        ].request();
-      } else {}
-      logger = await LogFileHelper.createLogger(); 
-      //await FileDownloaderHelper.saveFileOnDevice();
+  if (Platform.isAndroid) {
+    var status = await Permission.storage.status;
+    if (status.isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        //Permission.location,
+        Permission.storage,
+      ].request();
+    } else {
+    logger = await LogFileHelper.createLogger();
+    //await FileDownloaderHelper.saveFileOnDevice();
 
-      final service = FlutterBackgroundService();
-  
+    final serviceAndroid = FlutterBackgroundService();
+    final serviceIOS = FlutterBackgroundServiceIOS();
 
-  //dodamo ios permission za plugin
- /* await flutterLocalNotificationsPlugin
+    //dodamo ios permission za plugin
+    /* await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(
         alert: true,
@@ -67,16 +68,27 @@ if(Platform.isAndroid){
         sound: true,
       );
 */
-  if (await service.isRunning()) {
-    debugPrint("----isRunning");
-    logger.log(Level.info, "---- service is running: isRunning");
-  } else {
-    print("----notRunning");
-    logger.log(Level.info, "---- service NOT running: notRunning");
+    if (await serviceAndroid.isRunning()) {
+      debugPrint("----isRunning on Android");
+      logger.log(Level.info, "---- service is running on Android: isRunning");
+    } else {
+      print("----notRunning on Android");
+      logger.log(Level.info, "---- service NOT running on Android: notRunning");
 
-    await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
+      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
+    }
   }
-}
+  // TODO
+  else if(await serviceIOS.isServiceRunning()){
+      debugPrint("----isRunning on IOS");
+      logger.log(Level.info, "---- service is running on IOS: isRunning");
+    } else {
+      print("----notRunning on IOS");
+      logger.log(Level.info, "---- service NOT running on IOS: notRunning");
+
+      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceIOS);
+    }
+  }
 
   // SharedPreferences.setMockInitialValues({});
   await SharedPreferences.getInstance().then((value) {
