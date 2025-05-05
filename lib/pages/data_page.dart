@@ -78,12 +78,11 @@ class _DataState extends State<DataPage> {
     data = await Provider.of<DataSmartMqtt>(context, listen: true).getNewDataList();
     debugPrint("^^^^^ data: % $data");
 
-    if (data != null) {
-      return data;
-    }
-    setState(() {
+    return data;
+      setState(() {
 
     });
+    return null;
   }
 
   Widget _buildDataView() {
@@ -102,7 +101,7 @@ class _DataState extends State<DataPage> {
                     scrollDirection: Axis.vertical,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
-                      Data item = snapshot.data![index]!;
+                      Data item = snapshot.data![index];
                       String sensorAddress =
                           item.sensorAddress.toString();
                       // int? u = item.u;

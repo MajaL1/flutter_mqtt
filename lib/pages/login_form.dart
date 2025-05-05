@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/user_topic.dart';
@@ -264,7 +264,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                                         fontFamily: 'Roboto',
                                                         letterSpacing: 1.5),
                                                   ))
-                                              : Center(
+                                              : const Center(
                                                   child:
                                                       CircularProgressIndicator()),
                                         ),
@@ -436,74 +436,69 @@ class _LoginFormValidationState extends State<LoginForm> {
          //debugPrint("====licenceError:: $licenseError");
           return true;
         }
-        else if (user != null) {
+        else {
           debugPrint(
-              "loginForm, user: $user.username, ${user.email}, $user.password, $user.topic");
-          List<String> userTopicList = Utils.createTopicListFromApi(user);
-          await SharedPreferences.getInstance().then((value) async {
-            value.setString("username", username);
-            value.setString("pass", password);
-            // value.setStringList("user_topics", userTopicList);
-            value.setString("username", user.username);
-
-            if (user.email != null) {
-              await value.setString("email", user.email);
-            }
-
-            value.setString("mqtt_username", user.username);
-            value.setString("mqtt_pass", user.mqtt_pass);
-
-            debugPrint("--- user.userTopicList: ${user.userTopicList}");
-
-            String userTopicListPref = jsonEncode(userTopicList);
-            List<UserTopic> userTopicListRw = user.userTopicList;
-            String userTopicListRwStr = jsonEncode(userTopicListRw);
-
-            value.setString("user_topic_list", userTopicListPref);
-            value.setString("user_topic_list_rw", userTopicListRwStr);
-
-            value.reload();
-          });
-
-          if(await service.isRunning()){
-            print("---- login isRunning");
-            debugPrint("---- login isRunning");
-          }
-          else {
-            debugPrint("---- login notRunning");
-            print("---- notRunning");
-            await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
-                service);
-          }
-          //await smartMqtt.initializeMQTTClient();
-          // inicializiraj servis za posiljanje sporocil
-          await NotificationHelper.initializeService();
-          await SharedPreferences.getInstance().then((value) {
-            value.setBool("isLoggedIn", true);
-          });
-
-          loginError = false;
-          licenseError = false;
-
-          // await service.startService();
-          /* await Workmanager().initialize(
-              callbackDispatcher, // The top level function, aka callbackDispatcher
-              isInDebugMode:
-              true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-            );
-          Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"isConnected": true}
-          , existingWorkPolicy: ExistingWorkPolicy.append);
-*/
-          //FlutterBackgroundService().startService();
-          await Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
-
-          debugPrint("Validated");
-        } else {
-          setState(() {
-            loginError = true;
-          });
+            "loginForm, user: $user.username, ${user.email}, $user.password, $user.topic");
         }
+        List<String> userTopicList = Utils.createTopicListFromApi(user);
+        await SharedPreferences.getInstance().then((value) async {
+          value.setString("username", username);
+          value.setString("pass", password);
+          // value.setStringList("user_topics", userTopicList);
+          value.setString("username", user.username);
+
+          await value.setString("email", user.email);
+        
+          value.setString("mqtt_username", user.username);
+          value.setString("mqtt_pass", user.mqtt_pass);
+
+          debugPrint("--- user.userTopicList: ${user.userTopicList}");
+
+          String userTopicListPref = jsonEncode(userTopicList);
+          List<UserTopic> userTopicListRw = user.userTopicList;
+          String userTopicListRwStr = jsonEncode(userTopicListRw);
+
+          value.setString("user_topic_list", userTopicListPref);
+          value.setString("user_topic_list_rw", userTopicListRwStr);
+
+          value.reload();
+        });
+
+        if(await service.isRunning()){
+          print("---- login isRunning");
+          debugPrint("---- login isRunning");
+        }
+        else {
+          debugPrint("---- login notRunning");
+          print("---- notRunning");
+          await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
+              service);
+        }
+        //await smartMqtt.initializeMQTTClient();
+        // inicializiraj servis za posiljanje sporocil
+        await NotificationHelper.initializeService();
+        await SharedPreferences.getInstance().then((value) {
+          value.setBool("isLoggedIn", true);
+        });
+
+        loginError = false;
+        licenseError = false;
+
+        // await service.startService();
+        /* await Workmanager().initialize(
+            callbackDispatcher, // The top level function, aka callbackDispatcher
+            isInDebugMode:
+            true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+          );
+        Workmanager().registerPeriodicTask("simplePeriodicTask", "simplePeriodicTask1", inputData: {"isConnected": true}
+        , existingWorkPolicy: ExistingWorkPolicy.append);
+*/
+        //FlutterBackgroundService().startService();
+        await Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
+
+        debugPrint("Validated");
+      
       } catch (e) {
         debugPrint("e: $e");
         setState(() {
@@ -531,6 +526,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   static Future<bool> notificationPermissionGranted() async {
     bool isGranted = true;
+    if(Platform.isAndroid){
     Map<Permission, PermissionStatus> statuses = await [
       Permission.notification,
     ].request();
@@ -538,7 +534,9 @@ class _LoginFormValidationState extends State<LoginForm> {
       if (permission.isDenied) {
         isGranted = false;
       }
-    });
+    }); 
     return isGranted;
+    }
+    return true;
   }
 }

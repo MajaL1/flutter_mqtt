@@ -66,13 +66,13 @@ class UserDataSettings {
       "hi_alarm": hiAlarm,
       "rw": rw,
       "lo_alarm": loAlarm,
-      "ts": ts == null ? null : ts?.toIso8601String()
+      "ts": ts?.toIso8601String()
     };
   }
 
   @override
   String toString() {
-    return 'deviceName: ${deviceName}, rw: ${rw}, SensorAddress: ${sensorAddress}, friendlyName: ${friendlyName}, hiAlarm: ${hiAlarm}, loAlarm: ${loAlarm}., ts: ${ts}';
+    return 'deviceName: $deviceName, rw: $rw, SensorAddress: $sensorAddress, friendlyName: $friendlyName, hiAlarm: $hiAlarm, loAlarm: $loAlarm., ts: $ts';
   }
 
   static List<UserDataSettings> getUserDataSettingsAlarm(List json) {
@@ -88,7 +88,7 @@ class UserDataSettings {
       String deviceName = "";
       String sensorAddress = "";
       int rw = 1;
-      DateTime? ts = null;
+      DateTime? ts;
 
       if (key.isNotEmpty) {
         if (key == "ts") {
@@ -166,42 +166,40 @@ class UserDataSettings {
           String friendlyName = "";
           String deviceName = "";
           int rw = 1;
-          DateTime? ts = null;
+          DateTime? ts;
 
           for (String key1 in value.keys) {
-            if (key1 != null) {
-              value[key1];
-              var value1 = value[key1];
-              //print("key1: $key1, value1: $value1");
-              if (key1 == "t") {
-                t = value1;
-              }
-              if (key1 == "device_name") {
-                deviceName = value1;
-              }
-              if (key1 == "friendlyName") {
-                friendlyName = value1.toString();
-              }
-              if (key1 == "hi_alarm") {
-                hiAlarm = value1;
-              }
-              if (key1 == "lo_alarm") {
-                loAlarm = value1;
-              }
-              if (key1 == "typ") {
-                typ = value1;
-              }
-              if (key1 == "rw") {
-                rw = value1;
-              }
-              if (key1 == "u") {
-                u = value1;
-              }
-              if (key1 == "ts") {
-                ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
-              }
+            value[key1];
+            var value1 = value[key1];
+            //print("key1: $key1, value1: $value1");
+            if (key1 == "t") {
+              t = value1;
             }
-          }
+            if (key1 == "device_name") {
+              deviceName = value1;
+            }
+            if (key1 == "friendlyName") {
+              friendlyName = value1.toString();
+            }
+            if (key1 == "hi_alarm") {
+              hiAlarm = value1;
+            }
+            if (key1 == "lo_alarm") {
+              loAlarm = value1;
+            }
+            if (key1 == "typ") {
+              typ = value1;
+            }
+            if (key1 == "rw") {
+              rw = value1;
+            }
+            if (key1 == "u") {
+              u = value1;
+            }
+            if (key1 == "ts") {
+              ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
+            }
+                    }
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
           UserDataSettings userSettings = UserDataSettings(
               friendlyName: friendlyName,

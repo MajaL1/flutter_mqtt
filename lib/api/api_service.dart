@@ -234,7 +234,7 @@ class ApiService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool("serviceStopped", true);
     //service.invoke("stopService");
-    var isRunning;
+    bool isRunning = false;
     int i = 5;
     while(i > 0) {
       isRunning = await service.isRunning();
@@ -242,7 +242,7 @@ class ApiService {
         break;
       }
      else {
-        sleep(Duration(seconds:1));
+        sleep(const Duration(seconds:1));
       }
      i--;
     }

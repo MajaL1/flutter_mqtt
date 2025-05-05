@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:async';
-
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +29,7 @@ class DataSmartMqtt extends ChangeNotifier {
     debugPrint("___________________________________________________");
 
     if(!decodeMessage.contains("con") || !decodeMessage.contains("dis") ) {
-      Data? data = await convertMessageToData(decodeMessage, topicName);
+      Data? data = convertMessageToData(decodeMessage, topicName);
       List<Data> dataList = await setDataListToPreferences(data!, preferences);
       //preferences.setString("data_mqtt", decodeMessage);
       debugPrint("''data: ${data.toString()}");
@@ -66,45 +65,43 @@ class DataSmartMqtt extends ChangeNotifier {
     List<Data> dataList = [];
     List jsonMap1 = [];
 
-    if(dataListStr != null) {
-      if (dataListStr.isNotEmpty) {
-        jsonMap1 = json.decode(dataListStr);
-        //debugPrint("!!!1 jsonMap1 $jsonMap1");
+    if (dataListStr!.isNotEmpty) {
+      jsonMap1 = json.decode(dataListStr);
+      //debugPrint("!!!1 jsonMap1 $jsonMap1");
 
-       // List dataList1 = jsonMap1.map((val) => Data.fromJsonList(val)).toList();
-        dataList =  Data.fromJsonList(jsonMap1);
+     // List dataList1 = jsonMap1.map((val) => Data.fromJsonList(val)).toList();
+      dataList =  Data.fromJsonList(jsonMap1);
 
-        String? sensorAddress = newData.sensorAddress;
-        String ? deviceName = newData.deviceName;
+      String? sensorAddress = newData.sensorAddress;
+      String ? deviceName = newData.deviceName;
 
-        bool dataExistsInList = false;
+      bool dataExistsInList = false;
 
 
-        for(Data data in dataList) {
-          if(data.deviceName == deviceName && data.sensorAddress== sensorAddress) {
-            //data = Data(typ: newData.typ, sensorAddress: newData.sensorAddress, deviceName: newData.deviceName, ts: newData.ts, t: newData.t, d: newData.d, lb: newData.lb, r: newData.r, w: newData.w);
-            dataList.remove(data);
-            dataList.add(newData);
-            dataExistsInList = true;
-            break;
-          }
-        }
-        if(!dataExistsInList){
+      for(Data data in dataList) {
+        if(data.deviceName == deviceName && data.sensorAddress== sensorAddress) {
+          //data = Data(typ: newData.typ, sensorAddress: newData.sensorAddress, deviceName: newData.deviceName, ts: newData.ts, t: newData.t, d: newData.d, lb: newData.lb, r: newData.r, w: newData.w);
+          dataList.remove(data);
           dataList.add(newData);
+          dataExistsInList = true;
+          break;
         }
-
-
-        //dataList = jsonMap1.map((val) => Data.fromJson(val)).toList();
-        /*
-        List jsonMap1 = json.decode(parsedMqttSettings!);
-        parsedMqttSettingsList =
-            jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
-         */
-
-        debugPrint("!datalist.size: ${dataList.length}");//, encodedData dataListStr $dataList");
       }
-    }
+      if(!dataExistsInList){
+        dataList.add(newData);
+      }
 
+
+      //dataList = jsonMap1.map((val) => Data.fromJson(val)).toList();
+      /*
+      List jsonMap1 = json.decode(parsedMqttSettings!);
+      parsedMqttSettingsList =
+          jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+       */
+
+      debugPrint("!datalist.size: ${dataList.length}");//, encodedData dataListStr $dataList");
+    }
+  
 
     String json1 =
         jsonEncode(dataList);
@@ -129,17 +126,8 @@ class DataSmartMqtt extends ChangeNotifier {
   Future<List<Data>?> getNewDataList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if(newMqttData == null){
-      debugPrint("newMqttData == null, vzemi stari data list iz prefs");
-      String? dataListStr = prefs.getString("data_mqtt_list");
-      List jsonMap1 = json.decode(dataListStr!);
-      List <Data> dataList =  Data.fromJsonList(jsonMap1);
-      return dataList;
-    }
-    else{
-      debugPrint("newMqttData != null");
-    }
-   // notifyListeners();
+    debugPrint("newMqttData != null");
+     // notifyListeners();
     return newMqttData;
   }
 }

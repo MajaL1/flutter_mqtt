@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';
 import '../pages/about_page.dart';
-import '../pages/data_page.dart';
 import '../pages/login_form.dart';
 
 //import '../pages/data_page.dart';
@@ -13,7 +12,7 @@ import '../pages/login_form.dart';
 class NavDrawer extends StatefulWidget {
   //const NavDrawer.base({Key? key}) : super(key: key);
 
-   const NavDrawer.data({required this.username, required this.email});
+   const NavDrawer.data({Key? key, required this.username, required this.email}) : super(key: key);
 
   //MyHomePage({Key key, this.title}) : super(key: key);
   final String username;
@@ -186,7 +185,7 @@ class _NavDrawerState extends State<NavDrawer> {
                           onTap: () => Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                   builder: (context) =>
-                                       UserSettings.base())),
+                                       const UserSettings.base())),
                         ),
                     ),
                     Container(

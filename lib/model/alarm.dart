@@ -68,7 +68,7 @@ class Alarm {
       "b": b,
       "hi_alarm": hiAlarm,
       "lo_alarm": loAlarm,
-      "ts": ts == null ? null : ts?.toIso8601String()
+      "ts": ts?.toIso8601String()
       // "ts": ts
     };
   }
@@ -89,58 +89,56 @@ class Alarm {
           int r = 0;
           int bv = 0;
           int b = 0;
-          DateTime? ts = null;
+          DateTime? ts;
           int t = 0;
           int l = 0;
           String friendlyName =  "";
 
           for (String key1 in value.keys) {
-            if (key1 != null) {
-              value[key1];
-              int value1 = value[key1];
+            value[key1];
+            int value1 = value[key1];
 //print("key1: $key1, value1: $value1");
-              if (key1 == "typ") {
-                typ = value1;
-              }
-              if (key1 == "v") {
-                v = value1;
-              }
-              if (key1 == "u") {
-                u = value1;
-              }
-              if (key1 == "hi_alarm") {
-                hiAlarm = value1;
-              }
-              if (key1 == "lo_alarm") {
-                loAlarm = value1;
-              }
-              if (key1 == "ts") {
-                ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
-                // ts = valueInt;
-              }
-              if (key1 == "lb") {
-                lb = value1;
-              }
-              if (key1 == "b") {
-                b = value1;
-              }
-              if (key1 == "r") {
-                r = value1;
-              }
-              if (key1 == "friendlyName") {
-                friendlyName = value1 as String;
-              }
-              if (key1 == "bv") {
-                bv = value1;
-              }
-              if (key1 == "t") {
-                t = value1;
-              }
-              if (key1 == "l") {
-                l = value1;
-              }
+            if (key1 == "typ") {
+              typ = value1;
             }
-          }
+            if (key1 == "v") {
+              v = value1;
+            }
+            if (key1 == "u") {
+              u = value1;
+            }
+            if (key1 == "hi_alarm") {
+              hiAlarm = value1;
+            }
+            if (key1 == "lo_alarm") {
+              loAlarm = value1;
+            }
+            if (key1 == "ts") {
+              ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
+              // ts = valueInt;
+            }
+            if (key1 == "lb") {
+              lb = value1;
+            }
+            if (key1 == "b") {
+              b = value1;
+            }
+            if (key1 == "r") {
+              r = value1;
+            }
+            if (key1 == "friendlyName") {
+              friendlyName = value1 as String;
+            }
+            if (key1 == "bv") {
+              bv = value1;
+            }
+            if (key1 == "t") {
+              t = value1;
+            }
+            if (key1 == "l") {
+              l = value1;
+            }
+                    }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
               sensorAddress: key,
@@ -162,6 +160,7 @@ class Alarm {
       }
       throw Exception(["Cannot decode alarm"]);
     }
+    return null;
   }
 
   // vrne sparsano listo alarmov iz preferenc
@@ -176,7 +175,7 @@ class Alarm {
       int loAlarm = 0;
       int v = 0;
       int u = 0XFFFF;
-      DateTime? ts = null;
+      DateTime? ts;
       int lb = 0;
       int r = 0;
       int l = 0;
@@ -293,7 +292,7 @@ class Alarm {
           int loAlarm = 0;
           int v = 0;
           int u = 0XFFFF;
-          DateTime? ts = null;
+          DateTime? ts;
           int lb = 0;
           int r = 0;
           int l = 0;
@@ -304,58 +303,56 @@ class Alarm {
           String valueStr = "";
 
           for (String key1 in value.keys) {
-            if (key1 != null) {
-              //value[key1];
-              int valueInt;
-              if (value[key1] is String) {
-                valueStr = value[key1];
+            //value[key1];
+            int valueInt;
+            if (value[key1] is String) {
+              valueStr = value[key1];
+            } else {
+              if (value[key1] != null) {
+                valueInt = value[key1];
               } else {
-                if (value[key1] != null) {
-                  valueInt = value[key1];
-                } else {
-                  valueInt = 0;
-                }
+                valueInt = 0;
+              }
 //print("key1: $key1, value1: $value1");
-                if (key1 == "typ") {
-                  typ = valueInt;
-                }
-                if (key1 == "v") {
-                  v = valueInt;
-                }
-                if (key1 == "u") {
-                  u = valueInt;
-                }
-                if (key1 == "hi_alarm") {
-                  hiAlarm = valueInt;
-                }
-                if (key1 == "lo_alarm") {
-                  loAlarm = valueInt;
-                }
-                if (key1 == "ts") {
-                  ts = DateTime.fromMillisecondsSinceEpoch(valueInt * 1000);
-                  //  DateTime.fromMicrosecondsSinceEpoch(valueInt);
-                }
-                if (key1 == "lb") {
-                  lb = valueInt;
-                }
-                if (key1 == "t") {
-                  t = valueInt;
-                }
-                if (key1 == "r") {
-                  r = valueInt;
-                }
-                if (key1 == "bv") {
-                  bv = valueInt;
-                }
-                if (key1 == "l") {
-                  l = valueInt;
-                }
-                if (key1 == "b") {
-                  b = valueInt;
-                }
+              if (key1 == "typ") {
+                typ = valueInt;
+              }
+              if (key1 == "v") {
+                v = valueInt;
+              }
+              if (key1 == "u") {
+                u = valueInt;
+              }
+              if (key1 == "hi_alarm") {
+                hiAlarm = valueInt;
+              }
+              if (key1 == "lo_alarm") {
+                loAlarm = valueInt;
+              }
+              if (key1 == "ts") {
+                ts = DateTime.fromMillisecondsSinceEpoch(valueInt * 1000);
+                //  DateTime.fromMicrosecondsSinceEpoch(valueInt);
+              }
+              if (key1 == "lb") {
+                lb = valueInt;
+              }
+              if (key1 == "t") {
+                t = valueInt;
+              }
+              if (key1 == "r") {
+                r = valueInt;
+              }
+              if (key1 == "bv") {
+                bv = valueInt;
+              }
+              if (key1 == "l") {
+                l = valueInt;
+              }
+              if (key1 == "b") {
+                b = valueInt;
               }
             }
-          }
+                    }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
               sensorAddress: sensorName,

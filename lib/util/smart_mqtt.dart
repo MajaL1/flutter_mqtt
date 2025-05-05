@@ -305,7 +305,7 @@ class SmartMqtt extends ChangeNotifier {
         alarmInterval = preferences.getString("alarm_interval_setting");
         //}
         //debugPrint("+++++got alarmInterval: $alarmInterval");
-        timeIntervalMinutes = await Utils.getIntervalFromPreferences(alarmInterval);
+        timeIntervalMinutes = Utils.getIntervalFromPreferences(alarmInterval);
         if (timeIntervalMinutes == 100000) {
           noAlarm = true;
         }
@@ -365,16 +365,12 @@ class SmartMqtt extends ChangeNotifier {
               debugPrint("smartmqtt - alarmList---: $alarmListMqtt");
               messageCount++;
 
-              if(currentAlarmList != null) {
-                if (currentAlarmList.first != null){
-                  String ? friendlyName = await Utils.setFriendlyName(currentAlarmList.first);
-                  //debugPrint("utils - setFriendlyName after: $friendlyName");
-                  if(friendlyName != null) {
-                    currentAlarmList.first.friendlyName = friendlyName;
-                  }
-                }
+              String ? friendlyName = await Utils.setFriendlyName(currentAlarmList.first);
+              //debugPrint("utils - setFriendlyName after: $friendlyName");
+              if(friendlyName != null) {
+                currentAlarmList.first.friendlyName = friendlyName;
               }
-
+                        
               // prikaze sporocilo z alarmom
               if (!noAlarm) {
                 await NotificationHelper.instance.sendMessage(currentAlarmList.first);
@@ -401,7 +397,7 @@ class SmartMqtt extends ChangeNotifier {
       //String oldUserSettings = newUserSettings;
       Map newSettings = <String, String>{};
       if (newUserSettings.isEmpty) {
-        debugPrint("1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: ${decodeMessage}");
+        debugPrint("1 AAAAAAAA  newUserSettings.isEmpty:, newUserSettings: $decodeMessage");
         newUserSettings = decodeMessage;
         newSettings = json.decode(newUserSettings);
         //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
@@ -593,7 +589,7 @@ class SmartMqtt extends ChangeNotifier {
 
   Future<void> setNewUserSettings(Map concatenatedSettings) async {
     newUserSettings = json.encode(concatenatedSettings);
-    debugPrint("setting new user settings: ${concatenatedSettings}");
+    debugPrint("setting new user settings: $concatenatedSettings");
   }
 
   Future<void> setAlarmIntervalSettings(String interval) async {

@@ -294,7 +294,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       if (alarmListData.isNotEmpty) {
         List alarmMessageJson = json.decode(alarmListData);
         alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
-        debugPrint("1alarm history - alarmList: ${alarmList}");
+        debugPrint("1alarm history - alarmList: $alarmList");
       }
       //debugPrint("alarmList-:: $alarmList");
     }
@@ -302,7 +302,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       return refreshedAlarms;
     }
     return refreshedAlarms; */
-    debugPrint("2alarm history - alarmList: ${alarmList}");
+    debugPrint("2alarm history - alarmList: $alarmList");
 
     return alarmList;
   }

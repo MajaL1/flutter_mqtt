@@ -6,7 +6,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 //mport 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
-import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,9 +68,7 @@ class BackgroundMqtt {
       value.setBool("serviceStopped", false);
     });
 
-    if(logger == null) {
-      logger = await LogFileHelper.createLogger();
-    }
+    logger ??= await LogFileHelper.createLogger();
     logger.log(Level.info, "background_mqtt start onStart()");
 
 

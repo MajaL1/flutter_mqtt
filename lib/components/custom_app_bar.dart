@@ -24,7 +24,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String username = "";
   String email = "";
@@ -33,11 +33,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
   initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    InternetStatus? _connectionStatus;
-    late StreamSubscription<InternetStatus> _subscription;
-    _subscription = InternetConnection().onStatusChange.listen((status) {
+    InternetStatus? connectionStatus;
+    late StreamSubscription<InternetStatus> subscription;
+    subscription = InternetConnection().onStatusChange.listen((status) {
       setState(() {
-        _connectionStatus = status;
+        connectionStatus = status;
         widget.connectionStatusText =
             status == InternetStatus.connected ? "" : "No internet connection";
       });
@@ -61,14 +61,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     return Container(
         //padding: EdgeInsets.only(bottom:20),
-        margin: EdgeInsets.only(top: 22),
+        margin: const EdgeInsets.only(top: 22),
 
         //preferredSize: preferredSize,
         child: AppBar(
             //toolbarHeight: 50,
             leading: Builder(builder: (context) {
               return IconButton(
-                icon: Icon(Icons.menu),
+                icon: const Icon(Icons.menu),
                 onPressed: () {
                   //SharedPreferences.resetStatic();
                   SharedPreferences.getInstance().then((val) {
@@ -113,7 +113,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             color: Colors.redAccent, fontSize: 10),
                       )
                     ]),
-                    Column(),
+                    const Column(),
                   ]),
                   TableRow(children: [
                     // Text("${widget.title}",
@@ -135,7 +135,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                               style:
                                   TextStyle(fontSize: 9, color: Colors.white))
                         ])
-                  ]), TableRow(children: [
+                  ]), const TableRow(children: [
                   Column(), Column()]),
                 ]))));
   }

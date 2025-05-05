@@ -41,7 +41,7 @@ dependencies:
   #settings_ui: ^2.0.2
   http: ^1.1.0
   #google_fonts: ^5.1.0
-  flutter_local_notifications: ^17.1.2
+  flutter_local_notifications: ^18.0.1
   #font_awesome_flutter: ^10.5.0
   #progressive_image: ^2.0.1
   flutter_background_service: ^5.0.5
@@ -63,11 +63,13 @@ dependencies:
   #push: ^2.1.0
   #workmanager: ^0.5.2
   get: ^4.6.6
-  permission_handler: ^11.3.1
+  permission_handler: ^12.0.0+1
   #flutter_foreground_task: ^8.10.4
   #hooks_riverpod: ^2.6.1
   dependency_validator: ^4.1.1
   logger: ^2.5.0
+  connectivity_plus: ^6.1.4
+  permission_handler_apple: ^9.4.7
  # android_alarm_manager_plus: ^3.0.4
 
 dependency_overrides:

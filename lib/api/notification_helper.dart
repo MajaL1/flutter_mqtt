@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
@@ -171,9 +170,9 @@ class NotificationHelper extends ChangeNotifier {
     //       "**************************alarm sending message  message: $alarmMessage");
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
-   String? name = (friendlyName!= null && friendlyName!.isNotEmpty) ? friendlyName : "";
+   String? name = (friendlyName!= null && friendlyName.isNotEmpty) ? friendlyName : "";
    if(name.isEmpty) {
-     name = "${deviceName} ${sensorAddress}";
+     name = "$deviceName $sensorAddress";
    }
 
        //: "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
@@ -206,7 +205,7 @@ class NotificationHelper extends ChangeNotifier {
     String eventID = "as432445GFCLbd2in1en2103";
     int notificationId = eventID.hashCode;
 
-    debugPrint("showing alarm... ${alarmMessage}");
+    debugPrint("showing alarm... $alarmMessage");
     await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate", notificationDetails);
 
     await SharedPreferences.getInstance().then((value) {

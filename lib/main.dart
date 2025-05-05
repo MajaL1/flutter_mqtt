@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'dart:isolate';
 import 'dart:ui';
 
@@ -43,27 +44,29 @@ Future<void> main() async {
   DartPluginRegistrant.ensureInitialized();
   tzl.initializeTimeZones();
 
-  var status = await Permission.storage.status;
-  if (status.isDenied) {
-    Map<Permission, PermissionStatus> statuses = await [
-      //Permission.location,
-      Permission.storage,
-    ].request();
-  } else {}
-  logger = await LogFileHelper.createLogger();
-  //await FileDownloaderHelper.saveFileOnDevice();
+if(Platform.isAndroid){
+      var status = await Permission.storage.status;
+      if (status.isDenied) {
+        Map<Permission, PermissionStatus> statuses = await [
+          //Permission.location,
+          Permission.storage,
+        ].request();
+      } else {}
+      logger = await LogFileHelper.createLogger(); 
+      //await FileDownloaderHelper.saveFileOnDevice();
 
-  final service = FlutterBackgroundService();
+      final service = FlutterBackgroundService();
+  
 
   //dodamo ios permission za plugin
-  await flutterLocalNotificationsPlugin
+ /* await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(
         alert: true,
         badge: true,
         sound: true,
       );
-
+*/
   if (await service.isRunning()) {
     debugPrint("----isRunning");
     logger.log(Level.info, "---- service is running: isRunning");
@@ -73,6 +76,7 @@ Future<void> main() async {
 
     await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(service);
   }
+}
 
   // SharedPreferences.setMockInitialValues({});
   await SharedPreferences.getInstance().then((value) {

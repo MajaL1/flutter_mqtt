@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:logger/logger.dart';
@@ -23,7 +22,7 @@ class LogFileHelper {
         final Directory directory = await getApplicationDocumentsDirectory();
         final File file = File('${directory.path}/logFile.txt');
 
-        if (!directory!.existsSync()) {
+        if (!directory.existsSync()) {
           // Create the directory if it doesn't exist
           await directory.create();
         }

@@ -1,6 +1,6 @@
 import UIKit
 import Flutter
-import flutter_local_notifications
+
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,11 +9,11 @@ import flutter_local_notifications
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
   // This is required to make any communication available in the action isolate.
-    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
-      GeneratedPluginRegistrant.register(with: registry)
-    }
+    //FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+      //GeneratedPluginRegistrant.register(with: registry)
+    //}
 
-  SwiftFlutterBackgroundServicePlugin.taskIdentifier = "your.custom.task.identifier"
+  /*SwiftFlutterBackgroundServicePlugin.taskIdentifier = "your.custom.task.identifier"
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
 
@@ -21,5 +21,7 @@ import flutter_local_notifications
 
   if #available(iOS 10.0, *) {
     UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+  }*/
+  return true;
   }
 }

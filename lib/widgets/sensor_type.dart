@@ -37,12 +37,6 @@ class SensorTypeConstants {
         return SU11;
       case 8:
         return SU12;
-      case 6:
-        return SP10;
-      case 7:
-        return SP15;
-      case 8:
-        return SP20;
       case 9:
         return SP25;
       case 10:

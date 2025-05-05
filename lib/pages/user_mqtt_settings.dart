@@ -306,57 +306,50 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
       // ce je vsebina enaka, vrni dekodirane parsedCurrentMqttSettings
       debugPrint("=== 2 ");
 
-      if (parsedCurrentMqttSettings != null) {
-        debugPrint("=== 99 ");
+      debugPrint("=== 99 ");
 
-        try {
-         // List settings = jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
-          //List<UserDataSettings> parsedUserDataSettingsList = settings.cast<UserDataSettings>();
-          List<UserDataSettings> parsedUserDataSettingsList = UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings);
-          debugPrint("=== 99  parsedUserDataSettingsList: $parsedUserDataSettingsList,\n__99 $newUserSettings");
+      try {
+       // List settings = jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
+        //List<UserDataSettings> parsedUserDataSettingsList = settings.cast<UserDataSettings>();
+        List<UserDataSettings> parsedUserDataSettingsList = UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings);
+        debugPrint("=== 99  parsedUserDataSettingsList: $parsedUserDataSettingsList,\n__99 $newUserSettings");
 
-        // ce trenutni settingi niso prazni in ce novi settingi niso prazni
-        //if (newUserSettings != null && newUserSettings.is) {
-          if( parsedCurrentMqttSettings1!=null && parsedCurrentMqttSettings1.isNotEmpty) {
-            var jsonMap1 = json.decode(parsedCurrentMqttSettings1);
-            List parsed = jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
-            List<UserDataSettings> newUserDataSettings = parsed.cast<UserDataSettings>();
-            //List<UserDataSettings> newUserDataSettings = UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings1);
-            debugPrint("=== 99  newUserDataSettings: $newUserDataSettings");
+      // ce trenutni settingi niso prazni in ce novi settingi niso prazni
+      //if (newUserSettings != null && newUserSettings.is) {
+        if( parsedCurrentMqttSettings1!=null && parsedCurrentMqttSettings1.isNotEmpty) {
+          var jsonMap1 = json.decode(parsedCurrentMqttSettings1);
+          List parsed = jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
+          List<UserDataSettings> newUserDataSettings = parsed.cast<UserDataSettings>();
+          //List<UserDataSettings> newUserDataSettings = UserDataSettings.getUserDataSettingsList(parsedCurrentMqttSettings1);
+          debugPrint("=== 99  newUserDataSettings: $newUserDataSettings");
 
-            // primerjamo stare in nove settingse, dodamo friendly name na nove
-            List<UserDataSettings> diffSettings = Utils.diffOldAndNewSettings(newUserDataSettings, parsedUserDataSettingsList);
+          // primerjamo stare in nove settingse, dodamo friendly name na nove
+          List<UserDataSettings> diffSettings = Utils.diffOldAndNewSettings(newUserDataSettings, parsedUserDataSettingsList);
 
-            SharedPreferences.getInstance().then((value) {
-              var json0 = json.encode(List<dynamic>.from(diffSettings.map((x) => x.toJson())));
-              value.setString("parsed_current_mqtt_settings", json0);
-              //value.setString("current_mqtt_settings", json0);
-              debugPrint("===88 setting new  diffSettings: $json0");
-            });
-            return diffSettings;
-          }
-          else {
-            SharedPreferences.getInstance().then((value) {
-             // String str = json.encode(parsedUserDataSettingsList);
-              var json0 = json.encode(List<dynamic>.from(parsedUserDataSettingsList.map((x) => x.toJson())));
-              value.setString("parsed_current_mqtt_settings", json0);
-              //value.setString("current_mqtt_settings", json0);
-              debugPrint("===88 setting new: parsed_current_mqtt_settings $json0");
-            });
-            return parsedUserDataSettingsList;
-          }
+          SharedPreferences.getInstance().then((value) {
+            var json0 = json.encode(List<dynamic>.from(diffSettings.map((x) => x.toJson())));
+            value.setString("parsed_current_mqtt_settings", json0);
+            //value.setString("current_mqtt_settings", json0);
+            debugPrint("===88 setting new  diffSettings: $json0");
+          });
+          return diffSettings;
         }
-        catch(e, stacktrace){
-          debugPrint("stackTrace: $e, $stacktrace");
+        else {
+          SharedPreferences.getInstance().then((value) {
+           // String str = json.encode(parsedUserDataSettingsList);
+            var json0 = json.encode(List<dynamic>.from(parsedUserDataSettingsList.map((x) => x.toJson())));
+            value.setString("parsed_current_mqtt_settings", json0);
+            //value.setString("current_mqtt_settings", json0);
+            debugPrint("===88 setting new: parsed_current_mqtt_settings $json0");
+          });
+          return parsedUserDataSettingsList;
         }
-        // }
-      } else {
-        // ce vsebina ni enaka, vzemi  newUserSettings,
-        // naredi objekt UserDataSettings in klici pairOldSettingsWithNew(zaradi friendly name)
-        // ne rabimo klicati pairOldSettingsWithNew, to naredimo v
-
       }
-      debugPrint(
+      catch(e, stacktrace){
+        debugPrint("stackTrace: $e, $stacktrace");
+      }
+      // }
+          debugPrint(
           "=== _checkAndPairOldSettingsWithNew === returning userDataSettings $userDataSettings");
 
       return userDataSettings;
@@ -861,18 +854,12 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     List<UserDataSettings> userDataSettingsList;
     //if (mqttSettings?.compareTo("[]") != 0) {
     //debugPrint("saving friendly name...mqttSettings oldSettings: $mqttSettings");
-    if (mqttSettings != null) {
-      var jsonMap =
-      json.decode(mqttSettings); //jsonMap.runtimeType
+    var jsonMap =
+    json.decode(mqttSettings!); //jsonMap.runtimeType
 
-      List settings = jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
-      userDataSettingsList = settings.cast<UserDataSettings>();
-    } else {
-      Map<String, dynamic> jsonMap = json.decode(currentSettings!);
-      debugPrint("2get user data from json decode message");
-      userDataSettingsList = UserDataSettings.getUserDataSettings(jsonMap);
-    }
-
+    List settings = jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
+    userDataSettingsList = settings.cast<UserDataSettings>();
+  
     //debugPrint("get json from preferences $userDataSettingsList");
 
     UserDataSettings currentSensor =

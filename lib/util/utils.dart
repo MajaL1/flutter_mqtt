@@ -54,13 +54,13 @@ class Utils {
 
       for (TopicData topicData in userTopic.topicList) {
         if (topicData.name.contains("settings")) {
-          if (!userTopicList.contains(deviceName + "/settings")) {
-            userTopicList.add(deviceName + "/settings");
+          if (!userTopicList.contains("$deviceName/settings")) {
+            userTopicList.add("$deviceName/settings");
           }
         }
         if (topicData.name.contains("alarm")) {
-          if (!userTopicList.contains(deviceName + "/alarm")) {
-            userTopicList.add(deviceName + "/alarm");
+          if (!userTopicList.contains("$deviceName/alarm")) {
+            userTopicList.add("$deviceName/alarm");
           }
         }
        /* if (topicData.name.contains("data")) {
@@ -74,23 +74,23 @@ class Utils {
   }
 
   static Column showCircularProgressIndicator() {
-    return Column(
+    return const Column(
       children: <Widget>[
         SizedBox(
           height: 200.0,
           child: Stack(
             children: <Widget>[
               Center(
-                child: Container(
+                child: SizedBox(
                   width: 200,
                   height: 200,
-                  child: const CircularProgressIndicator(
+                  child: CircularProgressIndicator(
                     strokeWidth: 15,
                     value: 1.0,
                   ),
                 ),
               ),
-              const Center(child: Text("Getting user settings...")),
+              Center(child: Text("Getting user settings...")),
             ],
           ),
         ),
@@ -104,11 +104,7 @@ class Utils {
         preferences.getString("parsed_current_mqtt_settings");
     debugPrint(
         "call method currentSettingsContainNewSettings: $parsedMqttSettings");
-    // ali vsebuje enake nastavitve ali ce je shranjena lista nastavitev prazna
-    if (parsedMqttSettings == null) {
-      return false;
-    }
-    if (parsedMqttSettings.contains(decodeMessage) || parsedMqttSettings.isEmpty) {
+    if (parsedMqttSettings!.contains(decodeMessage) || parsedMqttSettings.isEmpty) {
       return true;
     } else {
       List<UserDataSettings> parsedMqttSettingsList =
@@ -183,7 +179,7 @@ class Utils {
     return test;
   }
 
-  /** Pride v postev za nastavitve za vsak alarm posebej **///
+  /// Pride v postev za nastavitve za vsak alarm posebej *//
   static Future<List<AlarmIntervalSetting>>
       getAlarmIntervalSettingsList() async {
     List<AlarmIntervalSetting> alarmIntervalSettingList = [];
@@ -286,7 +282,7 @@ class Utils {
 
   static Future<Map<String, List<Alarm>>>
       getLastAlarmHistoryListFromPreferencesTEST() async {
-    Map<String, List<Alarm>> alarmHistoryList = Map();
+    Map<String, List<Alarm>> alarmHistoryList = {};
     alarmHistoryList = await SharedPreferences.getInstance().then((value) {
       if (value.getString("last_alarm_history_list") != null) {
         // username = value.getString("mqtt_username")!;

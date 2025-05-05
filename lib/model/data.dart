@@ -91,40 +91,38 @@ class Data {
           int r = 0;
           int lb = 0;
           int d = 0;
-          DateTime? ts = null;
+          DateTime? ts;
 
           for (String key1 in value.keys) {
-            if (key1 != null) {
-              value[key1];
-              var value1 = value[key1];
+            value[key1];
+            var value1 = value[key1];
 //print("key1: $key1, value1: $value1");
-              if (key1 == "t") {
-                t = value1;
-              }
-              if (key1 == "typ") {
-                typ = value1;
-              }
-              if (key1 == "deviceName") {
-                deviceName = value1;
-              }
-              if (key1 == "w") {
-                w = value1;
-              }
-              if (key1 == "ts") {
-                ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
-                // ts = valueInt;
-              }
-              if (key1 == "r") {
-                r = value1;
-              }
-              if (key1 == "lb") {
-                lb = value1;
-              }
-              if (key1 == "d") {
-                d = value1;
-              }
+            if (key1 == "t") {
+              t = value1;
             }
-          }
+            if (key1 == "typ") {
+              typ = value1;
+            }
+            if (key1 == "deviceName") {
+              deviceName = value1;
+            }
+            if (key1 == "w") {
+              w = value1;
+            }
+            if (key1 == "ts") {
+              ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
+              // ts = valueInt;
+            }
+            if (key1 == "r") {
+              r = value1;
+            }
+            if (key1 == "lb") {
+              lb = value1;
+            }
+            if (key1 == "d") {
+              d = value1;
+            }
+                    }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           data = Data(
               //this.sensorAddress, this.typ, this.l, this.t, this.b, this.r, this.lb, this.bv
@@ -157,34 +155,32 @@ class Data {
           int t = 0;
 
           for (String key1 in value.keys) {
-            if (key1 != null) {
-              value[key1];
-              int value1 = value[key1];
-             // print("key1: $key1, value1: $value1");
-              if (key1 == "t") {
-                t = value1;
-              }
-              if (key1 == "typ") {
-                typ = value1;
-              }
-              if (key1 == "w") {
-                w = value1;
-              }
-              if (key1 == "d") {
-                d = value1;
-              }
-              if (key1 == "r") {
-                r = value1;
-              }
-              if (key1 == "lb") {
-                lb = value1;
-              }
-              if (key1 == "ts") {
-                ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
-                // ts = valueInt;
-              }
+            value[key1];
+            int value1 = value[key1];
+           // print("key1: $key1, value1: $value1");
+            if (key1 == "t") {
+              t = value1;
             }
-          }
+            if (key1 == "typ") {
+              typ = value1;
+            }
+            if (key1 == "w") {
+              w = value1;
+            }
+            if (key1 == "d") {
+              d = value1;
+            }
+            if (key1 == "r") {
+              r = value1;
+            }
+            if (key1 == "lb") {
+              lb = value1;
+            }
+            if (key1 == "ts") {
+              ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
+              // ts = valueInt;
+            }
+                    }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           data = Data(
               //this.sensorAddress, this.typ, this.l, this.t, this.b, this.r, this.lb, this.bv
