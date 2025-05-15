@@ -21,8 +21,8 @@ import 'pages/first_screen.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-//final serviceAndroid = FlutterBackgroundService();
-//final FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
+final serviceAndroid = FlutterBackgroundService();
+final FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
 
 //final service = FlutterBackgroundService();
 
