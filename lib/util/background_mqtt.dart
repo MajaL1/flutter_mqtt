@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -35,23 +36,42 @@ class BackgroundMqtt {
 
   @pragma('vm:entry-point')
   static Future<bool> startMqttService() async {
-    final result = await service.startService();
+    bool result = false;
+    if (Platform.isAndroid) {
+      result = await serviceAndroid.startService();
+    }
+    else if (Platform.isIOS) {
+      result = await serviceIOS.start();
+    }
     return result;
   }
 
   @pragma('vm:entry-point')
   static Future<void> stopMqttService() async {
-     service.invoke("stopService");
+    if (Platform.isAndroid) {
+      serviceAndroid.invoke("stopService");
+    }
+    if (Platform.isIOS) {
+      serviceIOS.invoke("stopService");
+    }
     //return result;
   }
   @pragma('vm:entry-point')
   static Future<bool> publish(String message, String topicName) async{
-    service.invoke("invokeOnPublish", {
-      "message": message,
-      "topic": topicName,
-    },);
-
-    //debugPrint("BackgroundMqtt: publish: ${BackgroundMqtt.smartMqtt}");
+    if (Platform.isAndroid) {
+      serviceAndroid.invoke("invokeOnPublish", {
+        "message": message,
+        "topic": topicName,
+      },);
+    }
+    // Todo
+    if (Platform.isIOS) {
+      serviceIOS.invoke("invokeOnPublish", {
+        "message": message,
+        "topic": topicName,
+      },);
+    }
+      //debugPrint("BackgroundMqtt: publish: ${BackgroundMqtt.smartMqtt}");
     //BackgroundMqtt.smartMqtt?.publish(message, topicName);
     return true;
   }

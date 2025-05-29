@@ -215,18 +215,33 @@ class ApiService {
   }
 
   static Future<bool> startService() async {
-    if(await service.isRunning()){
-      print("----isRunning");
-      debugPrint("----isRunning");
+    if(await serviceAndroid.isRunning()){
+      print("---- serviceAndroid isRunning");
+      debugPrint("----serviceAndroid isRunning");
       return false;
     }
-    else {
-      debugPrint("----notRunning");
-      print("----notRunning");
+    else if (serviceAndroid.isRunning() == false) {
+      debugPrint("---- serviceAndroid notRunning");
+      print("---- serviceAndroid notRunning");
       await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
-          service);
+          serviceAndroid);
       return true;
     }
+    if(await serviceIOS.isServiceRunning()){
+      print("----serviceIOS isRunning");
+      debugPrint("----serviceIOS isRunning");
+      return false;
+    }
+    else if (serviceAndroid.isRunning() == false) {
+      debugPrint("---- serviceIOS notRunning");
+      print("---- serviceIOS notRunning");
+      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
+          serviceIOS);
+      return true;
+    }
+    debugPrint("---- no service running, returning false");
+    print("---- no service running, returning false");
+    return false;
   }
 
   static Future<void> stopService() async {
@@ -237,7 +252,7 @@ class ApiService {
     bool isRunning = false;
     int i = 5;
     while(i > 0) {
-      isRunning = await service.isRunning();
+      isRunning = await serviceAndroid.isRunning() || (serviceIOS.isServiceRunning() == true);
       if (!isRunning) {
         break;
       }
