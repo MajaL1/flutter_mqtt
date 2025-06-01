@@ -289,7 +289,7 @@ class BackgroundMqtt {
       ),
     );
     debugPrint("main.dart end initializing background service");
-    logger.log(Level.info, "main.dart end initializing background service");
+    //logger.log(Level.info, "main.dart end initializing background service");
 
   }
 }

@@ -90,7 +90,7 @@ Future<void> main() async {
       logger.log(Level.info, "---- service is running on IOS: isRunning");
     } else {
       print("----notRunning on IOS");
-      logger.log(Level.info, "---- service NOT running on IOS: notRunning");
+     // logger.log(Level.info, "---- service NOT running on IOS: notRunning");
 
       await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceIOS);
     }
