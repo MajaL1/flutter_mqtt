@@ -258,7 +258,7 @@ class BackgroundMqtt {
           android: AndroidInitializationSettings('ic_bg_service_small'),
         ),
       );
-    //} 
+    //}*/ 
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
