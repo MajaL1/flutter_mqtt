@@ -18,6 +18,7 @@ import 'package:timezone/data/latest.dart' as tzl;
 import '../model/alarm.dart';
 import '../widgets/units.dart';
 
+@pragma('vm:entry-point')
 class NotificationHelper extends ChangeNotifier {
   static FlutterBackgroundService service = FlutterBackgroundService();
   static final NotificationHelper _instance = NotificationHelper._internal();
@@ -29,6 +30,7 @@ class NotificationHelper extends ChangeNotifier {
     return Container();
   }
 
+  @pragma('vm:entry-point')
   static Future<void> initializeService() async {
 
 
@@ -119,7 +121,7 @@ class NotificationHelper extends ChangeNotifier {
     );
     tzl.initializeTimeZones();
   }
-
+  @pragma('vm:entry-point')
   static Future<void> startMesagingService(String message) async {
     debugPrint("Messaging service started, message: $message");
 
@@ -204,9 +206,12 @@ class NotificationHelper extends ChangeNotifier {
       category: AndroidNotificationCategory.alarm,
     );
 
+    const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails();
+
+
     NotificationDetails notificationDetails = NotificationDetails(
         android: androidNotificationDetails,
-      iOS: const DarwinNotificationDetails()
+        iOS: iOSPlatformChannelSpecifics
 
     );
 
