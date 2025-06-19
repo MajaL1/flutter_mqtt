@@ -232,7 +232,7 @@ class ApiService {
       debugPrint("----serviceIOS isRunning");
       return false;
     }
-    else if (serviceAndroid.isRunning() == false) {
+    else if (serviceIOS.isServiceRunning() == false) {
       debugPrint("---- serviceIOS notRunning");
       print("---- serviceIOS notRunning");
       await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(

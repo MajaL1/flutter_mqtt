@@ -96,9 +96,23 @@ class BackgroundMqtt {
     SmartMqtt ? smartMqtt;
 
     SmartMqtt.instance.addListener(() {});
-    if (service is AndroidServiceInstance) {
+      if (service is AndroidServiceInstance) {
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
+        debugPrint(">>>>>>> service.setAsForegroundService()");
+        logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
+
+      });
+
+      service.on('setAsBackground').listen((event) {
+        service.setAsBackgroundService();
+        debugPrint(">>>>>>> service.setAsBackgroundService()");
+        logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
+      });
+    }
+    if (service is IOSServiceInstance) {
+      service.on('setAsForeground').listen((event) {
+       // TODO service.invoke();
         debugPrint(">>>>>>> service.setAsForegroundService()");
         logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
 
@@ -130,17 +144,7 @@ class BackgroundMqtt {
         String ? topic = event["topic"];
         smartMqtt?.publish(message, topic!);
       }
-    //  String ? topic = event[1];
-    //  smartMqtt?.publish(message!, topic!);
-    /*  builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
-          String? message = data["message"];
-          String? topic = data["topic"];
-          debugPrint("---blallala: $message, $topic");
-        }*/
-       // return Container();
-      });
+    });
    // );
     //FlutterBackgroundService().invoke("setAsBackground");
     DateTime startTime = DateTime.now();
@@ -279,7 +283,7 @@ class BackgroundMqtt {
       ),
       iosConfiguration: IosConfiguration(
         // auto start service
-        autoStart: false,
+        autoStart: true,
 
         // this will be executed when app is in foreground in separated isolate
         onForeground: onStart,
