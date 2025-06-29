@@ -51,7 +51,7 @@ class NotificationHelper extends ChangeNotifier {
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     //flutterLocalNotificationsPlugin.
-    flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
@@ -75,7 +75,7 @@ class NotificationHelper extends ChangeNotifier {
       });
     }
 
-    flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
         IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -85,7 +85,7 @@ class NotificationHelper extends ChangeNotifier {
     );
 
     if(Platform.isAndroid){
-      flutterLocalNotificationsPlugin
+      await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()!
           .requestNotificationsPermission();
@@ -94,7 +94,11 @@ class NotificationHelper extends ChangeNotifier {
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
-    }
+      }
+          await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>();
+    
 
     await service.configure(
       androidConfiguration: AndroidConfiguration(
@@ -189,7 +193,7 @@ class NotificationHelper extends ChangeNotifier {
       name,
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
-      icon: "icon",
+      icon: "@mipmap/ic_launcher",
       //actions: ,
       //largeIcon: FilePathAndroidBitmap(bigPicture),
       importance: Importance.max,
@@ -246,7 +250,7 @@ class NotificationHelper extends ChangeNotifier {
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
     WidgetsFlutterBinding.ensureInitialized();
-//service.runtimeType.
+    //service.runtimeType.
     // For flutter prior to version 3.0.0
     // We have to register the plugin manually
 
@@ -255,21 +259,27 @@ class NotificationHelper extends ChangeNotifier {
     //String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** preferences settings_mqtt $data");
 
+
     /// OPTIONAL when use custom notification
     // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     //     FlutterLocalNotificationsPlugin();
 
-    if (service is AndroidServiceInstance) {
+    //if (service is AndroidServiceInstance) {
       // debugPrint("setAsForeground message : ");
       service.on('setAsForeground').listen((event) {
-        service.setAsForegroundService();
+        service.invoke("startService");
+        debugPrint(" running in foreground Updated at ${DateTime.now()}");
       });
 
       service.on('setAsBackground').listen((event) {
+        service.invoke("stopService");
+        debugPrint(" running in background Updated at ${DateTime.now()}");
         //  debugPrint("setAsBackground : ");
-        service.setAsBackgroundService();
+        //service.setAsBackgroundService();
       });
-    }
+
+    
+    //}
 
     service.on('stopService').listen((event) {
       service.stopSelf();

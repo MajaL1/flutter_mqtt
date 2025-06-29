@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
+//import 'package:mqtt_test/model/alarm.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -465,7 +466,7 @@ class _LoginFormValidationState extends State<LoginForm> {
         });
 // TODO: IOS
 
-        if(Platform.isAndroid){
+        //if(Platform.isAndroid){
           if(await serviceAndroid.isRunning()){
             print("---- login isRunning");
             debugPrint("---- login isRunning");
@@ -476,8 +477,8 @@ class _LoginFormValidationState extends State<LoginForm> {
             await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
                 serviceAndroid);
           }
-        }
-        else if(Platform.isIOS) {
+        //}
+        /*else if(Platform.isIOS) {
           if(await serviceIOS.isServiceRunning()){
             print("---- login isRunning");
             debugPrint("---- login isRunning");
@@ -488,9 +489,9 @@ class _LoginFormValidationState extends State<LoginForm> {
             await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
                 serviceIOS);
           }
-        }
+        }*/
 
-          //await smartMqtt.initializeMQTTClient();
+        //await smartMqtt.initializeMQTTClient();
         // inicializiraj servis za posiljanje sporocil
         await NotificationHelper.initializeService();
         await SharedPreferences.getInstance().then((value) {

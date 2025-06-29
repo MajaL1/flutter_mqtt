@@ -113,13 +113,20 @@ class BackgroundMqtt {
     if (service is IOSServiceInstance) {
       service.on('setAsForeground').listen((event) {
        // TODO service.invoke();
+        serviceIOS.invoke("setAsForeground", {
+       
+        },);
         debugPrint(">>>>>>> service.setAsForegroundService()");
         logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
 
       });
 
       service.on('setAsBackground').listen((event) {
-        service.setAsBackgroundService();
+        //service.setAsBackgroundService();
+
+        serviceIOS.invoke("setAsBackgorund", {
+       
+        },);
         debugPrint(">>>>>>> service.setAsBackgroundService()");
         logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
       });

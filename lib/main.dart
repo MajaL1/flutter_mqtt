@@ -24,7 +24,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
 final serviceAndroid = FlutterBackgroundService();
 final FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
 
-//final service = FlutterBackgroundService();
+final service = FlutterBackgroundService();
 
 /// The [SharedPreferences] key to access the alarm fire count.
 const String countKey = 'count';
@@ -46,18 +46,18 @@ Future<void> main() async {
   tzl.initializeTimeZones();
 
   if (Platform.isAndroid) {
-    final serviceAndroid = FlutterBackgroundService();
+    //final serviceAndroid = FlutterBackgroundService();
 
     var status = await Permission.storage.status;
     if (status.isDenied) {
+      debugPrint("yes status.isDenied");
       Map<Permission, PermissionStatus> statuses = await [
         //Permission.location,
         Permission.storage,
       ].request();
     } else {
-      final serviceIOS = FlutterBackgroundServiceIOS();
-
       logger = await LogFileHelper.createLogger();
+      debugPrint("not status.isDenied");
       //await FileDownloaderHelper.saveFileOnDevice();
 
 
@@ -71,18 +71,21 @@ Future<void> main() async {
       );
 */
 
-      if (await serviceAndroid.isRunning()) {
+    }
+  }
+      if (await serviceAndroid.isRunning()) { 
         debugPrint("----isRunning on Android");
         logger.log(Level.info, "---- service is running on Android: isRunning");
-      } else {
+      }
+       else {
         print("----notRunning on Android");
-        logger.log(Level.info, "---- service NOT running on Android: notRunning");
+       // logger.log(Level.info, "---- service NOT running on Android: notRunning");
 
         await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
       }
-    }
-  }
-  else if(Platform.isIOS) {
+    
+  
+  /*else if(Platform.isIOS) {
     FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
     // TODO
     if (await serviceIOS.isServiceRunning()) {
@@ -90,10 +93,27 @@ Future<void> main() async {
       logger.log(Level.info, "---- service is running on IOS: isRunning");
     } else {
       print("----notRunning on IOS");
+      serviceIOS.start();
      // logger.log(Level.info, "---- service NOT running on IOS: notRunning");
-
+      serviceIOS.invoke("startService", {
+       
+        },);
       await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceIOS);
     }
+  }*/
+  @pragma('vm:entry-point')
+  Future<bool> onIosBackground(ServiceInstance service) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    DartPluginRegistrant.ensureInitialized();
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.reload();
+    final log = preferences.getStringList('log') ?? <String>[];
+    log.add(DateTime.now().toIso8601String());
+    print("ON IOS BACKGROUND");
+    await preferences.setStringList('log', log);
+
+    return true;
   }
 
 

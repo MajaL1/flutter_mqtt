@@ -57,9 +57,26 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       setState(() {});
 
       debugPrint("alarm_history initState");
+      showLocalTestNotification();
     });
   }
 
+  void showLocalTestNotification() {
+    Alarm alarm = Alarm(
+        sensorAddress: "test1233",
+        typ: 2,
+        v: 1,
+        hiAlarm: 10,
+        loAlarm: 2,
+        ts: DateTime.timestamp(),
+        lb: 1,
+        bv: 3,
+        r: 1,
+        l: 3,
+        b: 2,
+        t: 3);
+    NotificationHelper.instance.sendMessage(alarm); 
+  }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
