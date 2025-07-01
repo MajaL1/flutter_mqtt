@@ -40,33 +40,21 @@ class BackgroundMqtt {
     if (Platform.isAndroid) {
       result = await serviceAndroid.startService();
     }
-    else if (Platform.isIOS) {
-      result = await serviceIOS.start();
-    }
+   // else if (Platform.isIOS) {
+   //   result = await serviceIOS.start();
+   // }
     return result;
   }
 
   @pragma('vm:entry-point')
   static Future<void> stopMqttService() async {
-    if (Platform.isAndroid) {
       serviceAndroid.invoke("stopService");
-    }
-    if (Platform.isIOS) {
-      serviceIOS.invoke("stopService");
-    }
     //return result;
   }
   @pragma('vm:entry-point')
   static Future<bool> publish(String message, String topicName) async{
     if (Platform.isAndroid) {
       serviceAndroid.invoke("invokeOnPublish", {
-        "message": message,
-        "topic": topicName,
-      },);
-    }
-    // Todo
-    if (Platform.isIOS) {
-      serviceIOS.invoke("invokeOnPublish", {
         "message": message,
         "topic": topicName,
       },);
@@ -113,9 +101,9 @@ class BackgroundMqtt {
     if (service is IOSServiceInstance) {
       service.on('setAsForeground').listen((event) {
        // TODO service.invoke();
-        serviceIOS.invoke("setAsForeground", {
+        //serviceIOS.invoke("setAsForeground", {
        
-        },);
+        //},);
         debugPrint(">>>>>>> service.setAsForegroundService()");
         logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
 
@@ -124,9 +112,8 @@ class BackgroundMqtt {
       service.on('setAsBackground').listen((event) {
         //service.setAsBackgroundService();
 
-        serviceIOS.invoke("setAsBackgorund", {
-       
-        },);
+        //serviceIOS.invoke("setAsBackgorund", {
+        //},);
         debugPrint(">>>>>>> service.setAsBackgroundService()");
         logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
       });

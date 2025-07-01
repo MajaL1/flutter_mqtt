@@ -227,18 +227,6 @@ class ApiService {
           serviceAndroid);
       return true;
     }
-    if(await serviceIOS.isServiceRunning()){
-      print("----serviceIOS isRunning");
-      debugPrint("----serviceIOS isRunning");
-      return false;
-    }
-    else if (serviceIOS.isServiceRunning() == false) {
-      debugPrint("---- serviceIOS notRunning");
-      print("---- serviceIOS notRunning");
-      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
-          serviceIOS);
-      return true;
-    }
     debugPrint("---- no service running, returning false");
     print("---- no service running, returning false");
     return false;
@@ -252,7 +240,7 @@ class ApiService {
     bool isRunning = false;
     int i = 5;
     while(i > 0) {
-      isRunning = await serviceAndroid.isRunning() || (serviceIOS.isServiceRunning() == true);
+      isRunning = await serviceAndroid.isRunning();
       if (!isRunning) {
         break;
       }

@@ -22,9 +22,7 @@ import 'pages/first_screen.dart';
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 final serviceAndroid = FlutterBackgroundService();
-final FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
-
-final service = FlutterBackgroundService();
+//final service = FlutterBackgroundService();
 
 /// The [SharedPreferences] key to access the alarm fire count.
 const String countKey = 'count';

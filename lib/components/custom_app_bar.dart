@@ -131,7 +131,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     const Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("            v_2025-05-15",
+                          Text("            v_2025-06-02",
                               style:
                                   TextStyle(fontSize: 9, color: Colors.white))
                         ])
