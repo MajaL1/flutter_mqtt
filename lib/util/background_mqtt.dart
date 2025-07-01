@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/constants.dart';
 import 'log_file_helper.dart';
 
+@pragma('vm:entry-point')
 class BackgroundMqtt {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
