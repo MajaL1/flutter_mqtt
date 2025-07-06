@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -61,8 +62,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     return Container(
         //padding: EdgeInsets.only(bottom:20),
-        margin: const EdgeInsets.only(top: 22),
-
+        margin: Platform.isAndroid ? EdgeInsets.only(top: 22) : EdgeInsets.only(top: 45),
         //preferredSize: preferredSize,
         child: AppBar(
             //toolbarHeight: 50,
@@ -91,7 +91,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
               //height: 180,
               //padding: EdgeInsets.only(top:40),
 
-              decoration: GuiUtils.buildAppBarDecoration(),
+              decoration: //Platform.isAndroid ? 
+              GuiUtils.buildAppBarDecorationAndroid() //: GuiUtils.buildAppBarDecorationIOS(),
             ),
             shadowColor: Colors.black,
             foregroundColor: Colors.lightBlue,
@@ -115,6 +116,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     ]),
                     const Column(),
                   ]),
+               
                   TableRow(children: [
                     // Text("${widget.title}",
                     //     style: const TextStyle(
@@ -137,6 +139,12 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         ])
                   ]), const TableRow(children: [
                   Column(), Column()]),
+                  TableRow(children: [
+                    Column(children: [
+                      Text("    ",)
+                    ]),
+                    const Column(),
+                  ]),
                 ]))));
   }
 }

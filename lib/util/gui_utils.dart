@@ -103,7 +103,32 @@ class GuiUtils {
     );
   }
 
-  static BoxDecoration buildAppBarDecoration() {
+  static BoxDecoration buildAppBarDecorationAndroid() {
+    return const BoxDecoration(
+// color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
+    //color: Colors.red,
+// borderRadius: BorderRadius.circular(18),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black,//Colors.grey.withOpacity(0.15),
+          spreadRadius: 1,///4,
+          blurRadius: 1,
+          offset: const Offset(0, 1), // changes position of shadow
+        ),
+      ],
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.black,
+          Color.fromRGBO(0, 0, 190, 1),
+//Color.fromRGBO(0, 87, 153, 60)
+        ],
+      ),
+    );
+  }
+
+    static BoxDecoration buildAppBarDecorationIOS() {
     return BoxDecoration(
 // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
     //color: Colors.red,
@@ -120,7 +145,7 @@ class GuiUtils {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.black,
+          Color.fromRGBO(200, 200, 200, 0.5),
           Color.fromRGBO(0, 0, 190, 1),
 //Color.fromRGBO(0, 87, 153, 60)
         ],
