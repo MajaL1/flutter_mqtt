@@ -91,10 +91,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
               //height: 180,
               //padding: EdgeInsets.only(top:40),
 
-              decoration: //Platform.isAndroid ? 
+              decoration: //Platform.isAndroid ?
               GuiUtils.buildAppBarDecorationAndroid() //: GuiUtils.buildAppBarDecorationIOS(),
             ),
-            shadowColor: Colors.black,
+            //shadowColor: Colors.black,
             foregroundColor: Colors.lightBlue,
             title: Container(
                 //decoration: //Utils.buildAppBarDecoration(),
