@@ -62,7 +62,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     return Container(
         //padding: EdgeInsets.only(bottom:20),
-        margin: Platform.isAndroid ? EdgeInsets.only(top: 22) : EdgeInsets.only(top: 45),
+        margin: Platform.isAndroid ? const EdgeInsets.only(top: 22) : const EdgeInsets.only(top: 45),
         //preferredSize: preferredSize,
         child: AppBar(
             //toolbarHeight: 50,
@@ -133,17 +133,17 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     const Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("            v_2025-06-02",
+                          Text("            v_2025-07-14",
                               style:
                                   TextStyle(fontSize: 9, color: Colors.white))
                         ])
                   ]), const TableRow(children: [
                   Column(), Column()]),
-                  TableRow(children: [
+                  const TableRow(children: [
                     Column(children: [
                       Text("    ",)
                     ]),
-                    const Column(),
+                    Column(),
                   ]),
                 ]))));
   }
