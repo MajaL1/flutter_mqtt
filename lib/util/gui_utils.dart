@@ -112,8 +112,8 @@ class GuiUtils {
         BoxShadow(
           color: Colors.black,//Colors.grey.withOpacity(0.15),
           spreadRadius: 1,///4,
-          blurRadius: 1,
-          offset: const Offset(0, 1), // changes position of shadow
+          blurRadius: 0.1,
+          //offset: const Offset(0, 1), // changes position of shadow
         ),
       ],
       gradient: const LinearGradient(
@@ -133,14 +133,7 @@ class GuiUtils {
 // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
     //color: Colors.red,
 // borderRadius: BorderRadius.circular(18),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
-          spreadRadius: 4,
-          blurRadius: 8,
-          offset: const Offset(0, 1), // changes position of shadow
-        ),
-      ],
+
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
