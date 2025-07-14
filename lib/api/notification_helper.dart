@@ -193,7 +193,7 @@ class NotificationHelper extends ChangeNotifier {
       name,
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
-      icon: "@mipmap/ic_launcher",
+      icon: "icon",
       //actions: ,
       //largeIcon: FilePathAndroidBitmap(bigPicture),
       importance: Importance.max,
