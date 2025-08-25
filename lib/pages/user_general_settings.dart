@@ -172,12 +172,12 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
     return DropdownMenu<String>(
       menuStyle: MenuStyle(
-        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-            const EdgeInsets.all(0)),
+        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
 
         //visualDensity: const VisualDensity(vertical: 0, horizontal: 3)
       ),
       //menuHeight: 30,
+      width: 200,
       textStyle: const TextStyle(color: Colors.black87),
       //Color.fromRGBO(20, 20, 120, 1)),
       initialSelection: (dropdownValue!.isNotEmpty)

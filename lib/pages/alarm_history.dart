@@ -57,7 +57,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
       setState(() {});
 
       debugPrint("alarm_history initState");
-      showLocalTestNotification();
+      //showLocalTestNotification();
     });
   }
 

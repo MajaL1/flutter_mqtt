@@ -114,13 +114,25 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     // SmartMqtt.instance.isSaved = false;
     debugPrint("user_settings initState");
     initializePreference();
-    SharedPreferences.getInstance().then((value) {
-      value.reload();
+    //SharedPreferences.getInstance().then((value) {
+     // value.reload();
       //value.getString("data_mqtt_list");
       //  debugPrint(
       //    "###################: ${value.getString("parsed_current_mqtt_settings")}");
+    //});
+    //setState(() {});
+    // Start timer only once
+    timer = Timer.periodic(const Duration(seconds: 3), (_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+      if (prefs.getBool("settingsChanged") == true && mounted) {
+        setState(() {
+          refresh = !refresh; // toggle to trigger rebuild if needed
+        });
+        prefs.setBool("settingsChanged", false);
+      }
     });
-    setState(() {});
+
 
     // debugPrint("got Mqtt Data: $dataMqtt");
   }
