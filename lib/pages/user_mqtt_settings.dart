@@ -92,16 +92,13 @@ List<UserDataSettings> _parseUserDataSettingsToList(
 class _UserMqttSettingsState extends State<UserMqttSettings> {
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
-  //final debouncer = Debouncer();
+  final debouncer = Debouncer();
   late Timer timer;
   int countTest = 0;
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
   bool changePassSwitchVal = true;
   bool refresh = false;
-  final StreamController<List<UserDataSettings>> _settingsStreamController = StreamController<List<UserDataSettings>>();
-
-  late SharedPreferences prefs;
 
   TextStyle headingStyleIOS = const TextStyle(
     fontWeight: FontWeight.w600,
@@ -117,29 +114,16 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     // SmartMqtt.instance.isSaved = false;
     debugPrint("user_settings initState");
     initializePreference();
-    //SharedPreferences.getInstance().then((value) {
-    // value.reload();
+    SharedPreferences.getInstance().then((value) {
+      value.reload();
     //value.getString("data_mqtt_list");
     //  debugPrint(
     //    "###################: ${value.getString("parsed_current_mqtt_settings")}");
-    //});
-    //setState(() {});
-    // Start timer only once
-    _loadSettings();
-
-    timer = Timer.periodic(const Duration(seconds: 3), (_) async {
-      await prefs.reload();
-      if (prefs.getBool("settingsChanged") == true) {
-        await _loadSettings();
-        debugPrint("------------loadSettings---------------");
-        prefs.setBool("settingsChanged", false);
-      }
     });
+    setState(() {});
+
     // debugPrint("got Mqtt Data: $dataMqtt");
   }
-
-    // debugPrint("got Mqtt Data: $dataMqtt");
-
 
   @override
   Widget build(BuildContext context) {
@@ -267,8 +251,9 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                         )
                       : const Icon(null),
                 ))
-      ])
-    ]);
+        ])]);
+        
+    
   }
 
   Future<List<UserDataSettings>> _checkAndPairOldSettingsWithNew(String newUserSettings) async {
@@ -425,23 +410,18 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
     }
   }
 
-
-  Future<void> _loadSettings() async {
-    prefs = await SharedPreferences.getInstance();
-    await prefs.reload();
-    String raw = prefs.getString("current_mqtt_settings") ?? "";
-
-    List<UserDataSettings> settingsList = await _checkAndPairOldSettingsWithNew(raw)
-        .then((data) => _pairDevicesWithRw(data))
-        .then((data) => _parseUserDataSettingsToList(data));
-
-    _settingsStreamController.add(settingsList);
-  }
   Widget _buildMqttSettingsView() {
-    return StreamBuilder<List<UserDataSettings>>(
-        stream: _settingsStreamController.stream,
-
-
+    return FutureBuilder<List<UserDataSettings>>(
+      future:
+      //Provider.of<SmartMqtt>(context, listen: true)
+          //.getNewUserSettingsList()
+          _getNewUserSettingsList()
+              //.then((dataSettingsList) => _getUserDataSettings(dataSettingsList))
+              .then((dataSettingsList) =>
+                  _checkAndPairOldSettingsWithNew(dataSettingsList))
+              .then((dataSettingsList) => _pairDevicesWithRw(dataSettingsList))
+              .then((dataSettingsList) =>
+                  _parseUserDataSettingsToList(dataSettingsList)),
       builder: (context, snapshot) {
         debugPrint(
             "00000 snapshot.connectionState: ${snapshot.connectionState}");
@@ -737,7 +717,8 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
           SizedBox(
               //height: 50,
               width: MediaQuery.of(context).size.width / 5,
-              child: TextFormField(
+              child: StatefulBuilder(
+               builder: (context, setState) =>TextFormField(
                   enabled: rw == true ? true : false,
                   decoration: GuiUtils.setInputDecorationFriendlyName(),
                   // decoration: GuiUtils.setInputDecoration(value),
@@ -781,7 +762,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
                       notifier.value = isEnabledSave;
                     }
                     debugPrint("on changed, isEnabledSave: $isEnabledSave");
-                  })),
+                  }))),
 
           SizedBox(
             // height: 50,
