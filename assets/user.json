@@ -1,0 +1,28 @@
+{
+  "username": "test",
+  "id": 9,
+  "email": null,
+  "mqtt_pass": "MWQxYjRkZWJlZjQ2MWViNQ==",
+  "date_register": "2023-09-15 09:59:01",
+  "date_login": null,
+  "topics": {
+    "c45bbe821261": [
+      {
+        "topic": "settings",
+        "rw": 2
+      },
+      {
+        "topic": "data",
+        "rw": 1
+      },
+      {
+        "topic": "sensors",
+        "rw": 1
+      },
+      {
+        "topic": "alarm",
+        "rw": 1
+      }
+    ]
+  }
+}
