@@ -12,7 +12,7 @@ import flutter_background_service_ios
     /// Add this line
     SwiftFlutterBackgroundServicePlugin.taskIdentifier = "iosB"
 
-    
+
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }

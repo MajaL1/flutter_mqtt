@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
 import 'package:mqtt_test/main.dart';
+import 'package:mqtt_test/model/user.dart';
 //import 'package:mqtt_test/model/alarm.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
@@ -16,7 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../api/api_service.dart';
 import '../model/constants.dart';
-import '../model/user.dart';
+
 import '../util/background_mqtt.dart';
 import '../util/gui_utils.dart';
 import '../util/utils.dart';

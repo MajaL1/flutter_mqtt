@@ -77,7 +77,7 @@ class BackgroundMqtt {
       value.setBool("serviceStopped", false);
     });
 
-    logger ??= await LogFileHelper.createLogger();
+    //logger ??= await LogFileHelper.createLogger();
     logger.log(Level.info, "background_mqtt start onStart()");
 
 

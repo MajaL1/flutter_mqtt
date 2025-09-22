@@ -54,7 +54,7 @@ Future<void> main() async {
         Permission.storage,
       ].request();
     } else {
-      logger = await LogFileHelper.createLogger();
+      //logger = await LogFileHelper.createLogger();
       debugPrint("not status.isDenied");
       //await FileDownloaderHelper.saveFileOnDevice();
 
