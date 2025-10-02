@@ -78,7 +78,7 @@ class BackgroundMqtt {
     });
 
     //logger ??= await LogFileHelper.createLogger();
-    logger.log(Level.info, "background_mqtt start onStart()");
+    //logger.log(Level.info, "background_mqtt start onStart()");
 
 
 
@@ -154,7 +154,7 @@ class BackgroundMqtt {
 
       if(val.getString("username") == null || val.getString("mqtt_pass")== null || val.getString("user_topic_list")==null) {
         debugPrint("1 - service.stopSelf();");
-        logger.log(Level.info, "1 - service.stopSelf();");
+        //logger.log(Level.info, "1 - service.stopSelf();");
         service.stopSelf();
         return;
       }
@@ -188,7 +188,7 @@ class BackgroundMqtt {
       //smartMqtt?.setClient(client!);
 
     });
-    logger.log(Level.info, "FLUTTER BACKGROUND SERVICE: ${DateTime.now()}'");
+    //logger.log(Level.info, "FLUTTER BACKGROUND SERVICE: ${DateTime.now()}'");
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
   }
 
