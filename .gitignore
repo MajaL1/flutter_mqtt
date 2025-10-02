@@ -136,3 +136,4 @@ app.*.map.json
 /macos/DerivedData/Runner/Build/Intermediates.noindex/XCBuildData/PIFCache/target/TARGET@v11_hash=6ce54dc763a1dc5bec6e1e087f1b983d-json
 /macos/DerivedData/Runner/Build/Intermediates.noindex/XCBuildData/PIFCache/target/TARGET@v11_hash=ae8e777923fb91324939a7378b9c75e1-json
 /macos/DerivedData/Runner/Build/Intermediates.noindex/XCBuildData/PIFCache/workspace/WORKSPACE@v11_hash=(null)_subobjects=6108cf22519349dd5ac45f2eb28bb8c4-json
+/test/
