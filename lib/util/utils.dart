@@ -4,31 +4,21 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart'
+import 'package:mqtt_test/model/topic_data.dart';
+import 'package:mqtt_test/model/user.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/alarm.dart';
 import '../model/alarm_interval_setting.dart';
-import '../model/topic_data.dart';
-import '../model/user.dart';
+
 import '../model/user_data_settings.dart';
 import '../widgets/show_alarm_time_settings.dart';
 
 class Utils {
-  static Future<String> downloadFile(String url, String filename) async {
-    final direactory = await getApplicationSupportDirectory();
-    final filepath = '${direactory.path}/$filename';
-    final response = await http.get(Uri.parse(url));
-    debugPrint(response as String?);
-
-    final file = File(filepath);
-
-    await file.writeAsBytes(response.bodyBytes);
-    return filepath;
-  }
 
   /*static int compareDatesInMinutes(DateTime lastSentAlarm) {
     Duration? duration = DateTime.now().difference(lastSentAlarm);
@@ -302,17 +292,6 @@ class Utils {
   //str.map((item) => jsonEncode(item.toMap())).toList();
   // json
   // }
-
-  static Future<String> getImageFilePathFromAssets(
-      String asset, String filename) async {
-    final byteData = await rootBundle.load(asset);
-    final tempDirectory = await getTemporaryDirectory();
-    final file = File('${tempDirectory.path}/$filename');
-    await file.writeAsBytes(byteData.buffer
-        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
-    return file.path;
-  }
 
   static String generateRandomString(int len) {
     var r = Random();
