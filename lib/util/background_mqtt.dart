@@ -89,14 +89,14 @@ class BackgroundMqtt {
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
         debugPrint(">>>>>>> service.setAsForegroundService()");
-        logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
+        //logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
 
       });
 
       service.on('setAsBackground').listen((event) {
         service.setAsBackgroundService();
         debugPrint(">>>>>>> service.setAsBackgroundService()");
-        logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
+        //logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
       });
     }
     if (service is IOSServiceInstance) {
@@ -106,7 +106,7 @@ class BackgroundMqtt {
        
         //},);
         debugPrint(">>>>>>> service.setAsForegroundService()");
-        logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
+        //logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
 
       });
 
@@ -116,12 +116,12 @@ class BackgroundMqtt {
         //serviceIOS.invoke("setAsBackgorund", {
         //},);
         debugPrint(">>>>>>> service.setAsBackgroundService()");
-        logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
+        //logger.log(Level.info, ">>>>>>> service.setAsBackgroundService()");
       });
     }
     service.on('stopService').listen((event) {
       debugPrint(">>>>>>>stopped service.");
-      logger.log(Level.info, ">>>>>>>stopped service.");
+      //logger.log(Level.info, ">>>>>>>stopped service.");
       service.invoke("stopService");
       if(smartMqtt!.getConnectionState()){
         smartMqtt?.disconnect();

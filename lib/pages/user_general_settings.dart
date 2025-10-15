@@ -172,7 +172,9 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
     return DropdownMenu<String>(
       menuStyle: MenuStyle(
-        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
+        //padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
+        padding: WidgetStateProperty.all(EdgeInsets.zero),
+        //alignment: Alignment.centerLeft,
 
         //visualDensity: const VisualDensity(vertical: 0, horizontal: 3)
       ),
@@ -214,6 +216,11 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         return DropdownMenuEntry<String>(
             value: value,
             label: value,
+            labelWidget: Container(
+              width: 180, // <--- fixed width for label area
+              alignment: Alignment.centerLeft,
+              child: Text(value, overflow: TextOverflow.ellipsis),
+            ),
             style: ButtonStyle(
               padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                   const EdgeInsets.only(left: 13)),

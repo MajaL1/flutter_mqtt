@@ -1,4 +1,4 @@
-package com.example.test_alarm_app
+package com.example.alarm_app
 
 import io.flutter.embedding.android.FlutterActivity
 

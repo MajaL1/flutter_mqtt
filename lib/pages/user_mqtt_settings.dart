@@ -701,7 +701,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
               // const EdgeInsets.only(top: 0, bottom: 20, left: 0, right: 0),
               //  height: 40,
               //alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width / 3,
+              width: MediaQuery.of(context).size.width / 3 - 10,
               child: Text(
                 settingText,
                 maxLines: 1,
