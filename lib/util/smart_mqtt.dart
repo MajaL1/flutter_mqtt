@@ -249,7 +249,7 @@ class SmartMqtt extends ChangeNotifier {
       if ((decodeMessage.contains("v") ||
           decodeMessage.contains("typ") ||
           decodeMessage.contains("u"))) {
-        // debugPrint("got new settings");
+          debugPrint("got new settings mqtt");
         // ali novi settingi niso enaki prejsnim
         // ali ce so v zacetku prazni
         if (newUserSettings.compareTo(decodeMessage) != 0 &&

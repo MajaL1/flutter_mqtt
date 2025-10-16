@@ -37,7 +37,7 @@ class SettingsSmartMqtt1 with ChangeNotifier {
     if ((decodeMessage.contains("v") ||
         decodeMessage.contains("typ") ||
         decodeMessage.contains("u"))) {
-        print("got new settings");
+        print("got new settings mqtt!!");
       // ali novi settingi niso enaki prejsnim
       // ali ce so v zacetku prazni
       if (newUserSettings.compareTo(decodeMessage) != 0 &&
