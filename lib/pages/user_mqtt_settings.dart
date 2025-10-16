@@ -384,6 +384,7 @@ class _UserMqttSettingsState extends State<UserMqttSettings> {
 
         if(value.getBool("settingsChanged") == true){
           //debugPrint("2settingsChanged, ${value.getBool('settingsChanged')}");
+          if (!mounted) return;
           setState(() {
             refresh = true;
           });
