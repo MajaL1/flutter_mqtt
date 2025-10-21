@@ -54,12 +54,12 @@ class BackgroundMqtt {
   }
   @pragma('vm:entry-point')
   static Future<bool> publish(String message, String topicName) async{
-    if (Platform.isAndroid) {
+    //if (Platform.isAndroid) {
       serviceAndroid.invoke("invokeOnPublish", {
         "message": message,
         "topic": topicName,
       },);
-    }
+    //}
       //debugPrint("BackgroundMqtt: publish: ${BackgroundMqtt.smartMqtt}");
     //BackgroundMqtt.smartMqtt?.publish(message, topicName);
     return true;
