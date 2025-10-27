@@ -1,4 +1,4 @@
-package com.example.alarm_app
+package com.navis.alarm_app
 
 import io.flutter.embedding.android.FlutterActivity
 

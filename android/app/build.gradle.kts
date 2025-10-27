@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.alarm_app" // <-- your package name
+    namespace = "com.navis.alarm_app" // <-- your package name
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.alarm_app"
+        applicationId = "com.navis.alarm_app"
         minSdk = flutter.minSdkVersion
         targetSdk = 34
         versionCode = 1
