@@ -31,11 +31,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   void _listenConnection() {
-    if (!mounted) return;
     InternetConnection()
         .onStatusChange
         .listen((status) => setState(() => widget.connectionStatusText =
-    status == InternetStatus.connected ? "" : "No internet"));
+            status == InternetStatus.connected ? "" : "No internet"));
   }
 
   void _initPrefs() async {
@@ -50,72 +49,76 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     final isIOS = Platform.isIOS;
 
-    return Container(
-      margin: isIOS
-          ? const EdgeInsets.only(top: 45)
-          : const EdgeInsets.only(top: 22),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          )
-        ],
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(16),
-        ),
-      ),
-      child: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        titleSpacing: 0,
-        centerTitle: true,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded, color: Colors.white),
-            onPressed: () => Scaffold.of(context).openDrawer(),
+    return SafeArea(
+      // ensures we don't draw under the iPhone status bar
+      top: true,
+      bottom: false,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(16),
           ),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (widget.connectionStatusText?.isNotEmpty ?? false)
-              Text(
-                widget.connectionStatusText!,
-                style: const TextStyle(
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          titleSpacing: 0,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu_rounded, color: Colors.white),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (widget.connectionStatusText?.isNotEmpty ?? false)
+                Text(
+                  widget.connectionStatusText!,
+                  style: const TextStyle(
                     color: Colors.redAccent,
                     fontSize: 11,
-                    fontWeight: FontWeight.w400),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
               ),
-            Text(
-              widget.title,
-              style: const TextStyle(
-                  fontSize: 18, color: Colors.white, letterSpacing: 0.5),
+            ],
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12, top: 8),
+              child: Text(
+                "v_2025-10-26",
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.white.withOpacity(0.7),
+                ),
+              ),
             ),
-            const SizedBox(height: 2),
-            // Removed the version text from here
           ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12, top: 8),
-            child: Text(
-              "v_2025-10-26",
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.white.withOpacity(0.7),
-              ),
-            ),
-          ),
-        ],
       ),
-
     );
   }
 }
