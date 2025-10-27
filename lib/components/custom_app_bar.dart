@@ -9,7 +9,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   String? connectionStatusText = "";
 
   CustomAppBar(this.title, {Key? key})
-      : preferredSize = const Size.fromHeight(kToolbarHeight + 24),
+      : preferredSize = const Size.fromHeight(kToolbarHeight+5),
         super(key: key);
 
   @override

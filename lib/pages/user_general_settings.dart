@@ -146,48 +146,47 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   }
 
   DropdownMenu<String> _buildDropdownMenu(
-      bool isEnabledSave, ValueNotifier notifier) {
-    debugPrint("initState _buildDRopDownMenu, val $dropdownValue");
+      bool isEnabledSave,
+      ValueNotifier notifier,
+      ) {
+    debugPrint("initState _buildDropdownMenu, val $dropdownValue");
 
     SharedPreferences.getInstance().then((pref) {
       if (dropdownValue!.isEmpty) {
         String? val = pref.getString("alarm_interval_setting");
-        debugPrint("initState user_general_settings, val $val");
         if (val == null || val.isEmpty) {
           dropdownValue = ShowAlarmTimeSettings.minutes10;
         } else {
           dropdownValue = val;
-
-          debugPrint(
-              "initState user_general_settings, dropdown value: $dropdownValue");
         }
-        //setState(() {
-        //  dropdownValue = val;
-        //});
       }
     });
 
     bool isEnabledSave = false;
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
 
-    return DropdownMenu<String>(
+    final dropdown = DropdownMenu<String>(
+      width: 220,
       menuStyle: MenuStyle(
-        //padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.all(0)),
-        padding: WidgetStateProperty.all(EdgeInsets.zero),
-        //alignment: Alignment.centerLeft,
-
-        //visualDensity: const VisualDensity(vertical: 0, horizontal: 3)
+        elevation: WidgetStateProperty.all(8),
+        backgroundColor: WidgetStateProperty.all(Colors.white),
+        shadowColor: WidgetStateProperty.all(Colors.black.withOpacity(0.15)),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 6)),
       ),
-      //menuHeight: 30,
-      width: 200,
-      textStyle: const TextStyle(color: Colors.black87),
-      //Color.fromRGBO(20, 20, 120, 1)),
-      initialSelection: (dropdownValue!.isNotEmpty)
+      textStyle: const TextStyle(
+        color: Colors.black87,
+        fontSize: 15,
+        fontWeight: FontWeight.w500,
+      ),
+      initialSelection: dropdownValue!.isNotEmpty
           ? dropdownValue
           : ShowAlarmTimeSettings.minutes10,
       onSelected: (String? val) {
-        // This is called when the user selects an item.
-        debugPrint("-- 1 dropdown value: $dropdownValue");
         if (val == "") {
           isEnabledSave = false;
           notifier.value = isEnabledSave;
@@ -198,41 +197,65 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
           isEnabledSave = true;
           notifier.value = isEnabledSave;
         }
-        //debugPrint("on changed, isEnabledSave: ${isEnabledSave}");
         setState(() {
           dropdownValue = val!;
         });
       },
       inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        constraints: BoxConstraints.tight(const Size.fromHeight(50)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        constraints: BoxConstraints.tight(const Size.fromHeight(48)),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF2563EB), width: 1.4),
         ),
       ),
+      trailingIcon: const Icon(
+        Icons.keyboard_arrow_down_rounded,
+        color: Colors.black54,
+      ),
+      selectedTrailingIcon: const Icon(
+        Icons.keyboard_arrow_up_rounded,
+        color: Color(0xFF2563EB),
+      ),
       dropdownMenuEntries:
-          alarmIntervalsList.map<DropdownMenuEntry<String>>((String value) {
+      alarmIntervalsList.map<DropdownMenuEntry<String>>((String value) {
         return DropdownMenuEntry<String>(
-            value: value,
-            label: value,
-            labelWidget: Container(
-              width: 180, // <--- fixed width for label area
-              alignment: Alignment.centerLeft,
-              child: Text(value, overflow: TextOverflow.ellipsis),
+          value: value,
+          label: value,
+          labelWidget: Container(
+            width: 180,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 15),
             ),
-            style: ButtonStyle(
-              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                  const EdgeInsets.only(left: 13)),
-              backgroundColor: WidgetStateProperty.all<Color>(Colors.white54),
-              //overlayColor: MaterialStateProperty.all<Color>(Colors.blue),
-              // surfaceTintColor:
-              //   MaterialStateProperty.all<Color>(Colors.green),
-              // shadowColor: MaterialStateProperty.all<Color>(Colors.black)
-            ));
+          ),
+          style: ButtonStyle(
+            overlayColor:
+            WidgetStateProperty.all(const Color(0xFF2563EB).withOpacity(0.08)),
+            padding:
+            WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
+            backgroundColor: WidgetStateProperty.all(Colors.transparent),
+          ),
+        );
       }).toList(),
     );
+
+    return dropdown; // ✅ ensures a non-null return
   }
+
 
   SharedPreferences? preferences;
 
