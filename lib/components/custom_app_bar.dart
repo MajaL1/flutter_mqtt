@@ -99,16 +99,23 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   fontSize: 18, color: Colors.white, letterSpacing: 0.5),
             ),
             const SizedBox(height: 2),
-            Text(
+            // Removed the version text from here
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12, top: 8),
+            child: Text(
               "v_2025-10-26",
               style: TextStyle(
                 fontSize: 10,
                 color: Colors.white.withOpacity(0.7),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+
     );
   }
 }
