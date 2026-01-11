@@ -332,6 +332,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         //debugPrint("historyChanged, ${value.getBool('historyChanged')} ");
         if (value.getBool("historyChanged") == true) {
           debugPrint("2historyChanged, ${value.getBool('historyChanged')}");
+          if(!mounted) return;
           setState(() {
             refresh = true;
           });
