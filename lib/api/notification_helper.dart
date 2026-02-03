@@ -14,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tzl;
 //import 'package:timezone/timezone.dart' as tz;
 
-
 import '../model/alarm.dart';
 import '../widgets/units.dart';
 
@@ -32,8 +31,6 @@ class NotificationHelper extends ChangeNotifier {
 
   @pragma('vm:entry-point')
   static Future<void> initializeService() async {
-
-
     //service = FlutterBackgroundService();
 
     String eventID = "as432445GFCLbd2in1en21093";
@@ -63,12 +60,12 @@ class NotificationHelper extends ChangeNotifier {
       await flutterLocalNotificationsPlugin.initialize(
           //onDidReceiveNotificationResponse:
           const InitializationSettings(
-            iOS: DarwinInitializationSettings(requestAlertPermission: true,
-            requestBadgePermission: true,
-            requestSoundPermission: true,),
-            android: AndroidInitializationSettings(
-              'icon'
+            iOS: DarwinInitializationSettings(
+              requestAlertPermission: true,
+              requestBadgePermission: true,
+              requestSoundPermission: true,
             ),
+            android: AndroidInitializationSettings('icon'),
           ),
           onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
           onDidReceiveNotificationResponse:
@@ -79,14 +76,14 @@ class NotificationHelper extends ChangeNotifier {
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
 
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()!
@@ -96,11 +93,9 @@ class NotificationHelper extends ChangeNotifier {
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
-      }
-          await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>();
-    
+    }
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>();
 
     await service.configure(
       androidConfiguration: AndroidConfiguration(
@@ -118,7 +113,6 @@ class NotificationHelper extends ChangeNotifier {
         // auto start service
         autoStart: true,
 
-
         // this will be executed when app is in foreground in separated isolate
         onForeground: onStart,
         // you have to enable background fetch capability on xcode project
@@ -127,6 +121,7 @@ class NotificationHelper extends ChangeNotifier {
     );
     tzl.initializeTimeZones();
   }
+
   @pragma('vm:entry-point')
   static Future<void> startMesagingService(String message) async {
     debugPrint("Messaging service started, message: $message");
@@ -136,7 +131,8 @@ class NotificationHelper extends ChangeNotifier {
   }
 
   @pragma('vm:entry-point')
-   static Future<void> notificationTapBackground(NotificationResponse details) async {
+  static Future<void> notificationTapBackground(
+      NotificationResponse details) async {
     debugPrint("TAP BACKGROUND");
     Get.to(const AlarmHistory());
   }
@@ -158,7 +154,7 @@ class NotificationHelper extends ChangeNotifier {
     return true;
   }
 
-   Future<void> sendMessage(Alarm? alarmMessage) async {
+  Future<void> sendMessage(Alarm? alarmMessage) async {
     debugPrint("Sending alarm: NotificationHelper.sendMessage");
     String? friendlyName = alarmMessage?.friendlyName;
     String? hiAlarm = alarmMessage?.hiAlarm.toString();
@@ -182,12 +178,13 @@ class NotificationHelper extends ChangeNotifier {
     //       "**************************alarm sending message  message: $alarmMessage");
     String formattedDate =
         DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
-   String? name = (friendlyName!= null && friendlyName.isNotEmpty) ? friendlyName : "";
-   if(name.isEmpty) {
-     name = "$deviceName $sensorAddress";
-   }
+    String? name =
+        (friendlyName != null && friendlyName.isNotEmpty) ? friendlyName : "";
+    if (name.isEmpty) {
+      name = "$deviceName $sensorAddress";
+    }
 
-       //: "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
+    //: "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
     //debugPrint(" 4444 friendlyName: , $friendlyName, na,me: $name");
 
     AndroidNotificationDetails androidNotificationDetails =
@@ -212,45 +209,43 @@ class NotificationHelper extends ChangeNotifier {
       category: AndroidNotificationCategory.alarm,
     );
 
-    const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentAlert: true,
-        presentBadge: true,
-        presentSound: true,);
-
+    const DarwinNotificationDetails iOSPlatformChannelSpecifics =
+        DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
 
     NotificationDetails notificationDetails = NotificationDetails(
-        android: androidNotificationDetails,
-        iOS: iOSPlatformChannelSpecifics
-
-    );
+        android: androidNotificationDetails, iOS: iOSPlatformChannelSpecifics);
 
     String eventID = "as432445GFCLbd2in1en2103";
     int notificationId = eventID.hashCode;
 
     debugPrint("showing alarm... $alarmMessage");
-    await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate", notificationDetails);
 
-await flutterLocalNotificationsPlugin.show(
-  DateTime.now().millisecondsSinceEpoch ~/ 1000, // NEW ID every time
-  ' "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate"',                           // MUST exist
-  'This should appear in TestFlight',
-  const NotificationDetails(
-    iOS: DarwinNotificationDetails(
-      presentAlert: true,
-      presentSound: true,
-      presentBadge: true,
-      sound: 'default',
-      interruptionLevel: InterruptionLevel.active,
-    ),
-  ),
-);
+    await flutterLocalNotificationsPlugin.show(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000, // NEW ID every time
+      ' "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate"', // MUST exist
+      'This should appear in TestFlight',
+      const NotificationDetails(
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentSound: true,
+          presentBadge: true,
+          sound: 'default',
+          interruptionLevel: InterruptionLevel.active,
+        ),
+      ),
+    );
 
     await SharedPreferences.getInstance().then((value) {
       value.setBool("historyChanged", true);
     });
   }
 
-
-  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+  void onDidReceiveNotificationResponse(
+      NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
       debugPrint('notification payload: $payload');
@@ -275,26 +270,24 @@ await flutterLocalNotificationsPlugin.show(
     //String decodeMessage = const Utf8Decoder().convert(data.codeUnits);
     debugPrint("****************** preferences settings_mqtt $data");
 
-
     /// OPTIONAL when use custom notification
     // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     //     FlutterLocalNotificationsPlugin();
 
     //if (service is AndroidServiceInstance) {
-      // debugPrint("setAsForeground message : ");
-      service.on('setAsForeground').listen((event) {
-        service.invoke("startService");
-        debugPrint(" running in foreground Updated at ${DateTime.now()}");
-      });
+    // debugPrint("setAsForeground message : ");
+    service.on('setAsForeground').listen((event) {
+      service.invoke("startService");
+      debugPrint(" running in foreground Updated at ${DateTime.now()}");
+    });
 
-      service.on('setAsBackground').listen((event) {
-        service.invoke("stopService");
-        debugPrint(" running in background Updated at ${DateTime.now()}");
-        //  debugPrint("setAsBackground : ");
-        //service.setAsBackgroundService();
-      });
+    service.on('setAsBackground').listen((event) {
+      service.invoke("stopService");
+      debugPrint(" running in background Updated at ${DateTime.now()}");
+      //  debugPrint("setAsBackground : ");
+      //service.setAsBackgroundService();
+    });
 
-    
     //}
 
     service.on('stopService').listen((event) {
