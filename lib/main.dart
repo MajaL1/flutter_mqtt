@@ -73,7 +73,7 @@ Future<void> main() async {
   }
       if (await serviceAndroid.isRunning()) { 
         debugPrint("----isRunning on Android");
-        logger.log(Level.info, "---- service is running on Android: isRunning");
+        //logger.log(Level.info, "---- service is running on Android: isRunning");
       }
        else {
         print("----notRunning on Android");

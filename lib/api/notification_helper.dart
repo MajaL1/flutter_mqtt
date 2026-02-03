@@ -63,7 +63,9 @@ class NotificationHelper extends ChangeNotifier {
       await flutterLocalNotificationsPlugin.initialize(
           //onDidReceiveNotificationResponse:
           const InitializationSettings(
-            iOS: DarwinInitializationSettings(),
+            iOS: DarwinInitializationSettings(requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,),
             android: AndroidInitializationSettings(
               'icon'
             ),
@@ -210,7 +212,9 @@ class NotificationHelper extends ChangeNotifier {
       category: AndroidNotificationCategory.alarm,
     );
 
-    const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails();
+    const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(presentAlert: true,
+        presentBadge: true,
+        presentSound: true,);
 
 
     NotificationDetails notificationDetails = NotificationDetails(
@@ -228,9 +232,6 @@ class NotificationHelper extends ChangeNotifier {
     await SharedPreferences.getInstance().then((value) {
       value.setBool("historyChanged", true);
     });
-
-     //await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on device $name", "v: $v $units, $alarmValue \n$formattedDate", notificationDetails);
-    //  notifyListeners();
   }
 
 
