@@ -229,6 +229,21 @@ class NotificationHelper extends ChangeNotifier {
     debugPrint("showing alarm... $alarmMessage");
     await flutterLocalNotificationsPlugin.show(notificationId, "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate", notificationDetails);
 
+await flutterLocalNotificationsPlugin.show(
+  DateTime.now().millisecondsSinceEpoch ~/ 1000, // NEW ID every time
+  ' "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate"',                           // MUST exist
+  'This should appear in TestFlight',
+  const NotificationDetails(
+    iOS: DarwinNotificationDetails(
+      presentAlert: true,
+      presentSound: true,
+      presentBadge: true,
+      sound: 'default',
+      interruptionLevel: InterruptionLevel.active,
+    ),
+  ),
+);
+
     await SharedPreferences.getInstance().then((value) {
       value.setBool("historyChanged", true);
     });
