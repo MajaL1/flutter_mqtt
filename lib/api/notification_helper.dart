@@ -225,11 +225,17 @@ class NotificationHelper extends ChangeNotifier {
     debugPrint("showing alarm... $alarmMessage");
 
     await flutterLocalNotificationsPlugin.show(
-      DateTime.now().millisecondsSinceEpoch ~/ 1000, // NEW ID every time
-      "Alarm on $name",
-      "$v $units\nalarm level $alarmValue $units,  $formattedDate'", // MUST exist
-    
-      const NotificationDetails(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+
+      "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate",
+        NotificationDetails(
+        android: AndroidNotificationDetails(
+          'alarm_channel',                 // channel ID (constant!)
+          'Alarms',                        // channel name
+          channelDescription: 'Alarm notifications',
+          importance: Importance.max,      // 🚨 THIS FIXES THE CRASH
+          priority: Priority.high,
+        ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,
           presentSound: true,
