@@ -226,8 +226,9 @@ class NotificationHelper extends ChangeNotifier {
 
     await flutterLocalNotificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000, // NEW ID every time
-      ' "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate"', // MUST exist
-      'This should appear in TestFlight',
+      "Alarm on $name",
+      "$v $units\nalarm level $alarmValue $units,  $formattedDate'", // MUST exist
+    
       const NotificationDetails(
         iOS: DarwinNotificationDetails(
           presentAlert: true,

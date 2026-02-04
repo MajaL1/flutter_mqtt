@@ -23,6 +23,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
   String username = "";
   String email = "";
 
+  late StreamSubscription<InternetStatus> _connectionSub;
+
   @override
   void initState() {
     super.initState();
@@ -31,11 +33,18 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   void _listenConnection() {
-    InternetConnection()
+    _connectionSub = InternetConnection()
         .onStatusChange
-        .listen((status) => setState(() => widget.connectionStatusText =
-            status == InternetStatus.connected ? "" : "No internet"));
+        .listen((status) {
+      if (!mounted) return;
+
+      setState(() {
+        widget.connectionStatusText =
+        status == InternetStatus.connected ? "" : "No internet";
+      });
+    });
   }
+
 
   void _initPrefs() async {
     final val = await SharedPreferences.getInstance();
@@ -109,7 +118,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             Padding(
               padding: const EdgeInsets.only(right: 12, top: 8),
               child: Text(
-                "v_2026-02-03",
+                "v_2026-02-04",
                 style: TextStyle(
                   fontSize: 10,
                   color: Colors.white.withOpacity(0.7),
