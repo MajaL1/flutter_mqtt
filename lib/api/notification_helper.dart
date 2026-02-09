@@ -228,7 +228,7 @@ class NotificationHelper extends ChangeNotifier {
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
 
       "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate",
-        NotificationDetails(
+       const NotificationDetails(
         android: AndroidNotificationDetails(
           'alarm_channel',                 // channel ID (constant!)
           'Alarms',                        // channel name

@@ -50,6 +50,27 @@ class ApiService {
     return alarmList;
   }
 
+  static Future<int> getAlarmsHistoryListLength()  async {
+    List<Alarm> alarmList = [];
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.reload();
+    if (preferences.containsKey("alarm_list_mqtt")) {
+      String alarmListData = preferences.get("alarm_list_mqtt") as String;
+      if (alarmListData.isNotEmpty) {
+        List alarmMessageJson = json.decode(alarmListData);
+        alarmList = Alarm.getAlarmListFromPreferences(alarmMessageJson);
+      }
+      debugPrint("alarmList-:: $alarmList");
+    }
+    alarmList.add(Alarm());
+    alarmList = alarmList.reversed.toList();
+    // Ce je vec kot 2000 zadetkov, izbrisi zadnje
+    if (alarmList.length > 2000) {
+      alarmList.removeRange(2000, alarmList.length);
+    }
+    return alarmList.length;
+  }
+
   static Future<List<Alarm>> getAlarmsHistoryTest() async {
     List<Alarm> alarmList = [];
     int i = 0;
