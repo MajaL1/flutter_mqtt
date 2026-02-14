@@ -37,6 +37,7 @@ class BackgroundMqtt {
 
   @pragma('vm:entry-point')
   static Future<bool> startMqttService() async {
+    DartPluginRegistrant.ensureInitialized();
     bool result = false;
     if (Platform.isAndroid) {
       result = await serviceAndroid.startService();
@@ -237,6 +238,7 @@ class BackgroundMqtt {
   @pragma('vm:entry-point')
   Future<void> initializeService(service) async {
     debugPrint("main.dart initializing background service");
+    DartPluginRegistrant.ensureInitialized();
 
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(

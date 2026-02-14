@@ -87,257 +87,215 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    //bool network = true;
     return DefaultTabController(
-        length: 3,
-        // child: SingleChildScrollView(
-        child: WillPopScope(
-            onWillPop: () async => false,
-            child: Scaffold(
-                backgroundColor: Colors.white,
-                body: SingleChildScrollView(
-                    child: Form(
-                        //autovalidate: true, //check for validation while typing
-                        key: formkey,
-                        child: Container(
-                            color: Colors.white54,
-                            alignment: Alignment.center,
-                            // width: MediaQuery. of(context). size. width - 30,
-                            child: Container(
-                                width: MediaQuery.of(context).size.width - 50,
-                                color: Colors.white38,
-                                child: Column(children: <Widget>[
-                                  Container(
-                                      //color: Colors.amber,
-                                      padding: const EdgeInsets.only(
-                                          top: 40, bottom: 0),
-                                      child: Text(
-                                        widget.connectionStatusText != null
-                                            ? widget.connectionStatusText!
-                                            : "",
-                                        style: const TextStyle(
-                                            color: Colors.redAccent,
-                                            fontSize: 14),
-                                      )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 40.0, bottom: 40),
-                                      child: Center(
-                                        child: SizedBox(
-                                            width: 100,
-                                            height: 100,
-                                            child: Container(
-                                              child: Image.asset(
-                                                  'assets/images/LOGO_NEW_ORIG.png'),
+      length: 3,
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFFF5F7FA),
+                  Color(0xFFE4ECF7),
+                ],
+              ),
+            ),
+            child: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formkey,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        children: [
+                          if (widget.connectionStatusText != null &&
+                              widget.connectionStatusText!.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: Text(
+                                widget.connectionStatusText!,
+                                style: const TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
 
-                                              // color: Color(0xFF3A5A98),
-                                            )
-                                            //FlutterLogo(size: 200),
-                                            ),
-                                      )),
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                        top: 30.0, bottom: 0),
-                                    width: 350,
-                                    // color: Color.fromRGBO(24, 125, 255, 0.05),
-                                    decoration: buildLoginBoxDecoration(),
-                                    child: Column(
-                                      children: [
-                                        const Text(""),
-                                        const Text(
-                                          Constants.LOGIN_TO_NAVIS,
-                                          style: TextStyle(
-                                              color:
-                                                  Color.fromRGBO(0, 0, 102, 1),
-                                              wordSpacing: 5.9,
-                                              fontWeight: FontWeight.w900,
-                                              fontStyle: FontStyle.normal,
-                                              fontFamily: 'Roboto',
-                                              fontSize: 20),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              left: 65.0,
-                                              right: 65.0,
-                                              top: 40,
-                                              bottom: 15),
-                                          child: TextFormField(
-                                              initialValue: emailText,
-                                              style: const TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: Color.fromRGBO(
-                                                      00, 20, 20, 80),
-                                                  fontSize: 16),
-                                              decoration: GuiUtils
-                                                  .buildInputUsernameLoginDecoration(),
-                                              //controller: emailController,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  usernameVal =value; // Update the _inputText whenever the user types
-                                                  });
-                                              },
-                                              validator: MultiValidator([
-                                                RequiredValidator(
-                                                    errorText: "Required")
-                                                // EmailValidator(errorText: "Enter valid username")
-                                              ])),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                            left: 65.0,
-                                            right: 65.0,
-                                          ),
-                                          //height: 60,
-                                          //width: 220,
-                                          child: TextFormField(
-                                              obscureText: true,
-                                              enableSuggestions: false,
-                                              initialValue: passwordText,
-                                              autocorrect: false,
-                                              style: const TextStyle(
-                                                  fontFamily: 'Roboto',
-                                                  color: Color.fromRGBO(
-                                                      00, 20, 20, 80),
-                                                  fontSize: 16),
-                                              decoration:
-                                                  buildInputUsernamePasswordDecoration(),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  passwordVal =
-                                                      value; // Update the _inputText whenever the user types
-                                                });
-                                              },
-                                              //controller: passwordController,
-                                              validator: MultiValidator([
-                                                RequiredValidator(
-                                                    errorText: "* Required"),
-                                              ])
-                                              //validatePassword,        //Function to check validation
-                                              ),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 15,
-                                              bottom: 10),
-                                        ),
-                                        SizedBox(
-                                          // height: 50,
-                                          width: 120,
-                                          // decoration: Utils
-                                          //   .buildLoginButtonBoxDecoration(),
-                                          child: !isLoading
-                                              ? TextButton(
-                                                  style: GuiUtils
-                                                      .buildElevatedButtonLogin(),
-                                                  onPressed: () async {
-                                                    if (usernameVal.isEmpty){
-                                                        usernameVal = emailText;
-                                                    }
-                                                    if (passwordVal.isEmpty){
-                                                      passwordVal = passwordText;
-                                                    }
-                                                    notificationPermissionGranted()
-                                                        .then((val) async {
-                                                      debugPrint(
-                                                          "notificationPermissionGranted: $val");
-                                                      bool isError = await login(usernameVal,
-                                                          passwordVal);
-                                                      debugPrint("loginStatus $isError");
-                                                      if(isError) {
-                                                        setState(() {
-                                                          isLoading = false;
-                                                        });
-                                                      }
+                          /// LOGO
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 32),
+                            child: SizedBox(
+                              width: 110,
+                              height: 110,
+                              child: Image.asset(
+                                'assets/images/LOGO_NEW_ORIG.png',
+                              ),
+                            ),
+                          ),
 
-                                                    });
-                                                    if (!mounted) return;
-                                                    setState(() {
-                                                      isLoading = true;
-                                                    });
+                          /// CARD
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(24),
+                            decoration: buildLoginBoxDecoration(),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  Constants.LOGIN_TO_NAVIS,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF0A1F44),
+                                  ),
+                                ),
+                                const SizedBox(height: 32),
 
-                                                  },
-                                                  child: const Text(
-                                                    'Login',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 18,
-                                                        fontFamily: 'Roboto',
-                                                        letterSpacing: 1.5),
-                                                  ))
-                                              : const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                        ),
-                                       Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 0,
-                                              bottom: 0),
-                                          child: loginError == true
-                                              ? const Text(
-                                                  "Login error",
-                                                  style: TextStyle(
-                                                      color: Colors.redAccent,
-                                                      fontFamily: 'Roboto'),
-                                                )
-                                              : const Text(""),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 0,
-                                              bottom: 0),
-                                          child: licenseError == true
-                                              ? const Text(
-                                            "License expired",
-                                            style: TextStyle(
-                                                color: Colors.redAccent,
-                                                fontFamily: 'Roboto'),
-                                          )
-                                              : const Text(""),
-                                        ),
-                                        (!loginError && !licenseError) ? const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 5,
-                                              bottom: 5),
-                                          child: Text(
-                                            "or",
-                                            style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  74, 96, 128, 1.0),
-                                            ),
-                                          ),
-                                        ): Container(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 5,
-                                              bottom: 0),
-                                          child: TextButton(
-                                            onPressed: () {},
-                                            child: InkWell(
-                                                child: const Text(
-                                                  Constants.CREATE_ACCOUNT,
-                                                  style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 220, 1),
-                                                  ),
-                                                ),
-                                                onTap: () => launchUrl(
-                                                    Constants.REGISTER_URL)),
-                                          ),
-                                        ),
-                                      ],
+                                /// USERNAME
+                                TextFormField(
+                                  initialValue: emailText,
+                                  decoration: GuiUtils
+                                      .buildInputUsernameLoginDecoration(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      usernameVal = value;
+                                    });
+                                  },
+                                  validator: MultiValidator([
+                                    RequiredValidator(errorText: "Required")
+                                  ]),
+                                ),
+                                const SizedBox(height: 16),
+
+                                /// PASSWORD
+                                TextFormField(
+                                  obscureText: true,
+                                  enableSuggestions: false,
+                                  autocorrect: false,
+                                  initialValue: passwordText,
+                                  decoration:
+                                  buildInputUsernamePasswordDecoration(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      passwordVal = value;
+                                    });
+                                  },
+                                  validator: MultiValidator([
+                                    RequiredValidator(errorText: "* Required"),
+                                  ]),
+                                ),
+
+                                const SizedBox(height: 24),
+
+                                /// LOGIN BUTTON
+                                SizedBox(
+                                  height: 50,
+                                  child: !isLoading
+                                      ? ElevatedButton(
+                                    style: GuiUtils
+                                        .buildElevatedButtonLogin(),
+                                    onPressed: () async {
+                                      if (usernameVal.isEmpty) {
+                                        usernameVal = emailText;
+                                      }
+                                      if (passwordVal.isEmpty) {
+                                        passwordVal = passwordText;
+                                      }
+
+                                      notificationPermissionGranted()
+                                          .then((val) async {
+                                        bool isError = await login(
+                                            usernameVal, passwordVal);
+                                        if (isError) {
+                                          setState(() {
+                                            isLoading = false;
+                                          });
+                                        }
+                                      });
+
+                                      if (!mounted) return;
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                    },
+                                    child: const Text(
+                                      'Login',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        letterSpacing: 1.2,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                      : const Center(
+                                    child:
+                                    CircularProgressIndicator(),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                /// ERRORS
+                                if (loginError)
+                                  const Text(
+                                    "Login error",
+                                    textAlign: TextAlign.center,
+                                    style:
+                                    TextStyle(color: Colors.redAccent),
+                                  ),
+
+                                if (licenseError)
+                                  const Text(
+                                    "License expired",
+                                    textAlign: TextAlign.center,
+                                    style:
+                                    TextStyle(color: Colors.redAccent),
+                                  ),
+
+                                if (!loginError && !licenseError)
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                    child: Text(
+                                      "or",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.grey),
                                     ),
                                   ),
-                                ]))))))));
+
+                                /// REGISTER
+                                TextButton(
+                                  onPressed: () {},
+                                  child: InkWell(
+                                    child: const Text(
+                                      Constants.CREATE_ACCOUNT,
+                                      style: TextStyle(
+                                        color: Colors.indigo,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    onTap: () =>
+                                        launchUrl(Constants.REGISTER_URL),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   InputDecoration buildInputUsernamePasswordDecoration() {
@@ -369,6 +327,22 @@ class _LoginFormValidationState extends State<LoginForm> {
         hintStyle: const TextStyle(fontSize: 12));
   }
 
+
+  BoxDecoration buildLoginBoxDecoration() {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 20,
+          offset: Offset(0, 10),
+        ),
+      ],
+    );
+  }
+
+/*
   BoxDecoration buildLoginBoxDecoration() {
     return const BoxDecoration(
       //color: Colors.,
@@ -392,7 +366,7 @@ class _LoginFormValidationState extends State<LoginForm> {
       ],
     );
   }
-
+*/
   @pragma(
       'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 

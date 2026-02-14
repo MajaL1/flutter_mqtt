@@ -32,7 +32,8 @@ class NotificationHelper extends ChangeNotifier {
   @pragma('vm:entry-point')
   static Future<void> initializeService() async {
     //service = FlutterBackgroundService();
-
+    DartPluginRegistrant.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
     String eventID = "as432445GFCLbd2in1en21093";
     int notificationId = eventID.hashCode;
 
@@ -124,6 +125,7 @@ class NotificationHelper extends ChangeNotifier {
 
   @pragma('vm:entry-point')
   static Future<void> startMesagingService(String message) async {
+    DartPluginRegistrant.ensureInitialized();
     debugPrint("Messaging service started, message: $message");
 
     // setSendAlarm(message);
@@ -133,6 +135,7 @@ class NotificationHelper extends ChangeNotifier {
   @pragma('vm:entry-point')
   static Future<void> notificationTapBackground(
       NotificationResponse details) async {
+      DartPluginRegistrant.ensureInitialized();
     debugPrint("TAP BACKGROUND");
     Get.to(const AlarmHistory());
   }
