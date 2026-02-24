@@ -70,6 +70,8 @@ dependencies:
   logger: ^2.5.0
   connectivity_plus: ^6.1.4
   permission_handler_apple: ^9.4.7
+  firebase_core: ^4.4.0
+  firebase_messaging: ^16.1.1
  # android_alarm_manager_plus: ^3.0.4
 
 dependency_overrides:

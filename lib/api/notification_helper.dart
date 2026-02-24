@@ -8,11 +8,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 //import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mqtt_test/main.dart';
+//import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:timezone/data/latest.dart' as tzl;
-//import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:mqtt_test/util/notifications_singleton.dart';
+import 'package:mqtt_test/util/service_singleton.dart';
+
 
 import '../model/alarm.dart';
 import '../widgets/units.dart';
@@ -47,7 +50,7 @@ class NotificationHelper extends ChangeNotifier {
       //sound:
     );
 
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    //flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     //flutterLocalNotificationsPlugin.
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -71,8 +74,10 @@ class NotificationHelper extends ChangeNotifier {
           onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
           onDidReceiveNotificationResponse:
               (NotificationResponse details) async {
-        Get.to(const AlarmHistory());
-      });
+                print("Tapped notification");
+        /*Get.to(const AlarmHistory());
+      */}
+      );
     }
 
     await flutterLocalNotificationsPlugin
@@ -120,7 +125,7 @@ class NotificationHelper extends ChangeNotifier {
         onBackground: onIosBackground,
       ),
     );
-    tzl.initializeTimeZones();
+    tz.initializeTimeZones();
   }
 
   @pragma('vm:entry-point')
@@ -227,6 +232,35 @@ class NotificationHelper extends ChangeNotifier {
 
     debugPrint("showing alarm... $alarmMessage");
 
+
+    final scheduledTime =
+    tz.TZDateTime.now(tz.local).add(const Duration(seconds: 2));
+
+   /* await flutterLocalNotificationsPlugin.zonedSchedule(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate",
+      scheduledTime,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'alarm_channel',
+          'Alarms',
+          channelDescription: 'Alarm notifications',
+          //sound: AndroidNotificatio,
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentSound: true,
+          presentBadge: true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+    );
+*/
+
     await flutterLocalNotificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
 
@@ -244,7 +278,7 @@ class NotificationHelper extends ChangeNotifier {
           presentSound: true,
           presentBadge: true,
           sound: 'default',
-          interruptionLevel: InterruptionLevel.active,
+         // interruptionLevel: InterruptionLevel.active,
         ),
       ),
     );
@@ -304,7 +338,7 @@ class NotificationHelper extends ChangeNotifier {
       service.stopSelf();
     });
 
-    tzl.initializeTimeZones();
+    tz.initializeTimeZones();
   }
 
   Future<List<Alarm>> getRefreshedAlarmList() async {

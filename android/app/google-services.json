@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "399087891732",
+    "project_id": "navis-alarm-app",
+    "storage_bucket": "navis-alarm-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399087891732:android:87b106acc9bd895bfc3e01",
+        "android_client_info": {
+          "package_name": "com.navis.alarm_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuSwjj0IpkaNgTqx0MEPi9FEtGk4oVs34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

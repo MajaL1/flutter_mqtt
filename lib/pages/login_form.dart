@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mqtt_test/api/notification_helper.dart';
-import 'package:mqtt_test/main.dart';
+//import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/user.dart';
 //import 'package:mqtt_test/model/alarm.dart';
 import 'package:mqtt_test/model/user_topic.dart';
@@ -14,6 +14,10 @@ import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:mqtt_test/util/service_singleton.dart';
+import 'package:mqtt_test/util/notifications_singleton.dart';
+
 
 import '../api/api_service.dart';
 import '../model/constants.dart';

@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 //mport 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
-import 'package:mqtt_test/main.dart';
+import 'package:mqtt_test/util/service_singleton.dart';
+import 'package:mqtt_test/util/notifications_singleton.dart';
+
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,6 +73,9 @@ class BackgroundMqtt {
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     preferences.setBool("serviceStopped", false);
@@ -239,6 +245,9 @@ class BackgroundMqtt {
   Future<void> initializeService(service) async {
     debugPrint("main.dart initializing background service");
     DartPluginRegistrant.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
+    //await Firebase.initializeApp();
+
 
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(

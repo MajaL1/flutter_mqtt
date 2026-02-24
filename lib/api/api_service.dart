@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' show Client, Response, post;
-import 'package:mqtt_test/main.dart';
+//import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/model/alarm.dart';
 import 'package:mqtt_test/model/constants.dart';
 import 'package:mqtt_test/model/notification_message.dart';
@@ -13,6 +13,12 @@ import 'package:mqtt_test/model/topic_data.dart';
 import 'package:mqtt_test/model/user.dart';
 import 'package:mqtt_test/model/user_topic.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mqtt_test/util/notifications_singleton.dart';
+import 'package:mqtt_test/util/service_singleton.dart';
+
+
+
+
 
 import '../util/background_mqtt.dart';
 

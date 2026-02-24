@@ -4,20 +4,30 @@ import 'dart:io' show Platform;
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:mqtt_test/util/service_singleton.dart';
+import 'package:mqtt_test/util/notifications_singleton.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:logger/logger.dart';
+//import 'package:logger/logger.dart';
 import 'package:mqtt_test/util/background_mqtt.dart';
-import 'package:mqtt_test/util/log_file_helper.dart';
+//import 'package:mqtt_test/util/log_file_helper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:timezone/data/latest.dart' as tzl;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'model/alarm.dart';
 import 'pages/first_screen.dart';
+
+import 'firebase_options.dart';
+
+
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -38,10 +48,53 @@ SharedPreferences? prefs;
 
 var logger;
 
+Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
+  // DO NOT call Firebase.initializeApp() here
+  // DO NOT call FirebaseMessaging here
+
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    "Alarm",
+    "New alarm received",
+    const NotificationDetails(
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentSound: true,
+      ),
+    ),
+  );
+}
+
+@pragma('vm:entry-point')
+Future<bool> onIosBackground(ServiceInstance service) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
+
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.reload();
+  final log = preferences.getStringList('log') ?? <String>[];
+  log.add(DateTime.now().toIso8601String());
+  print("ON IOS BACKGROUND");
+  await preferences.setStringList('log', log);
+
+  return true;
+}
+
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
-  tzl.initializeTimeZones();
+
+ // await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
+  tz.initializeTimeZones();
+  await FirebaseMessaging.instance.requestPermission();
 
   if (Platform.isAndroid) {
     //final serviceAndroid = FlutterBackgroundService();
@@ -56,22 +109,13 @@ Future<void> main() async {
     } else {
       //logger = await LogFileHelper.createLogger();
       debugPrint("not status.isDenied");
-      //await FileDownloaderHelper.saveFileOnDevice();
-
-
-      //dodamo ios permission za plugin
-      /* await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-      ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-*/
 
     }
   }
-      if (await serviceAndroid.isRunning()) { 
+  String? token = await FirebaseMessaging.instance.getToken();
+  print("FIREBASE FCM TOKEN: $token");
+
+  if (await serviceAndroid.isRunning()) {
         debugPrint("----isRunning on Android");
         //logger.log(Level.info, "---- service is running on Android: isRunning");
       }
@@ -81,8 +125,8 @@ Future<void> main() async {
 
         await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
       }
-    
-  
+
+
   /*else if(Platform.isIOS) {
     FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
     // TODO
@@ -94,26 +138,11 @@ Future<void> main() async {
       serviceIOS.start();
      // logger.log(Level.info, "---- service NOT running on IOS: notRunning");
       serviceIOS.invoke("startService", {
-       
+
         },);
       await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceIOS);
     }
   }*/
-  @pragma('vm:entry-point')
-  Future<bool> onIosBackground(ServiceInstance service) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    DartPluginRegistrant.ensureInitialized();
-
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.reload();
-    final log = preferences.getStringList('log') ?? <String>[];
-    log.add(DateTime.now().toIso8601String());
-    print("ON IOS BACKGROUND");
-    await preferences.setStringList('log', log);
-
-    return true;
-  }
-
 
   // SharedPreferences.setMockInitialValues({});
   await SharedPreferences.getInstance().then((value) {
