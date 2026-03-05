@@ -118,7 +118,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             Padding(
               padding: const EdgeInsets.only(right: 12, top: 8),
               child: Text(
-                "v_2026-02-25"
+                "v_2026-03-06"
                     ""
                     ""
                     "",

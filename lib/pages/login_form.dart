@@ -149,13 +149,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                Text(
+                                const Text(
                                   Constants.LOGIN_TO_NAVIS,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF0A1F44),
+                                    color:  Color.fromRGBO(132, 134, 136, 1),
                                   ),
                                 ),
                                 const SizedBox(height: 32),
@@ -201,8 +201,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   height: 50,
                                   child: !isLoading
                                       ? ElevatedButton(
-                                    style: GuiUtils
-                                        .buildElevatedButtonLogin(),
+                                    style: GuiUtils.buildElevatedButtonLogin(),
                                     onPressed: () async {
                                       if (usernameVal.isEmpty) {
                                         usernameVal = emailText;
@@ -213,8 +212,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
                                       notificationPermissionGranted()
                                           .then((val) async {
-                                        bool isError = await login(
-                                            usernameVal, passwordVal);
+                                        bool isError = await login(usernameVal, passwordVal);
                                         if (isError) {
                                           setState(() {
                                             isLoading = false;
@@ -237,8 +235,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     ),
                                   )
                                       : const Center(
-                                    child:
-                                    CircularProgressIndicator(),
+                                    child: CircularProgressIndicator(),
                                   ),
                                 ),
 
@@ -278,7 +275,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     child: const Text(
                                       Constants.CREATE_ACCOUNT,
                                       style: TextStyle(
-                                        color: Colors.indigo,
+                                        color: Color.fromRGBO(120,120,136, 1),
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -304,7 +301,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   InputDecoration buildInputUsernamePasswordDecoration() {
     return InputDecoration(
-        prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
+        prefixIcon: const Icon(Icons.lock, color: Color.fromRGBO(86,181,224, 1),),
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(

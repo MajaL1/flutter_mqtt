@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/utils.dart';
@@ -142,15 +144,23 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   /// The unsolicited disconnect callback
-  void onDisconnected() {
+  Future<void> onDisconnected() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Record failure time if not already recorded
+
+    print("xxxxx onDisconnected getting fail_time: fail_time: ${prefs.getString('fail_time')}");
+    if (prefs.getString('fail_time') == null) {
+      prefs.setString('fail_time', DateTime.now().toIso8601String());
+      print("xxxxx onDisconnected setting fail_time!=null: fail_time: ${prefs.getString('fail_time')}");
+
+    }
     String clientID = client!.clientIdentifier;
-    print(
-        "///////////////////////////// onDisconnected  $clientID, $instance.currentState ///////////////////////////////////");
+    print("///////////////////////////// onDisconnected  $clientID, $instance.currentState ///////////////////////////////////");
     MqttConnectReturnCode? returnCode = client!.connectionStatus!.returnCode;
-    print(
-        ':OnDisconnected client callback - Client disconnection, return code: $returnCode');
-    if (client!.connectionStatus!.returnCode ==
-        MqttConnectReturnCode.noneSpecified) {
+
+    NotificationHelper.instance.showCriticalNotification();
+    print(':OnDisconnected client callback - Client disconnection, return code: $returnCode');
+    if (client!.connectionStatus!.returnCode == MqttConnectReturnCode.noneSpecified) {
       print(":OnDisconnected callback is solicited, this is correct");
     }
     instance.currentState = MQTTAppConnectionState.disconnected;
@@ -166,8 +176,7 @@ class SmartMqtt extends ChangeNotifier {
     SharedPreferences.getInstance().then((value) {
       value.setBool("connected", true);
     });
-    print(
-        "///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
+    print("///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
 
     print('on Connected: ALARM APP:Mosquitto client connected....');
     for (String topicName in topicList) {
@@ -179,8 +188,11 @@ class SmartMqtt extends ChangeNotifier {
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       await mqttMessageProcessor(c);
     });
-    print(
-        'EXAMPLE::OnConnected client callback - Client connection was sucessful');
+    print('EXAMPLE::OnConnected client callback - Client connection was sucessful');
+
+    SharedPreferences.getInstance().then((val) {
+      val.remove('fail_time');
+    });
   }
 
   Future<void> mqttMessageProcessor(

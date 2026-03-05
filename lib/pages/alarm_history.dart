@@ -75,7 +75,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         l: 3,
         b: 2,
         t: 3);
-    NotificationHelper.instance.sendMessage(alarm); 
+    NotificationHelper.instance.sendMessage(alarm);
   }
   @override
   Widget build(BuildContext context) {
@@ -101,6 +101,21 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                         const Padding(
                           padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 7, bottom: 15.0),
                         ),
+                        /*Container(
+                          height: 30,
+                          width: 130,
+                          decoration: GuiUtils.buildHistoryButtonDecoration(),
+                          child: ElevatedButton.icon(
+                              style: GuiUtils.buildElevatedButtonSettings(),
+                              onPressed: () {
+                                serviceAndroid.invoke("simulate_disconnect");
+                              },
+                              label: const Text(
+                                'Test fail',
+                                style: TextStyle(color: Colors.white, fontSize: 12),
+                              ),
+                              icon: const Icon(Icons.refresh, color: Colors.white, size: 18)),
+                        ),*/
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -157,7 +172,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                       style: TextStyle(color: Colors.white, fontSize: 12),
                                     ),
                                     icon: const Icon(Icons.refresh, color: Colors.white, size: 18)),
-                              )
+                              ),
                             ]),
                         const Divider(height: 40, color: Colors.transparent, thickness: 0),
                         ListView.builder(

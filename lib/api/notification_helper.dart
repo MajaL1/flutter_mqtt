@@ -232,35 +232,6 @@ class NotificationHelper extends ChangeNotifier {
 
     debugPrint("showing alarm... $alarmMessage");
 
-
-    final scheduledTime =
-    tz.TZDateTime.now(tz.local).add(const Duration(seconds: 2));
-
-   /* await flutterLocalNotificationsPlugin.zonedSchedule(
-      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate",
-      scheduledTime,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'alarm_channel',
-          'Alarms',
-          channelDescription: 'Alarm notifications',
-          //sound: AndroidNotificatio,
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(
-          presentAlert: true,
-          presentSound: true,
-          presentBadge: true,
-        ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
-    );
-*/
-
     await flutterLocalNotificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
 
@@ -286,6 +257,37 @@ class NotificationHelper extends ChangeNotifier {
     await SharedPreferences.getInstance().then((value) {
       value.setBool("historyChanged", true);
     });
+  }
+
+  Future<void> showCriticalNotification() async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'critical_mqtt_channel', // Unique ID
+      'Critical Alerts',       // User-visible name
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+      // You can point to a custom sound file in android/app/src/main/res/raw
+      sound: RawResourceAndroidNotificationSound('alarm_sound'),
+      fullScreenIntent: true, // Useful for waking up the screen
+    );
+
+    const NotificationDetails platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+        interruptionLevel: InterruptionLevel.critical, // iOS 15+ Critical Alert
+      ),
+    );
+
+    await FlutterLocalNotificationsPlugin().show(
+      999,
+      'CRITICAL: Server Down',
+      'The MQTT server has been unreachable for over 2 hours.',
+      platformDetails,
+    );
   }
 
   void onDidReceiveNotificationResponse(

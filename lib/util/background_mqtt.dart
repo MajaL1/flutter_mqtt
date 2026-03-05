@@ -71,6 +71,9 @@ class BackgroundMqtt {
 
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
+
+    print("^^^^ xxxxx  1 onStart(ServiceInstance service) background_mqtt ^^^^^");
+
     // Only available for flutter 3.0.0 and later
     DartPluginRegistrant.ensureInitialized();
     WidgetsFlutterBinding.ensureInitialized();
@@ -86,8 +89,6 @@ class BackgroundMqtt {
 
     //logger ??= await LogFileHelper.createLogger();
     //logger.log(Level.info, "background_mqtt start onStart()");
-
-
 
     SmartMqtt ? smartMqtt;
 
@@ -114,7 +115,6 @@ class BackgroundMqtt {
         //},);
         debugPrint(">>>>>>> service.setAsForegroundService()");
         //logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
-
       });
 
       service.on('setAsBackground').listen((event) {
@@ -147,14 +147,28 @@ class BackgroundMqtt {
         smartMqtt?.publish(message, topic!);
       }
     });
-   // );
+
+    // Inside your onStart(ServiceInstance service)
+    service.on('simulate_disconnect').listen((event) {
+      // 1. Manually disconnect the real client
+      smartMqtt?.client?.disconnect();
+
+      // 2. Manually set the failure timestamp to 4 hours ago
+      final fourHoursAgo = DateTime.now().subtract(Duration(hours: 4));
+      SharedPreferences.getInstance().then((val) {
+        val.setString('fail_time', fourHoursAgo.toIso8601String());
+      });
+
+      print("Simulating 4-hour disconnect...");
+    });
+
+    // );
     //FlutterBackgroundService().invoke("setAsBackground");
     DateTime startTime = DateTime.now();
 
     DateTime currentTime = DateTime.now();
     debugPrint(" startTime, currentTime $startTime, $currentTime");
     debugPrint("SmartMqtt:: ${SmartMqtt.instance.toString()}");
-
 
     SharedPreferences.getInstance().then((val) {
       val.reload();
@@ -197,6 +211,38 @@ class BackgroundMqtt {
     });
     //logger.log(Level.info, "FLUTTER BACKGROUND SERVICE: ${DateTime.now()}'");
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
+
+    //print("^^^^ xxxxx 2 before running background timer for server fail check ^^^^^");
+    Timer.periodic(const Duration(minutes: 5), (timer) async {
+      final prefs = await SharedPreferences.getInstance();
+      final String? failTimeStr = prefs.getString('fail_time');
+      //print("^^^^ xxxxx 3 timer running background timer for server fail check ^^^^^");
+
+      if (failTimeStr != null) {
+        final failTime = DateTime.parse(failTimeStr);
+        final durationDown = DateTime.now().difference(failTime);
+
+        print("durationDown: $durationDown failTime: $failTime");
+
+        //if (durationDown.inMinutes >= 2) {
+        if (durationDown.inHours >= 2) {
+          print("^^^^ xxxxx durationDown.inMinutes >= 2 ^^^^^");
+
+          NotificationHelper.instance.showCriticalNotification();
+        }
+
+        // Update the persistent notification text so user knows it's working
+        if (service is AndroidServiceInstance) {
+          service.setForegroundNotificationInfo(
+            title: "MQTT Status: Monitoring",
+            content: failTimeStr == null
+                ? "Server Online"
+                : "Server Down for ${durationDown.inMinutes} mins",
+          );
+        }
+      }});
+
+
   }
 
   /* void callMqttConnect(DateTime startTime, ServiceInstance service) {
@@ -271,8 +317,7 @@ class BackgroundMqtt {
     //}*/ 
 
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     await service.configure(

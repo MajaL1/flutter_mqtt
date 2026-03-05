@@ -261,26 +261,56 @@ class GuiUtils {
   }
 
   static ButtonStyle buildElevatedButtonLogin() {
+    const mainColor = Color(0xFF56B5E0); // your color
+    const pressedColor = Color(0xFF3A8FB8); // darker shade for press
+    const hoverColor = Color(0xFF6CC4EB); // lighter shade for hover
+
     return ButtonStyle(
-//side: MaterialStateProperty.BorderSide(color: Colors.red),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-          //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
-        )),
-        backgroundColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        foregroundColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        overlayColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+      padding: WidgetStateProperty.all(
+        const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+      ),
+
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+
+      elevation: WidgetStateProperty.resolveWith<double>(
+            (states) {
+          if (states.contains(WidgetState.pressed)) return 2;
+          return 6; // soft iOS-friendly elevation
+        },
+      ),
+
+      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+            (states) {
+          if (states.contains(WidgetState.pressed)) return pressedColor;
+          if (states.contains(WidgetState.hovered)) return hoverColor;
+          return mainColor;
+        },
+      ),
+
+      foregroundColor: WidgetStateProperty.all(Colors.blue),
+
+      overlayColor: WidgetStateProperty.resolveWith<Color?>(
+            (states) {
+          if (states.contains(WidgetState.pressed)) {
+            return Colors.white.withOpacity(0.15);
+          }
+          return null;
+        },
+      ),
+    );
   }
+
+
 
   static InputDecoration buildInputUsernameLoginDecoration() {
     return InputDecoration(
         prefixIcon: const Icon(
           Icons.person,
-          color: Colors.blueAccent,
+          color: Color.fromRGBO(86,181,224, 1),
         ),
         filled: true,
         fillColor: Colors.white,
