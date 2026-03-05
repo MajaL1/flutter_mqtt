@@ -42,15 +42,13 @@ class User {
     }
 
     return User(
-        id: map["id"],
-        username: map["username"],
-        email: map["email"],
-        mqtt_pass: map["mqtt_pass"],
-        date_register: DateTime.parse(map["date_register"]),
-        date_login: map["date_login"] == null
-            ? null
-            : DateTime.tryParse(map["date_login"]), userTopicList: [],
-    //    userTopicList: userTopicList
+      id: map["id"],
+      username: map["username"],
+      email: map["email"],
+      mqtt_pass: map["mqtt_pass"],
+      date_register: DateTime.parse(map["date_register"]),
+      date_login: map["date_login"] == null ? null : DateTime.tryParse(map["date_login"]), userTopicList: [],
+      //    userTopicList: userTopicList
     );
   }
 
@@ -73,6 +71,7 @@ class User {
       "userTopicList": userTopicList
     };
   }
+
   @override
   String toString() {
     return 'User{id: $id, name: $username}';

@@ -4,18 +4,13 @@ import 'package:flutter/material.dart';
 
 class NotificationMessage {
   int? id;
-  String ?channel;
+  String? channel;
   String title;
-  String ?description;
+  String? description;
   bool on;
 
   NotificationMessage(
-      {
-        this.id = 0,
-        required this.channel,
-        required this.title,
-        required this.description,
-        required this.on});
+      {this.id = 0, required this.channel, required this.title, required this.description, required this.on});
 
   // Class Function
   showNotificationInfo() {
@@ -32,14 +27,12 @@ class NotificationMessage {
   }
 
   Map<String, dynamic> toJson() {
-    return {"id": id, "channel": channel
-      ,"title": title, "description": description, "on": on};
+    return {"id": id, "channel": channel, "title": title, "description": description, "on": on};
   }
 
   List<NotificationMessage> notificationMessageFromJson(String jsonData) {
     final data = json.decode(jsonData);
-    return List<NotificationMessage>.from(
-        data.map((item) => NotificationMessage.fromJson(item)));
+    return List<NotificationMessage>.from(data.map((item) => NotificationMessage.fromJson(item)));
   }
 
   String notificationMessageToJson(NotificationMessage data) {

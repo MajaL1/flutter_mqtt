@@ -27,8 +27,6 @@ import 'pages/first_screen.dart';
 
 import 'firebase_options.dart';
 
-
-
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 final serviceAndroid = FlutterBackgroundService();
@@ -80,17 +78,14 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
 
- // await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-
 
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
   tz.initializeTimeZones();
@@ -109,23 +104,20 @@ Future<void> main() async {
     } else {
       //logger = await LogFileHelper.createLogger();
       debugPrint("not status.isDenied");
-
     }
   }
   String? token = await FirebaseMessaging.instance.getToken();
   print("FIREBASE FCM TOKEN: $token");
 
   if (await serviceAndroid.isRunning()) {
-        debugPrint("----isRunning on Android");
-        //logger.log(Level.info, "---- service is running on Android: isRunning");
-      }
-       else {
-        print("----notRunning on Android");
-       // logger.log(Level.info, "---- service NOT running on Android: notRunning");
+    debugPrint("----isRunning on Android");
+    //logger.log(Level.info, "---- service is running on Android: isRunning");
+  } else {
+    print("----notRunning on Android");
+    // logger.log(Level.info, "---- service NOT running on Android: notRunning");
 
-        await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
-      }
-
+    await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
+  }
 
   /*else if(Platform.isIOS) {
     FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();

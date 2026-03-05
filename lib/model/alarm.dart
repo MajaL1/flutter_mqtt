@@ -15,14 +15,13 @@ class Alarm {
   int? b;
   int? t;
 
-
   Alarm(
       {this.sensorAddress,
       this.deviceName,
       this.friendlyName,
       this.typ,
       this.v,
-        this.u,
+      this.u,
       this.hiAlarm,
       this.loAlarm,
       this.ts,
@@ -32,7 +31,6 @@ class Alarm {
       this.b,
       this.l,
       this.t});
-
 
   /*factory Alarm.fromJson(Map<String, dynamic> addjson){
     return Alarm(
@@ -54,7 +52,7 @@ class Alarm {
   } */
   Map<String, dynamic> toJson() {
     return {
-      "device_name" : deviceName,
+      "device_name": deviceName,
       "sensor_address": sensorAddress,
       "friendlyName": friendlyName,
       "typ": typ,
@@ -92,7 +90,7 @@ class Alarm {
           DateTime? ts;
           int t = 0;
           int l = 0;
-          String friendlyName =  "";
+          String friendlyName = "";
 
           for (String key1 in value.keys) {
             value[key1];
@@ -138,7 +136,7 @@ class Alarm {
             if (key1 == "l") {
               l = value1;
             }
-                    }
+          }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
               sensorAddress: key,
@@ -258,7 +256,7 @@ class Alarm {
       Alarm newAlarm = Alarm(
           sensorAddress: sensorAddress,
           deviceName: deviceName,
-          friendlyName: friendlyName  ,
+          friendlyName: friendlyName,
           typ: typ,
           v: v,
           u: u,
@@ -352,7 +350,7 @@ class Alarm {
                 b = valueInt;
               }
             }
-                    }
+          }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           Alarm alarm = Alarm(
               sensorAddress: sensorName,

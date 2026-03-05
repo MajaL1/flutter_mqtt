@@ -14,8 +14,8 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutState extends State<AboutPage> {
-  TextStyle headingStyle = const TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
+  TextStyle headingStyle =
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
 
   TextStyle headingStyleIOS = const TextStyle(
     fontWeight: FontWeight.w600,
@@ -23,8 +23,6 @@ class _AboutState extends State<AboutPage> {
     color: CupertinoColors.inactiveGray,
   );
   TextStyle descStyleIOS = const TextStyle(color: CupertinoColors.inactiveGray);
-
-
 
   String username = "";
   String email = "";
@@ -46,7 +44,7 @@ class _AboutState extends State<AboutPage> {
         //if(val.getString("email") != null) {
         //String ? email = val.getString("email");
         //  email ??= "";
-       // }
+        // }
       });
     });
   }
@@ -58,7 +56,10 @@ class _AboutState extends State<AboutPage> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
       appBar: CustomAppBar(Constants.ABOUT),
-      drawer:  NavDrawer.data(username: username, email: email,),
+      drawer: NavDrawer.data(
+        username: username,
+        email: email,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 15, right: 10),
         scrollDirection: Axis.vertical,
@@ -90,39 +91,30 @@ class _AboutState extends State<AboutPage> {
   }
 
   Widget _buildAboutView() {
-    return
-      Center(child:
-          Column(children: [
-            const Padding(padding: EdgeInsets.only(top: 30)),
-            const Text("ALARM APP", style: TextStyle(
-              color: Colors.black45,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2.5,
-            fontSize: 30)),
-            const Padding(padding: EdgeInsets.only(top: 30)),
-
-            const Text("v.10.10.0", style: TextStyle(
-                color: Colors.black45,
-                fontWeight: FontWeight.bold,
-                fontSize: 22)),
-            const Padding(padding: EdgeInsets.only(top: 50)),
-            SizedBox(
-          width: 200,
-          height: 200,
-          child: Image.asset('assets/images/LOGO_NEW_ORIG.png'),
-
+    return Center(
+        child: Column(children: [
+      const Padding(padding: EdgeInsets.only(top: 30)),
+      const Text("ALARM APP",
+          style: TextStyle(
+              color: Colors.black45, fontWeight: FontWeight.bold, letterSpacing: 2.5, fontSize: 30)),
+      const Padding(padding: EdgeInsets.only(top: 30)),
+      const Text("v.10.10.0",
+          style: TextStyle(color: Colors.black45, fontWeight: FontWeight.bold, fontSize: 22)),
+      const Padding(padding: EdgeInsets.only(top: 50)),
+      SizedBox(
+        width: 200,
+        height: 200,
+        child: Image.asset('assets/images/LOGO_NEW_ORIG.png'),
       ),
-            const Padding(padding: EdgeInsets.only(top: 50)),
-            const Text("www.navis-elektronika.com", style: TextStyle(
-              color: Colors.black45,
-              fontWeight: FontWeight.bold,
-              fontSize: 16)),
+      const Padding(padding: EdgeInsets.only(top: 50)),
+      const Text("www.navis-elektronika.com",
+          style: TextStyle(color: Colors.black45, fontWeight: FontWeight.bold, fontSize: 16)),
+    ])
 
-          ])
-
-      //FlutterLogo(size: 200),
-    );
+        //FlutterLogo(size: 200),
+        );
   }
+
   @override
   void dispose() {
     debugPrint("about_page.dart - dispose");

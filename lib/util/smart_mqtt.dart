@@ -152,10 +152,10 @@ class SmartMqtt extends ChangeNotifier {
     if (prefs.getString('fail_time') == null) {
       prefs.setString('fail_time', DateTime.now().toIso8601String());
       print("xxxxx onDisconnected setting fail_time!=null: fail_time: ${prefs.getString('fail_time')}");
-
     }
     String clientID = client!.clientIdentifier;
-    print("///////////////////////////// onDisconnected  $clientID, $instance.currentState ///////////////////////////////////");
+    print(
+        "///////////////////////////// onDisconnected  $clientID, $instance.currentState ///////////////////////////////////");
     MqttConnectReturnCode? returnCode = client!.connectionStatus!.returnCode;
 
     NotificationHelper.instance.showCriticalNotification();
@@ -176,7 +176,8 @@ class SmartMqtt extends ChangeNotifier {
     SharedPreferences.getInstance().then((value) {
       value.setBool("connected", true);
     });
-    print("///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
+    print(
+        "///////////////////////////// onConnected,  $clientID, $currentState  ///////////////////////////////////");
 
     print('on Connected: ALARM APP:Mosquitto client connected....');
     for (String topicName in topicList) {
@@ -195,8 +196,7 @@ class SmartMqtt extends ChangeNotifier {
     });
   }
 
-  Future<void> mqttMessageProcessor(
-      List<MqttReceivedMessage<MqttMessage?>>? c) async {
+  Future<void> mqttMessageProcessor(List<MqttReceivedMessage<MqttMessage?>>? c) async {
     final MqttPublishMessage recMess = c![0].payload as MqttPublishMessage;
 
     debugPrint("mqttMessageProcessor: currentState: $currentState");
@@ -207,8 +207,7 @@ class SmartMqtt extends ChangeNotifier {
 
     // FlutterBackgroundService().invoke("setAsBackground");
 
-    String message =
-        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+    String message = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
     String decodeMessage = const Utf8Decoder().convert(message.codeUnits);
     //debugPrint("MQTT decodeMessage: $decodeMessage");
     String? topicName = recMess.variableHeader?.topicName;
@@ -217,8 +216,7 @@ class SmartMqtt extends ChangeNotifier {
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    String? alarmInterval1 =
-        await SharedPreferences.getInstance().then((value) {
+    String? alarmInterval1 = await SharedPreferences.getInstance().then((value) {
       return value.getString("alarm_interval_setting");
     });
     debugPrint("alarmInterval 1: $alarmInterval1");
@@ -259,14 +257,11 @@ class SmartMqtt extends ChangeNotifier {
       //preverimo, ker je prvo sporocilo
       // po shranjevanju oblike {"135":{"hi_alarm":111}}
       // in tega izpustimo
-      if ((decodeMessage.contains("v") ||
-          decodeMessage.contains("typ") ||
-          decodeMessage.contains("u"))) {
-          debugPrint("got new settings mqtt");
+      if ((decodeMessage.contains("v") || decodeMessage.contains("typ") || decodeMessage.contains("u"))) {
+        debugPrint("got new settings mqtt");
         // ali novi settingi niso enaki prejsnim
         // ali ce so v zacetku prazni
-        if (newUserSettings.compareTo(decodeMessage) != 0 &&
-            decodeMessage.isNotEmpty) {
+        if (newUserSettings.compareTo(decodeMessage) != 0 && decodeMessage.isNotEmpty) {
           await _parseMqttSettingsForTopic(preferences, decodeMessage, topicName);
           //{\"57\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455},\"84\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455}}
         }
@@ -286,7 +281,7 @@ class SmartMqtt extends ChangeNotifier {
       List<Alarm> currentAlarmList = Alarm.getAlarmList(currentAlarmJson);
       currentAlarmList.first.deviceName = topicName.split("/alarm").first;
 
-     //debugPrint("+++++ALARM ? check below if show ${currentAlarmList.first.toString()},: ${messageCount}");
+      //debugPrint("+++++ALARM ? check below if show ${currentAlarmList.first.toString()},: ${messageCount}");
 
       //prebere listo alarmov iz preferenc in jim doda nov alarm
       SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -383,9 +378,9 @@ class SmartMqtt extends ChangeNotifier {
             debugPrint("smartmqtt - alarmList---: $alarmListMqtt");
             messageCount++;
 
-            String ? friendlyName = await Utils.setFriendlyName(currentAlarmList.first);
+            String? friendlyName = await Utils.setFriendlyName(currentAlarmList.first);
             //debugPrint("utils - setFriendlyName after: $friendlyName");
-            if(friendlyName != null) {
+            if (friendlyName != null) {
               currentAlarmList.first.friendlyName = friendlyName;
             }
 
@@ -399,7 +394,8 @@ class SmartMqtt extends ChangeNotifier {
     }
   }
 
-  Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences, String decodeMessage, String topicName) async {
+  Future<void> _parseMqttSettingsForTopic(
+      SharedPreferences preferences, String decodeMessage, String topicName) async {
     try {
       debugPrint("new user settings");
       preferences.setString("current_mqtt_settings", decodeMessage);
@@ -407,9 +403,7 @@ class SmartMqtt extends ChangeNotifier {
       Map decodeMessageSettings = <String, String>{};
       decodeMessageSettings = json.decode(decodeMessage);
       //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
-      await setDeviceNameToSettings(decodeMessageSettings, topicName
-          .split("/settings")
-          .first);
+      await setDeviceNameToSettings(decodeMessageSettings, topicName.split("/settings").first);
       //-----
       //String oldUserSettings = newUserSettings;
       Map newSettings = <String, String>{};
@@ -451,14 +445,13 @@ class SmartMqtt extends ChangeNotifier {
         //print("map: ${concatenatedSettings}");
         //debugPrint("5 AAAAAAAA: concatenatedSettings ${concatenatedSettings}");
       }
-    } catch(e){
+    } catch (e) {
       debugPrint("!!!Exception:: $e");
     }
   }
 
   // iz historija dobi zadnji alarm za napravo in vrne njen datum
-  Future<DateTime?> _getLastAlarmDateFromHistory(
-      String? deviceName, String? sensorName) async {
+  Future<DateTime?> _getLastAlarmDateFromHistory(String? deviceName, String? sensorName) async {
     List<Alarm> alarmList = [];
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -492,8 +485,7 @@ class SmartMqtt extends ChangeNotifier {
 
     //debugPrint("alarmList.size: ${alarmList.length}");
     //lastSentAlarm ??= DateTime.now();
-    debugPrint(
-        "----lastSentAlarm: $lastSentAlarm for device $deviceName, sensonName: $sensorName");
+    debugPrint("----lastSentAlarm: $lastSentAlarm for device $deviceName, sensonName: $sensorName");
 
     return lastSentAlarm;
   }
@@ -522,8 +514,7 @@ class SmartMqtt extends ChangeNotifier {
     String identifier = l.toString();
 
     _identifier = identifier;
-    _instance.client = MqttServerClient(Constants.BROKER_IP, identifier,
-        maxConnectionAttempts: 1);
+    _instance.client = MqttServerClient(Constants.BROKER_IP, identifier, maxConnectionAttempts: 1);
     _instance.client!.port = 1883;
     _instance.client!.keepAlivePeriod = 50;
     //client.autoReconnect = true;
@@ -580,9 +571,8 @@ class SmartMqtt extends ChangeNotifier {
   }
 
   Future<String> getNewUserSettingsList() async {
-
     debugPrint("getNewUserSettingsList 222222222222 new User settings - smart mqtt:");
-    String  settings =  "";
+    String settings = "";
     await SharedPreferences.getInstance().then((value) {
       String set = value.getString("current_mqtt_settings")!;
       debugPrint("2222222222222 new User settings - smart mqtt: $set");
@@ -599,7 +589,7 @@ class SmartMqtt extends ChangeNotifier {
         Map val = settings[key];
 
         //for (String key1 in val.keys) {
-          //print("key1: $key1");
+        //print("key1: $key1");
         //}
         final Map<String, String> deviceNameMap = {"device_name": deviceName};
         val.addAll(deviceNameMap);

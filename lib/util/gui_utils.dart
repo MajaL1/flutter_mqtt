@@ -13,14 +13,12 @@ class GuiUtils {
           borderSide: const BorderSide(color: Colors.black12, width: 8.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-              width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
+          borderSide: const BorderSide(width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
           borderRadius: BorderRadius.circular(4),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
-          borderSide: const BorderSide(
-              color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+          borderSide: const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
         labelStyle: const TextStyle(),
         hintStyle: const TextStyle(fontSize: 12));
@@ -28,18 +26,16 @@ class GuiUtils {
 
   static BoxDecoration buildBoxDecorationSettings() {
     return BoxDecoration(
-      color: Colors.white70, //Color.fromRGBO(0, 87, 153, 60),
-      borderRadius: BorderRadius.circular(9),
-      boxShadow: const [
-        BoxShadow(
-          color: Colors.white10,
-          spreadRadius: 4,
-          blurRadius: 5,
-          offset: Offset(0, 2), // changes position of shadow
-        ),
-      ]
-
-    );
+        color: Colors.white70, //Color.fromRGBO(0, 87, 153, 60),
+        borderRadius: BorderRadius.circular(9),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.white10,
+            spreadRadius: 4,
+            blurRadius: 5,
+            offset: Offset(0, 2), // changes position of shadow
+          ),
+        ]);
   }
 
   static BoxDecoration buildButtonDecoration() {
@@ -57,11 +53,7 @@ class GuiUtils {
       gradient: const RadialGradient(
         center: Alignment(0, 0),
         radius: 2,
-        colors: [
-          Colors.blue,
-          Colors.blueAccent,
-          Color.fromRGBO(0, 87, 153, 60)
-        ],
+        colors: [Colors.blue, Colors.blueAccent, Color.fromRGBO(0, 87, 153, 60)],
       ),
     );
   }
@@ -79,8 +71,7 @@ class GuiUtils {
           ),
         ],
         color: const Color.fromRGBO(230, 249, 255, 0.7019607843137254),
-        border:
-            const Border(bottom: BorderSide(color: Colors.grey, width: 1)));
+        border: const Border(bottom: BorderSide(color: Colors.grey, width: 1)));
   }
 
   static BoxDecoration buildBoxDecoration() {
@@ -106,12 +97,14 @@ class GuiUtils {
   static BoxDecoration buildAppBarDecorationAndroid() {
     return const BoxDecoration(
 // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
-    //color: Colors.red,
+      //color: Colors.red,
 // borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
-          color: Colors.black,//Colors.grey.withOpacity(0.15),
-          spreadRadius: 1,///4,
+          color: Colors.black, //Colors.grey.withOpacity(0.15),
+          spreadRadius: 1,
+
+          ///4,
           blurRadius: 0.1,
           //offset: const Offset(0, 1), // changes position of shadow
         ),
@@ -128,10 +121,10 @@ class GuiUtils {
     );
   }
 
-    static BoxDecoration buildAppBarDecorationIOS() {
+  static BoxDecoration buildAppBarDecorationIOS() {
     return BoxDecoration(
 // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
-    //color: Colors.red,
+      //color: Colors.red,
 // borderRadius: BorderRadius.circular(18),
 
       gradient: const LinearGradient(
@@ -208,14 +201,13 @@ class GuiUtils {
 
   static buildSaveMqttSettingsButtonDecoration1() {
     return ButtonStyle(
-      backgroundColor: WidgetStateColor.resolveWith((states) =>
-          const Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
+      backgroundColor: WidgetStateColor.resolveWith(
+          (states) => const Color.fromRGBO(0, 0, 190, 1)), //Color.fromRGBO(0, 87, 153, 60),
       //borderRadius: BorderRadius.circular(12),
     );
   }
 
-  static WidgetStateProperty<Color> getColor(
-      Color color, Color colorPressed) {
+  static WidgetStateProperty<Color> getColor(Color color, Color colorPressed) {
     getColor(Set<WidgetState> states) {
       if (states.contains(WidgetState.pressed)) {
         return colorPressed;
@@ -227,37 +219,28 @@ class GuiUtils {
     return WidgetStateProperty.resolveWith(getColor);
   }
 
-
   static ButtonStyle buildElevatedButtonSettings() {
     return ButtonStyle(
         //side: MaterialStateProperty.BorderSide(color: Colors.red),
-        shape:WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6.0),
           //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
         )),
-        backgroundColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        foregroundColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        overlayColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+        backgroundColor: getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        foregroundColor: getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        overlayColor: getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
   }
 
   static ButtonStyle buildElevatedButtonFriendlyName() {
     return ButtonStyle(
         //side: MaterialStateProperty.BorderSide(color: Colors.red),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           //side: BorderSide(color: Color.fromRGBO(0, 0, 90, 1)))
         )),
-        backgroundColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        foregroundColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
-        overlayColor:
-            getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
+        backgroundColor: getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        foregroundColor: getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue),
+        overlayColor: getColor(const Color.fromRGBO(0, 0, 190, 1), Colors.lightBlue));
   }
 
   static ButtonStyle buildElevatedButtonLogin() {
@@ -269,32 +252,27 @@ class GuiUtils {
       padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
       ),
-
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
       ),
-
       elevation: WidgetStateProperty.resolveWith<double>(
-            (states) {
+        (states) {
           if (states.contains(WidgetState.pressed)) return 2;
           return 6; // soft iOS-friendly elevation
         },
       ),
-
       backgroundColor: WidgetStateProperty.resolveWith<Color>(
-            (states) {
+        (states) {
           if (states.contains(WidgetState.pressed)) return pressedColor;
           if (states.contains(WidgetState.hovered)) return hoverColor;
           return mainColor;
         },
       ),
-
       foregroundColor: WidgetStateProperty.all(Colors.blue),
-
       overlayColor: WidgetStateProperty.resolveWith<Color?>(
-            (states) {
+        (states) {
           if (states.contains(WidgetState.pressed)) {
             return Colors.white.withOpacity(0.15);
           }
@@ -304,25 +282,21 @@ class GuiUtils {
     );
   }
 
-
-
   static InputDecoration buildInputUsernameLoginDecoration() {
     return InputDecoration(
         prefixIcon: const Icon(
           Icons.person,
-          color: Color.fromRGBO(86,181,224, 1),
+          color: Color.fromRGBO(86, 181, 224, 1),
         ),
         filled: true,
         fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-              width: 0.7, color: Color.fromRGBO(108, 165, 222, 60)),
+          borderSide: const BorderSide(width: 0.7, color: Color.fromRGBO(108, 165, 222, 60)),
           borderRadius: BorderRadius.circular(16), //
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-              color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
+          borderSide: const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -339,14 +313,12 @@ class GuiUtils {
       filled: true,
       fillColor: Colors.white,
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(
-            width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
+        borderSide: const BorderSide(width: 1.5, color: Color.fromRGBO(108, 165, 222, 60)),
         borderRadius: BorderRadius.circular(3), //
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(3),
-        borderSide: const BorderSide(
-            color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
+        borderSide: const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2.0),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(3),
@@ -356,31 +328,31 @@ class GuiUtils {
       labelStyle: const TextStyle(letterSpacing: 0.8),
     );
   }
+
   static InputDecoration setInputDecorationFriendlyName() {
     return InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.only(left:3, right: 3),
-        border: UnderlineInputBorder(
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-            borderRadius: BorderRadius.circular(14)),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.lightBlueAccent, width: 1.0),
-        ),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.black54, width: 1.5),
-        ),
-        disabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1.0),
-        ),
-
-
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.only(left: 3, right: 3),
+      border: UnderlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey, width: 1),
+          borderRadius: BorderRadius.circular(14)),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.lightBlueAccent, width: 1.0),
+      ),
+      enabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.black54, width: 1.5),
+      ),
+      disabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+      ),
     );
   }
+
   static InputDecoration setInputDecoration(val) {
     return InputDecoration(
         //labelText: val,
-        contentPadding: const EdgeInsets.only(left:3, right: 3),
+        contentPadding: const EdgeInsets.only(left: 3, right: 3),
         filled: true,
         fillColor: Colors.white,
         border: UnderlineInputBorder(

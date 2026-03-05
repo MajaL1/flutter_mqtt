@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+
 //mport 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
@@ -14,6 +15,7 @@ import 'package:mqtt_test/util/notifications_singleton.dart';
 import 'package:mqtt_test/util/smart_mqtt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api/notification_helper.dart';
 import '../model/constants.dart';
 import 'log_file_helper.dart';
 
@@ -45,33 +47,36 @@ class BackgroundMqtt {
     if (Platform.isAndroid) {
       result = await serviceAndroid.startService();
     }
-   // else if (Platform.isIOS) {
-   //   result = await serviceIOS.start();
-   // }
+    // else if (Platform.isIOS) {
+    //   result = await serviceIOS.start();
+    // }
     return result;
   }
 
   @pragma('vm:entry-point')
   static Future<void> stopMqttService() async {
-      serviceAndroid.invoke("stopService");
+    serviceAndroid.invoke("stopService");
     //return result;
   }
+
   @pragma('vm:entry-point')
-  static Future<bool> publish(String message, String topicName) async{
+  static Future<bool> publish(String message, String topicName) async {
     //if (Platform.isAndroid) {
-      serviceAndroid.invoke("invokeOnPublish", {
+    serviceAndroid.invoke(
+      "invokeOnPublish",
+      {
         "message": message,
         "topic": topicName,
-      },);
+      },
+    );
     //}
-      //debugPrint("BackgroundMqtt: publish: ${BackgroundMqtt.smartMqtt}");
+    //debugPrint("BackgroundMqtt: publish: ${BackgroundMqtt.smartMqtt}");
     //BackgroundMqtt.smartMqtt?.publish(message, topicName);
     return true;
   }
 
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
-
     print("^^^^ xxxxx  1 onStart(ServiceInstance service) background_mqtt ^^^^^");
 
     // Only available for flutter 3.0.0 and later
@@ -90,15 +95,14 @@ class BackgroundMqtt {
     //logger ??= await LogFileHelper.createLogger();
     //logger.log(Level.info, "background_mqtt start onStart()");
 
-    SmartMqtt ? smartMqtt;
+    SmartMqtt? smartMqtt;
 
     SmartMqtt.instance.addListener(() {});
-      if (service is AndroidServiceInstance) {
+    if (service is AndroidServiceInstance) {
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
         debugPrint(">>>>>>> service.setAsForegroundService()");
         //logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
-
       });
 
       service.on('setAsBackground').listen((event) {
@@ -109,9 +113,9 @@ class BackgroundMqtt {
     }
     if (service is IOSServiceInstance) {
       service.on('setAsForeground').listen((event) {
-       // TODO service.invoke();
+        // TODO service.invoke();
         //serviceIOS.invoke("setAsForeground", {
-       
+
         //},);
         debugPrint(">>>>>>> service.setAsForegroundService()");
         //logger.log(Level.info, ">>>>>>> service.setAsForegroundService()");
@@ -130,7 +134,7 @@ class BackgroundMqtt {
       debugPrint(">>>>>>>stopped service.");
       //logger.log(Level.info, ">>>>>>>stopped service.");
       service.invoke("stopService");
-      if(smartMqtt!.getConnectionState()){
+      if (smartMqtt!.getConnectionState()) {
         smartMqtt?.disconnect();
         smartMqtt?.dispose();
       }
@@ -140,10 +144,10 @@ class BackgroundMqtt {
     //StreamBuilder<Map<String, dynamic>?>(
     //  stream:
     service.on('invokeOnPublish').listen((event) {
-      if(event!= null) {
+      if (event != null) {
         debugPrint("event: $event, $smartMqtt");
-        String  message = event["message"];
-        String ? topic = event["topic"];
+        String message = event["message"];
+        String? topic = event["topic"];
         smartMqtt?.publish(message, topic!);
       }
     });
@@ -173,21 +177,21 @@ class BackgroundMqtt {
     SharedPreferences.getInstance().then((val) {
       val.reload();
 
-      if(val.getString("username") == null || val.getString("mqtt_pass")== null || val.getString("user_topic_list")==null) {
+      if (val.getString("username") == null ||
+          val.getString("mqtt_pass") == null ||
+          val.getString("user_topic_list") == null) {
         debugPrint("1 - service.stopSelf();");
         //logger.log(Level.info, "1 - service.stopSelf();");
         service.stopSelf();
         return;
       }
 
-      if( smartMqtt != null) {
+      if (smartMqtt != null) {
         debugPrint(" 2 - smartMqtt?.getConnectionState() ${smartMqtt?.getConnectionState()}");
-        if(smartMqtt?.getConnectionState() == true )
-        {
+        if (smartMqtt?.getConnectionState() == true) {
           return;
         }
-      }
-      else {
+      } else {
         debugPrint("3 - smartMqtt == null");
       }
       bool? appRunInBackground = val.getBool("appRunInBackground");
@@ -197,9 +201,11 @@ class BackgroundMqtt {
       String? userTopicList = val.getString("user_topic_list");
       String? currentState = val.getString("current_state");
       String? clientIdentifier = val.getString("identifier");
-      debugPrint("//////////////// 1 background_mqtt shared prefs in background: - $currentState, $clientIdentifier, $username, $password, $userTopicList $currentState");
+      debugPrint(
+          "//////////////// 1 background_mqtt shared prefs in background: - $currentState, $clientIdentifier, $username, $password, $userTopicList $currentState");
 
-      smartMqtt = SmartMqtt(mqttPass: password!,
+      smartMqtt = SmartMqtt(
+          mqttPass: password!,
           username: username!,
           topicList: userTopicList,
           port: Constants.BROKER_PORT,
@@ -207,7 +213,6 @@ class BackgroundMqtt {
       //MqttServerClient ? client = smartMqtt?.initializeMQTTClient();
       //debugPrint("::SmartMqtt.initalizeClient: $client");
       //smartMqtt?.setClient(client!);
-
     });
     //logger.log(Level.info, "FLUTTER BACKGROUND SERVICE: ${DateTime.now()}'");
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}') as String?;
@@ -235,14 +240,11 @@ class BackgroundMqtt {
         if (service is AndroidServiceInstance) {
           service.setForegroundNotificationInfo(
             title: "MQTT Status: Monitoring",
-            content: failTimeStr == null
-                ? "Server Online"
-                : "Server Down for ${durationDown.inMinutes} mins",
+            content: failTimeStr == null ? "Server Online" : "Server Down for ${durationDown.inMinutes} mins",
           );
         }
-      }});
-
-
+      }
+    });
   }
 
   /* void callMqttConnect(DateTime startTime, ServiceInstance service) {
@@ -294,13 +296,11 @@ class BackgroundMqtt {
     WidgetsFlutterBinding.ensureInitialized();
     //await Firebase.initializeApp();
 
-
     /// OPTIONAL, using custom notification channel id
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'my_foreground', // id
       'MY FOREGROUND SERVICE', // title
-      description:
-          'This channel is used for important notifications.', // description
+      description: 'This channel is used for important notifications.', // description
       importance: Importance.low, // importance must be at low or higher level
     );
 
@@ -314,7 +314,7 @@ class BackgroundMqtt {
           android: AndroidInitializationSettings('ic_bg_service_small'),
         ),
       );
-    //}*/ 
+    //}*/
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
@@ -345,6 +345,5 @@ class BackgroundMqtt {
     );
     debugPrint("main.dart end initializing background service");
     //logger.log(Level.info, "main.dart end initializing background service");
-
   }
 }

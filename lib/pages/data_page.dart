@@ -18,8 +18,8 @@ class DataPage extends StatefulWidget {
 }
 
 class _DataState extends State<DataPage> {
-  TextStyle headingStyle = const TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
+  TextStyle headingStyle =
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
 
   TextStyle headingStyleIOS = const TextStyle(
     fontWeight: FontWeight.w600,
@@ -73,24 +73,22 @@ class _DataState extends State<DataPage> {
     );
   }
 
-  Future <List<Data>?> _getNewDataList() async {
+  Future<List<Data>?> _getNewDataList() async {
     List<Data>? data;
     data = await Provider.of<DataSmartMqtt>(context, listen: true).getNewDataList();
     debugPrint("^^^^^ data: % $data");
 
     return data;
-      setState(() {
-
-    });
+    setState(() {});
     return null;
   }
 
   Widget _buildDataView() {
     return FutureBuilder<List<Data>?>(
-        future: _getNewDataList(),//then((dataList) => _getMqttData(dataList!)),
+        future: _getNewDataList(), //then((dataList) => _getMqttData(dataList!)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-           // return Utils.showCircularProgressIndicator();
+            // return Utils.showCircularProgressIndicator();
           }
           if (snapshot.hasData) {
             debugPrint("?? shapshot.hasData");
@@ -102,8 +100,7 @@ class _DataState extends State<DataPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index) {
                       Data item = snapshot.data![index];
-                      String sensorAddress =
-                          item.sensorAddress.toString();
+                      String sensorAddress = item.sensorAddress.toString();
                       // int? u = item.u;
                       int? typ = item.typ;
                       int? d = item.d;
@@ -112,7 +109,7 @@ class _DataState extends State<DataPage> {
                       int? t = item.t;
                       DateTime? ts = item.ts;
                       int? lb = item.lb;
-                      String ? date = DateFormat("yyyy-MM-dd hh:mm:ss").format(ts!);
+                      String? date = DateFormat("yyyy-MM-dd hh:mm:ss").format(ts!);
 
                       String? deviceName = item.deviceName;
                       //debugPrint("sensorAddress, deviceName: ${sensorAddress}, ${deviceName}");
@@ -120,16 +117,13 @@ class _DataState extends State<DataPage> {
 
                       return SingleChildScrollView(
                           scrollDirection: Axis.vertical,
-                          padding: const EdgeInsets.only(
-                              top: 30.0, bottom: 1.0, left: 0.0, right: 30.0),
-                          child: Wrap(
-                            children: [
-                              Text("device: $deviceName, sensor: $sensorAddress \n"),
-                              Text("typ: $typ, d: $d, r: $r, w: $w, t: $t, lb: $lb \nts: $date"),
-                            ]
-                      ));
+                          padding: const EdgeInsets.only(top: 30.0, bottom: 1.0, left: 0.0, right: 30.0),
+                          child: Wrap(children: [
+                            Text("device: $deviceName, sensor: $sensorAddress \n"),
+                            Text("typ: $typ, d: $d, r: $r, w: $w, t: $t, lb: $lb \nts: $date"),
+                          ]));
                     }));
-          }else {
+          } else {
             return const Text("No data.");
           }
           return const CircularProgressIndicator();

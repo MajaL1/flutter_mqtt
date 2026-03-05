@@ -7,7 +7,6 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 //import 'package:mqtt_test/pages/login_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class CustomAppBarIos extends StatefulWidget implements PreferredSizeWidget {
   late String? connectionStatusText = "";
 
@@ -37,19 +36,17 @@ class _CustomAppBarState extends State<CustomAppBarIos> {
     subscription = InternetConnection().onStatusChange.listen((status) {
       setState(() {
         connectionStatus = status;
-        widget.connectionStatusText =
-            status == InternetStatus.connected ? "" : "No internet connection";
+        widget.connectionStatusText = status == InternetStatus.connected ? "" : "No internet connection";
       });
     });
     SharedPreferences.getInstance().then((val) {
       setState(() {
         username = val.getString("username")!;
-        email = "";//val.getString("email")!;
+        email = ""; //val.getString("email")!;
       });
       val.reload();
 
-      debugPrint(
-          "44444 1 custom_appbar initState username: $username, email: $email");
+      debugPrint("44444 1 custom_appbar initState username: $username, email: $email");
     });
     debugPrint("-- custom_appbar initstate");
   }
@@ -58,7 +55,6 @@ class _CustomAppBarState extends State<CustomAppBarIos> {
   Widget build(BuildContext context) {
     // String ? connectionText = LoginForm.base().connectionStatusText;
 
-  
     return CupertinoPageScaffold(
       child: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {

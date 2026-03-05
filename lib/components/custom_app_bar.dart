@@ -9,7 +9,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   String? connectionStatusText = "";
 
   CustomAppBar(this.title, {Key? key})
-      : preferredSize = const Size.fromHeight(kToolbarHeight+5),
+      : preferredSize = const Size.fromHeight(kToolbarHeight + 5),
         super(key: key);
 
   @override
@@ -33,18 +33,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   void _listenConnection() {
-    _connectionSub = InternetConnection()
-        .onStatusChange
-        .listen((status) {
+    _connectionSub = InternetConnection().onStatusChange.listen((status) {
       if (!mounted) return;
 
       setState(() {
-        widget.connectionStatusText =
-        status == InternetStatus.connected ? "" : "No internet";
+        widget.connectionStatusText = status == InternetStatus.connected ? "" : "No internet";
       });
     });
   }
-
 
   void _initPrefs() async {
     final val = await SharedPreferences.getInstance();
@@ -119,9 +115,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
               padding: const EdgeInsets.only(right: 12, top: 8),
               child: Text(
                 "v_2026-03-06"
-                    ""
-                    ""
-                    "",
+                ""
+                ""
+                "",
                 style: TextStyle(
                   fontSize: 10,
                   color: Colors.white.withOpacity(0.7),

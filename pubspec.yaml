@@ -74,6 +74,10 @@ dependencies:
   firebase_messaging: ^16.1.1
  # android_alarm_manager_plus: ^3.0.4
 
+dart:
+  format:
+    line-length: 120
+
 dependency_overrides:
   intl: any
 

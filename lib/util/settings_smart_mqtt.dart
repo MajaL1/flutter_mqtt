@@ -6,9 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/data.dart';
 
 class SettingsSmartMqtt1 with ChangeNotifier {
-
-  Data ?newMqttData;
-
+  Data? newMqttData;
 
   static final SettingsSmartMqtt1 _instance = SettingsSmartMqtt1._internal();
 
@@ -17,15 +15,13 @@ class SettingsSmartMqtt1 with ChangeNotifier {
   static SettingsSmartMqtt1 get instance => _instance;
   String newUserSettings = "";
 
-
   factory SettingsSmartMqtt1() {
     debugPrint("SETTINGS_SMARTMQTT");
     return _instance;
   }
 
-
-  Future<void> settingsProcessor(String decodeMessage, String topicName,
-      SharedPreferences preferences) async {
+  Future<void> settingsProcessor(
+      String decodeMessage, String topicName, SharedPreferences preferences) async {
     debugPrint("___________________________________________________");
     debugPrint("from topic $topicName");
     debugPrint("__________ $decodeMessage");
@@ -34,33 +30,26 @@ class SettingsSmartMqtt1 with ChangeNotifier {
     //preverimo, ker je prvo sporocilo
     // po shranjevanju oblike {"135":{"hi_alarm":111}}
     // in tega izpustimo
-    if ((decodeMessage.contains("v") ||
-        decodeMessage.contains("typ") ||
-        decodeMessage.contains("u"))) {
-        print("got new settings mqtt!!");
+    if ((decodeMessage.contains("v") || decodeMessage.contains("typ") || decodeMessage.contains("u"))) {
+      print("got new settings mqtt!!");
       // ali novi settingi niso enaki prejsnim
       // ali ce so v zacetku prazni
-      if (newUserSettings.compareTo(decodeMessage) != 0 &&
-          decodeMessage.isNotEmpty) {
-        await _parseMqttSettingsForTopic(
-            preferences, decodeMessage, topicName);
+      if (newUserSettings.compareTo(decodeMessage) != 0 && decodeMessage.isNotEmpty) {
+        await _parseMqttSettingsForTopic(preferences, decodeMessage, topicName);
         //{\"57\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455},\"84\":{\"typ\":1,\"u\":0,\"ut\":0,\"hi_alarm\":0,\"ts\":455}}
       }
     }
   }
 
-  Future<void> _parseMqttSettingsForTopic(SharedPreferences preferences,
-      String decodeMessage, String topicName) async {
+  Future<void> _parseMqttSettingsForTopic(
+      SharedPreferences preferences, String decodeMessage, String topicName) async {
     debugPrint("new user settings");
     preferences.setString("current_mqtt_settings", decodeMessage);
     // parse trenutno sporocilo
     Map decodeMessageSettings = <String, String>{};
     decodeMessageSettings = json.decode(decodeMessage);
     //debugPrint("AAAAAAAA  decodeMessageSettings: ${decodeMessageSettings}");
-    await setDeviceNameToSettings(
-        decodeMessageSettings, topicName
-        .split("/settings")
-        .first);
+    await setDeviceNameToSettings(decodeMessageSettings, topicName.split("/settings").first);
     //-----
     //String oldUserSettings = newUserSettings;
     Map newSettings = <String, String>{};
@@ -70,17 +59,13 @@ class SettingsSmartMqtt1 with ChangeNotifier {
       newSettings = json.decode(newUserSettings);
       //debugPrint("1 AAAAAAAA newSettings: ${newSettings}");
 
-      await setDeviceNameToSettings(
-          newSettings, topicName
-          .split("/settings")
-          .first);
+      await setDeviceNameToSettings(newSettings, topicName.split("/settings").first);
       //debugPrint("1 AAAAAAAA2 newSettings: ${newSettings}");
 
       await setNewUserSettings(newSettings);
       notifyListeners();
       //debugPrint("notifying listeners 1.. $newSettings");
-    } else if (newUserSettings.isNotEmpty &&
-        !newUserSettings.contains(decodeMessage)) {
+    } else if (newUserSettings.isNotEmpty && !newUserSettings.contains(decodeMessage)) {
       // debugPrint("2 AAAAAAAA  newUserSettings.isNotEmpty &&!decodeMessage.contains(newUserSettings),");
       //debugPrint("3 AAAAAAAA: decodeMessageSettings ${decodeMessageSettings}");
 
@@ -164,13 +149,10 @@ class SettingsSmartMqtt1 with ChangeNotifier {
 
     Data? data = Data().getData(dataStr);
     // Data data = json.decode(dataStr);
-    data?.deviceName = deviceName
-        .split("/data")
-        .first;
+    data?.deviceName = deviceName.split("/data").first;
 
     debugPrint(
-        "converting data object...${data?.deviceName}, ${data
-            ?.sensorAddress}, ${data?.typ}, ${data?.t}");
+        "converting data object...${data?.deviceName}, ${data?.sensorAddress}, ${data?.typ}, ${data?.t}");
 
     return data;
   }
@@ -181,7 +163,7 @@ class SettingsSmartMqtt1 with ChangeNotifier {
         Map val = settings[key];
 
         //for (String key1 in val.keys) {
-          //print("key1: $key1");
+        //print("key1: $key1");
         //}
         final Map<String, String> deviceNameMap = {"device_name": deviceName};
         val.addAll(deviceNameMap);
@@ -208,4 +190,3 @@ class SettingsSmartMqtt1 with ChangeNotifier {
     debugPrint("setting data_mqtt_list encodedData: $encodedData");
   }
 }
-

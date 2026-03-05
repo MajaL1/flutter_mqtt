@@ -79,7 +79,7 @@ class Data {
 
     for (String key in json.keys) {
 //print("key:  $key");
-    //debugPrint("!!!! key:  $key");
+      //debugPrint("!!!! key:  $key");
       if (key.isNotEmpty) {
         Map value = json[key];
 //print("value:  $value");
@@ -122,7 +122,7 @@ class Data {
             if (key1 == "d") {
               d = value1;
             }
-                    }
+          }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           data = Data(
               //this.sensorAddress, this.typ, this.l, this.t, this.b, this.r, this.lb, this.bv
@@ -157,7 +157,7 @@ class Data {
           for (String key1 in value.keys) {
             value[key1];
             int value1 = value[key1];
-           // print("key1: $key1, value1: $value1");
+            // print("key1: $key1, value1: $value1");
             if (key1 == "t") {
               t = value1;
             }
@@ -180,7 +180,7 @@ class Data {
               ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
               // ts = valueInt;
             }
-                    }
+          }
 //print("Creating alarm: $key, $t, $hiAlarm, $loAlarm");
           data = Data(
               //this.sensorAddress, this.typ, this.l, this.t, this.b, this.r, this.lb, this.bv
@@ -215,7 +215,7 @@ class Data {
       "deviceName": deviceName,
       "typ": typ,
       "d": d,
-      "ts":  ts?.toIso8601String(),//ts, //DateTime.fromMillisecondsSinceEpoch(ts * 1000),
+      "ts": ts?.toIso8601String(), //ts, //DateTime.fromMillisecondsSinceEpoch(ts * 1000),
       "t": t,
       "w": w,
       "r": r,

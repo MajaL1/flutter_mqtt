@@ -20,8 +20,8 @@ class UserSettings extends StatefulWidget {
 }
 
 class _UserSettingsState extends State<UserSettings> {
-  TextStyle headingStyle = const TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
+  TextStyle headingStyle =
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
 
   //final debouncer = Debouncer();
   int countTest = 0;
@@ -51,14 +51,13 @@ class _UserSettingsState extends State<UserSettings> {
       setState(() {
         username = val.getString("username")!;
         email = (val.getString("email") ?? "");
-
       });
       //val.reload();
-     // setState(() {
-     //   if(val.getString("email")!= null) {
-     //     email = val.getString("email")!;
-     //   }
-     // });
+      // setState(() {
+      //   if(val.getString("email")!= null) {
+      //     email = val.getString("email")!;
+      //   }
+      // });
     });
 
     debugPrint("user_settings initState");
@@ -76,8 +75,8 @@ class _UserSettingsState extends State<UserSettings> {
       drawer: NavDrawer.data(username: username, email: email),
       body: const SingleChildScrollView(
         padding: EdgeInsets.only(left: 15, right: 10, top: 10),
-       // scrollDirection: Axis.vertical,
-      //  resizeToAvoidBottomInset: true,
+        // scrollDirection: Axis.vertical,
+        //  resizeToAvoidBottomInset: true,
 
         child: Column(children: <Widget>[
           // Padding(padding: EdgeInsets.symmetric(vertical: 15)),

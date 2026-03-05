@@ -9,8 +9,7 @@ class NavDrawer extends StatelessWidget {
   final String username;
   final String email;
 
-  const NavDrawer.data({Key? key, required this.username, required this.email})
-      : super(key: key);
+  const NavDrawer.data({Key? key, required this.username, required this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,34 +35,32 @@ class NavDrawer extends StatelessWidget {
           children: [
             _buildHeader(),
             //const Divider(color: Colors.white24, thickness: 0.5),
-            _buildTile(context, Icons.history, "History",
-                    () => _navigate(context, const AlarmHistory())),
+            _buildTile(context, Icons.history, "History", () => _navigate(context, const AlarmHistory())),
             const Divider(color: Colors.white24, thickness: 0.5),
-            _buildTile(context, Icons.settings, "Settings",
-                    () => _navigate(context, const UserSettings.base())),
+            _buildTile(
+                context, Icons.settings, "Settings", () => _navigate(context, const UserSettings.base())),
             const Divider(color: Colors.white24, thickness: 0.5),
-            _buildTile(context, Icons.info_outline, "About",
-                    () => _navigate(context, const AboutPage.base())),
+            _buildTile(
+                context, Icons.info_outline, "About", () => _navigate(context, const AboutPage.base())),
             const Divider(color: Colors.white24, thickness: 0.5),
             _buildTile(
               context,
               Icons.logout,
               "Log out",
-                  () async {
+              () async {
                 await ApiService.logout();
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => LoginForm.base()),
-                        (route) => false);
+                    MaterialPageRoute(builder: (_) => LoginForm.base()), (route) => false);
               },
               color: Colors.redAccent,
             ),
             const Divider(color: Colors.white24, thickness: 0.5),
-
           ],
         ),
       ),
     );
   }
+
 /*
 
   Widget _buildHeader() {
@@ -116,18 +113,17 @@ class NavDrawer extends StatelessWidget {
         child: Icon(Icons.person, color: Colors.blueAccent, size: 40),
       ),
       accountName: Text(
-        "   "+username,
+        "   " + username,
         style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
       accountEmail: Text(
-        "    "+email,
+        "    " + email,
         style: const TextStyle(fontSize: 13, color: Colors.white70),
       ),
     );
   }
 
-  Widget _buildTile(BuildContext context, IconData icon, String title,
-      VoidCallback onTap,
+  Widget _buildTile(BuildContext context, IconData icon, String title, VoidCallback onTap,
       {Color color = Colors.white70}) {
     return ListTile(
       leading: Icon(icon, color: color),
@@ -143,7 +139,6 @@ class NavDrawer extends StatelessWidget {
   }
 
   void _navigate(BuildContext context, Widget page) {
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (_) => page));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => page));
   }
 }

@@ -77,6 +77,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         t: 3);
     NotificationHelper.instance.sendMessage(alarm);
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Alarm>>(
@@ -203,16 +204,19 @@ class _AlarmHistoryState extends State<AlarmHistory> {
 
                               //     DateTime ts = snapshot.data![index].ts!;
 
-                              if (snapshot.data![index].hiAlarm != 0 && snapshot.data![index].hiAlarm != null) {
+                              if (snapshot.data![index].hiAlarm != 0 &&
+                                  snapshot.data![index].hiAlarm != null) {
                                 alarmValue = "Hi alarm: $hiAlarm";
                               }
-                              if (snapshot.data![index].loAlarm != 0 && snapshot.data![index].loAlarm != null) {
+                              if (snapshot.data![index].loAlarm != 0 &&
+                                  snapshot.data![index].loAlarm != null) {
                                 alarmValue += " Lo alarm: $loAlarm";
                               }
                               String formattedDate = "";
 
                               if (snapshot.data![index].ts != null) {
-                                formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(snapshot.data![index].ts!);
+                                formattedDate =
+                                    DateFormat('yyyy-MM-dd – HH:mm').format(snapshot.data![index].ts!);
                               }
                               //    DateTime.fromMillisecondsSinceEpoch(snapshot.data![index].ts! * 1000);
                               return Container(
@@ -222,8 +226,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                     border: Border(bottom: BorderSide(color: Colors.blueGrey, width: 0.0))),
                                 child: Table(
                                     border: const TableBorder(
-                                        horizontalInside:
-                                            BorderSide(width: 0.0, color: Colors.blue, style: BorderStyle.solid)),
+                                        horizontalInside: BorderSide(
+                                            width: 0.0, color: Colors.blue, style: BorderStyle.solid)),
                                     columnWidths: const {
                                       0: FixedColumnWidth(0.5),
                                       1: FixedColumnWidth(70.0),
@@ -234,8 +238,8 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                       isHeader
                                           ? TableRow(children: [
                                               Container(
-                                                padding:
-                                                    const EdgeInsets.only(top: 1.0, left: 1, right: 1, bottom: 1.0),
+                                                padding: const EdgeInsets.only(
+                                                    top: 1.0, left: 1, right: 1, bottom: 1.0),
                                                 child: const Text("",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
@@ -271,27 +275,31 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                             ])
                                           : TableRow(children: [
                                               Container(
-                                                  padding:
-                                                      const EdgeInsets.only(top: 1.0, left: 1, right: 1, bottom: 1.0),
+                                                  padding: const EdgeInsets.only(
+                                                      top: 1.0, left: 1, right: 1, bottom: 1.0),
                                                   child: Text(
                                                     index.toString(),
                                                     textAlign: TextAlign.center,
-                                                    style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
+                                                    style: const TextStyle(
+                                                        color: Color.fromRGBO(55, 55, 58, 0.9)),
                                                   )),
                                               Container(
                                                   padding: const EdgeInsets.all(1.0),
                                                   child: Text(deviceName,
-                                                      style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
+                                                      style: const TextStyle(
+                                                          color: Color.fromRGBO(55, 55, 58, 0.9)),
                                                       textAlign: TextAlign.center)),
                                               Container(
                                                   padding: const EdgeInsets.all(1.0),
                                                   child: Text("Value: $v \n$alarmValue $units",
-                                                      style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
+                                                      style: const TextStyle(
+                                                          color: Color.fromRGBO(55, 55, 58, 0.9)),
                                                       textAlign: TextAlign.center)),
                                               Container(
                                                 padding: const EdgeInsets.all(1.0),
                                                 child: Text("$formattedDate ",
-                                                    style: const TextStyle(color: Color.fromRGBO(55, 55, 58, 0.9)),
+                                                    style: const TextStyle(
+                                                        color: Color.fromRGBO(55, 55, 58, 0.9)),
                                                     textAlign: TextAlign.center),
                                               )
                                             ])
@@ -347,7 +355,7 @@ class _AlarmHistoryState extends State<AlarmHistory> {
         //debugPrint("historyChanged, ${value.getBool('historyChanged')} ");
         if (value.getBool("historyChanged") == true) {
           debugPrint("2historyChanged, ${value.getBool('historyChanged')}");
-          if(!mounted) return;
+          if (!mounted) return;
           setState(() {
             refresh = true;
           });

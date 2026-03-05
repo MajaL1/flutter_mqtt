@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/data.dart';
 
 class DataSmartMqtt extends ChangeNotifier {
-
   static final DataSmartMqtt _instance = DataSmartMqtt._internal();
 
   DataSmartMqtt._internal();
@@ -20,28 +19,25 @@ class DataSmartMqtt extends ChangeNotifier {
   }
   List<Data> newMqttData = [];
 
-
-  Future<void> dataProcessor(String decodeMessage, String topicName,
-      SharedPreferences preferences) async {
+  Future<void> dataProcessor(String decodeMessage, String topicName, SharedPreferences preferences) async {
     debugPrint("___________________________________________________");
     debugPrint("from topic data $topicName");
     debugPrint("__________ $decodeMessage");
     debugPrint("___________________________________________________");
 
-    if(!decodeMessage.contains("con") || !decodeMessage.contains("dis") ) {
+    if (!decodeMessage.contains("con") || !decodeMessage.contains("dis")) {
       Data? data = convertMessageToData(decodeMessage, topicName);
       List<Data> dataList = await setDataListToPreferences(data!, preferences);
       //preferences.setString("data_mqtt", decodeMessage);
       debugPrint("''data: ${data.toString()}");
-      await setNewMqttData(dataList).then((val){notifyListeners();});
+      await setNewMqttData(dataList).then((val) {
+        notifyListeners();
+      });
       newMqttData = dataList;
       //notifyListeners();
-
-    }
-    else{
+    } else {
       debugPrint("data is weird: $decodeMessage");
-
-    }//newMqttData = data;
+    } //newMqttData = data;
   }
 
   static Data? convertMessageToData(String message, String deviceName) {
@@ -58,8 +54,7 @@ class DataSmartMqtt extends ChangeNotifier {
     return data;
   }
 
-  static Future<List<Data>> setDataListToPreferences (
-      Data newData, SharedPreferences preferences) async {
+  static Future<List<Data>> setDataListToPreferences(Data newData, SharedPreferences preferences) async {
     String? dataListStr = preferences.getString("data_mqtt_list");
 
     List<Data> dataList = [];
@@ -69,17 +64,16 @@ class DataSmartMqtt extends ChangeNotifier {
       jsonMap1 = json.decode(dataListStr);
       //debugPrint("!!!1 jsonMap1 $jsonMap1");
 
-     // List dataList1 = jsonMap1.map((val) => Data.fromJsonList(val)).toList();
-      dataList =  Data.fromJsonList(jsonMap1);
+      // List dataList1 = jsonMap1.map((val) => Data.fromJsonList(val)).toList();
+      dataList = Data.fromJsonList(jsonMap1);
 
       String? sensorAddress = newData.sensorAddress;
-      String ? deviceName = newData.deviceName;
+      String? deviceName = newData.deviceName;
 
       bool dataExistsInList = false;
 
-
-      for(Data data in dataList) {
-        if(data.deviceName == deviceName && data.sensorAddress== sensorAddress) {
+      for (Data data in dataList) {
+        if (data.deviceName == deviceName && data.sensorAddress == sensorAddress) {
           //data = Data(typ: newData.typ, sensorAddress: newData.sensorAddress, deviceName: newData.deviceName, ts: newData.ts, t: newData.t, d: newData.d, lb: newData.lb, r: newData.r, w: newData.w);
           dataList.remove(data);
           dataList.add(newData);
@@ -87,10 +81,9 @@ class DataSmartMqtt extends ChangeNotifier {
           break;
         }
       }
-      if(!dataExistsInList){
+      if (!dataExistsInList) {
         dataList.add(newData);
       }
-
 
       //dataList = jsonMap1.map((val) => Data.fromJson(val)).toList();
       /*
@@ -99,12 +92,10 @@ class DataSmartMqtt extends ChangeNotifier {
           jsonMap1.map((val) => UserDataSettings.fromJson(val)).toList();
        */
 
-      debugPrint("!datalist.size: ${dataList.length}");//, encodedData dataListStr $dataList");
+      debugPrint("!datalist.size: ${dataList.length}"); //, encodedData dataListStr $dataList");
     }
-  
 
-    String json1 =
-        jsonEncode(dataList);
+    String json1 = jsonEncode(dataList);
     //List jsonList = dataList.map((data) => data.toJson()).toList();
     //debugPrint("jsonList: ${json1}");
 
@@ -117,7 +108,7 @@ class DataSmartMqtt extends ChangeNotifier {
     return dataList;
   }
 
-  Future setNewMqttData(List<Data> dataList) async{
+  Future setNewMqttData(List<Data> dataList) async {
     debugPrint("setting new mqtt data: $dataList");
     newMqttData = dataList;
     notifyListeners();
@@ -127,7 +118,7 @@ class DataSmartMqtt extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     debugPrint("newMqttData != null");
-     // notifyListeners();
+    // notifyListeners();
     return newMqttData;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:mqtt_test/widgets/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPrefs1{
+class SharedPrefs1 {
   static late SharedPreferences _sharedPrefs;
 
   static final SharedPrefs1 _instance = SharedPrefs1._internal();

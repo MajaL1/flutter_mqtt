@@ -19,7 +19,6 @@ import '../model/user_data_settings.dart';
 import '../widgets/show_alarm_time_settings.dart';
 
 class Utils {
-
   /*static int compareDatesInMinutes(DateTime lastSentAlarm) {
     Duration? duration = DateTime.now().difference(lastSentAlarm);
     int differenceInMinutes = duration!.inMinutes;
@@ -53,7 +52,7 @@ class Utils {
             userTopicList.add("$deviceName/alarm");
           }
         }
-       /* if (topicData.name.contains("data")) {
+        /* if (topicData.name.contains("data")) {
           if (!userTopicList.contains(deviceName + "/data")) {
             userTopicList.add(deviceName + "/data");
           }
@@ -88,12 +87,9 @@ class Utils {
     );
   }
 
-  static bool currentSettingsContainNewSettings(
-      String decodeMessage, SharedPreferences preferences) {
-    String? parsedMqttSettings =
-        preferences.getString("parsed_current_mqtt_settings");
-    debugPrint(
-        "call method currentSettingsContainNewSettings: $parsedMqttSettings");
+  static bool currentSettingsContainNewSettings(String decodeMessage, SharedPreferences preferences) {
+    String? parsedMqttSettings = preferences.getString("parsed_current_mqtt_settings");
+    debugPrint("call method currentSettingsContainNewSettings: $parsedMqttSettings");
     if (parsedMqttSettings!.contains(decodeMessage) || parsedMqttSettings.isEmpty) {
       return true;
     } else {
@@ -110,8 +106,7 @@ class Utils {
 
         bool overwriteOldSettings = false;
         for (UserDataSettings newSetting in parsedMqttSettingsListNew) {
-          if (newSetting.deviceName == deviceName &&
-              newSetting.sensorAddress == sensorAddress) {
+          if (newSetting.deviceName == deviceName && newSetting.sensorAddress == sensorAddress) {
             overwriteOldSettings = true;
             break;
           }
@@ -170,12 +165,10 @@ class Utils {
   }
 
   /// Pride v postev za nastavitve za vsak alarm posebej *//
-  static Future<List<AlarmIntervalSetting>>
-      getAlarmIntervalSettingsList() async {
+  static Future<List<AlarmIntervalSetting>> getAlarmIntervalSettingsList() async {
     List<AlarmIntervalSetting> alarmIntervalSettingList = [];
 
-    alarmIntervalSettingList =
-        await SharedPreferences.getInstance().then((value) {
+    alarmIntervalSettingList = await SharedPreferences.getInstance().then((value) {
       if (value.getString("alarm_interval_settings_list") != null) {
         String? str = value.getString("alarm_interval_settings_list");
         if (str != null) {
@@ -189,8 +182,7 @@ class Utils {
 
   static Future<AlarmIntervalSetting?> getAlarmIntervalSettingForDevice(
       String sensorName, String deviceName, String alarmSetting) async {
-    List<AlarmIntervalSetting> alarmIntervalSettingList =
-        await getAlarmIntervalSettingsList();
+    List<AlarmIntervalSetting> alarmIntervalSettingList = await getAlarmIntervalSettingsList();
 
     for (AlarmIntervalSetting setting in alarmIntervalSettingList) {
       if (setting.sensorAddress == sensorName &&
@@ -202,15 +194,13 @@ class Utils {
     return null;
   }
 
-  static Future<void> setAlarmIntervalSettingForDevice(String sensorName,
-      String deviceName, String alarmSetting, String value) async {
-    List<AlarmIntervalSetting> alarmIntervalSettingList =
-        await getAlarmIntervalSettingsList();
+  static Future<void> setAlarmIntervalSettingForDevice(
+      String sensorName, String deviceName, String alarmSetting, String value) async {
+    List<AlarmIntervalSetting> alarmIntervalSettingList = await getAlarmIntervalSettingsList();
 
     bool found = false;
     for (AlarmIntervalSetting setting in alarmIntervalSettingList) {
-      if (setting.sensorAddress == sensorName &&
-          setting.deviceName == deviceName) {
+      if (setting.sensorAddress == sensorName && setting.deviceName == deviceName) {
         found = true;
         setting.setting = alarmSetting;
         break;
@@ -219,10 +209,7 @@ class Utils {
 
     if (!found) {
       AlarmIntervalSetting setting = AlarmIntervalSetting(
-          deviceName: deviceName,
-          sensorAddress: sensorName,
-          setting: alarmSetting,
-          value: value);
+          deviceName: deviceName, sensorAddress: sensorName, setting: alarmSetting, value: value);
 
       alarmIntervalSettingList.add(setting);
 
@@ -234,30 +221,14 @@ class Utils {
 
   static void setLastAlarmHistoryFromPreferencesTEST() {
     /** test **/
-    Alarm alarm1 = Alarm(
-        deviceName: "aa1",
-        sensorAddress: "aa1bb2",
-        hiAlarm: 10,
-        loAlarm: 1,
-        ts: DateTime.now());
-    Alarm alarm2 = Alarm(
-        deviceName: "aa1",
-        sensorAddress: "bb1cc2",
-        hiAlarm: 20,
-        loAlarm: 2,
-        ts: DateTime.now());
-    Alarm alarm3 = Alarm(
-        deviceName: "bb1",
-        sensorAddress: "dd1ee1",
-        hiAlarm: 40,
-        loAlarm: 4,
-        ts: DateTime.now());
-    Alarm alarm4 = Alarm(
-        deviceName: "bb1",
-        sensorAddress: "bb1cc2",
-        hiAlarm: 60,
-        loAlarm: 6,
-        ts: DateTime.now());
+    Alarm alarm1 =
+        Alarm(deviceName: "aa1", sensorAddress: "aa1bb2", hiAlarm: 10, loAlarm: 1, ts: DateTime.now());
+    Alarm alarm2 =
+        Alarm(deviceName: "aa1", sensorAddress: "bb1cc2", hiAlarm: 20, loAlarm: 2, ts: DateTime.now());
+    Alarm alarm3 =
+        Alarm(deviceName: "bb1", sensorAddress: "dd1ee1", hiAlarm: 40, loAlarm: 4, ts: DateTime.now());
+    Alarm alarm4 =
+        Alarm(deviceName: "bb1", sensorAddress: "bb1cc2", hiAlarm: 60, loAlarm: 6, ts: DateTime.now());
 
     Map<String, List<Alarm>> alarmHistoryList = {
       "aa1": [alarm1, alarm2],
@@ -270,8 +241,7 @@ class Utils {
     });
   }
 
-  static Future<Map<String, List<Alarm>>>
-      getLastAlarmHistoryListFromPreferencesTEST() async {
+  static Future<Map<String, List<Alarm>>> getLastAlarmHistoryListFromPreferencesTEST() async {
     Map<String, List<Alarm>> alarmHistoryList = {};
     alarmHistoryList = await SharedPreferences.getInstance().then((value) {
       if (value.getString("last_alarm_history_list") != null) {
@@ -295,22 +265,19 @@ class Utils {
 
   static String generateRandomString(int len) {
     var r = Random();
-    return String.fromCharCodes(
-        List.generate(len, (index) => r.nextInt(33) + 89));
+    return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
   }
 
-  static Future setFriendlyName(Alarm alarm) async{
+  static Future setFriendlyName(Alarm alarm) async {
     Future<String?> s = SharedPreferences.getInstance().then((value) {
       if (value.getString("parsed_current_mqtt_settings") != null) {
         List parsedMqttSettingsList = [];
 
-        String? parsedMqttSettings =
-            value.getString("parsed_current_mqtt_settings");
+        String? parsedMqttSettings = value.getString("parsed_current_mqtt_settings");
 
         var jsonMap = json.decode(parsedMqttSettings!); //jsonMap.runtimeType
 
-        parsedMqttSettingsList =
-            jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
+        parsedMqttSettingsList = jsonMap.map((val) => UserDataSettings.fromJson(val)).toList();
         // parsedMqttSettingsList =
         //     UserDataSettings.getUserDataSettingsList(parsedMqttSettings);
 
@@ -320,8 +287,7 @@ class Utils {
           String? friendlyName = setting.friendlyName;
 
           //debugPrint("utils - before sendMessage setFriendlyName");
-          if (alarm.sensorAddress == sensorAddress &&
-              alarm.deviceName == deviceName) {
+          if (alarm.sensorAddress == sensorAddress && alarm.deviceName == deviceName) {
             alarm.friendlyName = friendlyName;
           }
         }
@@ -333,7 +299,8 @@ class Utils {
     return s;
   }
 
-  static List<UserDataSettings> diffOldAndNewSettings(List<UserDataSettings> newUserSettings, List<UserDataSettings> currentUserSettings) {
+  static List<UserDataSettings> diffOldAndNewSettings(
+      List<UserDataSettings> newUserSettings, List<UserDataSettings> currentUserSettings) {
     /* RegExp regex = RegExp(
         "\s*\"friendlyName\" *: *(\"(.*?)\"(,|\s|)|\s*\{(.*?)\}(,|\s|))");
 
@@ -348,18 +315,15 @@ class Utils {
       debugPrint("withoutFriendlyName: $withoutFriendlyName");
     } */
 
-   // debugPrint("\n\t\t=== 1010  primerjamo NOVE SETTINGE: $newUserSettings");
-   // debugPrint("\n\t\t=== 1010  primerjamo TRENUTNE SETTINGE SETTINGE: $currentUserSettings");
-
-
+    // debugPrint("\n\t\t=== 1010  primerjamo NOVE SETTINGE: $newUserSettings");
+    // debugPrint("\n\t\t=== 1010  primerjamo TRENUTNE SETTINGE SETTINGE: $currentUserSettings");
 
     // preveri vsebino userdatasettingsov
     // preveri, ali so parametri v obeh listah enake, oz. novi listi pripni friendlyName
 
     for (UserDataSettings setOld in currentUserSettings) {
       for (UserDataSettings setNew in newUserSettings) {
-        if (setOld.deviceName == setNew.deviceName &&
-            setOld.sensorAddress == setNew.sensorAddress) {
+        if (setOld.deviceName == setNew.deviceName && setOld.sensorAddress == setNew.sensorAddress) {
           setOld.friendlyName = setNew.friendlyName;
         }
       }

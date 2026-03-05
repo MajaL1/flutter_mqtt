@@ -14,10 +14,9 @@ class UserTopic {
     return UserTopic(
       sensorName: json["sensorName"],
       //topicList: json["topicList"]
-      topicList:
-      (json['topicList']as List).map((item) => TopicData.fromJson(item)).toList(),
+      topicList: (json['topicList'] as List).map((item) => TopicData.fromJson(item)).toList(),
 
-        // myModels=(json.decode(response.body) as List).map((i) =>
+      // myModels=(json.decode(response.body) as List).map((i) =>
       //               MyModel.fromJson(i)).toList();
     );
   }

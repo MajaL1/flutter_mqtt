@@ -5,9 +5,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 //import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 //import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +17,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:mqtt_test/util/notifications_singleton.dart';
 import 'package:mqtt_test/util/service_singleton.dart';
-
 
 import '../model/alarm.dart';
 import '../widgets/units.dart';
@@ -26,6 +27,7 @@ class NotificationHelper extends ChangeNotifier {
   static final NotificationHelper _instance = NotificationHelper._internal();
 
   NotificationHelper._internal();
+
   static NotificationHelper get instance => _instance;
 
   Widget build(BuildContext context) {
@@ -44,8 +46,7 @@ class NotificationHelper extends ChangeNotifier {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'my_foreground', // id
       'MY FOREGROUND SERVICE', // title
-      description:
-          'This channel is used for important notifications.', // description
+      description: 'This channel is used for important notifications.', // description
       importance: Importance.high,
       //sound:
     );
@@ -53,8 +54,7 @@ class NotificationHelper extends ChangeNotifier {
     //flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     //flutterLocalNotificationsPlugin.
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
 
     //flutterLocalNotificationsPlugin.initialize(initializationSettings, onSe)
@@ -72,17 +72,14 @@ class NotificationHelper extends ChangeNotifier {
             android: AndroidInitializationSettings('icon'),
           ),
           onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-          onDidReceiveNotificationResponse:
-              (NotificationResponse details) async {
-                print("Tapped notification");
-        /*Get.to(const AlarmHistory());
-      */}
-      );
+          onDidReceiveNotificationResponse: (NotificationResponse details) async {
+        print("Tapped notification");
+        Get.to(const AlarmHistory());
+      });
     }
 
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
           alert: true,
           badge: true,
@@ -91,17 +88,15 @@ class NotificationHelper extends ChangeNotifier {
 
     if (Platform.isAndroid) {
       await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()!
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!
           .requestNotificationsPermission();
 
       await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
     }
-    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
 
     await service.configure(
       androidConfiguration: AndroidConfiguration(
@@ -118,7 +113,6 @@ class NotificationHelper extends ChangeNotifier {
       iosConfiguration: IosConfiguration(
         // auto start service
         autoStart: true,
-
         // this will be executed when app is in foreground in separated isolate
         onForeground: onStart,
         // you have to enable background fetch capability on xcode project
@@ -138,9 +132,8 @@ class NotificationHelper extends ChangeNotifier {
   }
 
   @pragma('vm:entry-point')
-  static Future<void> notificationTapBackground(
-      NotificationResponse details) async {
-      DartPluginRegistrant.ensureInitialized();
+  static Future<void> notificationTapBackground(NotificationResponse details) async {
+    DartPluginRegistrant.ensureInitialized();
     debugPrint("TAP BACKGROUND");
     Get.to(const AlarmHistory());
   }
@@ -184,10 +177,8 @@ class NotificationHelper extends ChangeNotifier {
 
     //   debugPrint(
     //       "**************************alarm sending message  message: $alarmMessage");
-    String formattedDate =
-        DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
-    String? name =
-        (friendlyName != null && friendlyName.isNotEmpty) ? friendlyName : "";
+    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(alarmMessage!.ts!);
+    String? name = (friendlyName != null && friendlyName.isNotEmpty) ? friendlyName : "";
     if (name.isEmpty) {
       name = "$deviceName $sensorAddress";
     }
@@ -195,8 +186,7 @@ class NotificationHelper extends ChangeNotifier {
     //: "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
     //debugPrint(" 4444 friendlyName: , $friendlyName, na,me: $name");
 
-    AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
+    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
       name,
       "$alarmValue, date: $formattedDate",
       color: Colors.redAccent,
@@ -217,31 +207,24 @@ class NotificationHelper extends ChangeNotifier {
       category: AndroidNotificationCategory.alarm,
     );
 
-    const DarwinNotificationDetails iOSPlatformChannelSpecifics =
-        DarwinNotificationDetails(
+    const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
     );
 
-    NotificationDetails notificationDetails = NotificationDetails(
-        android: androidNotificationDetails, iOS: iOSPlatformChannelSpecifics);
-
-    String eventID = "as432445GFCLbd2in1en2103";
-    int notificationId = eventID.hashCode;
-
     debugPrint("showing alarm... $alarmMessage");
 
     await flutterLocalNotificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-
-      "Alarm on $name","$v $units\nalarm level $alarmValue $units,  $formattedDate",
-       const NotificationDetails(
+      "Alarm on $name",
+      "$v $units\nalarm level $alarmValue $units,  $formattedDate",
+      const NotificationDetails(
         android: AndroidNotificationDetails(
-          'alarm_channel',                 // channel ID (constant!)
-          'Alarms',                        // channel name
+          'alarm_channel', // channel ID (constant!)
+          'Alarms', // channel name
           channelDescription: 'Alarm notifications',
-          importance: Importance.max,      // 🚨 THIS FIXES THE CRASH
+          importance: Importance.max, // 🚨 THIS FIXES THE CRASH
           priority: Priority.high,
         ),
         iOS: DarwinNotificationDetails(
@@ -249,7 +232,7 @@ class NotificationHelper extends ChangeNotifier {
           presentSound: true,
           presentBadge: true,
           sound: 'default',
-         // interruptionLevel: InterruptionLevel.active,
+          // interruptionLevel: InterruptionLevel.active,
         ),
       ),
     );
@@ -262,7 +245,7 @@ class NotificationHelper extends ChangeNotifier {
   Future<void> showCriticalNotification() async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'critical_mqtt_channel', // Unique ID
-      'Critical Alerts',       // User-visible name
+      'Critical Alerts', // User-visible name
       importance: Importance.max,
       priority: Priority.high,
       playSound: true,
@@ -290,8 +273,7 @@ class NotificationHelper extends ChangeNotifier {
     );
   }
 
-  void onDidReceiveNotificationResponse(
-      NotificationResponse notificationResponse) async {
+  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
       debugPrint('notification payload: $payload');

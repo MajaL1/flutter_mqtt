@@ -18,7 +18,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:mqtt_test/util/service_singleton.dart';
 import 'package:mqtt_test/util/notifications_singleton.dart';
 
-
 import '../api/api_service.dart';
 import '../model/constants.dart';
 
@@ -88,7 +87,6 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   //bool run =  SharedPreferences
 
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -116,8 +114,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Column(
                         children: [
-                          if (widget.connectionStatusText != null &&
-                              widget.connectionStatusText!.isNotEmpty)
+                          if (widget.connectionStatusText != null && widget.connectionStatusText!.isNotEmpty)
                             Padding(
                               padding: const EdgeInsets.only(bottom: 16),
                               child: Text(
@@ -155,7 +152,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
-                                    color:  Color.fromRGBO(132, 134, 136, 1),
+                                    color: Color.fromRGBO(132, 134, 136, 1),
                                   ),
                                 ),
                                 const SizedBox(height: 32),
@@ -163,16 +160,13 @@ class _LoginFormValidationState extends State<LoginForm> {
                                 /// USERNAME
                                 TextFormField(
                                   initialValue: emailText,
-                                  decoration: GuiUtils
-                                      .buildInputUsernameLoginDecoration(),
+                                  decoration: GuiUtils.buildInputUsernameLoginDecoration(),
                                   onChanged: (value) {
                                     setState(() {
                                       usernameVal = value;
                                     });
                                   },
-                                  validator: MultiValidator([
-                                    RequiredValidator(errorText: "Required")
-                                  ]),
+                                  validator: MultiValidator([RequiredValidator(errorText: "Required")]),
                                 ),
                                 const SizedBox(height: 16),
 
@@ -182,8 +176,7 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   enableSuggestions: false,
                                   autocorrect: false,
                                   initialValue: passwordText,
-                                  decoration:
-                                  buildInputUsernamePasswordDecoration(),
+                                  decoration: buildInputUsernamePasswordDecoration(),
                                   onChanged: (value) {
                                     setState(() {
                                       passwordVal = value;
@@ -201,42 +194,41 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   height: 50,
                                   child: !isLoading
                                       ? ElevatedButton(
-                                    style: GuiUtils.buildElevatedButtonLogin(),
-                                    onPressed: () async {
-                                      if (usernameVal.isEmpty) {
-                                        usernameVal = emailText;
-                                      }
-                                      if (passwordVal.isEmpty) {
-                                        passwordVal = passwordText;
-                                      }
+                                          style: GuiUtils.buildElevatedButtonLogin(),
+                                          onPressed: () async {
+                                            if (usernameVal.isEmpty) {
+                                              usernameVal = emailText;
+                                            }
+                                            if (passwordVal.isEmpty) {
+                                              passwordVal = passwordText;
+                                            }
 
-                                      notificationPermissionGranted()
-                                          .then((val) async {
-                                        bool isError = await login(usernameVal, passwordVal);
-                                        if (isError) {
-                                          setState(() {
-                                            isLoading = false;
-                                          });
-                                        }
-                                      });
+                                            notificationPermissionGranted().then((val) async {
+                                              bool isError = await login(usernameVal, passwordVal);
+                                              if (isError) {
+                                                setState(() {
+                                                  isLoading = false;
+                                                });
+                                              }
+                                            });
 
-                                      if (!mounted) return;
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-                                    },
-                                    child: const Text(
-                                      'Login',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        letterSpacing: 1.2,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  )
+                                            if (!mounted) return;
+                                            setState(() {
+                                              isLoading = true;
+                                            });
+                                          },
+                                          child: const Text(
+                                            'Login',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              letterSpacing: 1.2,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
                                       : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                                          child: CircularProgressIndicator(),
+                                        ),
                                 ),
 
                                 const SizedBox(height: 12),
@@ -246,16 +238,14 @@ class _LoginFormValidationState extends State<LoginForm> {
                                   const Text(
                                     "Login error",
                                     textAlign: TextAlign.center,
-                                    style:
-                                    TextStyle(color: Colors.redAccent),
+                                    style: TextStyle(color: Colors.redAccent),
                                   ),
 
                                 if (licenseError)
                                   const Text(
                                     "License expired",
                                     textAlign: TextAlign.center,
-                                    style:
-                                    TextStyle(color: Colors.redAccent),
+                                    style: TextStyle(color: Colors.redAccent),
                                   ),
 
                                 if (!loginError && !licenseError)
@@ -275,12 +265,11 @@ class _LoginFormValidationState extends State<LoginForm> {
                                     child: const Text(
                                       Constants.CREATE_ACCOUNT,
                                       style: TextStyle(
-                                        color: Color.fromRGBO(120,120,136, 1),
+                                        color: Color.fromRGBO(120, 120, 136, 1),
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                    onTap: () =>
-                                        launchUrl(Constants.REGISTER_URL),
+                                    onTap: () => launchUrl(Constants.REGISTER_URL),
                                   ),
                                 ),
                               ],
@@ -301,7 +290,10 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   InputDecoration buildInputUsernamePasswordDecoration() {
     return InputDecoration(
-        prefixIcon: const Icon(Icons.lock, color: Color.fromRGBO(86,181,224, 1),),
+        prefixIcon: const Icon(
+          Icons.lock,
+          color: Color.fromRGBO(86, 181, 224, 1),
+        ),
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(
@@ -309,14 +301,12 @@ class _LoginFormValidationState extends State<LoginForm> {
           borderSide: const BorderSide(color: Colors.black12, width: 8.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-              width: 0.75, color: Color.fromRGBO(108, 165, 222, 60)),
+          borderSide: const BorderSide(width: 0.75, color: Color.fromRGBO(108, 165, 222, 60)),
           borderRadius: BorderRadius.circular(16),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-              color: Color.fromRGBO(108, 165, 222, 60), width: 2),
+          borderSide: const BorderSide(color: Color.fromRGBO(108, 165, 222, 60), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -327,7 +317,6 @@ class _LoginFormValidationState extends State<LoginForm> {
         hintText: Constants.ENTER_SECURE_PASS,
         hintStyle: const TextStyle(fontSize: 12));
   }
-
 
   BoxDecoration buildLoginBoxDecoration() {
     return BoxDecoration(
@@ -368,8 +357,7 @@ class _LoginFormValidationState extends State<LoginForm> {
     );
   }
 */
-  @pragma(
-      'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+  @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 
   @override
   void dispose() {
@@ -379,8 +367,7 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   String generateRandomString(int len) {
     var r = Random();
-    return String.fromCharCodes(
-        List.generate(len, (index) => r.nextInt(33) + 89));
+    return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
   }
 
   @override
@@ -408,14 +395,12 @@ class _LoginFormValidationState extends State<LoginForm> {
 
       try {
         User? user = await ApiService.login(username, password);
-        if(user!.licenceExpired){
-         licenseError = true;
-         //debugPrint("====licenceError:: $licenseError");
+        if (user!.licenceExpired) {
+          licenseError = true;
+          //debugPrint("====licenceError:: $licenseError");
           return true;
-        }
-        else {
-          debugPrint(
-            "loginForm, user: $user.username, ${user.email}, $user.password, $user.topic");
+        } else {
+          debugPrint("loginForm, user: $user.username, ${user.email}, $user.password, $user.topic");
         }
         List<String> userTopicList = Utils.createTopicListFromApi(user);
         await SharedPreferences.getInstance().then((value) async {
@@ -443,16 +428,14 @@ class _LoginFormValidationState extends State<LoginForm> {
 // TODO: IOS
 
         //if(Platform.isAndroid){
-          if(await serviceAndroid.isRunning()){
-            print("---- login isRunning");
-            debugPrint("---- login isRunning");
-          }
-          else {
-            debugPrint("---- login notRunning");
-            print("---- notRunning");
-            await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
-                serviceAndroid);
-          }
+        if (await serviceAndroid.isRunning()) {
+          print("---- login isRunning");
+          debugPrint("---- login isRunning");
+        } else {
+          debugPrint("---- login notRunning");
+          print("---- notRunning");
+          await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
+        }
         //}
         /*else if(Platform.isIOS) {
           if(await serviceIOS.isServiceRunning()){
@@ -487,11 +470,9 @@ class _LoginFormValidationState extends State<LoginForm> {
         , existingWorkPolicy: ExistingWorkPolicy.append);
 */
         //FlutterBackgroundService().startService();
-        await Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
+        await Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const AlarmHistory()));
 
         debugPrint("Validated");
-
       } catch (e) {
         debugPrint("e: $e");
         setState(() {
@@ -519,16 +500,16 @@ class _LoginFormValidationState extends State<LoginForm> {
 
   static Future<bool> notificationPermissionGranted() async {
     bool isGranted = true;
-    if(Platform.isAndroid){
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.notification,
-    ].request();
-    statuses.forEach((key, permission) {
-      if (permission.isDenied) {
-        isGranted = false;
-      }
-    });
-    return isGranted;
+    if (Platform.isAndroid) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.notification,
+      ].request();
+      statuses.forEach((key, permission) {
+        if (permission.isDenied) {
+          isGranted = false;
+        }
+      });
+      return isGranted;
     }
     return true;
   }

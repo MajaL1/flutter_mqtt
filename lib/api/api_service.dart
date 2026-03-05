@@ -16,12 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_test/util/notifications_singleton.dart';
 import 'package:mqtt_test/util/service_singleton.dart';
 
-
-
-
-
 import '../util/background_mqtt.dart';
-
 
 class ApiService {
   static Client client = Client();
@@ -56,7 +51,7 @@ class ApiService {
     return alarmList;
   }
 
-  static Future<int> getAlarmsHistoryListLength()  async {
+  static Future<int> getAlarmsHistoryListLength() async {
     List<Alarm> alarmList = [];
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.reload();
@@ -81,30 +76,14 @@ class ApiService {
     List<Alarm> alarmList = [];
     int i = 0;
     while (i < 50) {
-      Alarm alarm1 = Alarm(
-          deviceName: "aa1",
-          sensorAddress: "aa1bb2",
-          hiAlarm: 10,
-          loAlarm: 1,
-          ts: DateTime.now());
-      Alarm alarm2 = Alarm(
-          deviceName: "aa1",
-          sensorAddress: "bb1cc2",
-          hiAlarm: 20,
-          loAlarm: 2,
-          ts: DateTime.now());
-      Alarm alarm3 = Alarm(
-          deviceName: "bb1",
-          sensorAddress: "dd1ee1",
-          hiAlarm: 40,
-          loAlarm: 4,
-          ts: DateTime.now());
-      Alarm alarm4 = Alarm(
-          deviceName: "bb1",
-          sensorAddress: "bb1cc2",
-          hiAlarm: 60,
-          loAlarm: 6,
-          ts: DateTime.now());
+      Alarm alarm1 =
+          Alarm(deviceName: "aa1", sensorAddress: "aa1bb2", hiAlarm: 10, loAlarm: 1, ts: DateTime.now());
+      Alarm alarm2 =
+          Alarm(deviceName: "aa1", sensorAddress: "bb1cc2", hiAlarm: 20, loAlarm: 2, ts: DateTime.now());
+      Alarm alarm3 =
+          Alarm(deviceName: "bb1", sensorAddress: "dd1ee1", hiAlarm: 40, loAlarm: 4, ts: DateTime.now());
+      Alarm alarm4 =
+          Alarm(deviceName: "bb1", sensorAddress: "bb1cc2", hiAlarm: 60, loAlarm: 6, ts: DateTime.now());
       alarmList.add(alarm1);
       alarmList.add(alarm2);
       alarmList.add(alarm3);
@@ -140,28 +119,25 @@ class ApiService {
     try {
       debugPrint('=====Logging in ... $username, $password');
 
-      Response response = await post(
-          Uri.parse('http://test.navis-livedata.com:1002/api/auth.php'),
-          body: {
-            'login_username': username,
-            'login_password': password,
-            'login': '123'
-          },
-          headers: {
-            "Content-type": "application/x-www-form-urlencoded",
-            "Accept": "text/html,application/xhtml+xml,application/xml"
-          });
+      Response response = await post(Uri.parse('http://test.navis-livedata.com:1002/api/auth.php'), body: {
+        'login_username': username,
+        'login_password': password,
+        'login': '123'
+      }, headers: {
+        "Content-type": "application/x-www-form-urlencoded",
+        "Accept": "text/html,application/xhtml+xml,application/xml"
+      });
 
       //User user = User.base();
       //user.licenceExpired = true;
       //return user;
       debugPrint("===RESPONSE status code:: ${response.statusCode}");
 
-      if(response.statusCode == 403){
+      if (response.statusCode == 403) {
         debugPrint("===Api service login status code 403: ");
-          User user = User.base();
-          user.licenceExpired = true;
-          return user;
+        User user = User.base();
+        user.licenceExpired = true;
+        return user;
       }
       if (response.statusCode == 200) {
         var data = await jsonDecode(response.body.toString());
@@ -199,7 +175,7 @@ class ApiService {
     return null;
   }
 
-  static Future logout() async{
+  static Future logout() async {
     debugPrint("logging out");
     await stopService();
     await _removeUserPreferences();
@@ -208,7 +184,7 @@ class ApiService {
     });
   }
 
-  static Future _removeUserPreferences() async{
+  static Future _removeUserPreferences() async {
     SharedPreferences.getInstance().then((value) {
       if (value.getString("username") != null) {
         value.remove("username");
@@ -242,16 +218,14 @@ class ApiService {
   }
 
   static Future<bool> startService() async {
-    if(await serviceAndroid.isRunning()){
+    if (await serviceAndroid.isRunning()) {
       print("---- serviceAndroid isRunning");
       debugPrint("----serviceAndroid isRunning");
       return false;
-    }
-    else if (serviceAndroid.isRunning() == false) {
+    } else if (serviceAndroid.isRunning() == false) {
       debugPrint("---- serviceAndroid notRunning");
       print("---- serviceAndroid notRunning");
-      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(
-          serviceAndroid);
+      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
       return true;
     }
     debugPrint("---- no service running, returning false");
@@ -266,32 +240,31 @@ class ApiService {
     //service.invoke("stopService");
     bool isRunning = false;
     int i = 5;
-    while(i > 0) {
+    while (i > 0) {
       isRunning = await serviceAndroid.isRunning();
       if (!isRunning) {
         break;
+      } else {
+        sleep(const Duration(seconds: 1));
       }
-     else {
-        sleep(const Duration(seconds:1));
-      }
-     i--;
+      i--;
     }
-    
-    if(i == 0 ){
+
+    if (i == 0) {
       debugPrint("error stop service");
     }
     debugPrint(" isRunning $isRunning");
 
     //} else {
-     // debugPrint(" isRunning FALSE, logout service");
-      //service.startService();
-   // }
+    // debugPrint(" isRunning FALSE, logout service");
+    //service.startService();
+    // }
     debugPrint("stopping service");
     return result;
   }
 
 // Todo: use this method
-  static Future<List<UserTopic>> getUserTopicList(Map topics) async{
+  static Future<List<UserTopic>> getUserTopicList(Map topics) async {
     List<TopicData> topicList = [];
     List<UserTopic> userTopicList = [];
 
@@ -408,20 +381,16 @@ class ApiService {
 
  */
   static Future<List<NotificationMessage>> getNotificationMessage() async {
-    var data =
-        await rootBundle.loadString("assets/test_notifications_list.json");
+    var data = await rootBundle.loadString("assets/test_notifications_list.json");
     //final jsonResult = jsonDecode(data);
     //debugPrint("jsonResult: $jsonResult");
 
     final parsed = jsonDecode(data).cast<Map<String, dynamic>>();
 
-    return parsed
-        .map<NotificationMessage>((json) => NotificationMessage.fromJson(json))
-        .toList();
+    return parsed.map<NotificationMessage>((json) => NotificationMessage.fromJson(json)).toList();
   }
 
-  Future<bool> createNotificationMessageFromJson(
-      NotificationMessage data) async {
+  Future<bool> createNotificationMessageFromJson(NotificationMessage data) async {
     String url = Constants.BASE_URL;
     final response = await client.post("$url/api/alarm" as Uri,
         headers: {"content-type": "application/json"}, body: data.toJson()

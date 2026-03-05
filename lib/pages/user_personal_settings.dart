@@ -16,8 +16,8 @@ class UserPersonalSettings extends StatefulWidget {
 
 class _UserPersonalSettingsState extends State<UserPersonalSettings> {
   late SharedPreferences prefs;
-  TextStyle headingStyle = const TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
+  TextStyle headingStyle =
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
   int countTest = 0;
   bool lockAppSwitchVal = true;
   bool fingerprintSwitchVal = false;
@@ -57,23 +57,20 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
 
   Container buildUserPersonalSettings() {
     return Container(
-          color: Colors.white,
-          child: Column(children: <Widget>[
-    const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 25),
-    ),
-    Container(height: 20),
-    const Text("Personal settings ",
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold)),
-    Container(height: 20),
-    //const Divider(height: 1, color: Colors.black12, thickness: 5),
-    _buildUserPersonalSettings(),
-          ]),
-          // ),
-        );
+      color: Colors.white,
+      child: Column(children: <Widget>[
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25),
+        ),
+        Container(height: 20),
+        const Text("Personal settings ",
+            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)),
+        Container(height: 20),
+        //const Divider(height: 1, color: Colors.black12, thickness: 5),
+        _buildUserPersonalSettings(),
+      ]),
+      // ),
+    );
   }
 
   BoxDecoration buildBoxDecoration() {
@@ -93,7 +90,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
 
   Widget _buildUserPersonalSettings() {
     return Container(
-     // padding: const EdgeInsets.only(left: 12, right: 12, bottom: 2, top: 20),
+      // padding: const EdgeInsets.only(left: 12, right: 12, bottom: 2, top: 20),
       alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,9 +106,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
           const Divider(height: 20, color: Colors.black12, thickness: 2),
           ListTile(
             leading: const Icon(Icons.stop_circle, color: Colors.black87),
-            title: serviceStopped
-                ? const Text('Start service')
-                : const Text('Stop service'),
+            title: serviceStopped ? const Text('Start service') : const Text('Stop service'),
 //style: TextStyle(
 //                     color: Colors.black87,
 //                     fontWeight: FontWeight.w600,
@@ -119,9 +114,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
             onTap: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
-                title: !serviceStopped
-                    ? const Text('Stop service')
-                    : const Text('Start service'),
+                title: !serviceStopped ? const Text('Stop service') : const Text('Start service'),
                 content: !serviceStopped
                     ? const Text(
                         'Are you sure you want to stop service? \n\n No alarms will be displayed.',
@@ -174,10 +167,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
           ListTile(
             leading: const Icon(Icons.exit_to_app, color: Colors.black87),
             title: const Text("Log out",
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14)),
+                style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 14)),
             onTap: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
@@ -196,9 +186,7 @@ class _UserPersonalSettingsState extends State<UserPersonalSettings> {
                       // Navigator.pop(context, 'OK');
                       ApiService.logout();
                       Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => LoginForm.base()),
-                          (route) => false);
+                          MaterialPageRoute(builder: (context) => LoginForm.base()), (route) => false);
                     },
                     child: const Text('OK'),
                   ),

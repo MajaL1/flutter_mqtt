@@ -10,7 +10,7 @@ class FirstScreen extends StatefulWidget {
 
   FirstScreen.base({Key? key}) : super(key: key);
 
-  FirstScreen.base1(FlutterBackgroundService service, {Key? key}) :  super(key: key) {
+  FirstScreen.base1(FlutterBackgroundService service, {Key? key}) : super(key: key) {
     service = service;
   }
   @override
@@ -59,10 +59,7 @@ class _FirstScreenState extends State<FirstScreen> {
                   child: CircularProgressIndicator(),
                 );
               } else {
-                return Scaffold(
-                    body: !isLoggedIn
-                        ?  LoginForm.base()
-                        : const AlarmHistory());
+                return Scaffold(body: !isLoggedIn ? LoginForm.base() : const AlarmHistory());
                 //  : UserSettings.base()));
                 //body: LoginForm.base());
               }

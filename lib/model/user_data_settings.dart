@@ -126,18 +126,17 @@ class UserDataSettings {
             }
           }
           UserDataSettings userDataSet = UserDataSettings(
-            deviceName: deviceName,
-            sensorAddress: sensorAddress,
-            friendlyName: friendlyName,
-            //editableSetting: editableSetting,
-            hiAlarm: hiAlarm,
-            loAlarm: loAlarm,
-            typ: typ,
-            t: t,
-            u: u,
-            ts: ts,
-            rw: rw
-          );
+              deviceName: deviceName,
+              sensorAddress: sensorAddress,
+              friendlyName: friendlyName,
+              //editableSetting: editableSetting,
+              hiAlarm: hiAlarm,
+              loAlarm: loAlarm,
+              typ: typ,
+              t: t,
+              u: u,
+              ts: ts,
+              rw: rw);
           userSettingsList.add(userDataSet);
         }
         // debugPrint(
@@ -199,7 +198,7 @@ class UserDataSettings {
             if (key1 == "ts") {
               ts = DateTime.fromMillisecondsSinceEpoch(value1 * 1000);
             }
-                    }
+          }
           //print("Creating userSettings: $key, $t, $hiAlarm, $loAlarm");
           UserDataSettings userSettings = UserDataSettings(
               friendlyName: friendlyName,
@@ -289,18 +288,17 @@ class UserDataSettings {
         }
       }
       UserDataSettings userDataSet = UserDataSettings(
-        deviceName: deviceName,
-        sensorAddress: sensorAddress,
-        friendlyName: friendlyName,
-        editableSetting: editableSetting,
-        hiAlarm: hiAlarm,
-        loAlarm: loAlarm,
-        typ: typ,
-        t: t,
-        u: u,
-        ts: ts,
-        rw: rw
-      );
+          deviceName: deviceName,
+          sensorAddress: sensorAddress,
+          friendlyName: friendlyName,
+          editableSetting: editableSetting,
+          hiAlarm: hiAlarm,
+          loAlarm: loAlarm,
+          typ: typ,
+          t: t,
+          u: u,
+          ts: ts,
+          rw: rw);
       userDataSettingsList.add(userDataSet);
     }
     debugPrint("### returning userDataSettingsList $userDataSettingsList");

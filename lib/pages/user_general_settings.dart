@@ -20,8 +20,8 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
   List<String> alarmIntervalsList = Utils.buildAlarmIntervalsList();
   String? dropdownValue = "";
 
-  TextStyle headingStyle = const TextStyle(
-      fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
+  TextStyle headingStyle =
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.blueAccent);
 
   TextStyle headingStyleIOS = const TextStyle(
     fontWeight: FontWeight.w600,
@@ -52,32 +52,29 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     //super.initState();
 
     return Container(
+      color: Colors.white,
+      child: Column(children: <Widget>[
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+        ),
+        // const Divider(height: 1, color: Colors.black12, thickness: 5),
+        Container(
+          height: 30,
           color: Colors.white,
-          child: Column(children: <Widget>[
-    const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    ),
-    // const Divider(height: 1, color: Colors.black12, thickness: 5),
-    Container(
-      height: 30,
-      color: Colors.white,
-    ),
-    Container(
-      //height: 30,
-      color: Colors.white,
-      child: const Text("General settings ",
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 20)),
-    ),
-    const Divider(height: 14, color: Colors.white, thickness: 5),
+        ),
+        Container(
+          //height: 30,
+          color: Colors.white,
+          child: const Text("General settings ",
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+        ),
+        const Divider(height: 14, color: Colors.white, thickness: 5),
 
-    //const Divider(height: 4, color: Colors.black12, thickness: 5),
-    _buildUserGeneralSettings(),
-          ]),
-          // ),
-        );
+        //const Divider(height: 4, color: Colors.black12, thickness: 5),
+        _buildUserGeneralSettings(),
+      ]),
+      // ),
+    );
   }
 
   BoxDecoration buildBoxDecoration() {
@@ -101,8 +98,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     ValueNotifier<bool> notifier = ValueNotifier(isEnabledSave);
 
     return Container(
-        padding:
-            const EdgeInsets.only(left: 30, right: 12, bottom: 12, top: 15),
+        padding: const EdgeInsets.only(left: 30, right: 12, bottom: 12, top: 15),
         alignment: Alignment.center,
         color: Colors.white,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -111,15 +107,11 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
             // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // const Padding(padding: EdgeInsets.symmetric(vertical: 15)),
-              const Row(children: [
-                Text("Alarm interval:",
-                    style: TextStyle(fontSize: 14))
-              ]),
+              const Row(children: [Text("Alarm interval:", style: TextStyle(fontSize: 14))]),
               Row(
                 children: [
                   Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 0.1, vertical: 0.1),
+                      padding: const EdgeInsets.symmetric(horizontal: 0.1, vertical: 0.1),
                       decoration: GuiUtils.buildBoxDecorationInterval(),
                       child: _buildDropdownMenu(isEnabledSave, notifier)),
                   IconButton(
@@ -138,17 +130,16 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
                             })
                 ],
               ),
-              const Divider(
-                  height: 20, color: Colors.transparent, thickness: 2),
+              const Divider(height: 20, color: Colors.transparent, thickness: 2),
             ],
           ),
         ]));
   }
 
   DropdownMenu<String> _buildDropdownMenu(
-      bool isEnabledSave,
-      ValueNotifier notifier,
-      ) {
+    bool isEnabledSave,
+    ValueNotifier notifier,
+  ) {
     debugPrint("initState _buildDropdownMenu, val $dropdownValue");
 
     SharedPreferences.getInstance().then((pref) {
@@ -183,9 +174,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         fontSize: 15,
         fontWeight: FontWeight.w500,
       ),
-      initialSelection: dropdownValue!.isNotEmpty
-          ? dropdownValue
-          : ShowAlarmTimeSettings.minutes10,
+      initialSelection: dropdownValue!.isNotEmpty ? dropdownValue : ShowAlarmTimeSettings.minutes10,
       onSelected: (String? val) {
         if (val == "") {
           isEnabledSave = false;
@@ -228,8 +217,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
         Icons.keyboard_arrow_up_rounded,
         color: Color(0xFF2563EB),
       ),
-      dropdownMenuEntries:
-      alarmIntervalsList.map<DropdownMenuEntry<String>>((String value) {
+      dropdownMenuEntries: alarmIntervalsList.map<DropdownMenuEntry<String>>((String value) {
         return DropdownMenuEntry<String>(
           value: value,
           label: value,
@@ -243,10 +231,8 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
             ),
           ),
           style: ButtonStyle(
-            overlayColor:
-            WidgetStateProperty.all(const Color(0xFF2563EB).withOpacity(0.08)),
-            padding:
-            WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
+            overlayColor: WidgetStateProperty.all(const Color(0xFF2563EB).withOpacity(0.08)),
+            padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
             backgroundColor: WidgetStateProperty.all(Colors.transparent),
           ),
         );
@@ -255,7 +241,6 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
 
     return dropdown; // ✅ ensures a non-null return
   }
-
 
   SharedPreferences? preferences;
 
@@ -275,8 +260,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
     dropdownValue = interval;
     SmartMqtt.instance.setAlarmIntervalSettings(interval);
     //SmartMqtt.instance.alarmInterval = interval;
-    debugPrint(
-        "dropdown value from smartMqtt ${SmartMqtt.instance.alarmInterval}");
+    debugPrint("dropdown value from smartMqtt ${SmartMqtt.instance.alarmInterval}");
     //SharedPreferences.getInstance().then((value) => value.setString(key, value))
     SharedPreferences.getInstance().then((value) {
       value.setString("alarm_interval_setting", interval);

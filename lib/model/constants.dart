@@ -5,13 +5,11 @@ class Constants {
   static const String BROKER_IP = "test.navis-livedata.com";
   static const int BROKER_PORT = 1883;
 
-
   static const String LOGIN_SUCCESS = "Login successful";
 
   static const HI_ALARM = "Hi alarm: ";
   static const LO_ALARM = "Lo alarm: ";
   static const TS = "Time: ";
-
 
   static const HI_ALARM_JSON = "hi_alarm";
   static const LO_ALARM_JSON = "lo_alarm";
@@ -22,11 +20,6 @@ class Constants {
   static const R = "r";
   static const BV = "bv";
   static const L = "l";
-
-
-
-
-
 
   static const U = "u: ";
   static const T = "t: ";
@@ -44,10 +37,6 @@ class Constants {
   static const FORGOT_PASS = "Forgot password?";
   static const CREATE_ACCOUNT = "Create account";
 
-
-
-
-
   // screen titles
   static const SETTINGS = "SETTINGS";
   static const HISTORY = "HISTORY";
@@ -62,13 +51,10 @@ class Constants {
   static const DEVICE_SETTING_LO_ALARM = "loAlarm";
   static const DEVICE_SETTING_U = "u";
 
-
   static const SAVE_DEVICE_SETTINGS = "Save";
   static const ENTER_USERNAME_AND_PASS = "Enter username and password";
 
   static const LOGIN_TO_NAVIS = "Login";
-
-
 
   static final Uri REGISTER_URL = Uri(
     scheme: 'http',
