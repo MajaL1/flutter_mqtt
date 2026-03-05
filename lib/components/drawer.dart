@@ -132,7 +132,7 @@ class NavDrawer extends StatelessWidget {
         style: TextStyle(color: color, letterSpacing: 1.2, fontSize: 15),
       ),
       onTap: onTap,
-      hoverColor: Colors.blue.withOpacity(0.2),
+      hoverColor: Colors.blue.withValues(alpha: 0.2),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       visualDensity: const VisualDensity(vertical: -2),
     );

@@ -10,13 +10,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-//import 'package:mqtt_test/main.dart';
 import 'package:mqtt_test/pages/alarm_history.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 import 'package:mqtt_test/util/notifications_singleton.dart';
-import 'package:mqtt_test/util/service_singleton.dart';
 
 import '../model/alarm.dart';
 import '../widgets/units.dart';
@@ -95,7 +92,7 @@ class NotificationHelper extends ChangeNotifier {
           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
     }
-    await flutterLocalNotificationsPlugin
+    flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
 
     await service.configure(
@@ -123,7 +120,7 @@ class NotificationHelper extends ChangeNotifier {
   }
 
   @pragma('vm:entry-point')
-  static Future<void> startMesagingService(String message) async {
+  static Future<void> startMessagingService(String message) async {
     DartPluginRegistrant.ensureInitialized();
     debugPrint("Messaging service started, message: $message");
 
@@ -185,33 +182,6 @@ class NotificationHelper extends ChangeNotifier {
 
     //: "deviceName: ${deviceName}, sensor:  ${sensorAddress}";
     //debugPrint(" 4444 friendlyName: , $friendlyName, na,me: $name");
-
-    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-      name,
-      "$alarmValue, date: $formattedDate",
-      color: Colors.redAccent,
-      icon: "icon",
-      //actions: ,
-      //largeIcon: FilePathAndroidBitmap(bigPicture),
-      importance: Importance.max,
-      priority: Priority.high,
-      groupKey: "alarms",
-      setAsGroupSummary: false,
-      colorized: true,
-      enableLights: true,
-
-      /*styleInformation: const BigTextStyleInformation(
-          '<b>Your</b> notification',
-          htmlFormatBigText: true,
-        ), */
-      category: AndroidNotificationCategory.alarm,
-    );
-
-    const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
 
     debugPrint("showing alarm... $alarmMessage");
 

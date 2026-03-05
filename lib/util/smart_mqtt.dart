@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
+//import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_test/util/utils.dart';
@@ -432,7 +432,7 @@ class SmartMqtt extends ChangeNotifier {
           ...newSettings,
           ...decodeMessageSettings,
         };
-        if (newUserSettings != null || newUserSettings.isNotEmpty) {
+        if (newUserSettings.isNotEmpty) {
           newUserSettings = json.encode(concatenatedSettings);
           debugPrint("notifying listeners 1.. $newUserSettings");
           preferences.setString("current_mqtt_settings", newUserSettings);

@@ -67,7 +67,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -120,7 +120,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 "",
                 style: TextStyle(
                   fontSize: 10,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
               ),
             ),

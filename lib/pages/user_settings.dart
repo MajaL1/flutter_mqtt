@@ -102,7 +102,7 @@ class _UserSettingsState extends State<UserSettings> {
       borderRadius: BorderRadius.circular(9),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha: 0.15),
           spreadRadius: 4,
           blurRadius: 5,
           offset: const Offset(0, 2), // changes position of shadow

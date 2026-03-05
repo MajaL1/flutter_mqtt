@@ -44,7 +44,7 @@ class GuiUtils {
       borderRadius: BorderRadius.circular(9),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha: 0.15),
           spreadRadius: 4,
           blurRadius: 5,
           offset: const Offset(0, 2), // changes position of shadow
@@ -64,7 +64,7 @@ class GuiUtils {
         borderRadius: BorderRadius.circular(9),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.15),
+            color: Colors.grey.withValues(alpha: 0.15),
             spreadRadius: 4,
             blurRadius: 8,
             offset: const Offset(0, 1), // changes position of shadow
@@ -80,7 +80,7 @@ class GuiUtils {
       borderRadius: BorderRadius.circular(9),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha: 0.15),
           spreadRadius: 4,
           blurRadius: 8,
           offset: const Offset(0, 1), // changes position of shadow
@@ -101,7 +101,7 @@ class GuiUtils {
 // borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
-          color: Colors.black, //Colors.grey.withOpacity(0.15),
+          color: Colors.black, //Colors.grey.withValues(alpha: 0.15),
           spreadRadius: 1,
 
           ///4,
@@ -122,12 +122,12 @@ class GuiUtils {
   }
 
   static BoxDecoration buildAppBarDecorationIOS() {
-    return BoxDecoration(
+    return const BoxDecoration(
 // color: Colors.black, //Color.fromRGBO(0, 87, 153, 60),
       //color: Colors.red,
 // borderRadius: BorderRadius.circular(18),
 
-      gradient: const LinearGradient(
+      gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
@@ -145,7 +145,7 @@ class GuiUtils {
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha: 0.15),
           spreadRadius: 4,
           blurRadius: 8,
           offset: const Offset(0, 1), // changes position of shadow
@@ -165,7 +165,7 @@ class GuiUtils {
       borderRadius: BorderRadius.circular(18),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha: 0.15),
           spreadRadius: 4,
           blurRadius: 8,
           offset: const Offset(0, 1), // changes position of shadow
@@ -185,7 +185,7 @@ class GuiUtils {
       borderRadius: BorderRadius.circular(12),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha: 0.15),
           spreadRadius: 4,
           blurRadius: 8,
           offset: const Offset(0, 1), // changes position of shadow
@@ -274,7 +274,7 @@ class GuiUtils {
       overlayColor: WidgetStateProperty.resolveWith<Color?>(
         (states) {
           if (states.contains(WidgetState.pressed)) {
-            return Colors.white.withOpacity(0.15);
+            return Colors.white.withValues(alpha: 0.15);
           }
           return null;
         },

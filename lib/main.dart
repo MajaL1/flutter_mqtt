@@ -83,9 +83,11 @@ Future<void> main() async {
   DartPluginRegistrant.ensureInitialized();
 
   // await Firebase.initializeApp();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
   tz.initializeTimeZones();

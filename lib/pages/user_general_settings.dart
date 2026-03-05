@@ -83,7 +83,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       borderRadius: BorderRadius.circular(9),
       boxShadow: [
         BoxShadow(
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha:0.15),
           spreadRadius: 4,
           blurRadius: 5,
           offset: const Offset(0, 2), // changes position of shadow
@@ -161,7 +161,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
       menuStyle: MenuStyle(
         elevation: WidgetStateProperty.all(8),
         backgroundColor: WidgetStateProperty.all(Colors.white),
-        shadowColor: WidgetStateProperty.all(Colors.black.withOpacity(0.15)),
+        shadowColor: WidgetStateProperty.all(Colors.black.withValues(alpha: 0.15)),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -231,7 +231,7 @@ class _UserGeneralSettingsState extends State<UserGeneralSettings> {
             ),
           ),
           style: ButtonStyle(
-            overlayColor: WidgetStateProperty.all(const Color(0xFF2563EB).withOpacity(0.08)),
+            overlayColor: WidgetStateProperty.all(const Color(0xFF2563EB).withValues(alpha: 0.08)),
             padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 12)),
             backgroundColor: WidgetStateProperty.all(Colors.transparent),
           ),
