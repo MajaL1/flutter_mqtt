@@ -7,19 +7,15 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
-
-
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
     id("com.google.gms.google-services")
-    // END: FlutterFire Configuration
-    id("org.jetbrains.kotlin.android")  // no version here
+    id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.navis.alarm_app" // <-- your package name
+    namespace = "com.navis.alarm_app"
     compileSdk = 36
 
     defaultConfig {
@@ -40,15 +36,12 @@ android {
         jvmTarget = "1.8"
     }
 
-
     signingConfigs {
         create("release") {
             val storeFilePath = keystoreProperties["storeFile"] as String?
-
             if (!storeFilePath.isNullOrEmpty()) {
                 // Use rootProject.file to anchor the path to your project folder
                 val keystoreFile = rootProject.file(storeFilePath)
-
                 if (keystoreFile.exists()) {
                     storeFile = keystoreFile
                 } else {
@@ -56,7 +49,6 @@ android {
                     throw GradleException("Keystore file not found at: ${keystoreFile.absolutePath}")
                 }
             }
-
             storePassword = keystoreProperties["storePassword"] as String?
             keyAlias = keystoreProperties["keyAlias"] as String?
             keyPassword = keystoreProperties["keyPassword"] as String?
@@ -68,16 +60,19 @@ android {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             isShrinkResources = false
-
-
         }
     }
-    dependencies {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
-    }
 
-    flutter {
-        source = "../.."
-    }
+    // Move dependencies block OUTSIDE of the 'android' block
+    // It should be a top-level block
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    // UPDATED: Version increased to 2.1.4 to fix the AAR metadata error
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+}
+
+flutter {
+    source = "../.."
 }

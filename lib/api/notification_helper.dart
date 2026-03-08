@@ -58,22 +58,26 @@ class NotificationHelper extends ChangeNotifier {
 
     //flutterLocalNotificationsPlugin.
     if (Platform.isIOS || Platform.isAndroid) {
-      await flutterLocalNotificationsPlugin.initialize(
-          //onDidReceiveNotificationResponse:
-          const InitializationSettings(
-            iOS: DarwinInitializationSettings(
-              requestAlertPermission: true,
-              requestBadgePermission: true,
-              requestSoundPermission: true,
-            ),
-            android: AndroidInitializationSettings('icon'),
-          ),
-          onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-          onDidReceiveNotificationResponse: (NotificationResponse details) async {
-        print("Tapped notification");
-        Get.to(const AlarmHistory());
-      });
+
+     await flutterLocalNotificationsPlugin.initialize(
+         // Use 'settings' instead of 'initializationSettings'
+         settings: const InitializationSettings(
+           iOS: DarwinInitializationSettings(
+             requestAlertPermission: true,
+             requestBadgePermission: true,
+             requestSoundPermission: true,
+           ),
+           android: AndroidInitializationSettings('icon'),
+         ),
+         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+         onDidReceiveNotificationResponse: (NotificationResponse details) async {
+           print("Tapped notification");
+           Get.to(const AlarmHistory());
+         },
+      );
     }
+
+
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
@@ -186,15 +190,15 @@ class NotificationHelper extends ChangeNotifier {
     debugPrint("showing alarm... $alarmMessage");
 
     await flutterLocalNotificationsPlugin.show(
-      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      "Alarm on $name",
-      "$v $units\nalarm level $alarmValue $units,  $formattedDate",
-      const NotificationDetails(
+      id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      title: "Alarm on $name",
+      body: "$v $units\nalarm level $alarmValue $units,  $formattedDate",
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
-          'alarm_channel', // channel ID (constant!)
-          'Alarms', // channel name
+          'alarm_channel',
+          'Alarms',
           channelDescription: 'Alarm notifications',
-          importance: Importance.max, // 🚨 THIS FIXES THE CRASH
+          importance: Importance.max,
           priority: Priority.high,
         ),
         iOS: DarwinNotificationDetails(
@@ -202,7 +206,6 @@ class NotificationHelper extends ChangeNotifier {
           presentSound: true,
           presentBadge: true,
           sound: 'default',
-          // interruptionLevel: InterruptionLevel.active,
         ),
       ),
     );
@@ -235,11 +238,11 @@ class NotificationHelper extends ChangeNotifier {
       ),
     );
 
-    await FlutterLocalNotificationsPlugin().show(
-      999,
-      'CRITICAL: Server Down',
-      'The MQTT server has been unreachable for over 2 hours.',
-      platformDetails,
+    await flutterLocalNotificationsPlugin.show(
+      id: 999, // Label your id
+      title: 'CRITICAL: Server Down', // Label your title
+      body: 'The MQTT server has been unreachable for over 2 hours.', // Label your body
+      notificationDetails: platformDetails, // Explicitly label your notification details
     );
   }
 

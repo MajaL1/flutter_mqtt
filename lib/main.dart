@@ -51,15 +51,15 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
   // DO NOT call FirebaseMessaging here
 
   await flutterLocalNotificationsPlugin.show(
-    0,
-    "Alarm",
-    "New alarm received",
-    const NotificationDetails(
+    id: 0,// id
+    title: "Alarm",                      // title
+    body: "New alarm received",         // body
+    notificationDetails: const NotificationDetails(
       iOS: DarwinNotificationDetails(
         presentAlert: true,
         presentSound: true,
       ),
-    ),
+    ), payload: "",
   );
 }
 
