@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:mqtt_test/util/service_singleton.dart';
 import 'package:mqtt_test/util/notifications_singleton.dart';
 
@@ -93,6 +94,19 @@ Future<void> main() async {
   tz.initializeTimeZones();
   await FirebaseMessaging.instance.requestPermission();
 
+
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
   if (Platform.isAndroid) {
     //final serviceAndroid = FlutterBackgroundService();
 
@@ -121,22 +135,6 @@ Future<void> main() async {
     await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceAndroid);
   }
 
-  /*else if(Platform.isIOS) {
-    FlutterBackgroundServiceIOS serviceIOS = FlutterBackgroundServiceIOS();
-    // TODO
-    if (await serviceIOS.isServiceRunning()) {
-      debugPrint("----isRunning on IOS");
-      logger.log(Level.info, "---- service is running on IOS: isRunning");
-    } else {
-      print("----notRunning on IOS");
-      serviceIOS.start();
-     // logger.log(Level.info, "---- service NOT running on IOS: notRunning");
-      serviceIOS.invoke("startService", {
-
-        },);
-      await BackgroundMqtt(flutterLocalNotificationsPlugin).initializeService(serviceIOS);
-    }
-  }*/
 
   // SharedPreferences.setMockInitialValues({});
   await SharedPreferences.getInstance().then((value) {
@@ -153,9 +151,7 @@ Future<void> main() async {
   // LocalNotifications.onClickNotification.stream.listen((event) {
 
   //}
-  runApp(
-    const NotificationsApp(),
-  );
+  runApp(const NotificationsApp());
 }
 
 // to ensure this is executed

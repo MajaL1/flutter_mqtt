@@ -112,11 +112,24 @@ class _AlarmHistoryState extends State<AlarmHistory> {
                                 serviceAndroid.invoke("simulate_disconnect");
                               },
                               label: const Text(
-                                'Test fail',
+                                'Test fail mqtt connect',
                                 style: TextStyle(color: Colors.white, fontSize: 12),
                               ),
                               icon: const Icon(Icons.refresh, color: Colors.white, size: 18)),
                         ),*/
+                        Container(
+                          height: 30,
+                          width: 130,
+                          decoration: GuiUtils.buildHistoryButtonDecoration(),
+                          child: ElevatedButton.icon(
+                              style: GuiUtils.buildElevatedButtonSettings(),
+                              onPressed: () => throw Exception(),
+                              label: const Text(
+                                'Test exception Program',
+                                style: TextStyle(color: Colors.white, fontSize: 12),
+                              ),
+                              icon: const Icon(Icons.refresh, color: Colors.white, size: 18)),
+                        ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
